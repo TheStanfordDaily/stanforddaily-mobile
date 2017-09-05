@@ -29,6 +29,7 @@ const {
 import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
 const {width, height} = Dimensions.get('window');
+import Header from './common/header';
 
 export default class DetailedPost extends Component {
 
@@ -48,6 +49,11 @@ export default class DetailedPost extends Component {
     this.loading = false;
     this.allLoadedReplies = {};
     this.items = [];
+    this.goBack = this.goBack.bind(this);
+  }
+
+  goBack() {
+    this.props.navigation.goBack();
   }
 
   componentDidMount() {
@@ -58,6 +64,7 @@ export default class DetailedPost extends Component {
     var firebaseApp = firebase.apps[0];
     var postKey = this.props.navigation.state.params.data.key;
     firebaseApp.database().ref('/replies/'+postKey).off();
+    clearInterval();
   }
 
   update(view) {
@@ -150,7 +157,7 @@ export default class DetailedPost extends Component {
     replies.child(postKey).child(replyKey).set(replyDetails, function () {
       view.listenForReplies();
     });
-    this.setState({text: ''});
+    this.setState({text: '', height: 0});
   }
 
   _renderItem(item) {
@@ -165,6 +172,7 @@ export default class DetailedPost extends Component {
   render() {
     return (
         <View style={styles.container}>
+          <Header title={this.props.navigation.state.params.name + "'s post"} goBack={this.goBack} ref='Header'/>
           <ScrollView>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={styles.mainView}>
@@ -181,13 +189,13 @@ export default class DetailedPost extends Component {
               contentContainerStyle={styles.listview}
             />
             </ScrollView>
-          <KeyboardAvoidingView keyboardVerticalOffset={64} contentContainerStyle={styles.writeAReply} behavior={"padding"}>
+          <KeyboardAvoidingView contentContainerStyle={styles.writeAReply} behavior={"padding"}>
             <View style={[styles.writeAReply, {height: Math.min(height/4, Math.max(52, this.state.height+20))}]}>
               <View style={[styles.textInputWrapper, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}>
                 <TextInput
                   {...this.props}
                   multiline={true}
-                  
+
                   onChangeText={(text) => this.setState({text:text})}
                   onContentSizeChange={(size) => this.setState({height: size.nativeEvent.contentSize.height})}
                   style={[styles.textInput, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}

@@ -24,18 +24,23 @@ export default class ReplyItem extends Component {
     constructor() {
         super();
         this._mounted = false;
+        this.state = {
+          body: '',
+          preview: ''
+        }
     }
 
     componentWillMount() {
-      this.setState(this.props.item);
-      var view = this;
-      setInterval(function(){
-        view.calculateTime(view.props.item.timeStamp);
-      },60000);
-      this.setState({body: "", author: ""});
+
     }
 
     componentDidMount() {
+      this.setState(this.props.item);
+      var view = this;
+      // setInterval(function(){
+      //   view.calculateTime(view.props.item.timeStamp);
+      // },60000);
+      this.setState({body: "", author: ""});
       console.log("mounted");
       this._mounted = true;
       var view = this;
@@ -51,7 +56,7 @@ export default class ReplyItem extends Component {
       } else {
         this.setState({author: "Anonymous"})
       }
-      if(this.state.long === "yes" && this.props.context === 'list') {
+      if(this.state.long === "yes") {
         this.setState({collapsed : true});
       } else {
         this.setState({collapsed : false});
@@ -60,6 +65,7 @@ export default class ReplyItem extends Component {
 
     componentWillUnmount() {
       this._mounted = false;
+      clearInterval();
     }
 
     viewMoreStyle() {

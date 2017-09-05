@@ -61,11 +61,7 @@ export default class NewPost extends Component {
       votes: 0,
       score: 0
     };
-    if(this.state.anon) {
-      userPosts.child('/privatePosts/'+key).set({post: key});
-    } else {
-      userPosts.child('/publicPosts/'+key).set({post: key});
-    }
+    userPosts.child('/posts/'+key).set({post: key});
 
     var view = this;
     posts.child(key).set(postDetails, function () {

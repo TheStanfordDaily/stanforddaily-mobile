@@ -33,7 +33,7 @@ export const ChatterStack = StackNavigator({
     navigationOptions: {
       title: 'Chatter',
       headerStyle: {backgroundColor: '#A82029'},
-      headerTintColor: 'white'
+      headerTintColor: 'white',
     },
   },
   DetailedPost: {
@@ -45,7 +45,7 @@ export const ChatterStack = StackNavigator({
     }),
   }
 }, {
-  headerMode: 'screen',
+  headerMode: 'none',
 });
 
 export const Tabs = TabNavigator({

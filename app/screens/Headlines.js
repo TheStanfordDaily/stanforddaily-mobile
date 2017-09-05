@@ -15,7 +15,8 @@ import {
     Image,
     StatusBar,
     LayoutAnimation,
-    TouchableOpacity
+    TouchableOpacity,
+    ActivityIndicator
 } from 'react-native';
 
 const {width, height} = Dimensions.get('window');
@@ -283,6 +284,7 @@ export default class Headlines extends Component {
                 renderSectionHeader={(sectionData, category) => this.renderSectionHeader(sectionData, category)}
                 enableEmptySections={true}
                 stickySectionHeadersEnabled={true}
+                renderFooter={() => <ActivityIndicator style={{marginTop: 8, marginBottom: 8}}/>}
             />
             </MenuContext>
             </View>

@@ -25,6 +25,7 @@ const {
 } = ReactNative;
 
 import PostItem from './common/post-item';
+import Header from './common/header';
 
 const firebaseConfig = {
     apiKey: "AIzaSyBIUCWibwkLZtyVKZ8cQ5E4uc51OXpn3iA",
@@ -157,6 +158,7 @@ export default class Chatter extends Component {
     var onpressFunc = () => this.props.navigation.navigate("SignIn", {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
     return (
       <View style={styles.container}>
+        <Header title={'Chatter'} ref='Header'/>
         <TouchableWithoutFeedback onPress={onpressFunc}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Please sign in/up to use this service</Text>
@@ -170,6 +172,7 @@ export default class Chatter extends Component {
   pointToVerify() {
     return (
       <View style={styles.container}>
+        <Header title={'Chatter'} ref='Header'/>
         <TouchableWithoutFeedback onPress={this.makeSureUserSignedIn.bind(this)}>
           <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Please verify your email to use this service</Text>
@@ -183,7 +186,7 @@ export default class Chatter extends Component {
   loadTheView() {
     return (
       <View style={styles.container}>
-
+        <Header title={'Chatter'} ref='Header'/>
         <ListView
           removeClippedSubviews={false}
           refreshControl={

@@ -74,11 +74,12 @@ export default class Header extends Component {
                 <Animated.View style={[styles.container, {height}]}>
                   {this.props.goBack === undefined && <View style={{width: 20}}/>}
                   {this.props.goBack !== undefined && (
-                    <Animated.View style={{width:20, left:16, top: 8, opacity: this.state.opacity}}>
+                    <Animated.View style={{width:20, marginLeft:16, marginTop: 8, opacity: this.state.opacity}}>
                       <Icon name="ios-arrow-back" size={34} color="#ffffff" onPress={() => this.props.goBack()}/>
                     </Animated.View>
                   )}
-                  <Animated.Image source={require('../../media/DailyLogo.png')} style={{width: 243, height: 30, marginTop: 13, opacity: this.state.opacity}}/>
+                  {this.props.title === undefined && <Animated.Image source={require('../../media/DailyLogo.png')} style={{width: 243, height: 30, marginTop: 13, opacity: this.state.opacity}}/>}
+                  {this.props.title !== undefined && <Animated.View style={{marginTop: 15, height: 30, width: 243}}><Text numberOfLines={1} ellipsizeMode={'middle'} style={{color: 'white', fontFamily:'Helvetica Neue', fontSize:20, textAlign: 'center'}}>{this.props.title}</Text></Animated.View>}
                   <View style={{width: 20}}/>
                 </Animated.View>
             </View>
