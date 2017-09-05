@@ -10,9 +10,11 @@ import {
     Dimensions,
     TouchableWithoutFeedback
 } from 'react-native';
-var MEDIA_URL = 'http://stanforddaily.com/wp-json/wp/v2/media/';
 import HTMLText from '../../modified_modules/react-native-html-to-text';
+import Placeholder from './placeholder';
 // import Button from './button';
+
+const MEDIA_URL = 'http://stanforddaily.com/wp-json/wp/v2/media/';
 const {width, height} = Dimensions.get('window');
 
 export default class NewsFeedItem extends Component {
@@ -24,7 +26,8 @@ export default class NewsFeedItem extends Component {
           date : "",
           title : "",
           featuredMedia : "",
-          description: ""
+          description: "",
+          loaded: false
         };
     }
 
@@ -72,7 +75,8 @@ export default class NewsFeedItem extends Component {
             title: title,
             featuredMedia: featuredMedia,
             description: description,
-            body: this.props.data.postObj.content.rendered
+            body: this.props.data.postObj.content.rendered,
+            loaded: true
           });
         }
     }
@@ -83,23 +87,26 @@ export default class NewsFeedItem extends Component {
     }
     renderContent() {
         this.fetchData();
-        return (
-          <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
-            <View style={styles.content}>
-            {this.state.featuredMedia !== "" && (
-              <View style={styles.imageContainer}>
-                <Image source={{uri: this.state.featuredMedia}} style={styles.image}/>
-              </View>)
-            }
-              <View style={styles.dateAndAuthorWithoutMedia}>
-                <Text style={styles.author}> {this.state.author} </Text>
-                <Text style={styles.date}> {this.state.date} </Text>
+        if(this.state.loaded) {
+          return (
+            <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
+              <View style={styles.content}>
+              {this.state.featuredMedia !== "" && (
+                <View style={styles.imageContainer}>
+                  <Image source={{uri: this.state.featuredMedia}} style={styles.image}/>
+                </View>)
+              }
+                <View style={styles.dateAndAuthor}>
+                  <Text style={styles.author}> {this.state.author} </Text>
+                  <Text style={styles.date}> {this.state.date} </Text>
+                </View>
+                <HTMLText style={styles.title} html={this.state.title}/>
+                <HTMLText containerStyle={{margin:0, padding:0}} style={styles.description} html={this.state.description}/>
               </View>
-              <HTMLText style={styles.title} html={this.state.title}/>
-              <HTMLText containerStyle={{margin:0, padding:0}} style={styles.description} html={this.state.description}/>
-            </View>
-          </TouchableWithoutFeedback>
-        )
+            </TouchableWithoutFeedback>
+          );
+        }
+        return <Placeholder />;
     }
 
     render() {
@@ -110,11 +117,6 @@ export default class NewsFeedItem extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        // flex: 1,
-
-    },
-
     content: {
         borderTopColor: '#DBDBDB',
         borderTopWidth: 1,
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
         // flex: 1
     },
 
-    dateAndAuthorWithoutMedia: {
+    dateAndAuthor: {
       flexDirection: 'row',
       justifyContent:"space-between",
       marginTop: 2,

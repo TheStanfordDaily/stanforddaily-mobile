@@ -3,32 +3,23 @@
  */
 import React, {Component} from 'react';
 import {
-    Animated,
     View,
     Text,
     Dimensions,
     RefreshControl,
-    Modal,
-    ScrollView,
     ListView,
     StyleSheet,
-    Image,
     StatusBar,
-    LayoutAnimation,
-    TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
 } from 'react-native';
-
-const {width, height} = Dimensions.get('window');
-
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
+import Placeholder from './common/placeholder';
 import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 
-//1 is regular post, 2 is image
-// const dropDownData = ["All", "News","Sports","Opinions","Arts & Life","The Grind"];
+const {width, height} = Dimensions.get('window');
 const categories = {
     "All" : '',
     "Featured Headlines": '1485',
@@ -39,7 +30,6 @@ const categories = {
     "The Grind": '32278'
 };
 const currentPosts = {};
-
 const data = [];
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2});
 const selectedCategory = 'All';
@@ -58,21 +48,38 @@ export default class Headlines extends Component {
         this.loadMore = _.debounce(this.loadMore, 200);
         this.goToPost = this.goToPost.bind(this);
         this._renderRow = this._renderRow.bind(this);
+        this.fetchDataIsBusy = false;
     }
 
     goToPost(data) {
-      console.log(data);
+      // console.log(data);
       this.props.navigation.navigate('Post', { ...data });
     }
 
     convertDataToMap() {
       var dataCategoryMap = {"Featured Headlines":[]}; // Create the blank map
+      dataCategoryMap[selectedCategory] = [];
       data.forEach(function(dataItem) {
-        if(!dataCategoryMap[dataItem.category]) {
-          dataCategoryMap[dataItem.category] = [];
+        // if(!dataCategoryMap[dataItem.category]) {
+          // dataCategoryMap[dataItem.category] = [];
+        // }
+        console.log("General log", selectedCategory);
+        if(dataItem.category === "Featured Headlines") {
+          dataCategoryMap["Featured Headlines"].push(dataItem);
+        } else if(dataItem.category === selectedCategory) {
+          dataCategoryMap[selectedCategory].push(dataItem);
+        } else {
+          console.log("Problem log", dataItem.category);
         }
-        dataCategoryMap[dataItem.category].push(dataItem);
+        // if(dataIte.category !== selectedCategory && dataItem.category !== "Featured Headlines")
       });
+      if(dataCategoryMap[selectedCategory] !== undefined) {
+        // console.log(dataCategoryMap[selectedCategory]);
+        dataCategoryMap[selectedCategory].push({category: selectedCategory, postObj: 'placeholder'});
+      }
+      if(currentPosts[1129933] !== undefined) {
+        console.log("It's fetched")
+      }
       return dataCategoryMap;
     }
 
@@ -95,6 +102,7 @@ export default class Headlines extends Component {
     async fetchNewCategoryHeadlines(categoryURL, loadMore) {
       let response = await fetch(categoryURL);
       let responseData = await response.json();
+      var counter = 2;
       responseData.forEach(function(post) {
         if(!currentPosts[post.id]) {
           currentPosts[post.id] = selectedCategory;
@@ -102,7 +110,8 @@ export default class Headlines extends Component {
           if(loadMore === true) {
             data.push(postObject);
           } else {
-            data.splice(1,0,postObject);
+            data.splice(counter,0,postObject);
+            counter += 1;
           }
         } else if (currentPosts[post.id] === selectedCategory) {
           return null;
@@ -113,6 +122,7 @@ export default class Headlines extends Component {
     }
 
     async handleCategoryFetching(counter, loadMore) {
+      console.log(counter);
       let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[selectedCategory];
       if(selectedCategory === "All") {
         categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter;
@@ -126,6 +136,7 @@ export default class Headlines extends Component {
       }
       await this.handleCategoryFetching(currentPage,loadMore);
       currentPage += 1;
+      this.fetchDataIsBusy = false;
     }
 
     async addNewData() {
@@ -142,7 +153,10 @@ export default class Headlines extends Component {
     async loadMore(event) {
       if(!this.state.loading) {
         this.state.loading = true;
-        this.fetchData(true);
+        if(!this.fetchDataIsBusy) {
+          this.fetchDataIsBusy = true;
+          this.fetchData(true);
+        }
         this.state.loading = false;
       }
     }
@@ -167,13 +181,12 @@ export default class Headlines extends Component {
           data.splice(i, 1);
         }
       }
-      console.log("Category: ", selectedCategory);
-      console.log("currentPosts: ", currentPosts);
       currentPage = 1;
-      var postObject = {category: selectedCategory, postObj: "placeholder"};
-      data.push(postObject);
       this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-      this.fetchData();
+      if(!this.fetchDataIsBusy) {
+        this.fetchDataIsBusy = true;
+        this.fetchData();
+      }
     }
 
     renderSectionHeader(sectionData, category) {
@@ -221,12 +234,17 @@ export default class Headlines extends Component {
   }
 
   _renderRow(data) {
-    console.log("called");
+    // console.log("called");
     // console.log(event);
     if(data.postObj !== 'placeholder') {
       return <NewsFeedItem data={data} onPress={this.goToPost}/>
     } else {
-      return null;
+      return (
+        <View>
+          <Placeholder />
+          <Placeholder />
+        </View>
+      );
     }
   }
 
@@ -283,5 +301,5 @@ const styles= StyleSheet.create({
         // backgroundColor: 'Colors.chat_bg',
         right: 0
 
-    }
+    },
 })
