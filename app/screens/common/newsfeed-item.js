@@ -98,15 +98,13 @@ export default class NewsFeedItem extends Component {
               <HTMLText style={styles.title} html={this.state.title}/>
               <HTMLText containerStyle={{margin:0, padding:0}} style={styles.description} html={this.state.description}/>
             </View>
-            </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
         )
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                {this.renderContent()}
-            </View>
+            this.renderContent()
         )
     }
 }
@@ -114,13 +112,14 @@ export default class NewsFeedItem extends Component {
 const styles = StyleSheet.create({
     container: {
         // flex: 1,
-        backgroundColor: '#fcfcfc',
-        width: '100%',
+
     },
 
     content: {
         borderTopColor: '#DBDBDB',
         borderTopWidth: 1,
+        backgroundColor: '#fcfcfc',
+        width: '100%',
         // flex: 1
     },
 

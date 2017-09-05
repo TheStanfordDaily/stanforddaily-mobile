@@ -55,10 +55,9 @@ export default class Headlines extends Component {
         };
         this.fetchData();
         this.offsetY = 0;
-        this._onScroll = this._onScroll.bind(this);
         this.loadMore = _.debounce(this.loadMore, 200);
-        this._renderRow = this._renderRow.bind(this);
         this.goToPost = this.goToPost.bind(this);
+        this._renderRow = this._renderRow.bind(this);
     }
 
     goToPost(data) {
@@ -77,7 +76,8 @@ export default class Headlines extends Component {
       return dataCategoryMap;
     }
 
-    async fetchFeaturedHeadlines(featuredURL) {
+    async fetchFeaturedHeadlines() {
+      let featuredURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page=1&categories="+categories['Featured Headlines'];
       let response = await fetch(featuredURL);
       let responseData = await response.json();
       responseData.forEach(function(post) {
@@ -92,60 +92,58 @@ export default class Headlines extends Component {
       this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
     }
 
-    async fetchCategoryHeadlines(categoryURL) {
+    async fetchNewCategoryHeadlines(categoryURL, loadMore) {
       let response = await fetch(categoryURL);
       let responseData = await response.json();
       responseData.forEach(function(post) {
         if(!currentPosts[post.id]) {
-        currentPosts[post.id] = selectedCategory;
-          data.push({
-            category: selectedCategory,
-            postObj: post
-          });
-        }
-      });
-    }
-
-    async fetchData() {
-      let featuredURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page=1&categories="+categories['Featured Headlines'];
-      await this.fetchFeaturedHeadlines(featuredURL);
-      let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+currentPage+"&categories="+categories[selectedCategory];
-      if(selectedCategory === "All") {
-        categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+currentPage;
-      }
-      currentPage += 1;
-      await this.fetchCategoryHeadlines(categoryURL);
-    }
-
-    async fetchNewCategoryHeadlines(categoryURL) {
-      let response = await fetch(categoryURL);
-      let responseData = await response.json();
-      responseData.forEach(function(post) {
-        if(!currentPosts[post.id]) {
-        currentPosts[post.id] = selectedCategory;
-          data.unshift({
-            category: selectedCategory,
-            postObj: post
-          });
+          currentPosts[post.id] = selectedCategory;
+          var postObject = {category: selectedCategory, postObj: post};
+          if(loadMore === true) {
+            data.push(postObject);
+          } else {
+            data.splice(1,0,postObject);
+          }
         } else if (currentPosts[post.id] === selectedCategory) {
-          return;
+          return null;
         }
       });
       this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
       return {Nonempty: 1};
     }
 
+    async handleCategoryFetching(counter, loadMore) {
+      let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[selectedCategory];
+      if(selectedCategory === "All") {
+        categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter;
+      }
+       return await this.fetchNewCategoryHeadlines(categoryURL, loadMore);
+    }
+
+    async fetchData(loadMore) {
+      if(loadMore !== true) {
+        await this.fetchFeaturedHeadlines();
+      }
+      await this.handleCategoryFetching(currentPage,loadMore);
+      currentPage += 1;
+    }
+
     async addNewData() {
-      let featuredURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page=1&categories="+categories['Featured Headlines'];
-      await this.fetchFeaturedHeadlines(featuredURL);
+      await this.fetchFeaturedHeadlines();
       //Make a while loop to handle multiple
       var newDataCounter = 1;
       while (true) {
-        let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+newDataCounter+"&categories="+categories[selectedCategory];
-        if(selectedCategory === "All") {
-          categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+newDataCounter;
-        }
-        if (await this.fetchNewCategoryHeadlines(categoryURL) === undefined) break;
+        var returnResult = this.handleCategoryFetching(newDataCounter);
+        if (returnResult === null) break;
+        newDataCounter += 1;
+      }
+    }
+
+    async loadMore(event) {
+      if(!this.state.loading) {
+        this.state.loading = true;
+        this.fetchData(true);
+        this.state.loading = false;
       }
     }
 
@@ -161,46 +159,6 @@ export default class Headlines extends Component {
         this.setState({refreshing: false});
     }
 
-
-
-    _renderRow(data) {
-      console.log("called");
-      // console.log(event);
-        return <NewsFeedItem data={data} onPress={this.goToPost}/>
-    }
-
-    async loadMore(event) {
-      this.setState({loading: true});
-        let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+currentPage+"&categories="+categories[selectedCategory];
-        if(selectedCategory === "All") {
-          categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+currentPage;
-        }
-        currentPage += 1;
-        await this.fetchCategoryHeadlines(categoryURL);
-        this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-        this.setState({loading: false});
-    }
-
-    _onScroll(event) {
-        // const e = event.nativeEvent;
-        // const l_height = e.contentSize.height;
-        // const offset = e.contentOffset.y;
-        //
-        // if(offset === 0)this.refs.Header.show();
-        // if(offset > this.offsetY) {
-        //     console.log('scrolling down');
-        //     if(!(offset < 56)) {
-        //         this.refs.Header.hide();
-        //     }
-        //     this.offsetY = offset;
-        //     //if
-        // } else if (offset < this.offsetY - 20) {
-        //     console.log('scrolling up');
-        //     this.offsetY = offset;
-        //     this.refs.Header.show();
-        // }
-    }
-
     setCategory(value) {
       selectedCategory = value;
       for (var i = data.length - 1; i >= 0; i--) {
@@ -212,8 +170,10 @@ export default class Headlines extends Component {
       console.log("Category: ", selectedCategory);
       console.log("currentPosts: ", currentPosts);
       currentPage = 1;
+      var postObject = {category: selectedCategory, postObj: "placeholder"};
+      data.push(postObject);
       this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-      this.loadMore();
+      this.fetchData();
     }
 
     renderSectionHeader(sectionData, category) {
@@ -257,6 +217,16 @@ export default class Headlines extends Component {
           </Menu>
         </View>
     )
+    }
+  }
+
+  _renderRow(data) {
+    console.log("called");
+    // console.log(event);
+    if(data.postObj !== 'placeholder') {
+      return <NewsFeedItem data={data} onPress={this.goToPost}/>
+    } else {
+      return null;
     }
   }
 

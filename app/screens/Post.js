@@ -71,11 +71,9 @@ async fetchData() {
 }
 
 onSwipeUp(gestureState) {
-  this.refs.postHeader.hide();
   }
 
   onSwipeDown(gestureState) {
-    this.refs.postHeader.show();
   }
 
   onSwipe(gestureName, gestureState) {

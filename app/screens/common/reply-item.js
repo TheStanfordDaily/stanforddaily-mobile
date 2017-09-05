@@ -31,16 +31,15 @@ export default class ReplyItem extends Component {
     }
 
     componentWillMount() {
-
+      this.setState(this.props.item);
+      var view = this;
+      setInterval(function(){
+        view.calculateTime(view.props.item.timeStamp);
+      },60000);
+      this.setState({body: "", author: ""});
     }
 
     componentDidMount() {
-      this.setState(this.props.item);
-      var view = this;
-      // setInterval(function(){
-      //   view.calculateTime(view.props.item.timeStamp);
-      // },60000);
-      this.setState({body: "", author: ""});
       console.log("mounted");
       this._mounted = true;
       var view = this;
@@ -75,7 +74,9 @@ export default class ReplyItem extends Component {
 
     calculateTime(TimeStamp) {
       var time = moment(TimeStamp).fromNow();
-      this.setState({timeStamp: time});
+      if(this._mounted) {
+        this.setState({timeStamp: time});
+      }
     }
 
     render() {
