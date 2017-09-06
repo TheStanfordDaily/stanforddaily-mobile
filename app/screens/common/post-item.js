@@ -27,6 +27,7 @@ export default class PostItem extends Component {
     }
 
     componentWillMount() {
+      this._mounted = true;
       this.setState(this.props.item);
       var view = this;
       setInterval(function(){

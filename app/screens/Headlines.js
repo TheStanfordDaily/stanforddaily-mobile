@@ -12,7 +12,8 @@ import {
     StatusBar,
     ActivityIndicator,
 } from 'react-native';
-import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
+import PopoverTooltip from 'react-native-popover-tooltip';
+
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
@@ -201,41 +202,29 @@ export default class Headlines extends Component {
     } else {
       return (
         <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-          <Menu onSelect={(value) => this.setCategory(value)}>
-            <MenuTrigger>
+        <PopoverTooltip
+          ref='tooltip1'
+          buttonComponent={
               <View style={{flexDirection: 'row'}}>
                 <Text style={{fontFamily:"Century", fontSize:28}}>
                   {selectedCategory}
                 </Text>
                 <Icon name="ios-arrow-down" size={34} color="#979797" style={{marginLeft:6, marginTop: 3}}/>
               </View>
-            </MenuTrigger>
-            <MenuOptions>
-              <MenuOption value={'All'}>
-                <Text>All</Text>
-              </MenuOption>
-              <MenuOption value={'News'}>
-                <Text>News</Text>
-              </MenuOption>
-              <MenuOption value={'Sports'}>
-                <Text>Sports</Text>
-              </MenuOption>
-              <MenuOption value={'Arts & Life'}>
-                <Text>Arts & Life</Text>
-              </MenuOption>
-              <MenuOption value={'The Grind'}>
-                <Text>The Grind</Text>
-              </MenuOption>
-            </MenuOptions>
-          </Menu>
-        </View>
-    )
-    }
-  }
+          }
+          items={[
+            {label: "All", onPress: () => this.setCategory("All")},
+            {label: "News", onPress: () => this.setCategory("News")},
+            {label: "Sports", onPress: () => this.setCategory("Sports")},
+            {label: "Arts & Life", onPress: () => this.setCategory("Arts & Life")},
+            {label: "The Grind", onPress: () => this.setCategory("The Grind")}
+          ]}
+          />
+        </View>)
+        }
+      }
 
   _renderRow(data) {
-    // console.log("called");
-    // console.log(event);
     if(data.postObj !== 'placeholder') {
       return <NewsFeedItem data={data} onPress={this.goToPost}/>
     } else {
@@ -257,7 +246,6 @@ export default class Headlines extends Component {
             />
             <View ref='view' style={styles.container}>
             <Header ref='Header'/>
-            <MenuContext style={{ flex: 1 }}>
             <ListView
                 removeClippedSubviews={false}
                 refreshControl={
@@ -274,7 +262,6 @@ export default class Headlines extends Component {
                 stickySectionHeadersEnabled={true}
                 renderFooter={() => <ActivityIndicator style={{marginTop: 8, marginBottom: 8}}/>}
             />
-            </MenuContext>
             </View>
             </View>
         )
