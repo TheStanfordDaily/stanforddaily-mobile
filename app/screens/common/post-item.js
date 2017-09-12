@@ -76,7 +76,6 @@ export default class PostItem extends Component {
 
     componentWillUnmount() {
       this._mounted = false;
-      this.props.firebase.database().ref("/posts/"+this.props.item.key).off();
       clearInterval();
     }
 

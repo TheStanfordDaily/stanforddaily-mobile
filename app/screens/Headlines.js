@@ -12,7 +12,7 @@ import {
     StatusBar,
     ActivityIndicator,
 } from 'react-native';
-import PopoverTooltip from 'react-native-popover-tooltip';
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
 
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
@@ -30,6 +30,7 @@ const categories = {
     "Arts & Life": '25',
     "The Grind": '32278'
 };
+
 const currentPosts = {};
 const data = [];
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2});
@@ -61,25 +62,18 @@ export default class Headlines extends Component {
       var dataCategoryMap = {"Featured Headlines":[]}; // Create the blank map
       dataCategoryMap[selectedCategory] = [];
       data.forEach(function(dataItem) {
-        // if(!dataCategoryMap[dataItem.category]) {
-          // dataCategoryMap[dataItem.category] = [];
-        // }
-        console.log("General log", selectedCategory);
         if(dataItem.category === "Featured Headlines") {
           dataCategoryMap["Featured Headlines"].push(dataItem);
         } else if(dataItem.category === selectedCategory) {
           dataCategoryMap[selectedCategory].push(dataItem);
-        } else {
-          console.log("Problem log", dataItem.category);
         }
-        // if(dataIte.category !== selectedCategory && dataItem.category !== "Featured Headlines")
       });
       if(dataCategoryMap[selectedCategory] !== undefined) {
-        // console.log(dataCategoryMap[selectedCategory]);
+        dataCategoryMap[selectedCategory].push({category: selectedCategory, postObj: 'placeholder'});
         dataCategoryMap[selectedCategory].push({category: selectedCategory, postObj: 'placeholder'});
       }
-      if(currentPosts[1129933] !== undefined) {
-        console.log("It's fetched")
+      while (dataCategoryMap["Featured Headlines"].length !== 2) {
+        dataCategoryMap["Featured Headlines"].push({category: "Featured Headlines", postObj: 'placeholder'});
       }
       return dataCategoryMap;
     }
@@ -123,7 +117,6 @@ export default class Headlines extends Component {
     }
 
     async handleCategoryFetching(counter, loadMore) {
-      console.log(counter);
       let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[selectedCategory];
       if(selectedCategory === "All") {
         categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter;
@@ -164,17 +157,15 @@ export default class Headlines extends Component {
 
     _onRefresh() {
         this.setState({refreshing: true});
-        for(var i = data.length-1; i >= 0; i--) {
-          if(data[i].category === "Featured Headlines") {
-            delete currentPosts[data[i].id];
-            data.splice(i, 1);
-          }
-        }
-        this.addNewData();
+        data = [];
+        currentPosts = {};
+        this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
+        this.fetchData();
         this.setState({refreshing: false});
     }
 
     setCategory(value) {
+      if (value === selectedCategory) return;
       selectedCategory = value;
       for (var i = data.length - 1; i >= 0; i--) {
         if (data[i].category !== "Featured Headlines") {
@@ -191,38 +182,48 @@ export default class Headlines extends Component {
     }
 
     renderSectionHeader(sectionData, category) {
-      if(category === "Featured Headlines") {
-        return (
-          <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-            <Text style={{fontFamily:"Century", fontSize:28}}>
-              {category}
-            </Text>
-          </View>
-        )
-    } else {
-      return (
-        <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-        <PopoverTooltip
-          ref='tooltip1'
-          buttonComponent={
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{fontFamily:"Century", fontSize:28}}>
-                  {selectedCategory}
-                </Text>
-                <Icon name="ios-arrow-down" size={34} color="#979797" style={{marginLeft:6, marginTop: 3}}/>
-              </View>
-          }
-          items={[
-            {label: "All", onPress: () => this.setCategory("All")},
-            {label: "News", onPress: () => this.setCategory("News")},
-            {label: "Sports", onPress: () => this.setCategory("Sports")},
-            {label: "Arts & Life", onPress: () => this.setCategory("Arts & Life")},
-            {label: "The Grind", onPress: () => this.setCategory("The Grind")}
-          ]}
-          />
-        </View>)
-        }
-      }
+       if(category === "Featured Headlines") {
+         return (
+           <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
+             <Text style={{fontFamily:"Century", fontSize:28, marginTop: 4}}>
+               {category}
+             </Text>
+           </View>
+         )
+     } else {
+       return (
+         <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
+           <Menu onSelect={(value) => this.setCategory(value)}>
+             <MenuTrigger>
+               <View style={{flexDirection: 'row', marginTop: 4}}>
+                 <Text style={{fontFamily:"Century", fontSize:28}}>
+                   {selectedCategory}
+                 </Text>
+                 <Icon name="ios-arrow-down" size={34} color="#979797" style={{marginLeft:6, marginTop: 3}}/>
+               </View>
+             </MenuTrigger>
+             <MenuOptions>
+               <MenuOption value={'All'}>
+                 <Text>All</Text>
+               </MenuOption>
+               <MenuOption value={'News'}>
+                 <Text>News</Text>
+               </MenuOption>
+               <MenuOption value={'Sports'}>
+                 <Text>Sports</Text>
+               </MenuOption>
+               <MenuOption value={'Arts & Life'}>
+                 <Text>Arts & Life</Text>
+               </MenuOption>
+               <MenuOption value={'The Grind'}>
+                 <Text>The Grind</Text>
+               </MenuOption>
+             </MenuOptions>
+           </Menu>
+         </View>
+     )
+     }
+   }
 
   _renderRow(data) {
     if(data.postObj !== 'placeholder') {
@@ -230,7 +231,6 @@ export default class Headlines extends Component {
     } else {
       return (
         <View>
-          <Placeholder />
           <Placeholder />
         </View>
       );
@@ -244,8 +244,8 @@ export default class Headlines extends Component {
             <StatusBar
               barStyle="light-content"
             />
-            <View ref='view' style={styles.container}>
             <Header ref='Header'/>
+            <MenuContext style={{ flex: 1 }}>
             <ListView
                 removeClippedSubviews={false}
                 refreshControl={
@@ -262,7 +262,7 @@ export default class Headlines extends Component {
                 stickySectionHeadersEnabled={true}
                 renderFooter={() => <ActivityIndicator style={{marginTop: 8, marginBottom: 8}}/>}
             />
-            </View>
+            </MenuContext>
             </View>
         )
     }

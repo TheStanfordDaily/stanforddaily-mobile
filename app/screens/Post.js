@@ -113,7 +113,7 @@ onSwipeUp(gestureState) {
         }}
         >
           <WebView
-          //  scalesPageToFit={false}
+           scalesPageToFit={false}
           //  startInLoadState={false}
            renderLoading={() => <ActivityIndicator/>}
            ref={'webview'}

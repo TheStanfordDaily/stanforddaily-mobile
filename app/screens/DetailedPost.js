@@ -38,7 +38,6 @@ export default class DetailedPost extends Component {
     this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged: function(row1, row2) {
-          console.log(row1.key + " Compared to " + row2.key);
           return row1.key !== row2.key;
         },
       }),
@@ -57,64 +56,95 @@ export default class DetailedPost extends Component {
   }
 
   componentDidMount() {
-    this.listenForReplies();
+    this.fetchMoreReplies();
   }
 
   componentWillUnmount() {
     var firebaseApp = firebase.apps[0];
     var postKey = this.props.navigation.state.params.data.key;
     firebaseApp.database().ref('/replies/'+postKey).off();
+    console.log("Turn off listeners");
     clearInterval();
   }
 
   update(view) {
-    // var newArr = view.items.slice();
-    // console.log(newArr);
     view.setState({
       dataSource: view.state.dataSource.cloneWithRows(view.items),
     });
   }
 
-  determineRef(postKey) {
+  processData(snap, view, postKey) {
+    var counter = 0;
+    snap.forEach((child) => {
+      var childJSON = child.val();
+      var body = '/repliesBodies/' + postKey + '/' + childJSON.body;
+      var postObject = {
+        body: body,
+        long: childJSON.long,
+        timeStamp : childJSON.TimeStamp,
+        anon: childJSON.anon,
+        key: child.key,
+      };
+      if (childJSON.anon === "no") {
+        postObject.author = '/Users/' + childJSON.author;
+      } else {
+        postObject.author = "Anonymous";
+      }
+      if(view.allLoadedReplies[child.key] !== 1) {
+        // if(refresh) {
+        //   view.items.splice(currInsertIdx,0,postObject);
+        //   currInsertIdx += 1;
+        //   view.allLoadedPosts[child.key] = 1;
+        // } else if (view.items[view.items.length - 1].key !== child.key) {
 
+        view.items.push(postObject);
+        counter += 1;
+        view.allLoadedReplies[child.key] = 1;
+        // }
+      }
+    });
+    view.update(view);
+    return counter;
   }
 
-  listenForReplies(itemsRef,refresh) {
+  listenForReplies() {
+    if(!this.loading) {
+      var firebaseApp = firebase.apps[0];
+      this.loading = true;
+      var view = this;
+      var postKey = this.props.navigation.state.params.data.key;
+      console.log("Reached the end");
+      firebaseApp.database().ref('/replies/'+postKey).on('value', (snap) => {
+        view.processData(snap,view,postKey);
+      });
+    }
+  }
+
+  determineRef(postKey) {
+    var firebaseApp = firebase.apps[0];
+    console.log("Hiiiiiii");
+    console.log(this.items[this.items.length - 1]);
+    if (this.items.length === 0) {
+      return firebaseApp.database().ref('/replies/'+postKey).orderByChild("TimeStamp").limitToFirst(10);
+    } else {
+      return firebaseApp.database().ref('/replies/'+postKey).orderByChild("TimeStamp").startAt(this.items[this.items.length - 1].timeStamp).limitToFirst(10);
+    }
+  }
+
+  fetchMoreReplies() {
     if(!this.loading) {
       this.loading = true;
       var view = this;
-      var firebaseApp = firebase.apps[0];
       var postKey = this.props.navigation.state.params.data.key;
       var repliesRef = this.determineRef(postKey);
-      firebaseApp.database().ref('/replies/'+postKey).on('child_added', (child) => {
-
-          var childJSON = child.val();
-          var body = '/repliesBodies/' + postKey + '/' + childJSON.body;
-          var postObject = {
-            body: body,
-            long: childJSON.long,
-            timeStamp : childJSON.TimeStamp,
-            anon: childJSON.anon,
-            key: child.key,
-          };
-          if (childJSON.anon === "no") {
-            postObject.author = '/Users/' + childJSON.author;
-          } else {
-            postObject.author = "Anonymous";
-          }
-          if(view.allLoadedReplies[child.key] !== 1) {
-            // if(refresh) {
-            //   view.items.splice(currInsertIdx,0,postObject);
-            //   currInsertIdx += 1;
-            //   view.allLoadedPosts[child.key] = 1;
-            // } else if (view.items[view.items.length - 1].key !== child.key) {
-
-            view.items.push(postObject);
-            view.allLoadedReplies[child.key] = 1;
-            // }
-          }
-          view.update(view, refresh);
-        });
+      console.log("Reached the end");
+      repliesRef.once('value', (snap) => {
+        if (view.processData(snap, view, postKey) === 0) {
+          view.loading = false;
+          view.listenForReplies();
+        }
+        view.loading = false;
+      });
     }
   }
 
@@ -155,13 +185,12 @@ export default class DetailedPost extends Component {
       return (currentReplies || 0) + 1;
     });
     replies.child(postKey).child(replyKey).set(replyDetails, function () {
-      view.listenForReplies();
+      view.fetchMoreReplies();
     });
     this.setState({text: '', height: 0});
   }
 
   _renderItem(item) {
-    console.log("Found a child with body", item.body);
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ReplyItem item={item} firebase={firebase}/>
@@ -187,6 +216,7 @@ export default class DetailedPost extends Component {
               renderRow={this._renderItem.bind(this)}
               enableEmptySections={true}
               contentContainerStyle={styles.listview}
+              onEndReached={this.fetchMoreReplies.bind(this)}
             />
             </ScrollView>
           <KeyboardAvoidingView contentContainerStyle={styles.writeAReply} behavior={"padding"}>
@@ -197,7 +227,7 @@ export default class DetailedPost extends Component {
                   multiline={true}
 
                   onChangeText={(text) => this.setState({text:text})}
-                  onContentSizeChange={(size) => this.setState({height: size.nativeEvent.contentSize.height})}
+                  onContentSizeChange={(size) => this.setState({height: size.nativeEvent.contentSize.height+10})}
                   style={[styles.textInput, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}
                   value={this.state.text}
                   placeholder={"Write a reply..."}
@@ -245,7 +275,7 @@ const styles = StyleSheet.create({
     height: 28,
     paddingLeft: 8,
     paddingRight: 8,
-    paddingTop: 2,
+    paddingTop: 5,
     paddingBottom: 5,
     flex: 1,
     fontFamily: 'Helvetica Neue',

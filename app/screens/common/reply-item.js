@@ -44,7 +44,6 @@ export default class ReplyItem extends Component {
       this._mounted = true;
       var view = this;
       this.calculateTime(this.state.timeStamp);
-      console.log(this.props.item.body);
       this.props.firebase.database().ref(this.props.item.body).once('value').then(function(snapshot) {
           view.setState({body : snapshot.val().body});
       });

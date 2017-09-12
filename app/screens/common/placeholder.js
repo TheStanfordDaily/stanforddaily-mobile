@@ -58,7 +58,7 @@ export default class Placeholder extends Component {
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
                 width={75}
-                height={8}
+                height={7}
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
@@ -68,7 +68,7 @@ export default class Placeholder extends Component {
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
                 style={{ marginTop: 15 }}
                 width={75}
-                height={8}
+                height={7}
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
@@ -78,7 +78,7 @@ export default class Placeholder extends Component {
             <View style={styles.title}>
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={15}
+                height={13}
                 width={width-28}
                 visible={false}
                 autoRun={true}
@@ -89,7 +89,7 @@ export default class Placeholder extends Component {
             <View style={styles.title}>
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={15}
+                height={13}
                 width={width-100}
                 visible={false}
                 autoRun={true}
@@ -100,7 +100,7 @@ export default class Placeholder extends Component {
             <View style={[styles.description,{marginTop: 8}]}>
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={8}
+                height={7}
                 width={width-28}
                 visible={false}
                 autoRun={true}
@@ -111,7 +111,7 @@ export default class Placeholder extends Component {
             <View style={styles.description}>
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={8}
+                height={7}
                 width={width-28}
                 visible={false}
                 autoRun={true}
@@ -122,7 +122,7 @@ export default class Placeholder extends Component {
             <View style={styles.description}>
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={8}
+                height={7}
                 width={width-28}
                 visible={false}
                 autoRun={true}

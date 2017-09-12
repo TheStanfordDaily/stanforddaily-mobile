@@ -45,7 +45,6 @@ export default class Chatter extends Component {
     this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged: function(row1, row2) {
-          console.log(row1.key + " Compared to " + row2.key);
           return row1.key !== row2.key;
         },
       }),
@@ -149,7 +148,6 @@ export default class Chatter extends Component {
   }
 
   loadMore() {
-    console.log("loadingmore")
     this.listenForItems(firebaseApp.database().ref().child('posts'), false);
   }
 
@@ -264,7 +262,6 @@ export default class Chatter extends Component {
   }
 
   goToPost(data, author) {
-    console.log(data);
     this.props.navigation.navigate("DetailedPost", {
       ...{data: data, currUser: currUser, name: author, visible: false},
     });
