@@ -145,6 +145,26 @@ var styles = StyleSheet.create({
     color: '#A5A5A5',
     fontSize: 14,
     fontFamily: 'Helvetica Neue',
+  },
+  profileReplies: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 6.5
+  },
+  deletePost: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 6.5,
+    borderLeftColor: "#A5A5A5",
+    borderLeftWidth: 1
+  },
+  profileOptionsText: {
+    marginLeft: 8,
+    color: "#A5A5A5"
   }
 })
 

@@ -6,6 +6,7 @@ const firebase = require('firebase');
 
 const {
   StyleSheet,
+  ScrollView,
   Text,
   View,
   TouchableHighlight,
@@ -22,9 +23,10 @@ const {
   Keyboard
 } = ReactNative;
 
-const {width, height} = Dimensions.get('window');
-
+import Icon from 'react-native-vector-icons/Ionicons';
 import {NavigationActions} from 'react-navigation';
+
+const {width, height} = Dimensions.get('window');
 
 export default class SignIn extends Component {
 
@@ -68,7 +70,7 @@ export default class SignIn extends Component {
 
   prepareSignUpCard() {
     this.setState({
-      height: 320,
+      height: 365,
       currProcess: 'signUp',
       signUpButtonLabel: 'Sign Up'
     });
@@ -84,6 +86,38 @@ export default class SignIn extends Component {
       toValue: width*2,
       duration: 400
     }).start(view.prepareSignUpCard.bind(view));
+  }
+
+  prepareSignUpCard() {
+    this.setState({
+      height: 365,
+      currProcess: 'signUp',
+      signUpButtonLabel: 'Sign Up'
+    });
+    Animated.timing(this.state.marginLeft, {
+      toValue: 0,
+      duration: 400
+    }).start();
+  }
+
+  backToSignIn() {
+    var view = this;
+    Animated.timing(this.state.marginLeft, {
+      toValue: width*2,
+      duration: 400
+    }).start(view.prepareSignInCard.bind(view));
+  }
+
+  prepareSignInCard() {
+    this.setState({
+      height: 303,
+      currProcess: 'signIn',
+      signUpButtonLabel: 'Not a user? Sign Up'
+    });
+    Animated.timing(this.state.marginLeft, {
+      toValue: 0,
+      duration: 400
+    }).start();
   }
 
   actuallySignUp() {
@@ -108,9 +142,6 @@ export default class SignIn extends Component {
             // error
             console.log('error when verifying email' + error);
           });
-          // scope.addUserToDatabase(user);
-          //
-          // load();
           user.updateProfile({displayName: scope.state.displayName});
       }).catch(function(error) {
           var errorCode = error.code;
@@ -138,7 +169,7 @@ export default class SignIn extends Component {
   render() {
     const {marginRight,marginLeft,height} = this.state;
     return (
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <StatusBar
           hidden={true}
         />
@@ -149,7 +180,7 @@ export default class SignIn extends Component {
         </View>
         <KeyboardAvoidingView style={styles.cardWrapper} behavior={'padding'}>
           <Animated.View style={[styles.card, {marginRight,marginLeft,height}]}>
-              <Image style={styles.logo} source={require('../media/Daily.png')}/>
+            <Image style={styles.logo} source={require('../media/Daily.png')}/>
             <View style={styles.textWrapper}>
               <Text style={styles.label}>Stanford Email</Text>
               <TextInput
@@ -198,9 +229,17 @@ export default class SignIn extends Component {
               underlayColor='#4e4e4e'>
                 <Text style={styles.buttonText}>{this.state.signUpButtonLabel}</Text>
             </TouchableHighlight>
+            {this.state.currProcess === 'signUp' &&
+              <TouchableHighlight
+                style={styles.signUpButton}
+                onPress={this.backToSignIn.bind(this)}
+                underlayColor='#4e4e4e'>
+                  <Text style={styles.buttonText}>Back To Sign In</Text>
+              </TouchableHighlight>
+            }
           </Animated.View>
         </KeyboardAvoidingView>
-      </View>
+      </ScrollView>
     );
   }
 
@@ -239,7 +278,8 @@ const styles= StyleSheet.create({
     width: 42,
     height: 37.8,
     tintColor: '#94171C',
-    marginTop: 24
+    marginTop: 24,
+    marginRight: 20
   },
   textWrapper: {
     width: '100%',

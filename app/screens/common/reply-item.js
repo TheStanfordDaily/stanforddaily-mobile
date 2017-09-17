@@ -26,7 +26,9 @@ export default class ReplyItem extends Component {
         this._mounted = false;
         this.state = {
           body: '',
-          preview: ''
+          preview: '',
+          imageExists: false,
+          imageURI: ""
         }
     }
 
@@ -48,9 +50,16 @@ export default class ReplyItem extends Component {
           view.setState({body : snapshot.val().body});
       });
       if(this.state.anon === "no") {
-        this.props.firebase.database().ref(this.props.item.author).once('value').then(function(snapshot) {
-            view.setState({author : snapshot.val().name});
+        this.props.firebase.database().ref("/Users/"+this.props.item.author).once('value').then(function(snapshot) {
+            view.setState({author : snapshot.val().name, userId: view.props.item.author});
         });
+        firebase.storage().ref('profile_pictures').child("thumb_"+view.props.item.author).getDownloadURL()
+          .then(function(url) {
+            view.setState({imageURI: url, imageExists: true});
+          })
+          .catch(function(error){
+
+          });
       } else {
         this.setState({author: "Anonymous"})
       }
@@ -78,6 +87,11 @@ export default class ReplyItem extends Component {
       }
     }
 
+    toProfile() {
+      // console.log(this.state);
+      if (this.state.userId) this.props.goToProfile(this.state.userId);
+    }
+
     render() {
       this.state.preview = this.state.body;
       if (this.state.long === "yes") {
@@ -87,12 +101,19 @@ export default class ReplyItem extends Component {
 
       return (
           <View style={styles.container}>
-            <Image style={styles.authorImage} source={require('../../media/abood.jpg')}/>
-            <View style={styles.post}>
-              <View style={styles.postInfo}>
-                <Text style={styles.authorName}>{this.state.author}</Text>
-                <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
+            <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+              <View>
+                {!this.state.imageExists && <Image style={styles.authorImage} source={require('../../media/anon_small.png')}/>}
+                {this.state.imageExists && <Image style={styles.authorImage} source={{uri: this.state.imageURI}}/>}
               </View>
+            </TouchableWithoutFeedback>
+            <View style={styles.post}>
+              <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+                <View style={styles.postInfo}>
+                  <Text style={styles.authorName}>{this.state.author}</Text>
+                  <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
+                </View>
+              </TouchableWithoutFeedback>
               <View style={styles.message}>
                 <Text style={styles.messageText}>
                   {this.state.collapsed && this.state.preview + " "}

@@ -35,7 +35,7 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 var currUser = "";
-var currUserImage = "../media/abood.jpg";
+var currUserThumbnail = "";
 import _ from 'lodash';
 
 export default class Chatter extends Component {
@@ -50,20 +50,31 @@ export default class Chatter extends Component {
       }),
       userStatus: 'none',
       refreshing: false,
+      imageURI: "",
+      imageExists: false
     };
-    this.itemsRef = this.getRef().child('posts');
+    this.itemsRef = firebaseApp.database().ref().child('posts');
     this.items = ["newPost"];
     this.currNum = 0;
     this.callbackNum = 0;
     this.error = false;
     this.loading = false;
     this.goToPost = this.goToPost.bind(this);
+    this.goToProfile = this.goToProfile.bind(this);
+    this.startNewPost = this.startNewPost.bind(this);
     this.listenForItems = _.debounce(this.listenForItems, 150);
     this.allLoadedPosts = {};
   }
 
-  getRef() {
-    return firebaseApp.database().ref();
+  goToProfile(userId) {
+    console.log(userId);
+    if (userId === currUser || userId === null) {
+      console.log("Now looking at currUser", currUser);
+      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: currUser, myProfile: true}});
+    } else {
+      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: userId, myProfile: false}});
+    }
+    console.log(this.loading);
   }
 
   update(view) {
@@ -111,7 +122,7 @@ export default class Chatter extends Component {
             sortDate: childJSON.sortDate,
           };
           if (childJSON.anon === "no") {
-            postObject.author = '/Users/' + childJSON.author;
+            postObject.author = childJSON.author;
           } else {
             postObject.author = "Anonymous";
           }
@@ -184,7 +195,7 @@ export default class Chatter extends Component {
   loadTheView() {
     return (
       <View style={styles.container}>
-        <Header title={'Chatter'} ref='Header'/>
+        <Header title={'Chatter'} toProfile={this.goToProfile} ref='Header'/>
         <ListView
           removeClippedSubviews={false}
           refreshControl={
@@ -219,11 +230,27 @@ export default class Chatter extends Component {
       usersRef.child(newUser.uid).once('value', function(snapshot) {
         if (snapshot.val() === null) {
           var key = newUser.uid;
-          var user = {name: newUser.displayName, pic: 'lolwut'};
+          var user = {name: newUser.displayName};
           usersRef.child(key).set(user, function () {
           });
         }
       });
+  }
+
+  listenForDeletes() {
+    var view = this;
+    firebaseApp.database().ref().child('posts').on('child_removed', function(data) {
+      var key = data.key;
+      if (view.allLoadedPosts[key]) {
+        for(var i = view.items.length - 1; i >= 0; i--) {
+          if (view.items[i].key === key) {
+            view.items.splice(i, 1);
+            view.update(view);
+            break;
+          }
+        }
+      }
+    });
   }
 
   makeSureUserSignedIn() {
@@ -236,11 +263,13 @@ export default class Chatter extends Component {
               view.addUserToDatabase(user);
               view.setState({userStatus : "verified"});
               view.listenForItems(firebaseApp.database().ref().child('posts'), true);
+              view.listenForDeletes();
             } else {
               view.setState({userStatus : "signedIn"});
             }
         });
       } else {
+        view.setState({userStatus : "none"});
         view.props.navigation.navigate("SignIn", {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
       }
     });
@@ -255,7 +284,7 @@ export default class Chatter extends Component {
   startNewPost() {
     // console.log("Navigate to new post");
     // this.items = [];
-    var dataToPass = {user: currUser, image: currUserImage, update: this.updateAfterComingBack.bind(this)};
+    var dataToPass = {user: currUser, image: currUserThumbnail, update: this.updateAfterComingBack.bind(this)};
     this.props.navigation.navigate("NewPost", {
       ...dataToPass,
     });
@@ -268,17 +297,52 @@ export default class Chatter extends Component {
   }
   _renderItem(item) {
     if(item !== "newPost") {
-      return <PostItem key={item.key} item={item} firebase={firebase} currUser={currUser} goToPost={this.goToPost} context={'list'}/>
+      return <PostItem
+              key={item.key}
+              item={item}
+              firebase={firebase}
+              currUser={currUser}
+              goToPost={this.goToPost}
+              goToProfile={this.goToProfile}
+              context={'list'}
+              />
     } else {
-      return (
-        <TouchableWithoutFeedback key={"NewPost"} onPress={this.startNewPost.bind(this)}>
-          <View style={styles.newPost}>
-            <Image style={styles.userImage} source={require('../media/abood.jpg')}/>
-            <Text style={styles.placeHolder}>Share how was campus today…</Text>
-          </View>
-        </TouchableWithoutFeedback>
-      );
+
+      return <NewPostItem startNewPost={this.startNewPost}/>;
     }
   }
 
+}
+
+class NewPostItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      imageExists: false,
+      imageURI: ""
+    };
+  }
+
+  componentWillMount() {
+    var view = this;
+    firebase.storage().ref('profile_pictures').child("thumb_"+currUser).getDownloadURL()
+      .then(function(url) {
+        currUserThumbnail = url;
+        view.setState({imageURI: url, imageExists: true});
+      }).catch(function(error){
+
+      });
+  }
+
+  render () {
+    return (
+      <TouchableWithoutFeedback onPress={() => this.props.startNewPost()}>
+        <View style={styles.newPost}>
+          {!this.state.imageExists && <Image style={styles.userImage} source={require('../media/anon_small.png')}/>}
+          {this.state.imageExists && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
+          <Text style={styles.placeHolder}>Share how was campus today…</Text>
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
 }

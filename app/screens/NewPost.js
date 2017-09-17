@@ -26,12 +26,25 @@ export default class NewPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      anon: false
+      anon: false,
+      imageExists: false,
+      imageURI: ''
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    if (this.props.navigation.state.params.image !== "") {
+      this.setState({imageExists: true, imageURI: this.props.navigation.state.params.image})
+    } else {
+      var view = this;
+      firebase.storage().ref('profile_pictures').child("thumb_"+this.props.navigation.state.params.user).getDownloadURL()
+        .then(function(url) {
+          currUserThumbnail = url;
+          view.setState({imageURI: url, imageExists: true});
+        }).catch(function(error){
 
+        });
+    }
   }
 
   createPost() {
@@ -61,7 +74,6 @@ export default class NewPost extends Component {
       votes: 0,
       score: 0
     };
-    userPosts.child('/posts/'+key).set({post: key});
 
     var view = this;
     posts.child(key).set(postDetails, function () {
@@ -69,6 +81,8 @@ export default class NewPost extends Component {
           const timestamp = snap.val().TimeStamp;
           var sortDate = timestamp * -1;
           postDetails.sortDate = sortDate;
+          userPosts.child('/posts/'+key).set({post: key, sortDate: sortDate});
+          if (anonString === 'no') userPosts.child('/publicPosts/'+key).set({post: key, sortDate: sortDate});
           posts.child(key).set(postDetails, function () {
             view.props.navigation.state.params.update();
             view.props.navigation.dispatch(NavigationActions.back());
@@ -100,7 +114,8 @@ export default class NewPost extends Component {
           hidden={true}
         />
         <View style={styles.header}>
-          <Image style={styles.userImage} source={require('../media/abood.jpg')}/>
+          {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={require('../media/anon_small.png')}/>}
+          {(this.state.imageExists && !this.state.anon) && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
           <Text style={styles.title}>Write an update</Text>
           <TouchableWithoutFeedback onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
           <Image style={styles.close} source={require('../media/Close.png')}/>

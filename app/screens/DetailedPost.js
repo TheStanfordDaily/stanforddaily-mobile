@@ -49,14 +49,36 @@ export default class DetailedPost extends Component {
     this.allLoadedReplies = {};
     this.items = [];
     this.goBack = this.goBack.bind(this);
+    this.goToProfile = this.goToProfile.bind(this);
+  }
+
+  goToProfile(userId) {
+    console.log(userId);
+    var currUser = this.props.navigation.state.params.currUser;
+    if (userId === currUser || userId === null) {
+      console.log("Now looking at currUser", currUser);
+      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: currUser, myProfile: true}});
+    } else {
+      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: userId, myProfile: false}});
+    }
+    console.log(this.loading);
   }
 
   goBack() {
     this.props.navigation.goBack();
   }
 
+  listenForDeletes() {
+    var view = this;
+    var firebaseApp = firebase.apps[0];
+    firebaseApp.database().ref().child('posts').on('child_removed', function(data) {
+      if (data.key === view.props.navigation.state.params.data.key) view.goBack();
+    });
+  }
+
   componentDidMount() {
     this.fetchMoreReplies();
+    this.listenForDeletes();
   }
 
   componentWillUnmount() {
@@ -86,21 +108,14 @@ export default class DetailedPost extends Component {
         key: child.key,
       };
       if (childJSON.anon === "no") {
-        postObject.author = '/Users/' + childJSON.author;
+        postObject.author = childJSON.author;
       } else {
         postObject.author = "Anonymous";
       }
       if(view.allLoadedReplies[child.key] !== 1) {
-        // if(refresh) {
-        //   view.items.splice(currInsertIdx,0,postObject);
-        //   currInsertIdx += 1;
-        //   view.allLoadedPosts[child.key] = 1;
-        // } else if (view.items[view.items.length - 1].key !== child.key) {
-
         view.items.push(postObject);
         counter += 1;
         view.allLoadedReplies[child.key] = 1;
-        // }
       }
     });
     view.update(view);
@@ -193,7 +208,7 @@ export default class DetailedPost extends Component {
   _renderItem(item) {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ReplyItem item={item} firebase={firebase}/>
+        <ReplyItem item={item} goToProfile={this.goToProfile} firebase={firebase}/>
       </TouchableWithoutFeedback>
     );
   }
@@ -205,7 +220,13 @@ export default class DetailedPost extends Component {
           <ScrollView>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={styles.mainView}>
-              <PostItem item={this.props.navigation.state.params.data} currUser={this.props.navigation.state.params.currUser} context={'DetailedPost'} firebase={firebase}/>
+              <PostItem
+                item={this.props.navigation.state.params.data}
+                currUser={this.props.navigation.state.params.currUser}
+                goToProfile={this.goToProfile}
+                context={'DetailedPost'}
+                firebase={firebase}
+              />
             </View>
             </TouchableWithoutFeedback>
             <ListView

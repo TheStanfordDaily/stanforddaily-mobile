@@ -9,6 +9,7 @@ import Chatter from '../screens/Chatter';
 import NewPost from '../screens/NewPost';
 import SignIn from '../screens/SignIn';
 import DetailedPost from '../screens/DetailedPost';
+import Profile from '../screens/Profile';
 
 export const NewsStack = StackNavigator({
   Headlines: {
@@ -43,7 +44,13 @@ export const ChatterStack = StackNavigator({
       headerTintColor: 'white',
       title: navigation.state.params.name + "'s Post",
     }),
-  }
+  },
+  Profile: {
+    screen: Profile,
+    navigationOptions: {
+      title: 'Profile',
+    },
+  },
 }, {
   headerMode: 'none',
 });

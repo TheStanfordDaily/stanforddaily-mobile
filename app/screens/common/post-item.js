@@ -23,17 +23,84 @@
 export default class PostItem extends Component {
     constructor() {
         super();
+        this.state = {
+          body: "",
+          repliesCount: -1,
+          votes: -1,
+          long: "no",
+          timeStamp : -1,
+          anon: "yes",
+          key: "",
+          sortDate: -1,
+          author: "",
+          userVote: -2,
+          hide: false,
+          imageExists: false,
+          imageURI: ""
+        }
         this._mounted = false;
+    }
+
+    getData() {
+      var firebaseApp = firebase.apps[0];
+      var view = this;
+      firebaseApp.database().ref().child('posts').child(this.propsCopy.item.key).once('value').then(function(snap){
+          var childJSON = snap.val();
+          // console.log("JSON", childJSON);
+          var body = '/postsBodies/' + childJSON.body;
+          var author = "Anonymous";
+          if (childJSON.anon === "no") {
+            author = childJSON.author;
+          }
+          var userVote = view.currUserVote(childJSON);
+          var postObject = {
+            body: body,
+            repliesCount: childJSON.repliesCount,
+            votes: childJSON.votes,
+            long: childJSON.long,
+            timeStamp : childJSON.TimeStamp,
+            anon: childJSON.anon,
+            key: view.propsCopy.item.key,
+            sortDate: childJSON.sortDate,
+            author: author,
+            userVote: userVote,
+          };
+          view.propsCopy.item.body = body;
+          view.propsCopy.item.repliesCount = childJSON.repliesCount;
+          view.propsCopy.item.votes = childJSON.votes;
+          view.propsCopy.item.long = childJSON.long;
+          view.propsCopy.item.timeStamp = childJSON.TimeStamp;
+          view.propsCopy.item.anon = childJSON.anon;
+          view.propsCopy.item.key = view.propsCopy.item.key;
+          view.propsCopy.item.sortDate = childJSON.sortDate;
+          view.propsCopy.item.author = author;
+          view.propsCopy.item.userVote = userVote;
+          view.setState({
+            repliesCount: childJSON.repliesCount,
+            votes: childJSON.votes,
+            long: childJSON.long,
+            timeStamp : childJSON.TimeStamp,
+            anon: childJSON.anon,
+            key: view.propsCopy.item.key,
+            sortDate: childJSON.sortDate,
+            userVote: userVote
+          });
+          view.componentDidMount();
+      });
     }
 
     componentWillMount() {
       this._mounted = true;
-      this.setState(this.props.item);
-      var view = this;
-      setInterval(function(){
-        view.calculateTime(view.props.item.timeStamp);
-      },60000);
-      this.setState({body: "", author: ""});
+      this.propsCopy = this.props;
+      if(this.propsCopy.item.body === undefined) this.getData();
+      else {
+        this.setState(this.propsCopy.item);
+        var view = this;
+        setInterval(function(){
+          view.calculateTime(view.propsCopy.item.timeStamp);
+        },60000);
+        this.setState({body: "", author: ""});
+      }
     }
 
     currUserVote(childJSON, currUser) {
@@ -46,32 +113,46 @@ export default class PostItem extends Component {
     }
 
     componentDidMount() {
-      console.log("mounted");
       this._mounted = true;
-      var view = this;
-      this.calculateTime(this.state.timeStamp);
-      this.props.firebase.database().ref(this.props.item.body).once('value').then(function(snapshot) {
-          view.setState({body : snapshot.val().body});
-      });
-      if(this.state.anon === "no") {
-        this.props.firebase.database().ref(this.props.item.author).once('value').then(function(snapshot) {
-            view.setState({author : snapshot.val().name});
+      if (this.propsCopy.item.body !== undefined) {
+        console.log("I'm here");
+        console.log(this.propsCopy.item);
+        var view = this;
+        this.calculateTime(this.state.timeStamp);
+        firebase.database().ref(this.propsCopy.item.body).once('value').then(function(snapshot) {
+            view.setState({body : snapshot.val().body});
+        });
+        if(this.state.anon === "no") {
+          firebase.database().ref("/Users/"+this.propsCopy.item.author).once('value').then(function(snapshot) {
+              view.setState({author : snapshot.val().name, userId: view.propsCopy.item.author});
+          });
+          firebase.storage().ref('profile_pictures').child("thumb_"+view.propsCopy.item.author).getDownloadURL()
+            .then(function(url) {
+              view.setState({imageURI: url, imageExists: true});
+            })
+            .catch(function(error){
+
+            });
+        } else {
+          this.setState({author: "Anonymous"})
+        }
+        if(this.state.long === "yes" && (this.propsCopy.context === 'list' || this.propsCopy.context === 'profile')) {
+          this.setState({collapsed : true});
+        } else {
+          this.setState({collapsed : false});
+        }
+        firebase.database().ref("/posts/"+this.propsCopy.item.key).on('value', function(snapshot) {
+          if(snapshot.val() !== null) {
+            view.setState({
+              repliesCount: snapshot.val().repliesCount,
+              votes: snapshot.val().votes,
+              userVote: view.currUserVote(snapshot.val(), view.propsCopy.currUser),
+            });
+          }
         });
       } else {
-        this.setState({author: "Anonymous"})
+        console.log(this.propsCopy.item.key);
       }
-      if(this.state.long === "yes" && this.props.context === 'list') {
-        this.setState({collapsed : true});
-      } else {
-        this.setState({collapsed : false});
-      }
-      this.props.firebase.database().ref("/posts/"+this.props.item.key).on('value', function(snapshot) {
-          view.setState({
-            repliesCount: snapshot.val().repliesCount,
-            votes: snapshot.val().votes,
-            userVote: view.currUserVote(snapshot.val(), view.props.currUser),
-          });
-      });
     }
 
     componentWillUnmount() {
@@ -98,28 +179,27 @@ export default class PostItem extends Component {
     }
 
     changeVote(newVote) {
-      var refToVotes = this.props.firebase.database().ref("/posts/"+this.props.item.key+"/votes");
-      var refToVoters = this.props.firebase.database().ref("/posts/"+this.props.item.key+"/voters");
+      var refToVotes = firebase.database().ref("/posts/"+this.propsCopy.item.key+"/votes");
+      var refToVoters = firebase.database().ref("/posts/"+this.propsCopy.item.key+"/voters");
       var view = this;
       if(this.state.userVote === newVote) {
         this.setState({userVote : 0});
         refToVotes.transaction(function(currentVotes) {
           return (currentVotes || 0) - newVote;
         });
-        this.props.firebase.database().ref("/posts/"+this.props.item.key+"/voters/"+this.props.currUser).remove();
+        this.propsCopy.firebase.database().ref("/posts/"+this.propsCopy.item.key+"/voters/"+this.propsCopy.currUser).remove();
       } else {
         refToVotes.transaction(function(currentVotes) {
           return (currentVotes || 0) + (newVote-view.state.userVote);
         });
-        this.props.firebase.database().ref("/posts/"+this.props.item.key+"/voters/"+this.props.currUser).set(newVote);
+        this.propsCopy.firebase.database().ref("/posts/"+this.propsCopy.item.key+"/voters/"+this.propsCopy.currUser).set(newVote);
         this.setState({userVote : newVote});
       }
     }
 
     containerStyle(context) {
       var style = styles.li;
-      console.log(context);
-      if(context === 'list') {
+      if(context === 'list' || context === 'profile') {
         return styles.li;
       } else {
         return styles.detailed;
@@ -131,26 +211,45 @@ export default class PostItem extends Component {
       this.setState({timeStamp: time});
     }
 
+    toProfile() {
+      // console.log(this.state);
+      if (this.state.userId) this.props.goToProfile(this.state.userId);
+    }
+
+    deletePost() {
+      this.props.deletePost(this.props.item.key);
+      this.props.handleDeletion(this.props.item.key);
+      this.setState({hide: true});
+    }
+
     render() {
-      if(this.props.context === "list") {
+      if(this.propsCopy.context === "list" || this.propsCopy.context === "profile") {
         this.state.preview = this.state.body;
         if (this.state.long === "yes") {
           this.state.preview = this.state.preview.substring(0, 180);
           this.state.preview += "..."
         }
       }
+      if (this.state.hide) return null;
 
       return (
-        <TouchableWithoutFeedback onPress={() => this.props.goToPost !== undefined ? this.props.goToPost(this.props.item, this.state.author) : console.log('none')}>
-          <View style={this.containerStyle(this.props.context)}>
+        <TouchableWithoutFeedback onPress={() => this.propsCopy.goToPost !== undefined ? this.propsCopy.goToPost(this.propsCopy.item, this.state.author) : console.log('none')}>
+          <View style={this.containerStyle(this.propsCopy.context)}>
             <View style={styles.post}>
               <View style={styles.content}>
                 <View style={styles.author}>
-                  <Image style={styles.authorImage} source={require('../../media/abood.jpg')}/>
-                  <View style={styles.postInfo}>
-                    <Text style={styles.authorName}>{this.state.author}</Text>
-                    <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
-                  </View>
+                  <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+                    <View>
+                      {!this.state.imageExists && <Image style={styles.authorImage} source={require('../../media/anon_small.png')}/>}
+                      {this.state.imageExists && <Image style={styles.authorImage} source={{uri: this.state.imageURI}}/>}
+                    </View>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+                    <View style={styles.postInfo}>
+                      <Text style={styles.authorName}>{this.state.author}</Text>
+                      <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
                 </View>
                 <View style={styles.message}>
                   <Text style={styles.messageText}>
@@ -178,16 +277,31 @@ export default class PostItem extends Component {
                 </TouchableWithoutFeedback>
               </View>
             </View>
-            {this.props.context === 'list' && (
-            <View style={styles.reply}>
-              <View style={styles.writeAReply}>
-                <Image style={{width: 19.5, height:17.3}} source={require('../../media/Messages.png')}/>
-                <Text style={styles.replyPlaceHolder}>Write a reply…</Text>
+            {this.propsCopy.context === 'list' && (
+              <View style={styles.reply}>
+                <View style={styles.writeAReply}>
+                  <Image style={{width: 19.5, height:17.3}} source={require('../../media/Messages.png')}/>
+                  <Text style={styles.replyPlaceHolder}>Write a reply…</Text>
+                </View>
+                <View style={styles.repliesCounter}>
+                  <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>
+                </View>
               </View>
-              <View style={styles.repliesCounter}>
-                <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>
+            )}
+            {this.propsCopy.context === 'profile' && (
+              <View style={styles.reply}>
+                <View style={styles.profileReplies}>
+                  <Image style={{width: 19.5, height:17.3}} source={require('../../media/Messages.png')}/>
+                  <Text style={styles.profileOptionsText}>{this.state.repliesCount + " Replies"}</Text>
+                </View>
+                <TouchableWithoutFeedback onPress={this.deletePost.bind(this)}>
+                  <View style={styles.deletePost}>
+                    <Image style={{width: 17, height:22, marginTop: 3.5, marginBottom: 3, tintColor: "#A5A5A5"}} source={require('../../media/delete.png')}/>
+                    <Text style={styles.profileOptionsText}>Delete Post</Text>
+                  </View>
+                </TouchableWithoutFeedback>
               </View>
-            </View>)}
+            )}
           </View>
           </TouchableWithoutFeedback>
       );
