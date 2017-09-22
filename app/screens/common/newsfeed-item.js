@@ -68,13 +68,23 @@ export default class NewsFeedItem extends Component {
             featuredMedia = featuredMediaData.source_url;
           }
         }
+        var cut = 130;
+        if (description.length > cut) {
+          var cut = cut;
+          while(cut < 150) {
+            if(description.charAt(cut) === ' ') {
+              break;
+            }
+            cut += 1;
+          }
+        }
         if(this._mounted) {
           this.setState({
             author: author,
             date: date,
             title: title,
             featuredMedia: featuredMedia,
-            description: description,
+            description: description.substring(0,cut)+'...',
             body: this.props.data.postObj.content.rendered,
             loaded: true
           });
@@ -148,7 +158,7 @@ const styles = StyleSheet.create({
       fontFamily: 'PT Serif',
       fontSize: 32,
       lineHeight: 35,
-      marginTop: 2,
+      marginTop: 4,
       marginLeft: 14,
       marginRight: 14,
     },

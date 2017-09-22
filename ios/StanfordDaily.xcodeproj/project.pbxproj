@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -57,9 +56,9 @@
 		D7313A9233784943B8B9369E /* PT_Serif-Web-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94B90E6C9E13453B97710CA9 /* PT_Serif-Web-BoldItalic.ttf */; };
 		DAFB552A08C517528FF37120 /* libPods-StanfordDailyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35F8FC953395E4C435023602 /* libPods-StanfordDailyTests.a */; };
 		E5719564454B4DA4B5554757 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD1DDF754B8E48899575308E /* Foundation.ttf */; };
-		F2B9DF30ACDE493C90FCE3E0 /* century-regular-5980fa6798c2a.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F32143FE49024F7BACB405BB /* century-regular-5980fa6798c2a.ttf */; };
 		F430C21B732B0ABC49D7CA7E /* libPods-StanfordDaily-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E53BB3A5952FA75042E09E /* libPods-StanfordDaily-tvOSTests.a */; };
 		FDB9C7BA8AC147818486A270 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C33CB11E3143E49AF8944B /* libBVLinearGradient.a */; };
+		23CAFA6A0C1E4AC98FC0E3E4 /* CENTURY.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 841BC36CADA54D7385345552 /* CENTURY.TTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -354,6 +353,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = StanfordDaily/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		21EFD3F580BE443297E9B4C3 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
+		293D045481A04229A2CFF8BB /* Century.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Century.ttf; path = ../app/assets/fonts/Century/Century.ttf; sourceTree = "<group>"; };
 		29BBD50B80DF4C8C928D260D /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		2BE99D71169E2CC9882C2E12 /* libPods-StanfordDaily-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StanfordDaily-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* StanfordDaily-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StanfordDaily-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -392,6 +392,7 @@
 		F7C33CB11E3143E49AF8944B /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		FA47697A2EC4438BB98013E3 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		FA5129F1C34E4543A6F8E260 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
+		841BC36CADA54D7385345552 /* CENTURY.TTF */ = {isa = PBXFileReference; name = "CENTURY.TTF"; path = "../app/assets/fonts/century/CENTURY.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -628,6 +629,8 @@
 				96BE54A67E4046B2BBAAABD7 /* SimpleLineIcons.ttf */,
 				48DFAE89175C4981B2152E89 /* Zocial.ttf */,
 				F32143FE49024F7BACB405BB /* century-regular-5980fa6798c2a.ttf */,
+				293D045481A04229A2CFF8BB /* Century.ttf */,
+				841BC36CADA54D7385345552 /* CENTURY.TTF */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1230,7 +1233,7 @@
 				0F7DA822653D46BEB54C8572 /* Octicons.ttf in Resources */,
 				18A0A25EF4F44C7CAF0DDD6A /* SimpleLineIcons.ttf in Resources */,
 				0E1F975F8BBD4CAE8F590EAE /* Zocial.ttf in Resources */,
-				F2B9DF30ACDE493C90FCE3E0 /* century-regular-5980fa6798c2a.ttf in Resources */,
+				23CAFA6A0C1E4AC98FC0E3E4 /* CENTURY.TTF in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

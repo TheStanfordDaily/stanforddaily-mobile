@@ -78,10 +78,15 @@ export default class Header extends Component {
         return (
             <View ref='container'>
                 <Animated.View style={[styles.container, {height}]}>
-                  {this.props.goBack === undefined && <View style={{width: 20}}/>}
+                  {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={{width: 20}}/>}
                   {this.props.goBack !== undefined && (
                     <Animated.View style={{width:20, marginTop: 13, opacity: this.state.opacity}}>
                       <Icon name="ios-arrow-back" size={34} color="#ffffff" onPress={() => this.props.goBack()}/>
+                    </Animated.View>
+                  )}
+                  {this.props.drawerHandler !== undefined && (
+                    <Animated.View style={{width:20, marginTop: 13, opacity: this.state.opacity}}>
+                      <Icon name="ios-menu" size={34} color="#ffffff" onPress={() => this.props.drawerHandler()}/>
                     </Animated.View>
                   )}
                   {this.props.title === undefined && <Animated.Image source={require('../../media/DailyLogo.png')} style={{width: 243, height: 30, marginTop: 13, opacity: this.state.opacity}}/>}

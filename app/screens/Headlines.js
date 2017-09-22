@@ -8,8 +8,11 @@ import {
     ListView,
     StatusBar,
     ActivityIndicator,
+    NetInfo,
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
-import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
+import Drawer from 'react-native-drawer'
 
 //Components for this app imports
 import Header from './common/header';
@@ -31,25 +34,39 @@ const categories = {
     "Arts & Life": '25',
     "The Grind": '32278'
 };
-const currentPosts = {}; //Hashes current posts to not duplicate
-const data = []; //A list of all current data
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2, sectionHeaderHasChanged: (s1, s2) => s1 !== s2}); //Special variable that works with the list view. Checl listView docs in React Native
-const selectedCategory = 'All'; //The currently selected category
-const currentPage = 1; //The last viewed page
+
+const selectedCategory = 'Featured Headlines'; //The currently selected category
 
 export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedCategory: 'Featured Headlines',
             refreshing: false,
             loading: false,
-            dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())
+            dataSource: new ListView.DataSource({
+              rowHasChanged: function(row1, row2) {
+                return row1.key !== row2.key;
+              },
+            }),
         };
-        this.fetchData(); //Fetches featured headlines and category articles
+        // this.data = []; //A list of all current data
+        this.currPosts = {}; //A hash of all current posts
+        for (var category in categories) {
+          // skip loop if the property is from prototype
+          if (!categories.hasOwnProperty(category)) continue;
+          // this.data.push({category: category, page: 1, posts:[]});
+          this.currPosts[category] = {page: 1, posts:[], hashed:{}};
+        }
+        console.log(this.currPosts);
+        this.fetchDataIsBusy = true; //Used to handle concurrency
+        this.fetchData = _.debounce(this.fetchData, 200); //Sets a gap of at least 200ms between each call to loading more articles
+        this.fetchData(false, (' ' + selectedCategory).slice(1)); //Fetches featured headlines and category articles
         this.loadMore = _.debounce(this.loadMore, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
-        this.fetchDataIsBusy = false; //Used to handle concurrency
+        this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
+
     }
 
     //Given data, it passes it to Post view
@@ -57,86 +74,69 @@ export default class Headlines extends Component {
       this.props.navigation.navigate('Post', { ...data });
     }
 
-    //Converts all fetched data to a map of <Category> => <Article>
-    convertDataToMap() {
-      var dataCategoryMap = {"Featured Headlines":[]}; // Create the blank map
-      dataCategoryMap[selectedCategory] = [];
-      data.forEach(function(dataItem) {
-        if(dataItem.category === "Featured Headlines") {
-          dataCategoryMap["Featured Headlines"].push(dataItem);
-        } else if(dataItem.category === selectedCategory) {
-          dataCategoryMap[selectedCategory].push(dataItem);
-        }
-      });
-      //Puts in some placeholders when needed
-      if(dataCategoryMap[selectedCategory] !== undefined) {
-        dataCategoryMap[selectedCategory].push({category: selectedCategory, postObj: 'placeholder'});
-        dataCategoryMap[selectedCategory].push({category: selectedCategory, postObj: 'placeholder'});
-      }
-      while (dataCategoryMap["Featured Headlines"].length !== 2) {
-        dataCategoryMap["Featured Headlines"].push({category: "Featured Headlines", postObj: 'placeholder'});
-      }
-      return dataCategoryMap;
+    //Opens the drawer
+    drawerHandler() {
+      this.refs.drawer.open();
     }
 
-    //Sends the fetch request, populates data with the new articles and alerts listView about potential change
-    //Specific to featured headlines
-    async fetchFeaturedHeadlines() {
-      let featuredURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page=1&categories="+categories['Featured Headlines'];
-      let response = await fetch(featuredURL);
-      let responseData = await response.json();
-      responseData.forEach(function(post) {
-        if(!currentPosts[post.id]) {
-        currentPosts[post.id] = "Featured Headlines";
-          data.push({
-            category: "Featured Headlines",
-            postObj: post
-          });
-        }
-      });
-      this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())}); //Alerting listView
+    //Converts all fetched data to a map of <Category> => <Article>
+    convertDataToMap(category) {
+      // this.setState({dataSource: this.state.dataSource.cloneWithRows(newArray)});
+      if (category !== selectedCategory) return;
+      var newArray = this.currPosts[selectedCategory]["posts"].slice();
+      //Puts in some placeholders when needed
+      if(newArray.length === 0) {
+        newArray.push({category: selectedCategory, postObj: 'placeholder'});
+        newArray.push({category: selectedCategory, postObj: 'placeholder'});
+      }
+      this.setState({dataSource: this.state.dataSource.cloneWithRows(newArray)});
     }
 
     //Sends the fetch request, populates data with the new articles and alerts listView about potential change
     //Specific to category articles
-    async fetchNewCategoryHeadlines(categoryURL, loadMore) {
+    async fetchNewCategoryHeadlines(category, categoryURL, loadMore) {
       let response = await fetch(categoryURL);
       let responseData = await response.json();
-      var counter = 2;
+      var counter = 0;
+      var view = this;
       responseData.forEach(function(post) {
-        if(!currentPosts[post.id]) {
-          currentPosts[post.id] = selectedCategory;
-          var postObject = {category: selectedCategory, postObj: post};
+        if(view.currPosts[category]["hashed"][post.id] === undefined) {
+          view.currPosts[category]["hashed"][post.id] = 1;
+          var postObject = {category: category, postObj: post, key: post.id};
           if(loadMore === true) {
-            data.push(postObject);
+            view.currPosts[category]["posts"].push(postObject);
           } else {
-            data.splice(counter,0,postObject);
+            view.currPosts[category]["posts"].splice(counter,0,postObject);
             counter += 1;
           }
-        } else if (currentPosts[post.id] === selectedCategory) {
-          return null;
         }
       });
-      this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-      return {Nonempty: 1};
+      this.convertDataToMap(category);
+      return counter;
     }
 
     //Determines the page and code for the category fetching, and calls the above function
-    async handleCategoryFetching(counter, loadMore) {
-      let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[selectedCategory];
-      if(selectedCategory === "All") {
+    async handleCategoryFetching(counter, loadMore, category) {
+      let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[category];
+      if(category === "All") {
         categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter;
       }
-       return await this.fetchNewCategoryHeadlines(categoryURL, loadMore);
+      return await this.fetchNewCategoryHeadlines(category, categoryURL, loadMore);
     }
 
     //Handles all requests to fetch more data, and figures out whether it should get category only or also featured headlines too
-    async fetchData(loadMore) {
-      if(loadMore !== true) {
-        await this.fetchFeaturedHeadlines();
+    async fetchData(loadMore, category) {
+      console.log(category);
+      if (loadMore || this.currPosts[category]["page"] === 1) {
+        await this.handleCategoryFetching(this.currPosts[category]["page"],loadMore,category);
+      } else {
+        var counter = 1;
+        while (true) {
+          var refreshed = await this.handleCategoryFetching(counter,loadMore,category);
+          if (refreshed !== 2) break;
+          counter += 1;
+        }
       }
-      await this.handleCategoryFetching(currentPage,loadMore);
-      currentPage += 1;
       this.fetchDataIsBusy = false;
     }
 
@@ -146,89 +146,50 @@ export default class Headlines extends Component {
         this.state.loading = true;
         if(!this.fetchDataIsBusy) {
           this.fetchDataIsBusy = true;
-          this.fetchData(true);
+          await this.fetchData(true, (' ' + selectedCategory).slice(1));
+          this.currPosts[selectedCategory]["page"] += 1;
         }
         this.state.loading = false;
       }
     }
 
     //Handles refreshing
-    _onRefresh() {
-        this.setState({refreshing: true});
-        data = [];
-        currentPosts = {};
-        this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-        this.fetchData();
-        this.setState({refreshing: false});
+    async _onRefresh() {
+      this.fetchDataIsBusy = true;
+      this.setState({refreshing: true});
+      await this.fetchData(false, (' ' + selectedCategory).slice(1));
+      this.setState({refreshing: false});
     }
 
     //Changes category, clears old posts, and sends a new request to fetch more posts
     setCategory(value) {
       if (value === selectedCategory) return;
+      this.currPosts[selectedCategory]["page"] = 1;
       selectedCategory = value;
-      for (var i = data.length - 1; i >= 0; i--) {
-        if (data[i].category !== "Featured Headlines") {
-          delete currentPosts[data[i].postObj.id];
-          data.splice(i, 1);
-        }
-      }
-      currentPage = 1;
-      this.setState({dataSource: ds.cloneWithRowsAndSections(this.convertDataToMap())});
-      if(!this.fetchDataIsBusy) {
-        this.fetchDataIsBusy = true;
-        this.fetchData();
-      }
+      this.setState({selectedCategory: value});
+      this.currPosts[selectedCategory] = {page: 1, posts:[], hashed:{}};
+      this.convertDataToMap((' ' + selectedCategory).slice(1));
+      this.fetchDataIsBusy = true;
+      this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
 
     //Renders the headers for the sections
     renderSectionHeader(sectionData, category) {
-       if(category === "Featured Headlines") {
-         return (
-           <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-             <Text style={{fontFamily:"Century", fontSize:28, marginTop: 4}}>
-               {category}
-             </Text>
-           </View>
-         )
-     } else {
        return (
          <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-           <Menu onSelect={(value) => this.setCategory(value)}>
-             <MenuTrigger>
-               <View style={{flexDirection: 'row', marginTop: 4}}>
-                 <Text style={{fontFamily:"Century", fontSize:28}}>
-                   {selectedCategory}
-                 </Text>
-                 <Icon name="ios-arrow-down" size={34} color="#979797" style={{marginLeft:6, marginTop: 3}}/>
-               </View>
-             </MenuTrigger>
-             <MenuOptions>
-               <MenuOption value={'All'}>
-                 <Text>All</Text>
-               </MenuOption>
-               <MenuOption value={'News'}>
-                 <Text>News</Text>
-               </MenuOption>
-               <MenuOption value={'Sports'}>
-                 <Text>Sports</Text>
-               </MenuOption>
-               <MenuOption value={'Arts & Life'}>
-                 <Text>Arts & Life</Text>
-               </MenuOption>
-               <MenuOption value={'The Grind'}>
-                 <Text>The Grind</Text>
-               </MenuOption>
-             </MenuOptions>
-           </Menu>
+           <View style={{flexDirection: 'row', marginTop: 4}}>
+             <Text style={{fontFamily:"Century", fontSize:28}}>
+               {selectedCategory}
+             </Text>
+           </View>
          </View>
      )
-     }
    }
 
    //Handles rendering rows by calling the NewsFeedItem and passing data to it
   _renderRow(data) {
     if(data.postObj !== 'placeholder') {
-      return <NewsFeedItem data={data} onPress={this.goToPost}/>
+      return <NewsFeedItem key={data.key} data={data} onPress={this.goToPost}/>
     } else {
       return (
         <View>
@@ -236,6 +197,44 @@ export default class Headlines extends Component {
         </View>
       );
     }
+  }
+
+  constructSideMenuList() {
+    var categoriesList = [];
+    for (var category in categories) {
+      // skip loop if the property is from prototype
+      if (!categories.hasOwnProperty(category)) continue;
+      categoriesList.push({key: category});
+    }
+    return categoriesList;
+  }
+
+  setTextStyle(category) {
+    if (category === selectedCategory) {
+      return {color: "#94171C"};
+    }
+    return {color: "#4E4E4E"};
+  }
+  //A method to render the drawer/side menu
+  sideMenu() {
+    return (
+      <View style={styles.sideMenuContainer}>
+        <View style={styles.sideBarTitle}>
+          <Text style={styles.sideBarTitleText}> Categories </Text>
+        </View>
+        <FlatList
+          data={this.constructSideMenuList()}
+          style={styles.flatListStyle}
+          renderItem={({item}) =>
+            <TouchableOpacity onPress={() => {this.setCategory(item.key); this.refs.drawer.close()}}>
+              <View style={styles.sideMenuItem}>
+                <Text style={this.setTextStyle(item.key)}>{item.key}</Text>
+              </View>
+            </TouchableOpacity>
+          }
+        />
+      </View>
+    )
   }
 
   //Required ReactNative function
@@ -248,12 +247,25 @@ export default class Headlines extends Component {
   */
   render() {
     return (
-        <View ref='view' style={{flex: 1}}>
+      <Drawer
+      type="static"
+      ref='drawer'
+      content={this.sideMenu()}
+      openDrawerOffset={0.25}
+      styles={drawerStyles}
+      tweenHandler={Drawer.tweenPresets.parallax}
+      captureGestures={true}
+      negotiatePan={true}
+      tapToClose={true}
+      onOpenStart={() => StatusBar.setHidden(true)}
+      onCloseStart={() => StatusBar.setHidden(false)}
+      >
+        <View ref='view' style={{flex: 1, backgroundColor:'ghostwhite'}}>
         <StatusBar
+          ref="statusBar"
           barStyle="light-content"
         />
-        <Header ref='Header'/>
-        <MenuContext style={{ flex: 1 }}>
+        <Header ref='Header' drawerHandler={this.drawerHandler}/>
         <ListView
             removeClippedSubviews={false}
             refreshControl={
@@ -270,8 +282,11 @@ export default class Headlines extends Component {
             stickySectionHeadersEnabled={true}
             renderFooter={() => <ActivityIndicator style={styles.loadingIndicator}/>}
         />
-        </MenuContext>
         </View>
+      </Drawer>
     )
   }
+}
+const drawerStyles = {
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
 }
