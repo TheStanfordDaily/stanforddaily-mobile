@@ -1,6 +1,3 @@
-/**
- * Created by ggoma on 12/17/16.
- */
 import React, {Component} from 'react';
 import {
     View,
@@ -12,13 +9,15 @@ import {
 } from 'react-native';
 import HTMLText from '../../modified_modules/react-native-html-to-text';
 import Placeholder from './placeholder';
-// import Button from './button';
+import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
+import styles from '../styles/newsfeeditem.js';
 
-const MEDIA_URL = 'http://stanforddaily.com/wp-json/wp/v2/media/';
+
 const {width, height} = Dimensions.get('window');
 
 export default class NewsFeedItem extends Component {
     constructor() {
+        //Constructor saying everything is initially empty
         super();
         this._mounted = false;
         this.state = {
@@ -31,13 +30,22 @@ export default class NewsFeedItem extends Component {
         };
     }
 
+    //When the item is about to be mounted, we fetch the data about this article from the server
+    componentWillMount() {
+      this.fetchData();
+    }
+
+    //Indicator saying that the item is now being displayed
     componentDidMount() {
       this._mounted = true;
     }
 
+    //Indicator saying that the item was took off the screen
     componentWillUnmount() {
       this._mounted = false;
     }
+
+    //Given a UTC formated date from the WP object, returns a date string in the expected mm/dd/yyyy format
     assembleDate(dateObj) {
       var dt = new Date(dateObj);
       var month = dt.getUTCMonth();
@@ -46,17 +54,17 @@ export default class NewsFeedItem extends Component {
       return month+1 + '/' + day + '/' + year;
     }
 
+    //Async fetch data from the WP server
     async fetchData() {
-      // console.log(this.props.data.postObj._links.author[0]);
-        let authorResponse = await fetch(this.props.data.postObj._links.author[0].href);
-        let authorData = await authorResponse.json();
-        var author = authorData.name;
-        var date = this.assembleDate(this.props.data.postObj.date);
-        var title = this.props.data.postObj.title.rendered;
-        var description = this.props.data.postObj.excerpt.rendered;
-        var featuredMedia = "";
+        let authorResponse = await fetch(this.props.data.postObj._links.author[0].href); //A reguest to get author info
+        let authorData = await authorResponse.json(); //Author info JSON
+        var author = authorData.name; //Author name
+        var date = this.assembleDate(this.props.data.postObj.date); //Gets date from the given response
+        var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
+        var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
+        var featuredMedia = ""; //We assume that there is no featured media till we find one
         if(this.props.data.postObj.featured_media !== 0) {
-          let featuredMediaResponse = await fetch(MEDIA_URL + this.props.data.postObj.featured_media);
+          let featuredMediaResponse = await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media);
           let featuredMediaData = await featuredMediaResponse.json();
           if(featuredMediaData.media_details.sizes.large !== undefined) {
             featuredMedia = featuredMediaData.media_details.sizes.large.source_url;
@@ -68,35 +76,44 @@ export default class NewsFeedItem extends Component {
             featuredMedia = featuredMediaData.source_url;
           }
         }
-        var cut = 130;
+        //Cutting the allowed number of characters for the desc
+        var cut = CONSTANT_NUMS.SOFT_DESC_LIMIT;
         if (description.length > cut) {
           var cut = cut;
-          while(cut < 150) {
+          while(cut < CONSTANT_NUMS.HARD_DESC_LIMIT) {
             if(description.charAt(cut) === ' ') {
               break;
             }
             cut += 1;
           }
         }
+        //If the item is displayed, and we have new data, put it up
         if(this._mounted) {
           this.setState({
             author: author,
             date: date,
             title: title,
             featuredMedia: featuredMedia,
-            description: description.substring(0,cut)+'...',
+            description: description.substring(0,cut)+STRINGS.MORE_TEXT,
             body: this.props.data.postObj.content.rendered,
             loaded: true
           });
         }
     }
 
+    //Handles clicking on items
     toPost() {
-      // console.log(this.state);
       this.props.onPress(this.state);
     }
+
+    //Renders the view:
+    //<Clickable to go to post>
+    //  if featuredMedia exists, <Image of featured media/>
+    // <Date and author/>
+    // <Title as HTML Text/>
+    // <Description as HTML/>
+    //</Clickable>
     renderContent() {
-        this.fetchData();
         if(this.state.loaded) {
           return (
             <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
@@ -111,11 +128,12 @@ export default class NewsFeedItem extends Component {
                   <Text style={styles.date}> {this.state.date} </Text>
                 </View>
                 <HTMLText style={styles.title} html={this.state.title}/>
-                <HTMLText containerStyle={{margin:0, padding:0}} style={styles.description} html={this.state.description}/>
+                <HTMLText style={styles.description} html={this.state.description}/>
               </View>
             </TouchableWithoutFeedback>
           );
         }
+        //If no content is loaded, put a placeholder
         return <Placeholder />;
     }
 
@@ -125,63 +143,3 @@ export default class NewsFeedItem extends Component {
         )
     }
 }
-
-const styles = StyleSheet.create({
-    content: {
-        borderTopColor: '#DBDBDB',
-        borderTopWidth: 1,
-        backgroundColor: '#fcfcfc',
-        width: '100%',
-        // flex: 1
-    },
-
-    dateAndAuthor: {
-      flexDirection: 'row',
-      justifyContent:"space-between",
-      marginTop: 2,
-      marginLeft: 14,
-      marginRight: 14,
-    },
-
-    author: {
-      fontFamily: 'PT Serif',
-      fontSize: 13
-    },
-
-    date: {
-      fontFamily: 'PT Serif',
-      fontSize: 13,
-      opacity: 0.60
-    },
-
-    title: {
-      fontFamily: 'PT Serif',
-      fontSize: 32,
-      lineHeight: 35,
-      marginTop: 4,
-      marginLeft: 14,
-      marginRight: 14,
-    },
-
-    description: {
-      fontFamily: 'PT Serif',
-      fontSize: 19,
-      lineHeight: 23.4,
-      marginTop: 8,
-      marginBottom: 13,
-      opacity: 0.80,
-      marginLeft: 14,
-      marginRight: 14,
-    },
-
-    image: {
-      width: width,
-      height: width/2,
-      marginBottom: 9
-    },
-
-    imageContainer: {
-      borderTopColor: '#DBDBDB',
-      borderTopWidth: 2,
-    }
-})

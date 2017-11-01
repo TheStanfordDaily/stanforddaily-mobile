@@ -295,7 +295,7 @@ export default class Profile extends Component {
               {this.props.navigation.state.params.myProfile && (
                 <TouchableWithoutFeedback onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
-                    <Image style={styles.edit} source={require('../media/edit.png')}/>
+                    <Image style={styles.edit} defaultSource={require('../media/anon_small.png')} source={require('../media/edit.png')}/>
                     <Text> Edit </Text>
                   </View>
                 </TouchableWithoutFeedback>

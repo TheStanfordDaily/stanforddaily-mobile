@@ -1,4 +1,6 @@
 //Pre-made Components imports
+const STRINGS_PATH = '../assets/strings.js';
+import {STRINGS, CATEGORIES, REFS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {
     View,
@@ -10,7 +12,8 @@ import {
     ActivityIndicator,
     NetInfo,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    SectionList
 } from 'react-native';
 import Drawer from 'react-native-drawer'
 
@@ -24,24 +27,18 @@ import _ from 'lodash';
 //Styles for the page
 import styles from './styles/headlines';
 
-//A map between categories names and their codes
-const categories = {
-    "All" : '',
-    "Featured Headlines": '1485',
-    "News": '3',
-    "Sports": '23',
-    "Opinions": '24',
-    "Arts & Life": '25',
-    "The Grind": '32278'
-};
+import Analytics from 'react-native-firebase-analytics';
 
-const selectedCategory = 'Featured Headlines'; //The currently selected category
+//A map between categories names and their codes
+
+
+const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedCategory: 'Featured Headlines',
+            selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
             loading: false,
             dataSource: new ListView.DataSource({
@@ -49,20 +46,24 @@ export default class Headlines extends Component {
                 return row1.key !== row2.key;
               },
             }),
+            selectedCategoryData: [
+              {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'},
+              {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'}
+            ]
         };
         // this.data = []; //A list of all current data
         this.currPosts = {}; //A hash of all current posts
-        for (var category in categories) {
+        for (var category in CATEGORIES) {
           // skip loop if the property is from prototype
-          if (!categories.hasOwnProperty(category)) continue;
+          if (!CATEGORIES.hasOwnProperty(category)) continue;
           // this.data.push({category: category, page: 1, posts:[]});
           this.currPosts[category] = {page: 1, posts:[], hashed:{}};
         }
-        console.log(this.currPosts);
+        // console.log(this.currPosts);
         this.fetchDataIsBusy = true; //Used to handle concurrency
-        this.fetchData = _.debounce(this.fetchData, 200); //Sets a gap of at least 200ms between each call to loading more articles
+        // this.fetchData = _.debounce(this.fetchData, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.fetchData(false, (' ' + selectedCategory).slice(1)); //Fetches featured headlines and category articles
-        this.loadMore = _.debounce(this.loadMore, 200); //Sets a gap of at least 200ms between each call to loading more articles
+        // this.loadMore = _.debounce(this.loadMore, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
@@ -71,7 +72,18 @@ export default class Headlines extends Component {
 
     //Given data, it passes it to Post view
     goToPost(data) {
-      this.props.navigation.navigate('Post', { ...data });
+      this.props.navigation.navigate(STRINGS.POST, { ...data });
+    }
+
+    componentDidMount() {
+      // console.log('hihi');
+      // tracker.setUser('12345678');
+      Analytics.setUserId('11111');
+      Analytics.setUserProperty('newThing', 'works?');
+
+      Analytics.logEvent('Headlineloaded', {
+        'item_id': 'login'
+      });
     }
 
     //Opens the drawer
@@ -83,13 +95,13 @@ export default class Headlines extends Component {
     convertDataToMap(category) {
       // this.setState({dataSource: this.state.dataSource.cloneWithRows(newArray)});
       if (category !== selectedCategory) return;
-      var newArray = this.currPosts[selectedCategory]["posts"].slice();
+      var newArray = this.currPosts[selectedCategory][STRINGS.POSTS].slice();
       //Puts in some placeholders when needed
       if(newArray.length === 0) {
-        newArray.push({category: selectedCategory, postObj: 'placeholder'});
-        newArray.push({category: selectedCategory, postObj: 'placeholder'});
+        newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'});
+        newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'});
       }
-      this.setState({dataSource: this.state.dataSource.cloneWithRows(newArray)});
+      this.setState({selectedCategoryData: newArray});
     }
 
     //Sends the fetch request, populates data with the new articles and alerts listView about potential change
@@ -100,13 +112,13 @@ export default class Headlines extends Component {
       var counter = 0;
       var view = this;
       responseData.forEach(function(post) {
-        if(view.currPosts[category]["hashed"][post.id] === undefined) {
-          view.currPosts[category]["hashed"][post.id] = 1;
+        if(view.currPosts[category][STRINGS.HASHED][post.id] === undefined) {
+          view.currPosts[category][STRINGS.HASHED][post.id] = 1;
           var postObject = {category: category, postObj: post, key: post.id};
           if(loadMore === true) {
-            view.currPosts[category]["posts"].push(postObject);
+            view.currPosts[category][STRINGS.POSTS].push(postObject);
           } else {
-            view.currPosts[category]["posts"].splice(counter,0,postObject);
+            view.currPosts[category][STRINGS.POSTS].splice(counter,0,postObject);
             counter += 1;
           }
         }
@@ -117,23 +129,22 @@ export default class Headlines extends Component {
 
     //Determines the page and code for the category fetching, and calls the above function
     async handleCategoryFetching(counter, loadMore, category) {
-      let categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter+"&categories="+categories[category];
-      if(category === "All") {
-        categoryURL = "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=2&page="+counter;
+      let categoryURL = STRINGS.REQUEST_PAGE +counter+STRINGS.CATEGORIES_URL+CATEGORIES[category];
+      if(category === STRINGS.ALL) {
+        categoryURL = STRINGS.REQUEST_PAGE+counter;
       }
       return await this.fetchNewCategoryHeadlines(category, categoryURL, loadMore);
     }
 
     //Handles all requests to fetch more data, and figures out whether it should get category only or also featured headlines too
     async fetchData(loadMore, category) {
-      console.log(category);
-      if (loadMore || this.currPosts[category]["page"] === 1) {
-        await this.handleCategoryFetching(this.currPosts[category]["page"],loadMore,category);
+      if (loadMore || this.currPosts[category][STRINGS.PAGE] === 1) {
+        await this.handleCategoryFetching(this.currPosts[category][STRINGS.PAGE],loadMore,category);
       } else {
         var counter = 1;
         while (true) {
           var refreshed = await this.handleCategoryFetching(counter,loadMore,category);
-          if (refreshed !== 2) break;
+          if (refreshed !== 3) break;
           counter += 1;
         }
       }
@@ -147,7 +158,7 @@ export default class Headlines extends Component {
         if(!this.fetchDataIsBusy) {
           this.fetchDataIsBusy = true;
           await this.fetchData(true, (' ' + selectedCategory).slice(1));
-          this.currPosts[selectedCategory]["page"] += 1;
+          this.currPosts[selectedCategory][STRINGS.PAGE] += 1;
         }
         this.state.loading = false;
       }
@@ -162,22 +173,23 @@ export default class Headlines extends Component {
     }
 
     //Changes category, clears old posts, and sends a new request to fetch more posts
-    setCategory(value) {
+    async setCategory(value) {
       if (value === selectedCategory) return;
-      this.currPosts[selectedCategory]["page"] = 1;
+      // this.currPosts[selectedCategory]["page"] = 1;
       selectedCategory = value;
       this.setState({selectedCategory: value});
-      this.currPosts[selectedCategory] = {page: 1, posts:[], hashed:{}};
+      // this.currPosts[selectedCategory] = {page: 1, posts:[], hashed:{}};
       this.convertDataToMap((' ' + selectedCategory).slice(1));
+      this.refs.listview.scrollToLocation({animated: false, sectionIndex:0, itemIndex:0, viewPosition:2});
       this.fetchDataIsBusy = true;
-      this.fetchData(false, (' ' + selectedCategory).slice(1));
+      await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
 
     //Renders the headers for the sections
-    renderSectionHeader(sectionData, category) {
+    renderSectionHeader() {
        return (
          <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-           <View style={{flexDirection: 'row', marginTop: 4}}>
+           <View style={{flexDirection: 'row'}}>
              <Text style={{fontFamily:"Century", fontSize:28}}>
                {selectedCategory}
              </Text>
@@ -188,8 +200,9 @@ export default class Headlines extends Component {
 
    //Handles rendering rows by calling the NewsFeedItem and passing data to it
   _renderRow(data) {
-    if(data.postObj !== 'placeholder') {
-      return <NewsFeedItem key={data.key} data={data} onPress={this.goToPost}/>
+    console.log(data.item.id);
+    if(data.item.postObj !== STRINGS.PLACEHOLDER) {
+      return <NewsFeedItem key={data.item.key} data={data.item} onPress={this.goToPost}/>
     } else {
       return (
         <View>
@@ -201,9 +214,9 @@ export default class Headlines extends Component {
 
   constructSideMenuList() {
     var categoriesList = [];
-    for (var category in categories) {
+    for (var category in CATEGORIES) {
       // skip loop if the property is from prototype
-      if (!categories.hasOwnProperty(category)) continue;
+      if (!CATEGORIES.hasOwnProperty(category)) continue;
       categoriesList.push({key: category});
     }
     return categoriesList;
@@ -211,9 +224,9 @@ export default class Headlines extends Component {
 
   setTextStyle(category) {
     if (category === selectedCategory) {
-      return {color: "#94171C"};
+      return {color: "#94171C", fontFamily: "Century"};
     }
-    return {color: "#4E4E4E"};
+    return {color: "#4E4E4E", fontFamily: "Century"};
   }
   //A method to render the drawer/side menu
   sideMenu() {
@@ -248,8 +261,8 @@ export default class Headlines extends Component {
   render() {
     return (
       <Drawer
-      type="static"
-      ref='drawer'
+      type={STRINGS.STATIC}
+      ref={REFS.DRAWER}
       content={this.sideMenu()}
       openDrawerOffset={0.25}
       styles={drawerStyles}
@@ -260,27 +273,24 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-        <View ref='view' style={{flex: 1, backgroundColor:'ghostwhite'}}>
+        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:'ghostwhite'}}>
         <StatusBar
-          ref="statusBar"
-          barStyle="light-content"
+          ref={REFS.STATUS_BAR}
+          barStyle={STRINGS.LIGHT_CONTENT}
         />
-        <Header ref='Header' drawerHandler={this.drawerHandler}/>
-        <ListView
+        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler}/>
+        <SectionList
+            ref={REFS.LIST}
             removeClippedSubviews={false}
-            refreshControl={
-                <RefreshControl
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh.bind(this)}
-                />
-            }
+            disableVirtualization={true}
+            refreshing={this.state.refreshing}
+            keyExtractor={item => item.key}
+            onRefresh={this._onRefresh.bind(this)}
             onEndReached={this.loadMore.bind(this)}
-            dataSource={this.state.dataSource}
-            renderRow={this._renderRow}
-            renderSectionHeader={(sectionData, category) => this.renderSectionHeader(sectionData, category)}
-            enableEmptySections={true}
-            stickySectionHeadersEnabled={true}
-            renderFooter={() => <ActivityIndicator style={styles.loadingIndicator}/>}
+            sections={[{data: this.state.selectedCategoryData, key: this.state.selectedCategory}]}
+            renderItem={this._renderRow}
+            renderSectionHeader={() => this.renderSectionHeader()}
+            ListFooterComponent={() => <ActivityIndicator style={styles.loadingIndicator}/>}
         />
         </View>
       </Drawer>

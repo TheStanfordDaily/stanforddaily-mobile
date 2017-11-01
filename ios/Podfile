@@ -8,12 +8,14 @@ target 'StanfordDaily' do
   # Pods for StanfordDaily
   pod 'RSKImageCropper'
   pod 'QBImagePickerController'
+  pod 'Firebase'
 
   target 'StanfordDailyTests' do
     inherit! :search_paths
     # Pods for testing
     pod 'RSKImageCropper'
     pod 'QBImagePickerController'
+    pod 'Firebase'
   end
 
 end

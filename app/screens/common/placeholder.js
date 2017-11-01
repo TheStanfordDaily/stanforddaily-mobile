@@ -1,6 +1,3 @@
-/**
- * Created by ggoma on 12/17/16.
- */
 import React, {Component} from 'react';
 import {
     View,
@@ -12,9 +9,10 @@ import {
     Animated
 } from 'react-native';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
-// import Button from './button';
+import {STRINGS, COLORS} from '../../assets/constants.js';
 
 const {width, height} = Dimensions.get('window');
+const PLACEHOLDER_SHIMMER = [COLORS.PLACEHOLDER_LIGHT, COLORS.PLACEHOLDER_DARK, COLORS.PLACEHOLDER_LIGHT];
 
 export default class Placeholder extends Component {
 
@@ -52,7 +50,7 @@ export default class Placeholder extends Component {
               visible={false}
               autoRun={true}
               style={{backgroundColor: 'white'}}
-              colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+              colorShimmer={PLACEHOLDER_SHIMMER}
             />
             <View style={styles.dateAndAuthor}>
               <ShimmerPlaceHolder
@@ -62,7 +60,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
               <ShimmerPlaceHolder
                 ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
@@ -72,7 +70,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
             <View style={styles.title}>
@@ -83,7 +81,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
             <View style={styles.title}>
@@ -94,7 +92,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
             <View style={[styles.description,{marginTop: 8}]}>
@@ -105,7 +103,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
             <View style={styles.description}>
@@ -116,7 +114,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
             <View style={styles.description}>
@@ -127,7 +125,7 @@ export default class Placeholder extends Component {
                 visible={false}
                 autoRun={true}
                 style={{backgroundColor: 'white'}}
-                colorShimmer={['#f0f0f0', '#E5E5E5', '#f0f0f0']}
+                colorShimmer={PLACEHOLDER_SHIMMER}
               />
             </View>
           </View>
@@ -137,11 +135,11 @@ export default class Placeholder extends Component {
 
 const styles = StyleSheet.create({
   placeholderBackground: {
-      borderTopColor: '#DBDBDB',
+      borderTopColor: '#A5A5A5',
       borderTopWidth: 1,
       backgroundColor: '#fcfcfc',
       width: '100%',
-      borderTopColor: '#DBDBDB',
+      borderTopColor: '#A5A5A5',
       borderTopWidth: 2,
       // flex: 1
   },

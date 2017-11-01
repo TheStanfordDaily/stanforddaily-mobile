@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -24,7 +25,9 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
+		158D0F25D02B4613BE396539 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B4E957F889A4FA080483776 /* libsqlite3.0.tbd */; };
 		18A0A25EF4F44C7CAF0DDD6A /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96BE54A67E4046B2BBAAABD7 /* SimpleLineIcons.ttf */; };
+		23CAFA6A0C1E4AC98FC0E3E4 /* CENTURY.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 841BC36CADA54D7385345552 /* CENTURY.TTF */; };
 		24C310A273AE4A7398ECB133 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 55EA870350674B69A1EDB1AB /* EvilIcons.ttf */; };
 		24E19B457B6E4ED59DE1FCDC /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 458317138ED74A969A78964C /* MaterialIcons.ttf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
@@ -40,6 +43,7 @@
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* StanfordDailyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* StanfordDailyTests.m */; };
 		2DD7BEB8B1CF93D7C613D5D0 /* libPods-StanfordDaily.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DEF6201948172B97184849D /* libPods-StanfordDaily.a */; };
+		2FEB2E0C1F8716A300EF3661 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2FEB2E0B1F8716A300EF3661 /* GoogleService-Info.plist */; };
 		44ACDB296FB54A0EA957E318 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 21EFD3F580BE443297E9B4C3 /* libRNVectorIcons.a */; };
 		5C4A0C29C4914FBDBA93F614 /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FA47697A2EC4438BB98013E3 /* libimageCropPicker.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -48,17 +52,21 @@
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8EB409D0C6D54D1F8DC294CE /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 29BBD50B80DF4C8C928D260D /* libRNFetchBlob.a */; };
 		983956D3CB36456DA0CE9EF6 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 49BDA34655294C14829B9DB0 /* MaterialCommunityIcons.ttf */; };
+		A2888A0314164990ACD20162 /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6E0225E7A8447CCB5FF4A06 /* libRCTGoogleAnalyticsBridge.a */; };
 		AADDD51A1CC340E6A06C3154 /* PT_Serif-Web-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E54F105D74F4840BD47A0E4 /* PT_Serif-Web-Regular.ttf */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
 		B1D67D1974BB4FF680F9BEB8 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BDFBA68C60684EDC81A0DAAB /* Entypo.ttf */; };
 		B485AAF7FF414702B962D52C /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C2C623DDD9A45F8ABC8CFF2 /* Ionicons.ttf */; };
+		C955FBE8A0D1458385AADA96 /* libRNFIRAnalytics.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 200EACFB58214FFD8D0FB5ED /* libRNFIRAnalytics.a */; };
 		CB0E5ADE7CF94F1887A32CFE /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1093783B55FE4310ACCF45BB /* FontAwesome.ttf */; };
 		D7313A9233784943B8B9369E /* PT_Serif-Web-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 94B90E6C9E13453B97710CA9 /* PT_Serif-Web-BoldItalic.ttf */; };
 		DAFB552A08C517528FF37120 /* libPods-StanfordDailyTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 35F8FC953395E4C435023602 /* libPods-StanfordDailyTests.a */; };
+		E23420A128C244629F0E014A /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DAB6D90CBAE440A98732BFCA /* libz.tbd */; };
 		E5719564454B4DA4B5554757 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD1DDF754B8E48899575308E /* Foundation.ttf */; };
+		EB0DF807959C49F38A2B9220 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181FBCDEFD0B4C499EEAC2CF /* CoreData.framework */; };
+		ED43AD206D9B4E7A9BC79616 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A5947978DF0A43D8AE85E8DF /* SystemConfiguration.framework */; };
 		F430C21B732B0ABC49D7CA7E /* libPods-StanfordDaily-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59E53BB3A5952FA75042E09E /* libPods-StanfordDaily-tvOSTests.a */; };
 		FDB9C7BA8AC147818486A270 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7C33CB11E3143E49AF8944B /* libBVLinearGradient.a */; };
-		23CAFA6A0C1E4AC98FC0E3E4 /* CENTURY.TTF in Resources */ = {isa = PBXBuildFile; fileRef = 841BC36CADA54D7385345552 /* CENTURY.TTF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -201,6 +209,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = A15C300E1CD25C330074CB35;
 			remoteInfo = RNFetchBlob;
+		};
+		2FEB2E041F8711F000EF3661 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4A8FC3B1949F409EA8BC9C17 /* RCTGoogleAnalyticsBridge.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A79185C61C30694E001236A6;
+			remoteInfo = RCTGoogleAnalyticsBridge;
+		};
+		2FEB2E091F8711F100EF3661 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81682CCA1C634A4DB6009C82 /* RNFIRAnalytics.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNFIRAnalytics;
 		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -352,18 +374,22 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = StanfordDaily/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = StanfordDaily/main.m; sourceTree = "<group>"; };
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
+		181FBCDEFD0B4C499EEAC2CF /* CoreData.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		200EACFB58214FFD8D0FB5ED /* libRNFIRAnalytics.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFIRAnalytics.a; sourceTree = "<group>"; };
 		21EFD3F580BE443297E9B4C3 /* libRNVectorIcons.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNVectorIcons.a; sourceTree = "<group>"; };
 		293D045481A04229A2CFF8BB /* Century.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Century.ttf; path = ../app/assets/fonts/Century/Century.ttf; sourceTree = "<group>"; };
 		29BBD50B80DF4C8C928D260D /* libRNFetchBlob.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFetchBlob.a; sourceTree = "<group>"; };
 		2BE99D71169E2CC9882C2E12 /* libPods-StanfordDaily-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StanfordDaily-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* StanfordDaily-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StanfordDaily-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* StanfordDaily-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StanfordDaily-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FEB2E0B1F8716A300EF3661 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "StanfordDaily/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3496FE8A54551926281D5551 /* Pods-StanfordDaily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily/Pods-StanfordDaily.release.xcconfig"; sourceTree = "<group>"; };
 		35F8FC953395E4C435023602 /* libPods-StanfordDailyTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StanfordDailyTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2C623DDD9A45F8ABC8CFF2 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		458317138ED74A969A78964C /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		48DFAE89175C4981B2152E89 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		49BDA34655294C14829B9DB0 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
+		4A8FC3B1949F409EA8BC9C17 /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		4D8C26809BDCF01E68549114 /* Pods-StanfordDaily-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily-tvOS.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily-tvOS/Pods-StanfordDaily-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		55025E117FB5484EA622B386 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		55EA870350674B69A1EDB1AB /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
@@ -372,27 +398,32 @@
 		6A02B9C8EFDC42F7A4AC1EED /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		7DEF6201948172B97184849D /* libPods-StanfordDaily.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StanfordDaily.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		81682CCA1C634A4DB6009C82 /* RNFIRAnalytics.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFIRAnalytics.xcodeproj; path = "../node_modules/react-native-firebase-analytics/ios/RNFIRAnalytics.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		841BC36CADA54D7385345552 /* CENTURY.TTF */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = CENTURY.TTF; path = ../app/assets/fonts/century/CENTURY.TTF; sourceTree = "<group>"; };
+		8B4E957F889A4FA080483776 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		94B90E6C9E13453B97710CA9 /* PT_Serif-Web-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PT_Serif-Web-BoldItalic.ttf"; path = "../app/assets/fonts/PT_Serif/PT_Serif-Web-BoldItalic.ttf"; sourceTree = "<group>"; };
 		96BE54A67E4046B2BBAAABD7 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		9E54F105D74F4840BD47A0E4 /* PT_Serif-Web-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PT_Serif-Web-Regular.ttf"; path = "../app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf"; sourceTree = "<group>"; };
 		A37B09B9C86FA03B8B9E38B1 /* Pods-StanfordDailyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDailyTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDailyTests/Pods-StanfordDailyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		A5947978DF0A43D8AE85E8DF /* SystemConfiguration.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B69A0418B61F4A9586CE54FD /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		BDFBA68C60684EDC81A0DAAB /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		BF347795E589481194928399 /* imageCropPicker.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = imageCropPicker.xcodeproj; path = "../node_modules/react-native-image-crop-picker/ios/imageCropPicker.xcodeproj"; sourceTree = "<group>"; };
 		CB6F993B0A224C8681173B3E /* PT_Serif-Web-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PT_Serif-Web-Bold.ttf"; path = "../app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf"; sourceTree = "<group>"; };
 		CD8C9D37A1A53D901A55387E /* Pods-StanfordDaily-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily-tvOSTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily-tvOSTests/Pods-StanfordDaily-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		DAB6D90CBAE440A98732BFCA /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		DD1DDF754B8E48899575308E /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		DE1CE421306D443BADA6A991 /* PT_Serif-Web-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PT_Serif-Web-Italic.ttf"; path = "../app/assets/fonts/PT_Serif/PT_Serif-Web-Italic.ttf"; sourceTree = "<group>"; };
 		E03523FA5E0433BE5529E239 /* Pods-StanfordDaily.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily/Pods-StanfordDaily.debug.xcconfig"; sourceTree = "<group>"; };
 		E252C148872341968CBC8230 /* Pods-StanfordDaily-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily-tvOSTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily-tvOSTests/Pods-StanfordDaily-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		EBB299195F66CBE97D0D1386 /* Pods-StanfordDaily-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily-tvOS/Pods-StanfordDaily-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		F32143FE49024F7BACB405BB /* century-regular-5980fa6798c2a.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "century-regular-5980fa6798c2a.ttf"; path = "../app/assets/fonts/Century/century-regular-5980fa6798c2a.ttf"; sourceTree = "<group>"; };
+		F6E0225E7A8447CCB5FF4A06 /* libRCTGoogleAnalyticsBridge.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTGoogleAnalyticsBridge.a; sourceTree = "<group>"; };
 		F7C33CB11E3143E49AF8944B /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		FA47697A2EC4438BB98013E3 /* libimageCropPicker.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libimageCropPicker.a; sourceTree = "<group>"; };
 		FA5129F1C34E4543A6F8E260 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
-		841BC36CADA54D7385345552 /* CENTURY.TTF */ = {isa = PBXFileReference; name = "CENTURY.TTF"; path = "../app/assets/fonts/century/CENTURY.TTF"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -427,6 +458,12 @@
 				5C4A0C29C4914FBDBA93F614 /* libimageCropPicker.a in Frameworks */,
 				2DD7BEB8B1CF93D7C613D5D0 /* libPods-StanfordDaily.a in Frameworks */,
 				8EB409D0C6D54D1F8DC294CE /* libRNFetchBlob.a in Frameworks */,
+				C955FBE8A0D1458385AADA96 /* libRNFIRAnalytics.a in Frameworks */,
+				A2888A0314164990ACD20162 /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
+				EB0DF807959C49F38A2B9220 /* CoreData.framework in Frameworks */,
+				ED43AD206D9B4E7A9BC79616 /* SystemConfiguration.framework in Frameworks */,
+				E23420A128C244629F0E014A /* libz.tbd in Frameworks */,
+				158D0F25D02B4613BE396539 /* libsqlite3.0.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,6 +574,7 @@
 		13B07FAE1A68108700A75B9A /* StanfordDaily */ = {
 			isa = PBXGroup;
 			children = (
+				2FEB2E0B1F8716A300EF3661 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -583,6 +621,8 @@
 				F7C33CB11E3143E49AF8944B /* libBVLinearGradient.a */,
 				FA47697A2EC4438BB98013E3 /* libimageCropPicker.a */,
 				29BBD50B80DF4C8C928D260D /* libRNFetchBlob.a */,
+				200EACFB58214FFD8D0FB5ED /* libRNFIRAnalytics.a */,
+				F6E0225E7A8447CCB5FF4A06 /* libRCTGoogleAnalyticsBridge.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -607,6 +647,22 @@
 			isa = PBXGroup;
 			children = (
 				2FE5E8A21F6E404300859553 /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2FEB2E011F8711F000EF3661 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2FEB2E051F8711F000EF3661 /* libRCTGoogleAnalyticsBridge.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2FEB2E061F8711F100EF3661 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2FEB2E0A1F8711F100EF3661 /* libRNFIRAnalytics.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -672,6 +728,8 @@
 				FA5129F1C34E4543A6F8E260 /* BVLinearGradient.xcodeproj */,
 				BF347795E589481194928399 /* imageCropPicker.xcodeproj */,
 				B69A0418B61F4A9586CE54FD /* RNFetchBlob.xcodeproj */,
+				81682CCA1C634A4DB6009C82 /* RNFIRAnalytics.xcodeproj */,
+				4A8FC3B1949F409EA8BC9C17 /* RCTGoogleAnalyticsBridge.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -729,6 +787,10 @@
 				2BE99D71169E2CC9882C2E12 /* libPods-StanfordDaily-tvOS.a */,
 				59E53BB3A5952FA75042E09E /* libPods-StanfordDaily-tvOSTests.a */,
 				35F8FC953395E4C435023602 /* libPods-StanfordDailyTests.a */,
+				181FBCDEFD0B4C499EEAC2CF /* CoreData.framework */,
+				A5947978DF0A43D8AE85E8DF /* SystemConfiguration.framework */,
+				DAB6D90CBAE440A98732BFCA /* libz.tbd */,
+				8B4E957F889A4FA080483776 /* libsqlite3.0.tbd */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -900,6 +962,10 @@
 					ProjectRef = 00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */;
 				},
 				{
+					ProductGroup = 2FEB2E011F8711F000EF3661 /* Products */;
+					ProjectRef = 4A8FC3B1949F409EA8BC9C17 /* RCTGoogleAnalyticsBridge.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
 				},
@@ -934,6 +1000,10 @@
 				{
 					ProductGroup = 2FE5E89E1F6E404200859553 /* Products */;
 					ProjectRef = B69A0418B61F4A9586CE54FD /* RNFetchBlob.xcodeproj */;
+				},
+				{
+					ProductGroup = 2FEB2E061F8711F100EF3661 /* Products */;
+					ProjectRef = 81682CCA1C634A4DB6009C82 /* RNFIRAnalytics.xcodeproj */;
 				},
 				{
 					ProductGroup = 2FE3AC391F2EB2A2004AFC82 /* Products */;
@@ -1075,6 +1145,20 @@
 			fileType = archive.ar;
 			path = libRNFetchBlob.a;
 			remoteRef = 2FE5E8A11F6E404300859553 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2FEB2E051F8711F000EF3661 /* libRCTGoogleAnalyticsBridge.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTGoogleAnalyticsBridge.a;
+			remoteRef = 2FEB2E041F8711F000EF3661 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		2FEB2E0A1F8711F100EF3661 /* libRNFIRAnalytics.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFIRAnalytics.a;
+			remoteRef = 2FEB2E091F8711F100EF3661 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {
@@ -1228,6 +1312,7 @@
 				CB0E5ADE7CF94F1887A32CFE /* FontAwesome.ttf in Resources */,
 				E5719564454B4DA4B5554757 /* Foundation.ttf in Resources */,
 				B485AAF7FF414702B962D52C /* Ionicons.ttf in Resources */,
+				2FEB2E0C1F8716A300EF3661 /* GoogleService-Info.plist in Resources */,
 				983956D3CB36456DA0CE9EF6 /* MaterialCommunityIcons.ttf in Resources */,
 				24E19B457B6E4ED59DE1FCDC /* MaterialIcons.ttf in Resources */,
 				0F7DA822653D46BEB54C8572 /* Octicons.ttf in Resources */,
@@ -1564,12 +1649,16 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = StanfordDailyTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1597,12 +1686,16 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = StanfordDailyTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1631,6 +1724,8 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = StanfordDaily/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1658,6 +1753,8 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = StanfordDaily/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1691,11 +1788,15 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = "StanfordDaily-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1732,11 +1833,15 @@
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-image-crop-picker/ios/**",
 					"$(SRCROOT)/../node_modules/react-native-fetch-blob/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-firebase-analytics/ios",
+					"$(SRCROOT)/../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/**",
 				);
 				INFOPLIST_FILE = "StanfordDaily-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1774,6 +1879,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.StanfordDaily-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1799,6 +1906,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

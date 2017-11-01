@@ -12,6 +12,8 @@ var styles = StyleSheet.create({
   authorImage: {
     height:35.6,
     width: 35.6,
+    borderWidth: 1,
+    borderColor: '#A5A5A5',
     borderRadius: 17.8,
     marginRight: 9.4
   },
@@ -138,6 +140,8 @@ var styles = StyleSheet.create({
   userImage: {
     height:42,
     width: 42,
+    borderWidth: 1,
+    borderColor: '#A5A5A5',
     borderRadius: 21,
     marginRight: 13
   },

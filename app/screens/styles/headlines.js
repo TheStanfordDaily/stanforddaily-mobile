@@ -1,6 +1,7 @@
-const React = require('react-native')
-const {StyleSheet, Dimensions} = React
+import React from 'react-native';
+const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
+import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
 
 const styles= StyleSheet.create({
     container: {
@@ -9,26 +10,26 @@ const styles= StyleSheet.create({
         height,
     },
     loadingIndicator: {
-      marginTop: 8,
-      marginBottom: 8
+      marginTop: MARGINS.DEFAULT_MARGIN,
+      marginBottom: MARGINS.DEFAULT_MARGIN
     },
     sideMenuContainer: {
       flex: 1,
-      backgroundColor: '#F7F7F7',
-      alignItems:'center'
+      backgroundColor: COLORS.SIDE_BAR_GRAY,
+      alignItems: ALIGNMENTS.CENTER
     },
     sideBarTitle: {
-      height: 64,
+      height: HEIGHTS.APP_HEADER,
       width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: ALIGNMENTS.CENTER,
+      alignItems: ALIGNMENTS.CENTER,
       borderBottomWidth: 2,
-      borderBottomColor: "#A5A5A5"
+      borderBottomColor: COLORS.LIGHT_GRAY
     },
     sideBarTitleText: {
-      color: "#4E4E4E",
-      fontFamily: 'Century',
-      fontSize: 24
+      color: COLORS.DARK_GRAY,
+      fontFamily: FONTS.CENTURY,
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM
     },
     flatListStyle: {
       flex: 1,
@@ -36,10 +37,10 @@ const styles= StyleSheet.create({
     },
     sideMenuItem: {
       width: '100%',
-      height: 45,
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderBottomColor: '#A5A5A5',
+      height: HEIGHTS.SIDE_MENU_ITEM,
+      justifyContent: ALIGNMENTS.CENTER,
+      alignItems: ALIGNMENTS.CENTER,
+      borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1
     }
 })

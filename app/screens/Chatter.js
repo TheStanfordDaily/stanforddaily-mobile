@@ -151,8 +151,9 @@ export default class Chatter extends Component {
   }
 
   _onRefresh() {
-    // this.items = ["NewPost"];
-    // this.allLoadedPosts = {};
+    this.items = ["NewPost"];
+    this.allLoadedPosts = {};
+    this.allLoaded = false;
     this.setState({refreshing: true});
     this.makeSureUserSignedIn();
     this.setState({refreshing: false});
@@ -325,7 +326,7 @@ class NewPostItem extends Component {
 
   componentWillMount() {
     var view = this;
-    firebase.storage().ref('profile_pictures').child("thumb_"+currUser).getDownloadURL()
+    firebase.storage().ref('profile_pictures').child(""+currUser).getDownloadURL()
       .then(function(url) {
         currUserThumbnail = url;
         view.setState({imageURI: url, imageExists: true});

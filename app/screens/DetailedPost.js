@@ -1,9 +1,3 @@
-/**
- * Sample Firebase & React Native App
- * https://github.com/davideast/firebase-react-native-sample
- */
-'use strict';
-
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
 const firebase = require('firebase');
@@ -23,13 +17,13 @@ const {
   Dimensions,
   Keyboard,
   ScrollView,
-
 } = ReactNative;
 
 import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
 const {width, height} = Dimensions.get('window');
 import Header from './common/header';
+import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images} from '../assets/constants.js';
 
 export default class DetailedPost extends Component {
 
@@ -53,15 +47,15 @@ export default class DetailedPost extends Component {
   }
 
   goToProfile(userId) {
-    console.log(userId);
+    // console.log(userId);
     var currUser = this.props.navigation.state.params.currUser;
     if (userId === currUser || userId === null) {
-      console.log("Now looking at currUser", currUser);
-      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: currUser, myProfile: true}});
+      // console.log("Now looking at currUser", currUser);
+      this.props.navigation.navigate(STRINGS.PROFILE, {...{currUser: currUser, profileId: currUser, myProfile: true}});
     } else {
-      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: userId, myProfile: false}});
+      this.props.navigation.navigate(STRINGS.PROFILE, {...{currUser: currUser, profileId: userId, myProfile: false}});
     }
-    console.log(this.loading);
+    // console.log(this.loading);
   }
 
   goBack() {
@@ -71,7 +65,7 @@ export default class DetailedPost extends Component {
   listenForDeletes() {
     var view = this;
     var firebaseApp = firebase.apps[0];
-    firebaseApp.database().ref().child('posts').on('child_removed', function(data) {
+    firebaseApp.database().ref().child(STRINGS.POSTS).on(STRINGS.CHILD_REMOVED, function(data) {
       if (data.key === view.props.navigation.state.params.data.key) view.goBack();
     });
   }
@@ -84,8 +78,8 @@ export default class DetailedPost extends Component {
   componentWillUnmount() {
     var firebaseApp = firebase.apps[0];
     var postKey = this.props.navigation.state.params.data.key;
-    firebaseApp.database().ref('/replies/'+postKey).off();
-    console.log("Turn off listeners");
+    firebaseApp.database().ref(STRINGS.REPLIES+'/'+postKey).off();
+    // console.log("Turn off listeners");
     clearInterval();
   }
 
@@ -99,7 +93,7 @@ export default class DetailedPost extends Component {
     var counter = 0;
     snap.forEach((child) => {
       var childJSON = child.val();
-      var body = '/repliesBodies/' + postKey + '/' + childJSON.body;
+      var body = STRINGS.REPLIES_BODIES + '/' + postKey + '/' + childJSON.body;
       var postObject = {
         body: body,
         long: childJSON.long,
@@ -107,10 +101,10 @@ export default class DetailedPost extends Component {
         anon: childJSON.anon,
         key: child.key,
       };
-      if (childJSON.anon === "no") {
+      if (childJSON.anon === STRINGS.NO) {
         postObject.author = childJSON.author;
       } else {
-        postObject.author = "Anonymous";
+        postObject.author = STRINGS.ANON;
       }
       if(view.allLoadedReplies[child.key] !== 1) {
         view.items.push(postObject);
@@ -128,8 +122,8 @@ export default class DetailedPost extends Component {
       this.loading = true;
       var view = this;
       var postKey = this.props.navigation.state.params.data.key;
-      console.log("Reached the end");
-      firebaseApp.database().ref('/replies/'+postKey).on('value', (snap) => {
+      // console.log("Reached the end");
+      firebaseApp.database().ref(STRINGS.REPLIES+'/'+postKey).on(STRINGS.VAL, (snap) => {
         view.processData(snap,view,postKey);
       });
     }
@@ -140,9 +134,9 @@ export default class DetailedPost extends Component {
     console.log("Hiiiiiii");
     console.log(this.items[this.items.length - 1]);
     if (this.items.length === 0) {
-      return firebaseApp.database().ref('/replies/'+postKey).orderByChild("TimeStamp").limitToFirst(10);
+      return firebaseApp.database().ref(STRINGS.REPLIES+'/'+postKey).orderByChild(STRINGS.TIMESTAMP).limitToFirst(CONSTANT_NUMS.REPLIES_LIMIT);
     } else {
-      return firebaseApp.database().ref('/replies/'+postKey).orderByChild("TimeStamp").startAt(this.items[this.items.length - 1].timeStamp).limitToFirst(10);
+      return firebaseApp.database().ref(STRINGS.REPLIES+'/'+postKey).orderByChild(STRINGS.TIMESTAMP).startAt(this.items[this.items.length - 1].timeStamp).limitToFirst(CONSTANT_NUMS.REPLIES_LIMIT);
     }
   }
 
@@ -152,8 +146,8 @@ export default class DetailedPost extends Component {
       var view = this;
       var postKey = this.props.navigation.state.params.data.key;
       var repliesRef = this.determineRef(postKey);
-      console.log("Reached the end");
-      repliesRef.once('value', (snap) => {
+      // console.log("Reached the end");
+      repliesRef.once(STRINGS.VAL, (snap) => {
         if (view.processData(snap, view, postKey) === 0) {
           view.loading = false;
           view.listenForReplies();
@@ -179,15 +173,15 @@ export default class DetailedPost extends Component {
     // firebase.apps[0].database().ref().once('value', (snap) =>  {
     //   console.log(snap.val());
     // });
-    var bodies = firebaseApp.database().ref("repliesBodies/");
-    var replies = firebaseApp.database().ref("replies/");
+    var bodies = firebaseApp.database().ref(STRINGS.REPLIES_BODIES);
+    var replies = firebaseApp.database().ref(STRINGS.REPLIES);
     var postKey = this.props.navigation.state.params.data.key;
     var replyKey = replies.push().key;
     bodies.child(postKey).child(replyKey).set({body: this.state.text});
-    var long = "no";
-    if(this.state.text.length > 180) long = "yes";
-    var anonString = "no";
-    if (this.state.anon) anonString = "yes";
+    var long = STRINGS.NO;
+    if(this.state.text.length > CONSTANT_NUMS.CHATTER_LIMIT) long = STRINGS.YES;
+    var anonString = STRINGS.NO;
+    if (this.state.anon) anonString = STRINGS.YES;
     var replyDetails = {
       TimeStamp: firebase.database.ServerValue.TIMESTAMP,
       anon: anonString,
@@ -196,7 +190,7 @@ export default class DetailedPost extends Component {
       long: long,
     };
     var view = this;
-    firebaseApp.database().ref('posts/'+postKey+'/repliesCount').transaction(function(currentReplies) {
+    firebaseApp.database().ref(STRINGS.POSTS+'/'+postKey+'/'+STRINGS.REPLIES_COUNT).transaction(function(currentReplies) {
       return (currentReplies || 0) + 1;
     });
     replies.child(postKey).child(replyKey).set(replyDetails, function () {
@@ -216,7 +210,7 @@ export default class DetailedPost extends Component {
   render() {
     return (
         <View style={styles.container}>
-          <Header title={this.props.navigation.state.params.name + "'s post"} goBack={this.goBack} ref='Header'/>
+          <Header title={this.props.navigation.state.params.name + STRINGS.CHATTER_POST_SUFFIX} goBack={this.goBack} ref={REFS.HEADER}/>
           <ScrollView>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={styles.mainView}>
@@ -224,7 +218,7 @@ export default class DetailedPost extends Component {
                 item={this.props.navigation.state.params.data}
                 currUser={this.props.navigation.state.params.currUser}
                 goToProfile={this.goToProfile}
-                context={'DetailedPost'}
+                context={STRINGS.DETAILED_POST}
                 firebase={firebase}
               />
             </View>
@@ -240,7 +234,7 @@ export default class DetailedPost extends Component {
               onEndReached={this.fetchMoreReplies.bind(this)}
             />
             </ScrollView>
-          <KeyboardAvoidingView contentContainerStyle={styles.writeAReply} behavior={"padding"}>
+          <KeyboardAvoidingView contentContainerStyle={styles.writeAReply} behavior={STRINGS.PAD}>
             <View style={[styles.writeAReply, {height: Math.min(height/4, Math.max(52, this.state.height+20))}]}>
               <View style={[styles.textInputWrapper, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}>
                 <TextInput
@@ -251,14 +245,14 @@ export default class DetailedPost extends Component {
                   onContentSizeChange={(size) => this.setState({height: size.nativeEvent.contentSize.height+10})}
                   style={[styles.textInput, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}
                   value={this.state.text}
-                  placeholder={"Write a reply..."}
+                  placeholder={STRINGS.REPLY_PLACEHOLDER}
                 />
                 <TouchableWithoutFeedback onPress={() => this.setState({anon : !this.state.anon})}>
-                  <Image style={this.decideColor('image')} source={require('../media/anon.png')}/>
+                  <Image style={this.decideColor(STRINGS.IMG)} source={Images.PROFILE}/>
                 </TouchableWithoutFeedback>
               </View>
               <TouchableWithoutFeedback onPress={this.createAReply.bind(this)}>
-                <Image style={styles.post} source={require('../media/send.png')}/>
+                <Image style={styles.post} source={Images.SEND}/>
               </TouchableWithoutFeedback>
             </View>
           </KeyboardAvoidingView>

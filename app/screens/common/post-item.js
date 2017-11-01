@@ -126,7 +126,7 @@ export default class PostItem extends Component {
           firebase.database().ref("/Users/"+this.propsCopy.item.author).once('value').then(function(snapshot) {
               view.setState({author : snapshot.val().name, userId: view.propsCopy.item.author});
           });
-          firebase.storage().ref('profile_pictures').child("thumb_"+view.propsCopy.item.author).getDownloadURL()
+          firebase.storage().ref('profile_pictures').child(""+view.propsCopy.item.author).getDownloadURL()
             .then(function(url) {
               view.setState({imageURI: url, imageExists: true});
             })
@@ -241,7 +241,7 @@ export default class PostItem extends Component {
                   <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
                     <View>
                       {!this.state.imageExists && <Image style={styles.authorImage} source={require('../../media/anon_small.png')}/>}
-                      {this.state.imageExists && <Image style={styles.authorImage} source={{uri: this.state.imageURI}}/>}
+                      {this.state.imageExists && <Image style={styles.authorImage} defaultSource={require('../../media/anon_small.png')} source={{uri: this.state.imageURI}}/>}
                     </View>
                   </TouchableWithoutFeedback>
                   <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
@@ -284,7 +284,8 @@ export default class PostItem extends Component {
                   <Text style={styles.replyPlaceHolder}>Write a reply…</Text>
                 </View>
                 <View style={styles.repliesCounter}>
-                  <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>
+                  {this.state.repliesCount === 1 && <Text style={styles.count}>{this.state.repliesCount + " Reply"}</Text>}
+                  {this.state.repliesCount !== 1 && <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>}
                 </View>
               </View>
             )}
@@ -292,7 +293,8 @@ export default class PostItem extends Component {
               <View style={styles.reply}>
                 <View style={styles.profileReplies}>
                   <Image style={{width: 19.5, height:17.3}} source={require('../../media/Messages.png')}/>
-                  <Text style={styles.profileOptionsText}>{this.state.repliesCount + " Replies"}</Text>
+                  {this.state.repliesCount === 1 && <Text style={styles.count}>{this.state.repliesCount + " Reply"}</Text>}
+                  {this.state.repliesCount !== 1 && <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>}
                 </View>
                 <TouchableWithoutFeedback onPress={this.deletePost.bind(this)}>
                   <View style={styles.deletePost}>

@@ -37,7 +37,7 @@ export default class NewPost extends Component {
       this.setState({imageExists: true, imageURI: this.props.navigation.state.params.image})
     } else {
       var view = this;
-      firebase.storage().ref('profile_pictures').child("thumb_"+this.props.navigation.state.params.user).getDownloadURL()
+      firebase.storage().ref('profile_pictures').child(""+this.props.navigation.state.params.user).getDownloadURL()
         .then(function(url) {
           currUserThumbnail = url;
           view.setState({imageURI: url, imageExists: true});

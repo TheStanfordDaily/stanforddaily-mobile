@@ -234,7 +234,7 @@ export default class SignIn extends Component {
                 style={styles.signUpButton}
                 onPress={this.backToSignIn.bind(this)}
                 underlayColor='#4e4e4e'>
-                  <Text style={styles.buttonText}>Back To Sign In</Text>
+                  <Text style={styles.buttonText}>Back</Text>
               </TouchableHighlight>
             }
           </Animated.View>

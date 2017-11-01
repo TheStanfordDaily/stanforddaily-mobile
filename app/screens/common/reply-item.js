@@ -53,7 +53,7 @@ export default class ReplyItem extends Component {
         this.props.firebase.database().ref("/Users/"+this.props.item.author).once('value').then(function(snapshot) {
             view.setState({author : snapshot.val().name, userId: view.props.item.author});
         });
-        firebase.storage().ref('profile_pictures').child("thumb_"+view.props.item.author).getDownloadURL()
+        firebase.storage().ref('profile_pictures').child(""+view.props.item.author).getDownloadURL()
           .then(function(url) {
             view.setState({imageURI: url, imageExists: true});
           })
@@ -104,7 +104,7 @@ export default class ReplyItem extends Component {
             <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
               <View>
                 {!this.state.imageExists && <Image style={styles.authorImage} source={require('../../media/anon_small.png')}/>}
-                {this.state.imageExists && <Image style={styles.authorImage} source={{uri: this.state.imageURI}}/>}
+                {this.state.imageExists && <Image style={styles.authorImage} defaultSource={require('../../media/anon_small.png')} source={{uri: this.state.imageURI}}/>}
               </View>
             </TouchableWithoutFeedback>
             <View style={styles.post}>
