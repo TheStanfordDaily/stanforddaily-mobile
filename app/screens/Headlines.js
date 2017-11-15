@@ -1,6 +1,5 @@
 //Pre-made Components imports
-const STRINGS_PATH = '../assets/strings.js';
-import {STRINGS, CATEGORIES, REFS} from '../assets/constants.js';
+import {STRINGS, CATEGORIES, REFS, KEYS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {
     View,
@@ -22,16 +21,15 @@ import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
 import Icon from 'react-native-vector-icons/Ionicons';
+import RNAmplitute from 'react-native-amplitude-analytics';
 import _ from 'lodash';
 
 //Styles for the page
 import styles from './styles/headlines';
 
-import Analytics from 'react-native-firebase-analytics';
-
 //A map between categories names and their codes
 
-
+const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Headlines extends Component {
@@ -41,11 +39,6 @@ export default class Headlines extends Component {
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
             loading: false,
-            dataSource: new ListView.DataSource({
-              rowHasChanged: function(row1, row2) {
-                return row1.key !== row2.key;
-              },
-            }),
             selectedCategoryData: [
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'},
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'}
@@ -78,12 +71,10 @@ export default class Headlines extends Component {
     componentDidMount() {
       // console.log('hihi');
       // tracker.setUser('12345678');
-      Analytics.setUserId('11111');
-      Analytics.setUserProperty('newThing', 'works?');
-
-      Analytics.logEvent('Headlineloaded', {
-        'item_id': 'login'
-      });
+      var currentdate = new Date();
+     // log an event
+     amplitude.logEvent(STRINGS.APP_OPENED);
+    //  console.log("Logged");
     }
 
     //Opens the drawer
@@ -101,6 +92,7 @@ export default class Headlines extends Component {
         newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'});
         newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'});
       }
+      amplitude.logEvent(STRINGS.ARTICLES_PREVIEW_REQUEST, {category: selectedCategory});
       this.setState({selectedCategoryData: newArray});
     }
 
@@ -178,6 +170,7 @@ export default class Headlines extends Component {
       // this.currPosts[selectedCategory]["page"] = 1;
       selectedCategory = value;
       this.setState({selectedCategory: value});
+      amplitude.logEvent(STRINGS.CATEGORY_CHANGED, {category: selectedCategory});
       // this.currPosts[selectedCategory] = {page: 1, posts:[], hashed:{}};
       this.convertDataToMap((' ' + selectedCategory).slice(1));
       this.refs.listview.scrollToLocation({animated: false, sectionIndex:0, itemIndex:0, viewPosition:2});
@@ -200,9 +193,9 @@ export default class Headlines extends Component {
 
    //Handles rendering rows by calling the NewsFeedItem and passing data to it
   _renderRow(data) {
-    console.log(data.item.id);
+    console.log("This is my id", data.item.key);
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
-      return <NewsFeedItem key={data.item.key} data={data.item} onPress={this.goToPost}/>
+      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost}/>
     } else {
       return (
         <View>

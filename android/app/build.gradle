@@ -133,6 +133,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-amplitude-analytics')
     compile project(':react-native-google-analytics-bridge')
     compile project(':react-native-firebase-analytics')
     compile project(':react-native-fetch-blob')

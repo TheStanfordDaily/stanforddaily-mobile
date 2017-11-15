@@ -10,61 +10,19 @@ import {
     TouchableOpacity,
     StyleSheet,
     Image,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Dimensions
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
+import {REFS, COLORS, ICONS, Images, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
+
+const iphone_x = Dimensions.get('window').height == 812;
+const top_margin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+MARGINS.NORMAL_HEADER_MARGINS : MARGINS.NORMAL_HEADER_MARGINS
 
 export default class Header extends Component {
     constructor() {
         super();
-        this.state = {
-            height: new Animated.Value(64),
-            original: 64,
-            animating: false,
-            hidden: false,
-            opacity: new Animated.Value(1.0),
-        };
-    }
-
-    hide() {
-
-        if(this.state.animating) {
-            return;
-        }
-        console.log('animating');
-
-        this.setState({animating: true, hidden: true});
-        Animated.parallel([
-          Animated.timing(this.state.height, {
-            toValue: 20,
-            duration: 500
-          }),
-          Animated.timing(this.state.opacity, {
-            toValue: 0.0,
-            duration: 500,
-            useNativeDriver: true,
-          })
-        ]).start();
-    }
-
-    show() {
-        if(!this.state.animating) {
-            return;
-        }
-        console.log('animating');
-        this.setState({animating: false, hidden:false});
-        Animated.parallel([
-          Animated.timing(this.state.height, {
-            toValue: 64,
-            duration: 500
-          }),
-          Animated.timing(this.state.opacity, {
-            toValue: 1.0,
-            duration: 500,
-            useNativeDriver: true,
-          })
-        ]).start();
     }
 
     toProfile() {
@@ -74,31 +32,42 @@ export default class Header extends Component {
 
     render() {
 
-        const {height} = this.state;
         return (
-            <View ref='container'>
-                <Animated.View style={[styles.container, {height}]}>
-                  {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={{width: 20}}/>}
+            <View ref={REFS.CONTAINER}>
+                <View style={styles.container}>
+                  {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={styles.leftButton}/>}
                   {this.props.goBack !== undefined && (
-                    <Animated.View style={{width:20, marginTop: 13, opacity: this.state.opacity}}>
-                      <Icon name="ios-arrow-back" size={34} color="#ffffff" onPress={() => this.props.goBack()}/>
-                    </Animated.View>
+                      <TouchableWithoutFeedback onPress={() => this.props.goBack()}>
+                        <View style={styles.leftButton}>
+                          <Icon name={ICONS.BACK} size={34} color={COLORS.WHITE}/>
+                        </View>
+                      </TouchableWithoutFeedback>
                   )}
                   {this.props.drawerHandler !== undefined && (
-                    <Animated.View style={{width:20, marginTop: 13, opacity: this.state.opacity}}>
-                      <Icon name="ios-menu" size={34} color="#ffffff" onPress={() => this.props.drawerHandler()}/>
-                    </Animated.View>
-                  )}
-                  {this.props.title === undefined && <Animated.Image source={require('../../media/DailyLogo.png')} style={{width: 243, height: 30, marginTop: 13, opacity: this.state.opacity}}/>}
-                  {this.props.title !== undefined && <Animated.View style={{marginTop: 15, height: 30, width: 243}}><Text numberOfLines={1} ellipsizeMode={'middle'} style={{color: 'white', fontFamily:'Helvetica Neue', fontSize:20, textAlign: 'center'}}>{this.props.title}</Text></Animated.View>}
-
-                  {this.props.toProfile ===  undefined && <View style={{width: 20}}/>}
-                  {this.props.toProfile !== undefined && (
-                    <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
-                    <Animated.Image source={require('../../media/anon.png')} style={{width: 20, height: 23, marginTop: 10, tintColor: 'white', opacity: this.state.opacity}}/>
+                    <TouchableWithoutFeedback style={styles.leftButton} onPress={() => this.props.drawerHandler()}>
+                      <View style={styles.leftButton}>
+                        <Icon name={ICONS.MENU} size={34} color={COLORS.WHITE}/>
+                      </View>
                     </TouchableWithoutFeedback>
                   )}
-                </Animated.View>
+                  {this.props.title === undefined && <Image source={Images.DAILY_FULL} style={styles.title}/>}
+                  {this.props.title !== undefined && (
+                    <View style={styles.title}>
+                      <Text numberOfLines={1} ellipsizeMode={'middle'} style={styles.wordsTitle}>
+                        {this.props.title}
+                      </Text>
+                    </View>)
+                  }
+
+                  {this.props.toProfile ===  undefined && <View style={styles.leftButton}/>}
+                  {this.props.toProfile !== undefined && (
+                    <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+                      <View style={styles.rightButton}>
+                        <Image source={Images.PROFILE} style={styles.profileImage}/>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  )}
+                </View>
             </View>
         )
 
@@ -110,8 +79,33 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
-        height: 64,
+        height: iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.APP_HEADER : HEIGHTS.APP_HEADER,
         backgroundColor: '#94171C',
     },
-
+    leftButton: {
+      width:40,
+      marginLeft: 10,
+      marginTop: top_margin
+    },
+    title: {
+      width: 243,
+      height: 30,
+      marginTop: top_margin
+    },
+    wordsTitle: {
+      color: COLORS.WHITE,
+      fontFamily:FONTS.HNEUE,
+      fontSize:20,
+      textAlign:ALIGNMENTS.CENTER
+    },
+    rightButton: {
+      width: 40,
+      height: 23,
+      marginTop: top_margin,
+    },
+    profileImage: {
+      tintColor: COLORS.WHITE,
+      width: 20,
+      height: 23
+    }
 })

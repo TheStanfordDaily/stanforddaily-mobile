@@ -1,17 +1,10 @@
-/**
- * Sample Firebase & React Native App
- * https://github.com/davideast/firebase-react-native-sample
- */
 'use strict';
 
 import React, {Component} from 'react';
-import ReactNative from 'react-native';
-const firebase = require('firebase');
-const styles = require('../assets/styles.js')
-const moment = require('moment');
-moment().format();
-
-const {
+import firebase from 'firebase';
+import styles from './styles/chatter.js';
+import _ from 'lodash';
+import {
   AppRegistry,
   ListView,
   StyleSheet,
@@ -22,24 +15,22 @@ const {
   Image,
   TouchableWithoutFeedback,
   RefreshControl
-} = ReactNative;
+} from 'react-native';
 
-import PostItem from './common/post-item';
-import Header from './common/header';
+//A module for time stamps
+import moment from 'moment';
+moment().format();
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBIUCWibwkLZtyVKZ8cQ5E4uc51OXpn3iA",
-    authDomain: "grocerytest-95615.firebaseapp.com",
-    databaseURL: "https://grocerytest-95615.firebaseio.com",
-    storageBucket: "grocerytest-95615.appspot.com",
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import PostItem from './common/post-item'; //Post items
+import Header from './common/header'; //The header
+import {STRINGS, FIREBASE_CONFIG, REFS, Images} from '../assets/constants.js'; //Constants
+
+const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG); //Configuring firebase
+
 var currUser = "";
 var currUserThumbnail = "";
-import _ from 'lodash';
 
 export default class Chatter extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -48,44 +39,41 @@ export default class Chatter extends Component {
           return row1.key !== row2.key;
         },
       }),
-      userStatus: 'none',
+      userStatus: STRINGS.NONE,
       refreshing: false,
       imageURI: "",
       imageExists: false
     };
-    this.itemsRef = firebaseApp.database().ref().child('posts');
-    this.items = ["newPost"];
-    this.currNum = 0;
-    this.callbackNum = 0;
-    this.error = false;
-    this.loading = false;
-    this.goToPost = this.goToPost.bind(this);
-    this.goToProfile = this.goToProfile.bind(this);
-    this.startNewPost = this.startNewPost.bind(this);
-    this.listenForItems = _.debounce(this.listenForItems, 150);
-    this.allLoadedPosts = {};
+    this.itemsRef = firebaseApp.database().ref().child(STRINGS.POSTS); //A reference to all posts
+    this.items = [STRINGS.NEW_POST]; //The current items. Only "create new post" is initially loaded
+    this.loading = false; //True if app is loading more posts. False if not
+    this.goToPost = this.goToPost.bind(this); //A function to handle going to posts
+    this.goToProfile = this.goToProfile.bind(this); //A function to handle going to profile
+    this.startNewPost = this.startNewPost.bind(this); //A function to handle going to NEWPOST view
+    this.listenForItems = _.debounce(this.listenForItems, 150); //A function to regulate fetching from Firebase (places a 150ms interval at least between 2 calls)
+    this.allLoadedPosts = {}; //A hashmap of all of the current posts
   }
 
   goToProfile(userId) {
-    console.log(userId);
-    if (userId === currUser || userId === null) {
-      console.log("Now looking at currUser", currUser);
-      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: currUser, myProfile: true}});
-    } else {
-      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: userId, myProfile: false}});
+    // console.log(userId);
+    if (userId === currUser || userId === null) { //Trying to access my own profile
+      // console.log("Now looking at currUser", currUser);
+      this.props.navigation.navigate(STRINGS.PROFILE, {...{currUser: currUser, profileId: currUser, myProfile: true}});
+    } else { //Trying to access someone else's profile
+      this.props.navigation.navigate(STRINGS.PROFILE, {...{currUser: currUser, profileId: userId, myProfile: false}});
     }
-    console.log(this.loading);
+    // console.log(this.loading);
   }
 
-  update(view) {
+  update(view) { //Handles updating the list view (Not sending requests to Firebase)
     var newArr = view.items.slice();
     view.setState({
       dataSource: view.state.dataSource.cloneWithRows(newArr),
     });
   }
 
-  currUserVote(childJSON) {
-    if (typeof childJSON.voters !== "undefined") {
+  currUserVote(childJSON) { //A small subroutine to handle showing the current user vote as a string
+    if (typeof childJSON.voters !== STRINGS.UNDEFINED) {
       if (currUser in childJSON.voters) {
         return childJSON.voters[currUser];
       }
@@ -93,25 +81,25 @@ export default class Chatter extends Component {
     return "0";
   }
 
-  refToItems(itemsRef, refresh) {
-    if (refresh) {
-      return itemsRef.orderByChild('sortDate').limitToFirst(3);
-    } else {
-      return itemsRef.orderByChild('sortDate').startAt(this.items[this.items.length - 1].sortDate).limitToFirst(4);
+  refToItems(itemsRef, refresh) { //Figures out the correct reference to Firebase.
+    if (refresh) { //Get the posts from the beginning
+      return itemsRef.orderByChild(STRINGS.NEWEST_TO_OLDEST).limitToFirst(3);//The number doesn't really matter
+    } else { //Load more posts to waht exists
+      return itemsRef.orderByChild(STRINGS.NEWEST_TO_OLDEST).startAt(this.items[this.items.length - 1].sortDate).limitToFirst(4); //The number doesn't really matter
     }
   }
 
-  listenForItems(itemsRef,refresh) {
-    if(!this.loading && !(this.allLoaded && !refresh)) {
-      this.loading = true;
-      var view = this;
-      var currInsertIdx = 1;
-      var ref = this.refToItems(itemsRef, refresh);
-      ref.once('value', (snap) => {
-        snap.forEach((child) => {
-          var childJSON = child.val();
-          var body = '/postsBodies/' + childJSON.body;
-          var postObject = {
+  listenForItems(itemsRef,refresh) { //Sends requests to Firebase
+    if(!this.loading && !(this.allLoaded && !refresh)) { //Basically if it's not currently loading and not all is loaded, or if it's a refresh
+      this.loading = true; //Block anymore requests till the next one
+      var view = this; //A reference to the current "this" object (Common JS practice for callbacks)
+      var currInsertIdx = 1; //For refresh
+      var ref = this.refToItems(itemsRef, refresh); //The reight reference
+      ref.once(STRINGS.VAL, (snap) => { //Send a request
+        snap.forEach((child) => { //Loop through children (posts)
+          var childJSON = child.val(); //Get the JSON value
+          var body = '/'+ STRINGS.POSTS_BODIES + '/' + childJSON.body; //Get the body url
+          var postObject = { //An object that has all of the necessary post data to create a list item
             body: body,
             repliesCount: childJSON.repliesCount,
             votes: childJSON.votes,
@@ -121,37 +109,36 @@ export default class Chatter extends Component {
             key: child.key,
             sortDate: childJSON.sortDate,
           };
-          if (childJSON.anon === "no") {
+          if (childJSON.anon === STRINGS.NO) { //Anonymous or not
             postObject.author = childJSON.author;
           } else {
-            postObject.author = "Anonymous";
+            postObject.author = STRINGS.ANON;
           }
-          postObject.userVote = view.currUserVote(childJSON);
-          if(view.allLoadedPosts[child.key] !== 1) {
-            if(refresh) {
+          postObject.userVote = view.currUserVote(childJSON); //User vote on the specific post
+          if(view.allLoadedPosts[child.key] !== 1) { //Ensuring that no duplicates happen
+            if(refresh) { //If refresh we add at the top
               view.items.splice(currInsertIdx,0,postObject);
               currInsertIdx += 1;
               view.allLoadedPosts[child.key] = 1;
-            } else if (view.items[view.items.length - 1].key !== child.key) {
+            } else if (view.items[view.items.length - 1].key !== child.key) { //if not, append at the end
               view.items.push(postObject);
               view.allLoadedPosts[child.key] = 1;
             }
           }
         });
-        view.update(view, refresh);
-        view.loading = false;
+        view.update(view, refresh); //Update the view after looping
+        view.loading = false; //Unlock this function for more requests
       });
     }
   }
 
   componentDidMount() {
-    // var view = this;
-    this.makeSureUserSignedIn();
+    this.makeSureUserSignedIn(); //Check sign in status
     // firebase.auth().signOut();
   }
 
-  _onRefresh() {
-    this.items = ["NewPost"];
+  _onRefresh() { //Handles refreshes
+    this.items = [STRINGS.NEW_POST];
     this.allLoadedPosts = {};
     this.allLoaded = false;
     this.setState({refreshing: true});
@@ -159,44 +146,44 @@ export default class Chatter extends Component {
     this.setState({refreshing: false});
   }
 
-  loadMore() {
-    this.listenForItems(firebaseApp.database().ref().child('posts'), false);
+  loadMore() { //Handles loading more
+    this.listenForItems(firebaseApp.database().ref().child(STRINGS.POSTS), false);
   }
 
-  pointToSignIn() {
+  pointToSignIn() { //Shows a simple view asking user to sign in
     var view = this;
-    var onpressFunc = () => this.props.navigation.navigate("SignIn", {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
+    var onpressFunc = () => this.props.navigation.navigate(STRINGS.SIGN_IN, {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
     return (
       <View style={styles.container}>
-        <Header title={'Chatter'} ref='Header'/>
+        <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
         <TouchableWithoutFeedback onPress={onpressFunc}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Please sign in/up to use this service</Text>
-            <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Tap anywhere to go to sign in/up page</Text>
+          <View style={styles.failedLoginContainer}>
+            <Text style={styles.failedLoginText}>Please sign in/up to use this service</Text>
+            <Text style={styles.failedLoginText}>Tap anywhere to go to sign in/up page</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>
     );
   }
 
-  pointToVerify() {
+  pointToVerify() { //Shows a simple view asking user to verify their account
     return (
       <View style={styles.container}>
-        <Header title={'Chatter'} ref='Header'/>
+        <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
         <TouchableWithoutFeedback onPress={this.makeSureUserSignedIn.bind(this)}>
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Please verify your email to use this service</Text>
-            <Text style={{fontFamily:"Helvetica Neue", fontSize:16, color:"#4E4E4E"}}>Tap anywhere once verified to load</Text>
+          <View style={styles.failedLoginContainer}>
+            <Text style={styles.failedLoginText}>Please verify your email to use this service</Text>
+            <Text style={styles.failedLoginText}>Tap anywhere once verified to load</Text>
           </View>
         </TouchableWithoutFeedback>
       </View>
     );
   }
 
-  loadTheView() {
+  loadTheView() { //Loads the list view
     return (
       <View style={styles.container}>
-        <Header title={'Chatter'} toProfile={this.goToProfile} ref='Header'/>
+        <Header title={STRINGS.CHATTER} toProfile={this.goToProfile} ref={REFS.HEADER}/>
         <ListView
           removeClippedSubviews={false}
           refreshControl={
@@ -215,10 +202,10 @@ export default class Chatter extends Component {
     );
   }
 
-  render() {
-    if(this.state.userStatus === 'none') {
+  render() { //Renders the right view based on user status
+    if(this.state.userStatus === STRINGS.NONE) {
       return this.pointToSignIn();
-    } else if (this.state.userStatus === 'signedIn') {
+    } else if (this.state.userStatus === STRINGS.SIGNED_IN) {
       return this.pointToVerify();
     } else {
       return this.loadTheView()
@@ -227,8 +214,8 @@ export default class Chatter extends Component {
 
   // create the user object and push to database
   addUserToDatabase(newUser) {
-    var usersRef = firebaseApp.database().ref("Users");
-      usersRef.child(newUser.uid).once('value', function(snapshot) {
+    var usersRef = firebaseApp.database().ref(STRINGS.USERS);
+      usersRef.child(newUser.uid).once(STRINGS.VAL, function(snapshot) {
         if (snapshot.val() === null) {
           var key = newUser.uid;
           var user = {name: newUser.displayName};
@@ -238,9 +225,9 @@ export default class Chatter extends Component {
       });
   }
 
-  listenForDeletes() {
+  listenForDeletes() { //Keeps an eye on deletes that other people make to avoid interacting with deleted posts
     var view = this;
-    firebaseApp.database().ref().child('posts').on('child_removed', function(data) {
+    firebaseApp.database().ref().child(STRINGS.POSTS).on(STRINGS.CHILD_REMOVED, function(data) {
       var key = data.key;
       if (view.allLoadedPosts[key]) {
         for(var i = view.items.length - 1; i >= 0; i--) {
@@ -254,7 +241,7 @@ export default class Chatter extends Component {
     });
   }
 
-  makeSureUserSignedIn() {
+  makeSureUserSignedIn() { //Checks user status using firebase authentication
     var view = this;
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -262,42 +249,43 @@ export default class Chatter extends Component {
             currUser = user.uid;
             if(user.emailVerified) {
               view.addUserToDatabase(user);
-              view.setState({userStatus : "verified"});
-              view.listenForItems(firebaseApp.database().ref().child('posts'), true);
+              view.setState({userStatus : STRINGS.VERIFIED});
+              view.listenForItems(firebaseApp.database().ref().child(STRINGS.POSTS), true);
               view.listenForDeletes();
             } else {
-              view.setState({userStatus : "signedIn"});
+              view.setState({userStatus : STRINGS.SIGNED_IN});
             }
         });
       } else {
-        view.setState({userStatus : "none"});
-        view.props.navigation.navigate("SignIn", {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
+        view.setState({userStatus : STRINGS.NONE});
+        view.props.navigation.navigate(STRINGS.SIGN_IN, {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
       }
     });
   }
 
-  updateAfterComingBack() {
+  updateAfterComingBack() { //Updates the view after user creates a post
     // this.items = ["NewPost"];
     // this.allLoadedPosts = {};
     this.makeSureUserSignedIn();
   }
 
-  startNewPost() {
+  startNewPost() { //Prepares starting a new post segue
     // console.log("Navigate to new post");
     // this.items = [];
     var dataToPass = {user: currUser, image: currUserThumbnail, update: this.updateAfterComingBack.bind(this)};
-    this.props.navigation.navigate("NewPost", {
+    this.props.navigation.navigate(STRINGS.NEW_POST, {
       ...dataToPass,
     });
   }
 
-  goToPost(data, author) {
-    this.props.navigation.navigate("DetailedPost", {
+  goToPost(data, author) { //Segues to post
+    this.props.navigation.navigate(STRINGS.DETAILED_POST, {
       ...{data: data, currUser: currUser, name: author, visible: false},
     });
   }
-  _renderItem(item) {
-    if(item !== "newPost") {
+
+  _renderItem(item) { //Renders a single list item
+    if(item !== STRINGS.NEW_POST) { //Regular post
       return <PostItem
               key={item.key}
               item={item}
@@ -305,15 +293,17 @@ export default class Chatter extends Component {
               currUser={currUser}
               goToPost={this.goToPost}
               goToProfile={this.goToProfile}
-              context={'list'}
+              context={STRINGS.LIST}
               />
     } else {
-
+      //The top "Create new post" item
       return <NewPostItem startNewPost={this.startNewPost}/>;
     }
   }
 
 }
+
+//CHATTER VIEW ENDS HERE. BELOW IS NEW POST ITEM IMPLEMENTATION
 
 class NewPostItem extends Component {
   constructor(props) {
@@ -326,7 +316,7 @@ class NewPostItem extends Component {
 
   componentWillMount() {
     var view = this;
-    firebase.storage().ref('profile_pictures').child(""+currUser).getDownloadURL()
+    firebase.storage().ref().child(STRINGS.PROFILE_PICTURES+'/'+currUser).getDownloadURL()
       .then(function(url) {
         currUserThumbnail = url;
         view.setState({imageURI: url, imageExists: true});
@@ -339,7 +329,7 @@ class NewPostItem extends Component {
     return (
       <TouchableWithoutFeedback onPress={() => this.props.startNewPost()}>
         <View style={styles.newPost}>
-          {!this.state.imageExists && <Image style={styles.userImage} source={require('../media/anon_small.png')}/>}
+          {!this.state.imageExists && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {this.state.imageExists && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
           <Text style={styles.placeHolder}>Share how was campus today…</Text>
         </View>

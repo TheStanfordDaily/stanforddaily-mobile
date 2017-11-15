@@ -1,6 +1,7 @@
 import React from 'react';
 import { TabNavigator, StackNavigator } from 'react-navigation';
-import {Image, View, TouchableOpacity} from 'react-native';
+import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
+import {MARGINS, HEIGHTS} from '../assets/constants.js';
 // const myIcon = ()
 
 import Headlines from '../screens/Headlines';
@@ -10,6 +11,10 @@ import NewPost from '../screens/NewPost';
 import SignIn from '../screens/SignIn';
 import DetailedPost from '../screens/DetailedPost';
 import Profile from '../screens/Profile';
+
+const iphone_x = Dimensions.get('window').height == 812;
+const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
+const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
 
 export const NewsStack = StackNavigator({
   Headlines: {
@@ -84,7 +89,10 @@ Chatter: {
     activeBackgroundColor: 'white',
     labelStyle: {
       fontFamily: 'PT Serif',
-      marginBottom: 3,
+      marginBottom: labelBottomMargin,
+    },
+    style: {
+      height: tabBarHeight
     }
   },
   lazy: true

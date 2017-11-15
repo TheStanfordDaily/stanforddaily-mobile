@@ -3,6 +3,9 @@ const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
 
+const iphone_x = height == 812;
+const top_padding = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
+
 const styles= StyleSheet.create({
     container: {
         flex: 1,
@@ -16,7 +19,8 @@ const styles= StyleSheet.create({
     sideMenuContainer: {
       flex: 1,
       backgroundColor: COLORS.SIDE_BAR_GRAY,
-      alignItems: ALIGNMENTS.CENTER
+      alignItems: ALIGNMENTS.CENTER,
+      paddingTop: top_padding
     },
     sideBarTitle: {
       height: HEIGHTS.APP_HEADER,

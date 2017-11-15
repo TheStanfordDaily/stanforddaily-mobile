@@ -5,7 +5,9 @@
 
 //Pre-made Components imports
 import React, {Component} from 'react';
+import {STRINGS, KEYS} from '../assets/constants.js';
 import Icon from 'react-native-vector-icons/Ionicons';
+import RNAmplitute from 'react-native-amplitude-analytics';
 import {
   View,
   WebView,
@@ -18,6 +20,7 @@ import {
 //Components for this app imports
 import Header from './common/header';
 
+const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window'); //Dimensions of the current device screen
 
 class Post extends Component {
@@ -64,6 +67,8 @@ class Post extends Component {
     this.setState({
         post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
     });
+    console.log(postData.id);
+    amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, {ArticleId: postData.id})
   }
 
   //Required ReactNative function

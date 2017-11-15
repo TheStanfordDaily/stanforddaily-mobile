@@ -90,6 +90,7 @@ export default class NewsFeedItem extends Component {
         //If the item is displayed, and we have new data, put it up
         if(this._mounted) {
           this.setState({
+            id: this.props.postID,
             author: author,
             date: date,
             title: title,

@@ -16,10 +16,14 @@ const {
   TextInput,
   KeyboardAvoidingView,
   Switch,
-  Button
+  Button,
+  Dimensions
 } = ReactNative;
 
 import {NavigationActions} from 'react-navigation';
+
+const iphone_x = Dimensions.get('window').height == 812;
+const top_margin = iphone_x ? 20 : 0;
 
 export default class NewPost extends Component {
 
@@ -176,7 +180,8 @@ const styles= StyleSheet.create({
       color: '#94171C',
       fontSize: 20,
       fontFamily: 'Helvetica Neue',
-      paddingRight: 8
+      paddingRight: 10,
+      marginTop: top_margin
     },
     close: {
       width: 17,

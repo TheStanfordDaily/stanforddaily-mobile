@@ -29,12 +29,16 @@ const {
 import {NavigationActions} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PostItem from './common/post-item';
+import {MARGINS} from '../assets/constants.js';
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 const {width, height} = Dimensions.get('window');
+
+const iphone_x = height == 812;
+const addedTopMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
 
 var currUser = "";
 var profileId = "";
@@ -364,7 +368,7 @@ const styles= StyleSheet.create({
       width: '100%'
     },
     statusBarBackground: {
-      height: 20,
+      height: 20 + addedTopMargin,
       backgroundColor: '#94171C',
     },
     header:{

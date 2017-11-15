@@ -12,6 +12,7 @@ const STRINGS = {
   HASHED: "hashed",
   REQUEST_PAGE: "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=3&page=",
   CATEGORIES_URL: "&categories=",
+  CATEGORY_CHANGED: "Category Changed",
   PAGE: "page",
   STATIC: "static",
   LIGHT_CONTENT: "light-content",
@@ -31,7 +32,22 @@ const STRINGS = {
   DETAILED_POST: "DetailedPost",
   PAD: "padding",
   REPLY_PLACEHOLDER: "Write a reply...",
-  IMG: "image"
+  IMG: "image",
+  APP_OPENED: "App opened",
+  ARTICLES_PREVIEW_REQUEST: "Article preview request",
+  ARTICLE_FULL_LOADED: "Article Clicked",
+  NEW_POST: "NewPost",
+  NONE: "none",
+  UNDEFINED: "undefined",
+  NEWEST_TO_OLDEST: "sortDate",
+  POSTS_BODIES: "postsBodies",
+  SIGN_IN: "SignIn",
+  CHATTER: "Chatter",
+  SIGNED_IN: "signedIn",
+  USERS: "Users",
+  VERIFIED: "verified",
+  LIST: "list",
+  PROFILE_PICTURES: "profile_pictures"
 }
 
 const PATHS = {
@@ -78,10 +94,12 @@ const REFS = {
   VIEW: "view",
   STATUS_BAR: "statusBar",
   HEADER: "Header",
-  LIST: "listview"
+  LIST: "listview",
+  CONTAINER: "container"
 };
 
 const COLORS = {
+  WHITE: "#FFFFFF",
   SIDE_BAR_GRAY: "#F7F7F7",
   LIGHT_GRAY: "#A5A5A5",
   DARK_GRAY: "#4E4E4E",
@@ -98,7 +116,8 @@ const ALIGNMENTS = {
 
 const FONTS = {
   CENTURY: "Century",
-  PT_SERIF:"PT Serif"
+  PT_SERIF:"PT Serif",
+  HNEUE: "Helvetica Neue"
 };
 
 const FONT_SIZES = {
@@ -110,14 +129,17 @@ const FONT_SIZES = {
 
 const MARGINS = {
   DEFAULT_MARGIN: 8,
-  ARTICLE_SIDES: 14
+  ARTICLE_SIDES: 14,
+  NORMAL_HEADER_MARGINS: 13,
+  IPHONEX_HEADER_ADDITION: 15
 };
 
 const HEIGHTS = {
   APP_HEADER: 64,
   SIDE_MENU_ITEM: 45,
   TITLE_LINE_HEIGHT: 35,
-  DESC_LINE_HEIGHT: 23.4
+  DESC_LINE_HEIGHT: 23.4,
+  TAB_BAR_HEIGHT: 49
 };
 
 const CONSTANT_NUMS = {
@@ -127,6 +149,22 @@ const CONSTANT_NUMS = {
   CHATTER_LIMIT: 180
 };
 
+const KEYS = {
+  AMPLITUDE_API: '377e75f8a2462c6f4690f6c7fa6ebebb',
+};
+
+const ICONS = {
+  BACK: "ios-arrow-back",
+  MENU: "ios-menu"
+}
+
+const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyBIUCWibwkLZtyVKZ8cQ5E4uc51OXpn3iA",
+    authDomain: "grocerytest-95615.firebaseapp.com",
+    databaseURL: "https://grocerytest-95615.firebaseio.com",
+    storageBucket: "grocerytest-95615.appspot.com",
+};
+
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images};
+module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, FIREBASE_CONFIG};
 // module.exports = CATEGORIES;

@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-const firebase = require('firebase');
+import styles from './styles/detailedpost.js';
+import firebase from 'firebase';
 
-const {
+import {
   TextInput,
   AppRegistry,
   ListView,
@@ -17,16 +18,16 @@ const {
   Dimensions,
   Keyboard,
   ScrollView,
-} = ReactNative;
+} from 'react-native';
 
 import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
-const {width, height} = Dimensions.get('window');
 import Header from './common/header';
 import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images} from '../assets/constants.js';
 
-export default class DetailedPost extends Component {
+const {width, height} = Dimensions.get('window');
 
+export default class DetailedPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -259,66 +260,4 @@ export default class DetailedPost extends Component {
         </View>
     );
   }
-
-
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "space-between"
-  },
-  writeAReply: {
-    width: "100%",
-    backgroundColor: "white",
-    flexDirection: 'row',
-    alignItems: 'flex-end'
-  },
-  textInputWrapper: {
-    flex:1,
-    borderWidth: 1,
-    borderColor: '#A5A5A5',
-    borderRadius: 7,
-    marginLeft: 14,
-    marginTop: 10,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'flex-end'
-  },
-  textInput: {
-    color: '#4e4e4e',
-    height: 28,
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 5,
-    paddingBottom: 5,
-    flex: 1,
-    fontFamily: 'Helvetica Neue',
-    fontSize: 14,
-  },
-  inactiveAnon: {
-    height: 20,
-    width: 17,
-    tintColor: '#A5A5A5',
-    marginRight: 6,
-    marginBottom: 6
-  },
-  activeAnon: {
-    height: 20,
-    width: 17,
-    tintColor: '#94171C',
-    marginRight: 6,
-    marginBottom: 6
-  },
-  post: {
-    height: 30,
-    width: 30,
-    tintColor: '#94171C',
-    marginRight: 8,
-    marginBottom: 11,
-    marginLeft: 4
-  },
-  listview: {
-    flex: 1,
-  },
-});

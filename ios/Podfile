@@ -9,6 +9,7 @@ target 'StanfordDaily' do
   pod 'RSKImageCropper'
   pod 'QBImagePickerController'
   pod 'Firebase'
+  pod 'Amplitude-iOS'
 
   target 'StanfordDailyTests' do
     inherit! :search_paths
@@ -16,6 +17,7 @@ target 'StanfordDaily' do
     pod 'RSKImageCropper'
     pod 'QBImagePickerController'
     pod 'Firebase'
+    pod 'Amplitude-iOS'
   end
 
 end
