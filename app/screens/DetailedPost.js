@@ -23,9 +23,12 @@ import {
 import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
 import Header from './common/header';
-import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images} from '../assets/constants.js';
+import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images, KEYS} from '../assets/constants.js';
+import RNAmplitute from 'react-native-amplitude-analytics';
 
+const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window');
+
 
 export default class DetailedPost extends Component {
   constructor(props) {
@@ -198,6 +201,7 @@ export default class DetailedPost extends Component {
       view.fetchMoreReplies();
     });
     this.setState({text: '', height: 0});
+    amplitude.logEvent(STRINGS.NEW_REPLY, {post: postKey});
   }
 
   _renderItem(item) {
@@ -248,9 +252,6 @@ export default class DetailedPost extends Component {
                   value={this.state.text}
                   placeholder={STRINGS.REPLY_PLACEHOLDER}
                 />
-                <TouchableWithoutFeedback onPress={() => this.setState({anon : !this.state.anon})}>
-                  <Image style={this.decideColor(STRINGS.IMG)} source={Images.PROFILE}/>
-                </TouchableWithoutFeedback>
               </View>
               <TouchableWithoutFeedback onPress={this.createAReply.bind(this)}>
                 <Image style={styles.post} source={Images.SEND}/>

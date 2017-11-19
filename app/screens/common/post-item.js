@@ -1,14 +1,10 @@
-/**
- * Created by ggoma on 12/17/16.
- */
- import React, {Component} from 'react';
- import ReactNative from 'react-native';
- const firebase = require('firebase');
- const styles = require('../../assets/styles.js')
- const moment = require('moment');
- moment().format();
 
- const {
+ import React, {Component} from 'react';
+ import firebase from 'firebase';
+ import styles from '../../assets/styles.js';
+ import moment from 'moment';
+
+ import {
    AppRegistry,
    ListView,
    StyleSheet,
@@ -18,12 +14,18 @@
    AlertIOS,
    Image,
    TouchableWithoutFeedback
- } = ReactNative;
+ } from 'react-native';
 
+import {STRINGS, KEYS} from '../../assets/constants.js'; //Constants
+
+import RNAmplitute from 'react-native-amplitude-analytics';
+const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API); //Analytics library and configuration
+
+moment().format();
 export default class PostItem extends Component {
     constructor() {
         super();
-        this.state = {
+        this.state = { //Default empty values
           body: "",
           repliesCount: -1,
           votes: -1,
@@ -53,18 +55,6 @@ export default class PostItem extends Component {
             author = childJSON.author;
           }
           var userVote = view.currUserVote(childJSON);
-          var postObject = {
-            body: body,
-            repliesCount: childJSON.repliesCount,
-            votes: childJSON.votes,
-            long: childJSON.long,
-            timeStamp : childJSON.TimeStamp,
-            anon: childJSON.anon,
-            key: view.propsCopy.item.key,
-            sortDate: childJSON.sortDate,
-            author: author,
-            userVote: userVote,
-          };
           view.propsCopy.item.body = body;
           view.propsCopy.item.repliesCount = childJSON.repliesCount;
           view.propsCopy.item.votes = childJSON.votes;
@@ -184,6 +174,7 @@ export default class PostItem extends Component {
       var view = this;
       if(this.state.userVote === newVote) {
         this.setState({userVote : 0});
+        amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: 0});
         refToVotes.transaction(function(currentVotes) {
           return (currentVotes || 0) - newVote;
         });
@@ -193,6 +184,7 @@ export default class PostItem extends Component {
           return (currentVotes || 0) + (newVote-view.state.userVote);
         });
         this.propsCopy.firebase.database().ref("/posts/"+this.propsCopy.item.key+"/voters/"+this.propsCopy.currUser).set(newVote);
+        amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: newVote});
         this.setState({userVote : newVote});
       }
     }

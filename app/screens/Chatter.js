@@ -23,8 +23,11 @@ moment().format();
 
 import PostItem from './common/post-item'; //Post items
 import Header from './common/header'; //The header
-import {STRINGS, FIREBASE_CONFIG, REFS, Images} from '../assets/constants.js'; //Constants
+import {STRINGS, FIREBASE_CONFIG, REFS, Images, KEYS} from '../assets/constants.js'; //Constants
+import RNAmplitute from 'react-native-amplitude-analytics';
 
+const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
+const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 const firebaseApp = firebase.initializeApp(FIREBASE_CONFIG); //Configuring firebase
 
 var currUser = "";
@@ -123,6 +126,7 @@ export default class Chatter extends Component {
             } else if (view.items[view.items.length - 1].key !== child.key) { //if not, append at the end
               view.items.push(postObject);
               view.allLoadedPosts[child.key] = 1;
+              amplitude.logEvent(STRINGS.LOAD_CHATTER_POSTS);
             }
           }
         });

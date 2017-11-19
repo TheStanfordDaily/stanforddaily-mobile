@@ -136,12 +136,7 @@ export default class NewPost extends Component {
             onChangeText={(text) => this.setState({post: text})}
           />
           <View style={styles.actionView}>
-            <TouchableWithoutFeedback onPress={() => this.setState({anon : !this.state.anon})}>
-            <View style={styles.anonView}>
-              <Image style={this.decideColor('image')} source={require('../media/anon.png')}/>
-              <Text style={this.decideColor('text')}>Anonymous</Text>
-            </View>
-            </TouchableWithoutFeedback>
+
             <TouchableHighlight
               style={styles.postButton}
               onPress={this.createPost.bind(this)}
@@ -203,7 +198,7 @@ const styles= StyleSheet.create({
       flexDirection: 'row',
       paddingLeft: 10,
       paddingRight: 10,
-      justifyContent: 'space-between',
+      justifyContent: 'flex-end',
       alignItems: 'center'
     },
     inactiveAnon: {

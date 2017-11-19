@@ -47,7 +47,11 @@ const STRINGS = {
   USERS: "Users",
   VERIFIED: "verified",
   LIST: "list",
-  PROFILE_PICTURES: "profile_pictures"
+  PROFILE_PICTURES: "profile_pictures",
+  SWITCHED_SCREEN: "Switched Screen",
+  LOAD_CHATTER_POSTS: "Request for more chatter posts",
+  VOTE_CHANGED: "New vote",
+  NEW_REPLY: "New Reply"
 }
 
 const PATHS = {
