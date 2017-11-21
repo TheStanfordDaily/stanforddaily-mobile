@@ -13,6 +13,7 @@ const images = {
   SEND: require("../media/send.png"),
   SIGN_OUT: require("../media/signout.png"),
   UP_VOTE: require("../media/upVote.png"),
+  DOWN_VOTE: require("../media/downVote.png"),
 };
 
 export default images;

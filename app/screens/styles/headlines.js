@@ -46,6 +46,16 @@ const styles= StyleSheet.create({
       alignItems: ALIGNMENTS.CENTER,
       borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1
+    },
+    categoriesHeaderContainer: {
+      height: 45,
+      backgroundColor:COLORS.WHITE,
+      alignItems:ALIGNMENTS.CENTER,
+      justifyContent:ALIGNMENTS.CENTER
+    },
+    categoriesText: {
+      fontFamily:FONTS.CENTURY,
+      fontSize:28
     }
 })
 

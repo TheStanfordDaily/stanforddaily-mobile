@@ -194,7 +194,7 @@ export default class DetailedPost extends Component {
       long: long,
     };
     var view = this;
-    firebaseApp.database().ref(STRINGS.POSTS+'/'+postKey+'/'+STRINGS.REPLIES_COUNT).transaction(function(currentReplies) {
+    firebaseApp.database().ref(STRINGS.POSTS).child(postKey).child(STRINGS.REPLIES_COUNT).transaction(function(currentReplies) {
       return (currentReplies || 0) + 1;
     });
     replies.child(postKey).child(replyKey).set(replyDetails, function () {

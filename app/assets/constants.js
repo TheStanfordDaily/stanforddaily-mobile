@@ -42,6 +42,7 @@ const STRINGS = {
   NEWEST_TO_OLDEST: "sortDate",
   POSTS_BODIES: "postsBodies",
   SIGN_IN: "SignIn",
+  SIGN_UP: "SignUp",
   CHATTER: "Chatter",
   SIGNED_IN: "signedIn",
   USERS: "Users",
@@ -51,7 +52,14 @@ const STRINGS = {
   SWITCHED_SCREEN: "Switched Screen",
   LOAD_CHATTER_POSTS: "Request for more chatter posts",
   VOTE_CHANGED: "New vote",
-  NEW_REPLY: "New Reply"
+  NEW_REPLY: "New Reply",
+  UP: "up",
+  DOWN: "down",
+  BOLD: "bold",
+  VOTES: "votes",
+  VOTERS: "voters",
+  PUBLIC_POSTS: "publicPosts",
+  NAME: "name"
 }
 
 const PATHS = {
@@ -110,12 +118,19 @@ const COLORS = {
   NEAR_WHITE: "#FCFCFC",
   PLACEHOLDER_LIGHT: "#F0F0F0",
   PLACEHOLDER_DARK: "#E5E5E5",
+  CARDINAL: "#94171C",
+  GHOST_WHITE: "ghostwhite"
 };
 
 const ALIGNMENTS = {
   ROW: "row",
+  COLUMN: "column",
   SPACE_BETWEEN: "space-between",
-  CENTER: "center"
+  SPACE_AROUND: "space-around",
+  FLEX_END: "flex-end",
+  FLEX_START: "flex-start",
+  CENTER: "center",
+  MIDDLE: "middle"
 };
 
 const FONTS = {
@@ -143,7 +158,10 @@ const HEIGHTS = {
   SIDE_MENU_ITEM: 45,
   TITLE_LINE_HEIGHT: 35,
   DESC_LINE_HEIGHT: 23.4,
-  TAB_BAR_HEIGHT: 49
+  TAB_BAR_HEIGHT: 49,
+  IPHONE_X: 812,
+  SIGN_IN_CARD: 303,
+  SIGN_UP_CARD: 365
 };
 
 const CONSTANT_NUMS = {

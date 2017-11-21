@@ -1,10 +1,7 @@
-'use strict';
-
 import React, {Component} from 'react';
-import ReactNative from 'react-native';
-const firebase = require('firebase');
+import firebase from 'firebase';
 
-const {
+import {
   StyleSheet,
   Text,
   View,
@@ -18,12 +15,10 @@ const {
   Switch,
   Button,
   Dimensions
-} = ReactNative;
-
+} from 'react-native';
+import styles from './styles/newpost.js';
 import {NavigationActions} from 'react-navigation';
-
-const iphone_x = Dimensions.get('window').height == 812;
-const top_margin = iphone_x ? 20 : 0;
+import {STRINGS, CONSTANT_NUMS, HEIGHTS, Images, COLORS} from '../assets/constants.js';
 
 export default class NewPost extends Component {
 
@@ -41,7 +36,7 @@ export default class NewPost extends Component {
       this.setState({imageExists: true, imageURI: this.props.navigation.state.params.image})
     } else {
       var view = this;
-      firebase.storage().ref('profile_pictures').child(""+this.props.navigation.state.params.user).getDownloadURL()
+      firebase.storage().ref(STRINGS.PROFILE_PICTURES).child(this.props.navigation.state.params.user).getDownloadURL()
         .then(function(url) {
           currUserThumbnail = url;
           view.setState({imageURI: url, imageExists: true});
@@ -59,15 +54,15 @@ export default class NewPost extends Component {
     // firebase.apps[0].database().ref().once('value', (snap) =>  {
     //   console.log(snap.val());
     // });
-    var bodies = firebaseApp.database().ref("postsBodies/");
-    var posts = firebaseApp.database().ref("posts/");
-    var userPosts = firebaseApp.database().ref("Users/" + this.props.navigation.state.params.user);
+    var bodies = firebaseApp.database().ref(STRINGS.POSTS_BODIES);
+    var posts = firebaseApp.database().ref(STRINGS.POSTS);
+    var userPosts = firebaseApp.database().ref(STRINGS.USERS).child(this.props.navigation.state.params.user);
     var key = posts.push().key;
     bodies.child(key).set({body: this.state.post});
-    var long = "no";
-    if(this.state.post.length > 180) long = "yes";
-    var anonString = "no";
-    if (this.state.anon) anonString = "yes";
+    var long = STRINGS.NO;
+    if(this.state.post.length > CONSTANT_NUMS.CHATTER_LIMIT) long = STRINGS.YES;
+    var anonString = STRINGS.NO;
+    if (this.state.anon) anonString = STRINGS.YES;
     var postDetails = {
       TimeStamp: firebase.database.ServerValue.TIMESTAMP,
       anon: anonString,
@@ -81,12 +76,12 @@ export default class NewPost extends Component {
 
     var view = this;
     posts.child(key).set(postDetails, function () {
-      firebaseApp.database().ref("posts/"+key).once('value', (snap) => {
+      firebaseApp.database().ref(STRINGS.POSTS).child(key).once(STRINGS.VAL, (snap) => {
           const timestamp = snap.val().TimeStamp;
           var sortDate = timestamp * -1;
           postDetails.sortDate = sortDate;
-          userPosts.child('/posts/'+key).set({post: key, sortDate: sortDate});
-          if (anonString === 'no') userPosts.child('/publicPosts/'+key).set({post: key, sortDate: sortDate});
+          userPosts.child(STRINGS.POSTS).child(key).set({post: key, sortDate: sortDate});
+          if (anonString === STRINGS.NO) userPosts.child(STRINGS.PUBLIC_POSTS).child(key).set({post: key, sortDate: sortDate});
           posts.child(key).set(postDetails, function () {
             view.props.navigation.state.params.update();
             view.props.navigation.dispatch(NavigationActions.back());
@@ -118,11 +113,11 @@ export default class NewPost extends Component {
           hidden={true}
         />
         <View style={styles.header}>
-          {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={require('../media/anon_small.png')}/>}
+          {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {(this.state.imageExists && !this.state.anon) && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
           <Text style={styles.title}>Write an update</Text>
           <TouchableWithoutFeedback onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
-          <Image style={styles.close} source={require('../media/Close.png')}/>
+          <Image style={styles.close} source={Images.CLOSE}/>
           </TouchableWithoutFeedback>
         </View>
         <KeyboardAvoidingView style={{flex: 1}} behavior={"height"}>
@@ -131,8 +126,8 @@ export default class NewPost extends Component {
             multiline = {true}
             autoFocus={true}
             placeholder={"Share how was campus today..."}
-            placeholderTextColor={"#A5A5A5"}
-            selectionColor={"#94171C"}
+            placeholderTextColor={COLORS.LIGHT_GRAY}
+            selectionColor={COLORS.CARDINAL}
             onChangeText={(text) => this.setState({post: text})}
           />
           <View style={styles.actionView}>
@@ -140,7 +135,7 @@ export default class NewPost extends Component {
             <TouchableHighlight
               style={styles.postButton}
               onPress={this.createPost.bind(this)}
-              underlayColor='#4e4e4e'>
+              underlayColor={COLORS.DARK_GRAY}>
                 <Text style={styles.postText}>Post</Text>
               </TouchableHighlight>
           </View>
@@ -151,89 +146,3 @@ export default class NewPost extends Component {
   }
 
 }
-
-const styles= StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-      flexDirection: 'column'
-    },
-    header: {
-      flexDirection: 'row',
-      marginRight: 18,
-      marginLeft: 18,
-      marginTop: 12,
-      justifyContent: 'space-between',
-      alignItems: 'center'
-    },
-    userImage: {
-      width: 35,
-      height: 35,
-      borderRadius: 17.5,
-    },
-    title: {
-      color: '#94171C',
-      fontSize: 20,
-      fontFamily: 'Helvetica Neue',
-      paddingRight: 10,
-      marginTop: top_margin
-    },
-    close: {
-      width: 17,
-      height: 17,
-    },
-    textInput: {
-      flex: 1,
-      marginRight: 14,
-      marginLeft: 14,
-      marginTop: 14,
-      fontFamily: 'Helvetica Neue',
-      fontSize: 20,
-      fontWeight: '200'
-    },
-    actionView: {
-      height: 50,
-      borderTopColor: "#BBBBBB",
-      borderTopWidth: 1,
-      flexDirection: 'row',
-      paddingLeft: 10,
-      paddingRight: 10,
-      justifyContent: 'flex-end',
-      alignItems: 'center'
-    },
-    inactiveAnon: {
-      height: 20,
-      width: 17,
-      tintColor: '#A5A5A5',
-      marginRight: 6
-    },
-    activeAnon: {
-      height: 20,
-      width: 17,
-      tintColor: '#94171C',
-      marginRight: 6
-    },
-    anonView: {
-      flexDirection: 'row',
-      alignItems: 'center',
-    },
-    activeAnonLabel: {
-      color: '#94171C'
-    },
-    inactiveAnonLabel: {
-      color: '#A5A5A5'
-    },
-    postButton: {
-      backgroundColor:'#94171C',
-      borderRadius:8,
-      width: 58,
-      height: 28
-    },
-    postText:{
-      color:'#fff',
-      textAlign:'center',
-      marginTop: 6,
-      fontFamily: 'Helvetica Neue',
-      fontSize: 14,
-  }
-})

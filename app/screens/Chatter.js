@@ -229,22 +229,6 @@ export default class Chatter extends Component {
       });
   }
 
-  listenForDeletes() { //Keeps an eye on deletes that other people make to avoid interacting with deleted posts
-    var view = this;
-    firebaseApp.database().ref().child(STRINGS.POSTS).on(STRINGS.CHILD_REMOVED, function(data) {
-      var key = data.key;
-      if (view.allLoadedPosts[key]) {
-        for(var i = view.items.length - 1; i >= 0; i--) {
-          if (view.items[i].key === key) {
-            view.items.splice(i, 1);
-            view.update(view);
-            break;
-          }
-        }
-      }
-    });
-  }
-
   makeSureUserSignedIn() { //Checks user status using firebase authentication
     var view = this;
     firebase.auth().onAuthStateChanged(function(user) {
@@ -255,7 +239,6 @@ export default class Chatter extends Component {
               view.addUserToDatabase(user);
               view.setState({userStatus : STRINGS.VERIFIED});
               view.listenForItems(firebaseApp.database().ref().child(STRINGS.POSTS), true);
-              view.listenForDeletes();
             } else {
               view.setState({userStatus : STRINGS.SIGNED_IN});
             }

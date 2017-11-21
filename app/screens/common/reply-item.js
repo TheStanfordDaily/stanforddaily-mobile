@@ -3,11 +3,12 @@
  */
  import React, {Component} from 'react';
  import ReactNative from 'react-native';
- const firebase = require('firebase');
- const moment = require('moment');
+ import firebase from 'firebase';
+ import moment from 'moment';
+ import styles from '../styles/replyitem.js';
  moment().format();
 
- const {
+ import {
    AppRegistry,
    ListView,
    StyleSheet,
@@ -18,8 +19,9 @@
    Image,
    TouchableWithoutFeedback,
    Dimensions
- } = ReactNative;
+ } from 'react-native';
 
+import {STRINGS, Images} from '../../assets/constants.js'; //Constants
 export default class ReplyItem extends Component {
     constructor() {
         super();
@@ -35,25 +37,28 @@ export default class ReplyItem extends Component {
     componentWillMount() {
       this.setState(this.props.item);
       var view = this;
-      setInterval(function(){
+      setInterval(function(){ //Updates the timestamp
         view.calculateTime(view.props.item.timeStamp);
       },60000);
       this.setState({body: "", author: ""});
     }
 
     componentDidMount() {
-      console.log("mounted");
+      // console.log("mounted");
       this._mounted = true;
       var view = this;
       this.calculateTime(this.state.timeStamp);
-      this.props.firebase.database().ref(this.props.item.body).once('value').then(function(snapshot) {
+      //Fetches the body of the reply
+      this.props.firebase.database().ref(this.props.item.body).once(STRINGS.VAL).then(function(snapshot) {
           view.setState({body : snapshot.val().body});
       });
-      if(this.state.anon === "no") {
-        this.props.firebase.database().ref("/Users/"+this.props.item.author).once('value').then(function(snapshot) {
+
+      //Handles whether or not to display the user
+      if(this.state.anon === STRINGS.NO) {
+        this.props.firebase.database().ref(STRINGS.USERS).child(this.props.item.author).once(STRINGS.VAL).then(function(snapshot) {
             view.setState({author : snapshot.val().name, userId: view.props.item.author});
         });
-        firebase.storage().ref('profile_pictures').child(""+view.props.item.author).getDownloadURL()
+        firebase.storage().ref(STRINGS.PROFILE_PICTURES).child(view.props.item.author).getDownloadURL()
           .then(function(url) {
             view.setState({imageURI: url, imageExists: true});
           })
@@ -61,9 +66,11 @@ export default class ReplyItem extends Component {
 
           });
       } else {
-        this.setState({author: "Anonymous"})
+        this.setState({author: STRINGS.ANON})
       }
-      if(this.state.long === "yes") {
+
+      //Deals with collapsing and view more
+      if(this.state.long === STRINGS.YES) {
         this.setState({collapsed : true});
       } else {
         this.setState({collapsed : false});
@@ -77,7 +84,7 @@ export default class ReplyItem extends Component {
 
     viewMoreStyle() {
       var style = styles.messageText;
-      style.fontWeight = 'bold';
+      style.fontWeight = STRINGS.BOLD;
     }
 
     calculateTime(TimeStamp) {
@@ -94,17 +101,22 @@ export default class ReplyItem extends Component {
 
     render() {
       this.state.preview = this.state.body;
-      if (this.state.long === "yes") {
+      if (this.state.long === STRINGS.YES) {
         this.state.preview = this.state.preview.substring(0, 180);
-        this.state.preview += "..."
+        this.state.preview += STRINGS.MORE_TEXT;
       }
 
+      /* Breakdown
+       * A container that has a touchable for the profile picture then a view that has style of "post"
+       * Post has a touchable for the name of the user and the timeStamp
+       * Then there is a view and a text for the reply body
+      */
       return (
           <View style={styles.container}>
             <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
               <View>
-                {!this.state.imageExists && <Image style={styles.authorImage} source={require('../../media/anon_small.png')}/>}
-                {this.state.imageExists && <Image style={styles.authorImage} defaultSource={require('../../media/anon_small.png')} source={{uri: this.state.imageURI}}/>}
+                {!this.state.imageExists && <Image style={styles.authorImage} source={Images.ANON_SMALL}/>}
+                {this.state.imageExists && <Image style={styles.authorImage} defaultSource={STRINGS.ANON_SMALL} source={{uri: this.state.imageURI}}/>}
               </View>
             </TouchableWithoutFeedback>
             <View style={styles.post}>
@@ -119,8 +131,8 @@ export default class ReplyItem extends Component {
                   {this.state.collapsed && this.state.preview + " "}
                   {!this.state.collapsed && this.state.body}
                   {this.state.collapsed && (
-                    <View style={{width:70, height:15, marginTop:2}}>
-                      <TouchableHighlight underlayColor={"#E5E5E5"} onPress={(event) => this.setState({collapsed : false})} activeOpacity={1}>
+                    <View style={styles.viewMoreStyle}>
+                      <TouchableHighlight underlayColor={COLORS.PLACEHOLDER_DARK} onPress={(event) => this.setState({collapsed : false})} activeOpacity={1}>
                         <Text style={this.viewMoreStyle()}>
                           View more
                         </Text>
@@ -134,48 +146,3 @@ export default class ReplyItem extends Component {
       );
     }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    paddingLeft: 18,
-    paddingRight: 14,
-    paddingTop: 6,
-    paddingBottom: 10,
-    borderTopWidth: 1,
-    borderTopColor: '#C8C8C8',
-    width: Dimensions.get('window').width,
-  },
-  authorImage: {
-    height:35.6,
-    width: 35.6,
-    borderRadius: 17.8,
-    marginRight: 9.4
-  },
-  post: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  postInfo: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  authorName: {
-    color: '#000',
-    fontSize: 14,
-    fontFamily: 'Helvetica Neue',
-    marginRight: 4
-  },
-  timeStamp: {
-    color: '#A5A5A5',
-    fontSize: 9,
-    fontFamily: 'Helvetica Neue',
-  },
-  messageText: {
-    color: '#000',
-    fontSize: 14,
-    fontFamily: 'Helvetica Neue',
-    fontWeight: '200'
-  }
-});

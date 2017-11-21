@@ -1,5 +1,4 @@
-//Pre-made Components imports
-import {STRINGS, CATEGORIES, REFS, KEYS} from '../assets/constants.js';
+import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {
     View,
@@ -181,9 +180,9 @@ export default class Headlines extends Component {
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
-         <View style={{height: 45, backgroundColor:'white', alignItems:"center", justifyContent:"center"}}>
-           <View style={{flexDirection: 'row'}}>
-             <Text style={{fontFamily:"Century", fontSize:28}}>
+         <View style={styles.categoriesHeaderContainer}>
+           <View style={{flexDirection: ALIGNMENTS.ROW}}>
+             <Text style={styles.categoriesText}>
                {selectedCategory}
              </Text>
            </View>
@@ -193,7 +192,7 @@ export default class Headlines extends Component {
 
    //Handles rendering rows by calling the NewsFeedItem and passing data to it
   _renderRow(data) {
-    console.log("This is my id", data.item.key);
+    // console.log("This is my id", data.item.key);
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
       return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost}/>
     } else {
@@ -217,9 +216,9 @@ export default class Headlines extends Component {
 
   setTextStyle(category) {
     if (category === selectedCategory) {
-      return {color: "#94171C", fontFamily: "Century"};
+      return {color: COLORS.CARDINAL, fontFamily: FONTS.CENTURY};
     }
-    return {color: "#4E4E4E", fontFamily: "Century"};
+    return {color: COLORS.DARK_GRAY, fontFamily: FONTS.CENTURY};
   }
   //A method to render the drawer/side menu
   sideMenu() {
@@ -266,7 +265,7 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:'ghostwhite'}}>
+        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
         <StatusBar
           ref={REFS.STATUS_BAR}
           barStyle={STRINGS.LIGHT_CONTENT}
@@ -291,5 +290,5 @@ export default class Headlines extends Component {
   }
 }
 const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3},
 }

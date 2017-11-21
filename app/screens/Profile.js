@@ -1,44 +1,30 @@
-'use strict';
-
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
-import Lightbox from 'react-native-lightbox';
 import _ from 'lodash';
 import RNFetchBlob from 'react-native-fetch-blob'
 import ImagePicker from 'react-native-image-crop-picker';
-const firebase = require('firebase');
+import firebase from 'firebase';
 
-const {
-  StyleSheet,
+import {
   Text,
   View,
-  TouchableHighlight,
-  AlertIOS,
   Image,
   TouchableWithoutFeedback,
-  StatusBar,
-  TextInput,
-  KeyboardAvoidingView,
-  Switch,
   ScrollView,
-  Dimensions,
   ListView,
   ActionSheetIOS
-} = ReactNative;
+} from 'react-native';
 
 import {NavigationActions} from 'react-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
 import PostItem from './common/post-item';
-import {MARGINS} from '../assets/constants.js';
+import {STRINGS, Images, ICONS, COLORS} from '../assets/constants.js';
+import styles from './styles/profile.js';
 
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
-const {width, height} = Dimensions.get('window');
-
-const iphone_x = height == 812;
-const addedTopMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
 
 var currUser = "";
 var profileId = "";
@@ -53,7 +39,6 @@ export default class Profile extends Component {
     this.goToPost = this.goToPost.bind(this);
     this.goToProfile = this.goToProfile.bind(this);
     this.deletePost = this.deletePost.bind(this);
-    this.handleDeletion = this.handleDeletion.bind(this);
     this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged: function(row1, row2) {
@@ -66,33 +51,36 @@ export default class Profile extends Component {
     }
   }
 
+  //Load initial data and set the initial values for the variables
   componentWillMount() {
     var firebaseApp = firebase.apps[0];
     currUser = this.props.navigation.state.params.currUser;
     profileId = this.props.navigation.state.params.profileId;
-    this.itemsRef = firebaseApp.database().ref().child('Users/'+profileId+'/publicPosts');
-    if (currUser === profileId) this.itemsRef = firebaseApp.database().ref().child('Users/'+profileId+'/posts');
-    var displayName = firebaseApp.database().ref("/Users/"+profileId + "/name");
+    this.itemsRef = firebaseApp.database().ref().child(STRINGS.USERS).child(profileId).child(STRINGS.PUBLIC_POSTS);
+    if (currUser === profileId) this.itemsRef = firebaseApp.database().ref().child(STRINGS.USERS).child(profileId).child(STRINGS.POSTS);
+    var displayName = firebaseApp.database().ref(STRINGS.USERS).child(profileId).child(STRINGS.NAME);
     var view = this;
-    firebase.storage().ref('profile_pictures').child(profileId).getDownloadURL()
+    firebase.storage().ref(STRINGS.PROFILE_PICTURES).child(profileId).getDownloadURL()
       .then(function(url) {
         view.setState({imageURI: url, imageExists: true});
       })
       .catch(function(error){
 
       });
-    displayName.once('value', (snap) => {
+    displayName.once(STRINGS.VAL, (snap) => {
       view.setState({ displayName: snap.val()});
     });
   }
 
+  //Begin listening for items once the screen is actually loaded
   componentDidMount() {
     var firebaseApp = firebase.apps[0];
     this.listenForItems(this.itemsRef, true);
   }
 
+  //Get the current user vote
   currUserVote(childJSON) {
-    if (typeof childJSON.voters !== "undefined") {
+    if (typeof childJSON.voters !== STRINGS.UNDEFINED) {
       if (currUser in childJSON.voters) {
         return childJSON.voters[currUser];
       }
@@ -100,6 +88,7 @@ export default class Profile extends Component {
     return "0";
   }
 
+  //Update the posts list
   update(view) {
     var newArr = view.items.slice();
     view.setState({
@@ -107,21 +96,23 @@ export default class Profile extends Component {
     });
   }
 
+  //Check Chatter.js for comments
   refToItems(itemsRef, refresh) {
     if (refresh || this.items.length === 0) {
-      return itemsRef.orderByChild('sortDate').limitToFirst(3);
+      return itemsRef.orderByChild(STRINGS.NEWEST_TO_OLDEST).limitToFirst(3);
     } else {
-      return itemsRef.orderByChild('sortDate').startAt(this.items[this.items.length - 1].sortDate).limitToFirst(4);
+      return itemsRef.orderByChild(STRINGS.NEWEST_TO_OLDEST).startAt(this.items[this.items.length - 1].sortDate).limitToFirst(4);
     }
   }
 
+  //Check Chatter.js for comments
   listenForItems(itemsRef,refresh) {
     if(!this.loading && !(this.allLoaded && !refresh)) {
       this.loading = true;
       var view = this;
       var currInsertIdx = 1;
       var ref = this.refToItems(itemsRef, refresh);
-      ref.once('value', (snap) => {
+      ref.once(STRINGS.VAL, (snap) => {
         snap.forEach((child) => {
           var postObject = {
             key: child.key,
@@ -143,29 +134,30 @@ export default class Profile extends Component {
     }
   }
 
+  //Signs out from firebase, and performs a back action to the chatter main page
   signOut() {
     firebase.auth().signOut();
     const resetAction = NavigationActions.reset({
       index: 0,
-      actions: [NavigationActions.navigate({ routeName: 'Chatter'}),]
+      actions: [NavigationActions.navigate({routeName: STRINGS.CHATTER}),]
     });
     this.props.navigation.dispatch(resetAction);
-    // this.props.navigation.state.params.clear();
-    // this.dismissModal();
-
   }
 
-  dismissModal() {
+  //Goes back to chatter
+  dismissScreen() {
     this.props.navigation.dispatch(NavigationActions.back());
   }
 
+  //Loads more posts
   loadMore() {
     var firebaseApp = firebase.apps[0];
     this.listenForItems(this.itemsRef, false);
   }
 
+  //Opens Detailed post view on post click
   goToPost(data, author) {
-    this.props.navigation.navigate("DetailedPost", {
+    this.props.navigation.navigate(STRINGS.DETAILED_POST, {
       ...{data: data, currUser: currUser, name: author, visible: false},
     });
   }
@@ -173,40 +165,29 @@ export default class Profile extends Component {
   goToProfile(userId) {
     console.log(userId);
     if (userId !== currUser && userId !== profileId && userId !== null) {
-      this.props.navigation.navigate("Profile", {...{currUser: currUser, profileId: userId, myProfile: false}});
+      this.props.navigation.navigate(STRINGS.PROFILE, {...{currUser: currUser, profileId: userId, myProfile: false}});
     }
-    console.log(this.loading);
+    // console.log(this.loading);
   }
 
+  //Deletes everything related to a post in the database
   deletePost(key) {
     var firebaseApp = firebase.apps[0];
-    firebaseApp.database().ref().child('Users/'+currUser+'/posts').child(key).remove();
-    firebaseApp.database().ref().child('Users/'+currUser+'/publicPosts').child(key).remove();
-    firebaseApp.database().ref().child('posts').child(key).remove();
-    firebaseApp.database().ref().child('postsBodies').child(key).remove();
-    firebaseApp.database().ref().child('replies').child(key).remove();
-    firebaseApp.database().ref().child('repliesBodies').child(key).remove();
-    // this.items = [];
-    // this.update(this);
-    // this.listenForItems(firebaseApp.database().ref().child('Users/'+currUser+'/posts'), false);
+    firebaseApp.database().ref().child(STRINGS.USERS).child(currUser).child(STRINGS.POSTS).child(key).remove();
+    firebaseApp.database().ref().child(STRINGS.USERS).child(currUser).child(STRINGS.PUBLIC_POSTS).child(key).remove();
+    firebaseApp.database().ref().child(STRINGS.POSTS).child(key).remove();
+    firebaseApp.database().ref().child(STRINGS.POSTS_BODIES).child(key).remove();
+    firebaseApp.database().ref().child(STRINGS.REPLIES).child(key).remove();
+    firebaseApp.database().ref().child(STRINGS.REPLIES_BODIES).child(key).remove();
   }
 
-  handleDeletion(key) {
-    for(var i = this.items.length - 1; i >= 0; i--) {
-      if (this.items[i].key === key) {
-        this.items.splice(i, 1);
-        this.update(this);
-        break;
-      }
-    }
-  }
-
+  //Image upload to firebase storage code snippet
   uploadImage(uri, mime = 'application/octet-stream') {
     return new Promise((resolve, reject) => {
       const uploadUri = uri.replace('file://', '');
       let uploadBlob = null;
       var firebaseApp = firebase.apps[0];
-      const imageRef = firebaseApp.storage().ref('profile_pictures').child(currUser);
+      const imageRef = firebaseApp.storage().ref(STRINGS.PROFILE_PICTURES).child(currUser);
 
       fs.readFile(uploadUri, 'base64')
         .then((data) => {
@@ -234,6 +215,7 @@ export default class Profile extends Component {
     });
   }
 
+  //Image upload options handler
   uploadOptions() {
     ActionSheetIOS.showActionSheetWithOptions({
       options: ['Upload From Library', 'Upload From Camera', 'Delete', 'Cancel'],
@@ -267,13 +249,14 @@ export default class Profile extends Component {
     });
   }
 
+  //Decides the context based on whether it's the profile of the person viewing it or not then renders a post item
   _renderItem(item) {
-    var context = 'list';
+    var context = STRINGS.LIST;
     if (this.props.navigation.state.params.myProfile) {
-      context = 'profile';
+      context = STRINGS.PROFILE;
     }
     return (
-      <View style={{borderTopColor: "#C8C8C8", borderTopWidth: 1}}>
+      <View style={styles.postContainer}>
           <PostItem
           key={item.key}
           item={item}
@@ -282,8 +265,7 @@ export default class Profile extends Component {
           goToPost={this.goToPost}
           goToProfile={this.goToProfile}
           context={context}
-          deletePost={this.deletePost}
-          handleDeletion={this.handleDeletion}/>
+          deletePost={this.deletePost}/>
       </View>
     );
   }
@@ -294,12 +276,12 @@ export default class Profile extends Component {
         <View style={styles.statusBarBackground}/>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.closeWrapper}>
-            <Icon name="ios-arrow-back" style={styles.back} size={34} color="#ffffff" onPress={this.dismissModal.bind(this)}/>
-            {!this.state.imageExists && <Image style={styles.profileImage} source={require('../media/anon_big.png')}>
+            <Icon name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
+            {!this.state.imageExists && <Image style={styles.profileImage} source={Images.ANON_BIG}>
               {this.props.navigation.state.params.myProfile && (
                 <TouchableWithoutFeedback onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
-                    <Image style={styles.edit} defaultSource={require('../media/anon_small.png')} source={require('../media/edit.png')}/>
+                    <Image style={styles.edit} source={Images.EDIT}/>
                     <Text> Edit </Text>
                   </View>
                 </TouchableWithoutFeedback>
@@ -309,7 +291,7 @@ export default class Profile extends Component {
               {this.props.navigation.state.params.myProfile && (
                 <TouchableWithoutFeedback onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
-                    <Image style={styles.edit} source={require('../media/edit.png')}/>
+                    <Image style={styles.edit} source={Images.EDIT}/>
                     <Text> Edit </Text>
                   </View>
                 </TouchableWithoutFeedback>
@@ -317,7 +299,7 @@ export default class Profile extends Component {
             </Image>}
             {this.props.navigation.state.params.myProfile && (
               <TouchableWithoutFeedback onPress={this.signOut.bind(this)}>
-                <Image style={styles.signout} source={require('../media/signout.png')}/>
+                <Image style={styles.signout} source={Images.SIGN_OUT}/>
               </TouchableWithoutFeedback>
             )}
             {!this.props.navigation.state.params.myProfile && (
@@ -338,85 +320,3 @@ export default class Profile extends Component {
   }
 
 }
-
-const styles= StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: 'white',
-      flexDirection: 'column'
-    },
-    scrollView: {
-      alignItems: 'center'
-    },
-    back: {
-      marginLeft: 14,
-    },
-    signout: {
-      width: 26,
-      height: 24,
-      marginTop: 8,
-      tintColor: 'white',
-      marginRight: 14,
-      top: 0,
-    },
-    closeWrapper: {
-      height: height/6.6,
-      backgroundColor: '#94171C',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      zIndex: 0,
-      width: '100%'
-    },
-    statusBarBackground: {
-      height: 20 + addedTopMargin,
-      backgroundColor: '#94171C',
-    },
-    header:{
-      height: height/6.6,
-      backgroundColor: '#94171C',
-    },
-    profileImage: {
-      width: 0.46667 * width,
-      height: 0.46667 * width,
-      borderRadius: (0.46667 * width)/2,
-      borderWidth: 2,
-      top: 8,
-      borderColor: 'white',
-      justifyContent: 'flex-end'
-    },
-    imageMargin: {
-      backgroundColor: 'white',
-      zIndex: 0,
-      height: (0.46667 * width)/2,
-    },
-    displayName: {
-      fontFamily: "Helvetica Neue",
-      fontSize: 20,
-      color: "#4E4E4E",
-      fontWeight: '500',
-      marginTop: 6,
-      marginBottom: 8
-    },
-    lightBox: {
-      width: 0.46667 * width,
-      height: 0.46667 * width,
-      borderRadius: (0.46667 * width)/2,
-      borderWidth: 0,
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    editPhoto: {
-      height: '18%',
-      width: '100%',
-      backgroundColor: 'white',
-      opacity: 0.75,
-      justifyContent: 'center',
-      alignItems: 'center',
-      flexDirection: 'row'
-    },
-    edit: {
-      height: 14,
-      width: 14,
-    }
-})
