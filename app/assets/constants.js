@@ -6,11 +6,14 @@ const STRINGS = {
   OPINIONS: "Opinions",
   ARTS: "Arts & Life",
   GRIND: "The Grind",
+  HEADLINES: "headlines",
   PLACEHOLDER: "placeholder",
   POST: "Post",
   POSTS: "posts",
   HASHED: "hashed",
-  REQUEST_PAGE: "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=3&page=",
+  REQUEST_SMALL_PAGE: "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=3&page=",
+  REQUEST_LARGE_PAGE: "http://stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=10&page=",
+  SEARCH_URL: "&search=",
   CATEGORIES_URL: "&categories=",
   CATEGORY_CHANGED: "Category Changed",
   PAGE: "page",
@@ -18,6 +21,7 @@ const STRINGS = {
   LIGHT_CONTENT: "light-content",
   MORE_TEXT: "...",
   MEDIA_URL: 'http://stanforddaily.com/wp-json/wp/v2/media/',
+  DAILY_URL: 'http://stanforddaily.com/',
   PROFILE: "Profile",
   CHILD_REMOVED: "child_removed",
   REPLIES: "replies",
@@ -59,7 +63,8 @@ const STRINGS = {
   VOTES: "votes",
   VOTERS: "voters",
   PUBLIC_POSTS: "publicPosts",
-  NAME: "name"
+  NAME: "name",
+  SEARCH: "Search"
 }
 
 const PATHS = {
@@ -107,7 +112,8 @@ const REFS = {
   STATUS_BAR: "statusBar",
   HEADER: "Header",
   LIST: "listview",
-  CONTAINER: "container"
+  CONTAINER: "container",
+  TITLE: "title"
 };
 
 const COLORS = {
@@ -150,7 +156,7 @@ const MARGINS = {
   DEFAULT_MARGIN: 8,
   ARTICLE_SIDES: 14,
   NORMAL_HEADER_MARGINS: 13,
-  IPHONEX_HEADER_ADDITION: 15
+  IPHONEX_HEADER_ADDITION: 20
 };
 
 const HEIGHTS = {
@@ -167,6 +173,8 @@ const HEIGHTS = {
 const CONSTANT_NUMS = {
   SOFT_DESC_LIMIT: 130,
   HARD_DESC_LIMIT: 150,
+  SOFT_SEARCH_DESC_LIMIT: 40,
+  HARD_SEARCH_DESC_LIMIT: 55,
   REPLIES_LIMIT: 10,
   CHATTER_LIMIT: 180
 };
@@ -177,7 +185,9 @@ const KEYS = {
 
 const ICONS = {
   BACK: "ios-arrow-back",
-  MENU: "ios-menu"
+  MENU: "ios-menu",
+  SEARCH: "ios-search",
+  SHARE: "ios-share-outline"
 }
 
 const FIREBASE_CONFIG = {

@@ -15,8 +15,9 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import {REFS, ICONS, Images, COLORS, ALIGNMENTS} from '../../assets/constants.js';
+import {REFS, ICONS, Images, COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
 import styles from '../styles/header.js';
+import ActivityView from 'react-native-activity-view';
 
 export default class Header extends Component {
     constructor() {
@@ -27,6 +28,12 @@ export default class Header extends Component {
       // console.log(this.state);
       this.props.toProfile(null);
     }
+
+    shareHandler() {
+    ActivityView.show({
+      url: STRINGS.DAILY_URL + "?p=" + this.props.postID
+    });
+  }
 
     render() {
 
@@ -57,11 +64,31 @@ export default class Header extends Component {
                     </View>)
                   }
 
-                  {this.props.toProfile ===  undefined && <View style={styles.leftButton}/>}
+                  {this.props.toProfile ===  undefined &&
+                    this.props.searchHandler ===  undefined &&
+                    this.props.share === undefined &&
+                    <View style={styles.leftButton}/>
+                  }
+
+                  {this.props.share !== undefined &&
+                    <TouchableWithoutFeedback style={styles.rightButton} onPress={this.shareHandler.bind(this)}>
+                      <View style={styles.rightButton}>
+                        <Icon name={ICONS.SHARE} size={34} color={COLORS.WHITE}/>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  }
+
                   {this.props.toProfile !== undefined && (
                     <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
                       <View style={styles.rightButton}>
                         <Image source={Images.PROFILE} style={styles.profileImage}/>
+                      </View>
+                    </TouchableWithoutFeedback>
+                  )}
+                  {this.props.searchHandler !== undefined && (
+                    <TouchableWithoutFeedback style={styles.rightButton} onPress={() => this.props.searchHandler()}>
+                      <View style={styles.rightButton}>
+                        <Icon name={ICONS.SEARCH} size={34} color={COLORS.WHITE}/>
                       </View>
                     </TouchableWithoutFeedback>
                   )}

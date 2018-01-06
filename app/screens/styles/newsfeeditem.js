@@ -1,7 +1,7 @@
 import React from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
+import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
 
 const styles = StyleSheet.create({
     content: {
@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
         width: '100%',
         // flex: 1
     },
-
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
@@ -22,7 +21,8 @@ const styles = StyleSheet.create({
 
     author: {
       fontFamily: FONTS.PT_SERIF,
-      fontSize: FONT_SIZES.DEFAULT_SMALL
+      fontSize: FONT_SIZES.DEFAULT_SMALL,
+      marginLeft: -2
     },
 
     date: {
@@ -60,7 +60,42 @@ const styles = StyleSheet.create({
     imageContainer: {
       borderTopColor: COLORS.LIGHT_GRAY,
       borderTopWidth: 2,
-    }
+    },
+    searchContainer: {
+      borderBottomColor: COLORS.LIGHT_GRAY,
+      borderBottomWidth: 1,
+      backgroundColor: COLORS.NEAR_WHITE,
+      width: '100%',
+      flexDirection: ALIGNMENTS.ROW,
+      maxHeight: 122
+    },
+    searchContent: {
+      flexDirection: ALIGNMENTS.COLUMN,
+      width: width - 120,
+      marginLeft: MARGINS.DEFAULT_MARGIN,
+      marginRight: MARGINS.DEFAULT_MARGIN,
+    },
+    searchImage: {
+      width: 120,
+      height: 120,
+    },
+    searchDateAndAuthor: {
+      flexDirection: ALIGNMENTS.ROW,
+      justifyContent: ALIGNMENTS.SPACE_BETWEEN,
+      marginTop: 2,
+    },
+    searchTitle: {
+      fontFamily: FONTS.PT_SERIF,
+      fontSize: 14,
+      fontWeight: STRINGS.BOLD,
+      marginTop: 2,
+    },
+    searchDescription: {
+      fontFamily: FONTS.PT_SERIF,
+      fontSize: 12,
+      marginTop: 2,
+      opacity: 0.80,
+    },
 })
 
 module.exports = styles

@@ -63,6 +63,7 @@ export default class NewsFeedItem extends Component {
         var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
         var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
         var featuredMedia = ""; //We assume that there is no featured media till we find one
+        try {
         if(this.props.data.postObj.featured_media !== 0) {
           let featuredMediaResponse = await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media);
           let featuredMediaData = await featuredMediaResponse.json();
@@ -76,11 +77,14 @@ export default class NewsFeedItem extends Component {
             featuredMedia = featuredMediaData.source_url;
           }
         }
+      } catch (exception) {
+
+      }
         //Cutting the allowed number of characters for the desc
-        var cut = CONSTANT_NUMS.SOFT_DESC_LIMIT;
+        var cut = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.SOFT_DESC_LIMIT : CONSTANT_NUMS.SOFT_SEARCH_DESC_LIMIT;
+        var hardLimit = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.HARD_DESC_LIMIT : CONSTANT_NUMS.HARD_SEARCH_DESC_LIMIT;
         if (description.length > cut) {
-          var cut = cut;
-          while(cut < CONSTANT_NUMS.HARD_DESC_LIMIT) {
+          while(cut < hardLimit) {
             if(description.charAt(cut) === ' ') {
               break;
             }
@@ -114,28 +118,59 @@ export default class NewsFeedItem extends Component {
     // <Title as HTML Text/>
     // <Description as HTML/>
     //</Clickable>
-    renderContent() {
-        if(this.state.loaded) {
-          return (
-            <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
-              <View style={styles.content}>
-              {this.state.featuredMedia !== "" && (
-                <View style={styles.imageContainer}>
-                  <Image source={{uri: this.state.featuredMedia}} style={styles.image}/>
-                </View>)
-              }
-                <View style={styles.dateAndAuthor}>
+    headlinesView() {
+      if(this.state.loaded) {
+        return (
+          <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
+            <View style={styles.content}>
+            {this.state.featuredMedia !== "" && (
+              <View style={styles.imageContainer}>
+                <Image source={{uri: this.state.featuredMedia}} style={styles.image}/>
+              </View>)
+            }
+              <View style={styles.dateAndAuthor}>
+                <Text style={styles.author}> {this.state.author} </Text>
+                <Text style={styles.date}> {this.state.date} </Text>
+              </View>
+              <HTMLText style={styles.title} html={this.state.title}/>
+              <HTMLText style={styles.description} html={this.state.description}/>
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }
+      //If no content is loaded, put a placeholder
+      return <Placeholder />;
+    }
+
+    searchView() {
+      if(this.state.loaded) {
+        return (
+          <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
+            <View style={styles.searchContainer}>
+              <View style={[styles.searchContent, {width: this.state.featuredMedia !== "" ? width - 136 : width - 16}]}>
+                <View style={styles.searchDateAndAuthor}>
                   <Text style={styles.author}> {this.state.author} </Text>
                   <Text style={styles.date}> {this.state.date} </Text>
                 </View>
-                <HTMLText style={styles.title} html={this.state.title}/>
-                <HTMLText style={styles.description} html={this.state.description}/>
+                <HTMLText style={styles.searchTitle} html={this.state.title}/>
+                <HTMLText style={styles.searchDescription} html={this.state.description}/>
               </View>
-            </TouchableWithoutFeedback>
-          );
+              {this.state.featuredMedia !== "" &&
+                  <Image source={{uri: this.state.featuredMedia}} style={styles.searchImage}/>
+              }
+            </View>
+          </TouchableWithoutFeedback>
+        );
+      }
+      return null;
+    }
+
+    renderContent() {
+        if(this.props.context === STRINGS.SEARCH) {
+          return this.searchView();
+        } else {
+          return this.headlinesView();
         }
-        //If no content is loaded, put a placeholder
-        return <Placeholder />;
     }
 
     render() {

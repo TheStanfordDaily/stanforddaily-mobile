@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     },
     leftButton: {
       width:40,
-      marginLeft: 10,
+      paddingLeft: 10,
       marginTop: top_margin
     },
     title: {
@@ -32,7 +32,8 @@ const styles = StyleSheet.create({
     },
     rightButton: {
       width: 40,
-      height: 23,
+      // alignSelf: ALIGNMENTS.CENTER,
+      paddingLeft: 5,
       marginTop: top_margin,
     },
     profileImage: {

@@ -59,7 +59,7 @@ export default class Headlines extends Component {
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
-
+        this.searchHandler = this.searchHandler.bind(this);
     }
 
     //Given data, it passes it to Post view
@@ -79,6 +79,10 @@ export default class Headlines extends Component {
     //Opens the drawer
     drawerHandler() {
       this.refs.drawer.open();
+    }
+
+    searchHandler() {
+      this.props.navigation.navigate(STRINGS.SEARCH, {});
     }
 
     //Converts all fetched data to a map of <Category> => <Article>
@@ -120,9 +124,9 @@ export default class Headlines extends Component {
 
     //Determines the page and code for the category fetching, and calls the above function
     async handleCategoryFetching(counter, loadMore, category) {
-      let categoryURL = STRINGS.REQUEST_PAGE +counter+STRINGS.CATEGORIES_URL+CATEGORIES[category];
+      let categoryURL = STRINGS.REQUEST_SMALL_PAGE +counter+STRINGS.CATEGORIES_URL+CATEGORIES[category];
       if(category === STRINGS.ALL) {
-        categoryURL = STRINGS.REQUEST_PAGE+counter;
+        categoryURL = STRINGS.REQUEST_SMALL_PAGE+counter;
       }
       return await this.fetchNewCategoryHeadlines(category, categoryURL, loadMore);
     }
@@ -194,7 +198,7 @@ export default class Headlines extends Component {
   _renderRow(data) {
     // console.log("This is my id", data.item.key);
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
-      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost}/>
+      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}/>
     } else {
       return (
         <View>
@@ -270,7 +274,7 @@ export default class Headlines extends Component {
           ref={REFS.STATUS_BAR}
           barStyle={STRINGS.LIGHT_CONTENT}
         />
-        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler}/>
+        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <SectionList
             ref={REFS.LIST}
             removeClippedSubviews={false}

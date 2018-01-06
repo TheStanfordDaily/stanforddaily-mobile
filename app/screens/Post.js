@@ -66,6 +66,7 @@ class Post extends Component {
     }
     this.setState({
         post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
+        id: postData.id,
     });
     console.log(postData.id);
     amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, {ArticleId: postData.id})
@@ -84,7 +85,7 @@ class Post extends Component {
         <StatusBar
           barStyle="light-content"
         />
-        <Header ref='postHeader' goBack={this.goBack}/>
+        <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack}/>
         <WebView
          scalesPageToFit={false}
          renderLoading={() => <ActivityIndicator/>}

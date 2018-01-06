@@ -5,6 +5,7 @@ import {STRINGS, MARGINS, HEIGHTS, KEYS} from '../assets/constants.js';
 // const myIcon = ()
 
 import Headlines from '../screens/Headlines';
+import Search from '../screens/Search';
 import Post from '../screens/Post';
 import Chatter from '../screens/Chatter';
 import NewPost from '../screens/NewPost';
@@ -18,6 +19,23 @@ const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
 const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
+
+export const SearchStack = StackNavigator({
+  Search: {
+    screen: Search,
+    navigationOptions: {
+      title: 'Search',
+    },
+  },
+  Post: {
+    screen: Post,
+    navigationOptions: {
+      title: 'Post',
+    },
+  },
+}, {
+  headerMode: 'none',
+});
 
 export const NewsStack = StackNavigator({
   Headlines: {
@@ -103,7 +121,8 @@ Chatter: {
       marginBottom: labelBottomMargin,
     },
     style: {
-      height: tabBarHeight
+      height: tabBarHeight,
+      marginBottom: iphone_x ? -34 : 0
     }
   },
   lazy: true
@@ -140,6 +159,9 @@ export const Root = StackNavigator({
   },
   SignIn: {
     screen: SignInStack,
+  },
+  Search: {
+    screen: SearchStack,
   }
 }, {
   mode: 'modal',

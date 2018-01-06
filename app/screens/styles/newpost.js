@@ -42,7 +42,8 @@ const styles= StyleSheet.create({
       marginTop: 14,
       fontFamily: FONTS.HNEUE,
       fontSize: 20,
-      fontWeight: '200'
+      fontWeight: '200',
+      marginLeft: 10
     },
     actionView: {
       height: 50,

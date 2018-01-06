@@ -1,6 +1,6 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
-import {HEIGHTS, Images, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
+import {HEIGHTS, Images, MARGINS, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
 
 const {width, height} = Dimensions.get('window');
 const iphone_x = height == HEIGHTS.IPHONE_X;
