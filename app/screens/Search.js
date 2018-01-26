@@ -13,7 +13,6 @@ import {
     TouchableOpacity,
     SectionList,
     TextInput,
-    TouchableWithoutFeedback,
     Image
 } from 'react-native';
 import Drawer from 'react-native-drawer'
@@ -186,9 +185,9 @@ export default class Search extends Component {
               }}
             />
           </View>
-          <TouchableWithoutFeedback onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
-            <Image style={styles.close} source={Images.CLOSE}/>
-          </TouchableWithoutFeedback>
+          <TouchableOpacity onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
+            <Image style={styles.close} resizeMode='contain' source={Images.CLOSE}/>
+          </TouchableOpacity>
         </View>
         <FlatList
             ref={REFS.LIST}

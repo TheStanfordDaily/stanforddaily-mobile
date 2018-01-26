@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   AlertIOS,
   Image,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   StatusBar,
   TextInput,
   KeyboardAvoidingView,
@@ -116,9 +116,9 @@ export default class NewPost extends Component {
           {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {(this.state.imageExists && !this.state.anon) && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
           <Text style={styles.title}>Write an update</Text>
-          <TouchableWithoutFeedback onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
+          <TouchableOpacity onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
           <Image style={styles.close} source={Images.CLOSE}/>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
         <KeyboardAvoidingView style={{flex: 1}} behavior={"height"}>
           <TextInput

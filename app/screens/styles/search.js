@@ -60,7 +60,7 @@ const styles= StyleSheet.create({
     header: {
       flexDirection: ALIGNMENTS.ROW,
       width: width,
-      justifyContent: ALIGNMENTS.SPACE_AROUND,
+      justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       alignItems: ALIGNMENTS.CENTER,
       height: iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.APP_HEADER : HEIGHTS.APP_HEADER,
       backgroundColor: COLORS.CARDINAL,
@@ -86,8 +86,8 @@ const styles= StyleSheet.create({
       borderRadius: 6,
     },
     close: {
-      width: 19,
-      height: 19,
+      width: 40,
+      height: 20,
       marginRight: 3,
       tintColor: COLORS.WHITE,
     },

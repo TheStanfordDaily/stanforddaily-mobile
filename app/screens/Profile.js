@@ -9,7 +9,7 @@ import {
   Text,
   View,
   Image,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   ScrollView,
   ListView,
   ActionSheetIOS
@@ -279,28 +279,28 @@ export default class Profile extends Component {
             <Icon name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
             {!this.state.imageExists && <Image style={styles.profileImage} source={Images.ANON_BIG}>
               {this.props.navigation.state.params.myProfile && (
-                <TouchableWithoutFeedback onPress={this.uploadOptions.bind(this)}>
+                <TouchableOpacity onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
                     <Image style={styles.edit} source={Images.EDIT}/>
                     <Text> Edit </Text>
                   </View>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
               )}
             </Image>}
             {this.state.imageExists && <Image style={styles.profileImage} source={{uri: this.state.imageURI}}>
               {this.props.navigation.state.params.myProfile && (
-                <TouchableWithoutFeedback onPress={this.uploadOptions.bind(this)}>
+                <TouchableOpacity onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
                     <Image style={styles.edit} source={Images.EDIT}/>
                     <Text> Edit </Text>
                   </View>
-                </TouchableWithoutFeedback>
+                </TouchableOpacity>
               )}
             </Image>}
             {this.props.navigation.state.params.myProfile && (
-              <TouchableWithoutFeedback onPress={this.signOut.bind(this)}>
+              <TouchableOpacity onPress={this.signOut.bind(this)}>
                 <Image style={styles.signout} source={Images.SIGN_OUT}/>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             )}
             {!this.props.navigation.state.params.myProfile && (
               <View style={styles.signout}/>

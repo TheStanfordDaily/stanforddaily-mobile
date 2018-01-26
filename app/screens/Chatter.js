@@ -13,7 +13,7 @@ import {
   TouchableHighlight,
   AlertIOS,
   Image,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   RefreshControl
 } from 'react-native';
 
@@ -160,12 +160,12 @@ export default class Chatter extends Component {
     return (
       <View style={styles.container}>
         <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
-        <TouchableWithoutFeedback onPress={onpressFunc}>
+        <TouchableOpacity style = {styles.failedLoginContainer} onPress={onpressFunc}>
           <View style={styles.failedLoginContainer}>
             <Text style={styles.failedLoginText}>Please sign in/up to use this service</Text>
             <Text style={styles.failedLoginText}>Tap anywhere to go to sign in/up page</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -174,12 +174,12 @@ export default class Chatter extends Component {
     return (
       <View style={styles.container}>
         <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
-        <TouchableWithoutFeedback onPress={this.makeSureUserSignedIn.bind(this)}>
+        <TouchableOpacity onPress={this.makeSureUserSignedIn.bind(this)}>
           <View style={styles.failedLoginContainer}>
             <Text style={styles.failedLoginText}>Please verify your email to use this service</Text>
             <Text style={styles.failedLoginText}>Tap anywhere once verified to load</Text>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -314,13 +314,13 @@ class NewPostItem extends Component {
 
   render () {
     return (
-      <TouchableWithoutFeedback onPress={() => this.props.startNewPost()}>
+      <TouchableOpacity onPress={() => this.props.startNewPost()}>
         <View style={styles.newPost}>
           {!this.state.imageExists && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {this.state.imageExists && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
           <Text style={styles.placeHolder}>Share how was campus today…</Text>
         </View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }

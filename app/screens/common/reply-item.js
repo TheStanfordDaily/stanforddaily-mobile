@@ -17,7 +17,7 @@
    TouchableHighlight,
    AlertIOS,
    Image,
-   TouchableWithoutFeedback,
+   TouchableOpacity,
    Dimensions
  } from 'react-native';
 
@@ -113,19 +113,19 @@ export default class ReplyItem extends Component {
       */
       return (
           <View style={styles.container}>
-            <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+            <TouchableOpacity onPress={this.toProfile.bind(this)}>
               <View>
                 {!this.state.imageExists && <Image style={styles.authorImage} source={Images.ANON_SMALL}/>}
                 {this.state.imageExists && <Image style={styles.authorImage} defaultSource={STRINGS.ANON_SMALL} source={{uri: this.state.imageURI}}/>}
               </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
             <View style={styles.post}>
-              <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+              <TouchableOpacity onPress={this.toProfile.bind(this)}>
                 <View style={styles.postInfo}>
                   <Text style={styles.authorName}>{this.state.author}</Text>
                   <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
               <View style={styles.message}>
                 <Text style={styles.messageText}>
                   {this.state.collapsed && this.state.preview + " "}

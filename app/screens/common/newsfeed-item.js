@@ -54,6 +54,37 @@ export default class NewsFeedItem extends Component {
       return month+1 + '/' + day + '/' + year;
     }
 
+    chooseMediaSize = async () => {
+      try {
+        var featuredMedia = ""; //We assume that there is no featured media till we find one
+        // console.warn(this.props.data.postObj.title.rendered + " " + this.props.data.postObj.featured_media);
+        if(this.props.data.postObj.featured_media !== 0) {
+          let featuredMediaResponse = await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media);
+          let featuredMediaData = await featuredMediaResponse.json();
+          if(width > CONSTANT_NUMS.PHONE_MAX_WIDTH) {
+            if(featuredMediaData.media_details.sizes["big-slider"] !== undefined) {
+              featuredMedia = featuredMediaData.media_details.sizes["big-slider"].source_url;
+            } else {
+              featuredMedia = featuredMediaData.source_url;
+            }
+          } else {
+            if(featuredMediaData.media_details.sizes.medium_large !== undefined) {
+              featuredMedia = featuredMediaData.media_details.sizes.medium_large.source_url;
+            } else if (featuredMediaData.media_details.sizes.large !== undefined) {
+              featuredMedia = featuredMediaData.media_details.sizes.large.source_url;
+            } else if (featuredMediaData.media_details.sizes.medium !== undefined) {
+              featuredMedia = featuredMediaData.media_details.sizes.medium.source_url;
+            } else {
+              featuredMedia = featuredMediaData.source_url;
+            }
+          }
+        }
+        return featuredMedia;
+      } catch (exception) {
+        return "";
+      }
+    }
+
     //Async fetch data from the WP server
     async fetchData() {
         let authorResponse = await fetch(this.props.data.postObj._links.author[0].href); //A reguest to get author info
@@ -62,24 +93,7 @@ export default class NewsFeedItem extends Component {
         var date = this.assembleDate(this.props.data.postObj.date); //Gets date from the given response
         var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
         var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
-        var featuredMedia = ""; //We assume that there is no featured media till we find one
-        try {
-        if(this.props.data.postObj.featured_media !== 0) {
-          let featuredMediaResponse = await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media);
-          let featuredMediaData = await featuredMediaResponse.json();
-          if(featuredMediaData.media_details.sizes.large !== undefined) {
-            featuredMedia = featuredMediaData.media_details.sizes.large.source_url;
-          } else if (featuredMediaData.media_details.sizes.medium_large !== undefined) {
-            featuredMedia = featuredMediaData.media_details.sizes.medium_large.source_url;
-          } else if (featuredMediaData.media_details.sizes.medium !== undefined) {
-            featuredMedia = featuredMediaData.media_details.sizes.medium.source_url;
-          } else {
-            featuredMedia = featuredMediaData.source_url;
-          }
-        }
-      } catch (exception) {
-
-      }
+        var featuredMedia = await this.chooseMediaSize();
         //Cutting the allowed number of characters for the desc
         var cut = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.SOFT_DESC_LIMIT : CONSTANT_NUMS.SOFT_SEARCH_DESC_LIMIT;
         var hardLimit = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.HARD_DESC_LIMIT : CONSTANT_NUMS.HARD_SEARCH_DESC_LIMIT;
@@ -147,7 +161,7 @@ export default class NewsFeedItem extends Component {
         return (
           <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
             <View style={styles.searchContainer}>
-              <View style={[styles.searchContent, {width: this.state.featuredMedia !== "" ? width - 136 : width - 16}]}>
+              <View style={[styles.searchContent, {flex: 1}]}>
                 <View style={styles.searchDateAndAuthor}>
                   <Text style={styles.author}> {this.state.author} </Text>
                   <Text style={styles.date}> {this.state.date} </Text>

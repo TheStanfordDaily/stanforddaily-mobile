@@ -8,7 +8,7 @@ import {
   TouchableHighlight,
   AlertIOS,
   Image,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   StatusBar,
   TextInput,
   KeyboardAvoidingView,
@@ -36,6 +36,13 @@ export default class SignIn extends Component {
     };
   }
 
+  showAlert(title, message) {
+    AlertIOS.alert(
+      title,
+      message
+    );
+  }
+
   //Goes back when 'x' is tapped
   dismissModal() {
     this.props.navigation.dispatch(NavigationActions.back());
@@ -56,6 +63,7 @@ export default class SignIn extends Component {
         var errorMessage = error.message;
         view.signedIn = false;
         view.error = true;
+        console.warn(errorMessage);
         if (errorCode === 'auth/wrong-password') {
             // alert('Wrong password.');
         } else {
@@ -170,9 +178,9 @@ export default class SignIn extends Component {
           hidden={true}
         />
         <View style={styles.closeWrapper}>
-          <TouchableWithoutFeedback onPress={this.dismissModal.bind(this)}>
+          <TouchableOpacity onPress={this.dismissModal.bind(this)}>
             <Image style={styles.close} source={Images.CLOSE}/>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
         </View>
         <KeyboardAvoidingView style={styles.cardWrapper} behavior={'padding'}>
           <Animated.View style={[styles.card, {marginRight,marginLeft,height}]}>

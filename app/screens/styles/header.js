@@ -9,14 +9,15 @@ const top_margin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+MARGINS.NORMAL_HEA
 const styles = StyleSheet.create({
     container: {
         flexDirection: ALIGNMENTS.ROW,
-        justifyContent: ALIGNMENTS.SPACE_AROUND,
+        justifyContent: ALIGNMENTS.SPACE_BETWEEN,
         alignItems: ALIGNMENTS.CENTER,
         height: iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.APP_HEADER : HEIGHTS.APP_HEADER,
         backgroundColor: COLORS.CARDINAL,
     },
     leftButton: {
-      width:40,
-      paddingLeft: 10,
+      width:56,
+      paddingLeft: 16,
+      paddingRight: 16,
       marginTop: top_margin
     },
     title: {
@@ -31,9 +32,9 @@ const styles = StyleSheet.create({
       textAlign:ALIGNMENTS.CENTER
     },
     rightButton: {
-      width: 40,
-      // alignSelf: ALIGNMENTS.CENTER,
-      paddingLeft: 5,
+      width: 56,
+      paddingRight: 16,
+      paddingLeft: 16,
       marginTop: top_margin,
     },
     profileImage: {

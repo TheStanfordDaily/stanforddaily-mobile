@@ -5,10 +5,10 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    TouchableWithoutFeedback,
+    TouchableOpacity,
     Animated
 } from 'react-native';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+// import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 import {STRINGS, COLORS} from '../../assets/constants.js';
 
 const {width, height} = Dimensions.get('window');
@@ -43,91 +43,7 @@ export default class Placeholder extends Component {
     render() {
         return (
           <View style={styles.placeholderBackground}>
-          <ShimmerPlaceHolder
-              ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-              width={width}
-              height={width/3}
-              visible={false}
-              autoRun={true}
-              style={{backgroundColor: 'white'}}
-              colorShimmer={PLACEHOLDER_SHIMMER}
-            />
-            <View style={styles.dateAndAuthor}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                width={75}
-                height={7}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                style={{ marginTop: 15 }}
-                width={75}
-                height={7}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
-            <View style={styles.title}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={13}
-                width={width-28}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
-            <View style={styles.title}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={13}
-                width={width-100}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
-            <View style={[styles.description,{marginTop: 8}]}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={7}
-                width={width-28}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
-            <View style={styles.description}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={7}
-                width={width-28}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
-            <View style={styles.description}>
-              <ShimmerPlaceHolder
-                ref={(ref) => this.bigImageAndSomeRowsAnimated.push(ref)}
-                height={7}
-                width={width-28}
-                visible={false}
-                autoRun={true}
-                style={{backgroundColor: 'white'}}
-                colorShimmer={PLACEHOLDER_SHIMMER}
-              />
-            </View>
+          
           </View>
         )
     }

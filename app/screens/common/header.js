@@ -7,10 +7,9 @@ import {
     View,
     Text,
     TextInput,
-    TouchableOpacity,
     StyleSheet,
     Image,
-    TouchableWithoutFeedback,
+    TouchableOpacity,
     Dimensions
 } from 'react-native';
 
@@ -42,18 +41,18 @@ export default class Header extends Component {
                 <View style={styles.container}>
                   {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={styles.leftButton}/>}
                   {this.props.goBack !== undefined && (
-                      <TouchableWithoutFeedback onPress={() => this.props.goBack()}>
+                      <TouchableOpacity onPress={() => this.props.goBack()}>
                         <View style={styles.leftButton}>
                           <Icon name={ICONS.BACK} size={34} color={COLORS.WHITE}/>
                         </View>
-                      </TouchableWithoutFeedback>
+                      </TouchableOpacity>
                   )}
                   {this.props.drawerHandler !== undefined && (
-                    <TouchableWithoutFeedback style={styles.leftButton} onPress={() => this.props.drawerHandler()}>
+                    <TouchableOpacity onPress={() => this.props.drawerHandler()}>
                       <View style={styles.leftButton}>
                         <Icon name={ICONS.MENU} size={34} color={COLORS.WHITE}/>
                       </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                   )}
                   {this.props.title === undefined && <Image source={Images.DAILY_FULL} style={styles.title}/>}
                   {this.props.title !== undefined && (
@@ -71,26 +70,26 @@ export default class Header extends Component {
                   }
 
                   {this.props.share !== undefined &&
-                    <TouchableWithoutFeedback style={styles.rightButton} onPress={this.shareHandler.bind(this)}>
+                    <TouchableOpacity onPress={this.shareHandler.bind(this)}>
                       <View style={styles.rightButton}>
                         <Icon name={ICONS.SHARE} size={34} color={COLORS.WHITE}/>
                       </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                   }
 
                   {this.props.toProfile !== undefined && (
-                    <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
+                    <TouchableOpacity onPress={this.toProfile.bind(this)}>
                       <View style={styles.rightButton}>
                         <Image source={Images.PROFILE} style={styles.profileImage}/>
                       </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                   )}
                   {this.props.searchHandler !== undefined && (
-                    <TouchableWithoutFeedback style={styles.rightButton} onPress={() => this.props.searchHandler()}>
+                    <TouchableOpacity onPress={() => this.props.searchHandler()}>
                       <View style={styles.rightButton}>
                         <Icon name={ICONS.SEARCH} size={34} color={COLORS.WHITE}/>
                       </View>
-                    </TouchableWithoutFeedback>
+                    </TouchableOpacity>
                   )}
                 </View>
             </View>

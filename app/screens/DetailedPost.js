@@ -13,7 +13,7 @@ import {
   TouchableHighlight,
   AlertIOS,
   Image,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
   KeyboardAvoidingView,
   Dimensions,
   Keyboard,
@@ -206,9 +206,9 @@ export default class DetailedPost extends Component {
 
   _renderItem(item) {
     return (
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TouchableOpacity onPress={() => Keyboard.dismiss()}>
         <ReplyItem item={item} goToProfile={this.goToProfile} firebase={firebase}/>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 
@@ -217,7 +217,7 @@ export default class DetailedPost extends Component {
         <View style={styles.container}>
           <Header title={this.props.navigation.state.params.name + STRINGS.CHATTER_POST_SUFFIX} goBack={this.goBack} ref={REFS.HEADER}/>
           <ScrollView>
-            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <TouchableOpacity onPress={() => Keyboard.dismiss()}>
             <View style={styles.mainView}>
               <PostItem
                 item={this.props.navigation.state.params.data}
@@ -227,7 +227,7 @@ export default class DetailedPost extends Component {
                 firebase={firebase}
               />
             </View>
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
             <ListView
               // onEndReached={this.loadMore.bind(this)}
 
@@ -253,9 +253,9 @@ export default class DetailedPost extends Component {
                   placeholder={STRINGS.REPLY_PLACEHOLDER}
                 />
               </View>
-              <TouchableWithoutFeedback onPress={this.createAReply.bind(this)}>
+              <TouchableOpacity onPress={this.createAReply.bind(this)}>
                 <Image style={styles.post} source={Images.SEND}/>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
         </View>
