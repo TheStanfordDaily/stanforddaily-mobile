@@ -13,7 +13,8 @@
    TouchableHighlight,
    AlertIOS,
    Image,
-   TouchableOpacity
+   TouchableOpacity,
+   TouchableWithoutFeedback
  } from 'react-native';
 
 import {STRINGS, KEYS, COLORS, Images} from '../../assets/constants.js'; //Constants
@@ -249,23 +250,23 @@ export default class PostItem extends Component {
        * In a profile it changes to including delete post
        */
       return (
-        <TouchableOpacity onPress={() => this.props.goToPost !== undefined ? this.props.goToPost(this.state, this.state.author) : console.log('none')}>
+        <TouchableWithoutFeedback onPress={() => this.props.goToPost !== undefined ? this.props.goToPost(this.state, this.state.author) : console.log('none')}>
           <View style={this.containerStyle(this.props.context)}>
             <View style={styles.post}>
               <View style={styles.content}>
                 <View style={styles.author}>
-                  <TouchableOpacity onPress={this.toProfile.bind(this)}>
+                  <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
                     <View>
                       {!this.state.imageExists && <Image style={styles.authorImage} source={Images.ANON_SMALL}/>}
                       {this.state.imageExists && <Image style={styles.authorImage} defaultSource={Images.ANON_BIG} source={{uri: this.state.imageURI}}/>}
                     </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={this.toProfile.bind(this)}>
+                  </TouchableWithoutFeedback>
+                  <TouchableWithoutFeedback onPress={this.toProfile.bind(this)}>
                     <View style={styles.postInfo}>
                       <Text style={styles.authorName}>{this.state.author}</Text>
                       <Text style={styles.timeStamp}>{this.state.timeStamp}</Text>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableWithoutFeedback>
                 </View>
                 <View style={styles.message}>
                   <Text style={styles.messageText}>
@@ -284,13 +285,13 @@ export default class PostItem extends Component {
                 </View>
               </View>
               <View style={styles.upDown}>
-                <TouchableOpacity onPress={this.changeVote.bind(this,1)}>
+                <TouchableWithoutFeedback onPress={this.changeVote.bind(this,1)}>
                   <Image style={this.determineColor(this.state.userVote,STRINGS.UP)} source={Images.UP_VOTE}/>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
                 <Text style={styles.votesCount}>{this.state.votes}</Text>
-                <TouchableOpacity onPress={this.changeVote.bind(this,-1)}>
+                <TouchableWithoutFeedback onPress={this.changeVote.bind(this,-1)}>
                   <Image style={this.determineColor(this.state.userVote,STRINGS.DOWN)} source={Images.DOWN_VOTE}/>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
               </View>
             </View>
             {this.props.context === STRINGS.LIST && (
@@ -300,8 +301,8 @@ export default class PostItem extends Component {
                   <Text style={styles.replyPlaceHolder}>Write a reply…</Text>
                 </View>
                 <View style={styles.repliesCounter}>
-                  {this.state.repliesCount === 1 && <Text style={styles.count}>{this.state.repliesCount + " Reply"}</Text>}
-                  {this.state.repliesCount !== 1 && <Text style={styles.count}>{this.state.repliesCount + " Replies"}</Text>}
+                  {this.state.repliesCount === 1 && <Text style={styles.countInList}>{this.state.repliesCount + " " + STRINGS.REPLY}</Text>}
+                  {this.state.repliesCount !== 1 && <Text style={styles.countInList}>{this.state.repliesCount + " " + STRINGS.REPLIES}</Text>}
                 </View>
               </View>
             )}
@@ -309,19 +310,19 @@ export default class PostItem extends Component {
               <View style={styles.reply}>
                 <View style={styles.profileReplies}>
                   <Image style={styles.replyIcon} source={Images.REPLIES}/>
-                  {this.state.repliesCount === 1 && <Text style={styles.count}>{this.state.repliesCount + STRINGS.REPLY}</Text>}
-                  {this.state.repliesCount !== 1 && <Text style={styles.count}>{this.state.repliesCount + STRINGS.REPLIES}</Text>}
+                  {this.state.repliesCount === 1 && <Text style={styles.countInProfile}>{this.state.repliesCount + " " + STRINGS.REPLY}</Text>}
+                  {this.state.repliesCount !== 1 && <Text style={styles.countInProfile}>{this.state.repliesCount + " " + STRINGS.REPLIES}</Text>}
                 </View>
-                <TouchableOpacity onPress={this.deletePost.bind(this)}>
+                <TouchableWithoutFeedback onPress={this.deletePost.bind(this)}>
                   <View style={styles.deletePost}>
                     <Image style={styles.deleteIcon} source={Images.DELETE}/>
                     <Text style={styles.profileOptionsText}>Delete Post</Text>
                   </View>
-                </TouchableOpacity>
+                </TouchableWithoutFeedback>
               </View>
             )}
           </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
       );
     }
 }

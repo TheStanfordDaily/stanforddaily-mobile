@@ -18,6 +18,7 @@ import {
   Dimensions,
   Keyboard,
   ScrollView,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import PostItem from './common/post-item';
@@ -206,14 +207,13 @@ export default class DetailedPost extends Component {
 
   _renderItem(item) {
     return (
-      <TouchableOpacity onPress={() => Keyboard.dismiss()}>
-        <ReplyItem item={item} goToProfile={this.goToProfile} firebase={firebase}/>
-      </TouchableOpacity>
+      <ReplyItem item={item} goToProfile={this.goToProfile} firebase={firebase}/>
     );
   }
 
   render() {
     return (
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <Header title={this.props.navigation.state.params.name + STRINGS.CHATTER_POST_SUFFIX} goBack={this.goBack} ref={REFS.HEADER}/>
           <ScrollView>
@@ -259,6 +259,7 @@ export default class DetailedPost extends Component {
             </View>
           </KeyboardAvoidingView>
         </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

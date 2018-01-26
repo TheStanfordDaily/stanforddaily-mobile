@@ -63,11 +63,13 @@ export default class SignIn extends Component {
         var errorMessage = error.message;
         view.signedIn = false;
         view.error = true;
-        console.warn(errorMessage);
+        // console.warn(errorCode);
         if (errorCode === 'auth/wrong-password') {
-            // alert('Wrong password.');
+            view.showAlert("Log In Failed", "Please make sure you entered the right password");
+        } else if (errorCode === 'auth/user-not-found') {
+            view.showAlert("Log In Failed", "The email you entered is not registered.");
         } else {
-            // alert(errorMessage);
+          view.showAlert("Log In Failed", errorMessage);
         }
       });
   }
@@ -139,16 +141,11 @@ export default class SignIn extends Component {
           });
           user.updateProfile({displayName: scope.state.displayName});
       }).catch(function(error) {
-          var errorCode = error.code;
           var errorMessage = error.message;
-          if (errorCode === 'auth/wrong-password') {
-              // alert('Wrong password.');
-          } else {
-              //alert('other problem')
-          }
+          scope.showAlert("Sign Up Failed", errorMessage)
         });
       } else {
-        //alert('Not a stanford student')
+        this.showAlert("Sign Up Failed", "This service is only for stanford students. Please enter your Stanford email.");
       }
   }
 

@@ -1,6 +1,11 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
+const {width, height} = Dimensions.get('window');
+
 import {COLORS, ALIGNMENTS, MARGINS, FONTS} from '../../assets/constants';
+
+const iphone_x = height == 812;
+const top_padding = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
 
 const styles= StyleSheet.create({
   container: {
@@ -13,8 +18,8 @@ const styles= StyleSheet.create({
     width: 17,
     height: 17,
     tintColor: COLORS.WHITE,
-    marginTop: 21,
-    marginRight: 14,
+    marginTop: 20 + top_padding,
+    marginRight: iphone_x ? 16 : 14,
     alignSelf: ALIGNMENTS.FLEX_END,
     top: 0,
   },

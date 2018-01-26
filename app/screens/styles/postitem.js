@@ -106,12 +106,18 @@ var styles = StyleSheet.create({
     marginTop: 6.5,
     paddingBottom: 6.5
   },
-  count: {
+  countInList: {
     color: COLORS.LIGHT_GRAY,
     fontSize: 14,
     fontFamily: FONTS.HNEUE,
     marginTop: 5,
     marginLeft: 20
+  },
+  countInProfile: {
+    color: COLORS.LIGHT_GRAY,
+    fontSize: 14,
+    fontFamily: FONTS.HNEUE,
+    marginLeft: 8
   },
   upDown: {
     flexDirection: ALIGNMENTS.COLUMN,

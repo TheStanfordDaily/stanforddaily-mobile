@@ -12,7 +12,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ListView,
-  ActionSheetIOS
+  ActionSheetIOS,
+  Dimensions
 } from 'react-native';
 
 import {NavigationActions} from 'react-navigation';
@@ -25,6 +26,7 @@ const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
+const {width, height} = Dimensions.get('window');
 
 var currUser = "";
 var profileId = "";
@@ -245,6 +247,14 @@ export default class Profile extends Component {
               .then(url => console.log('uploaded'))
               .catch(error => console.log(error));
         });
+      } else if (buttonIndex === 2) {
+        var firebaseApp = firebase.apps[0];
+        const imageRef = firebaseApp.storage().ref(STRINGS.PROFILE_PICTURES).child(currUser);
+        imageRef.delete().then(function() {
+          console.warn("Image deleted");
+        }).catch(function(error) {
+          console.warn(error);
+        });
       }
     });
   }
@@ -277,19 +287,20 @@ export default class Profile extends Component {
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.closeWrapper}>
             <Icon name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
-            {!this.state.imageExists && <Image style={styles.profileImage} source={Images.ANON_BIG}>
-              {this.props.navigation.state.params.myProfile && (
-                <TouchableOpacity onPress={this.uploadOptions.bind(this)}>
-                  <View style={styles.editPhoto}>
-                    <Image style={styles.edit} source={Images.EDIT}/>
-                    <Text> Edit </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            </Image>}
+            {!this.state.imageExists &&
+              <Image style={styles.profileImage} source={Images.ANON_BIG}>
+                {this.props.navigation.state.params.myProfile && (
+                  <TouchableOpacity style={styles.editPhoto} onPress={this.uploadOptions.bind(this)}>
+                    <View style={styles.editPhoto}>
+                      <Image style={styles.edit} source={Images.EDIT}/>
+                      <Text> Edit </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </Image>}
             {this.state.imageExists && <Image style={styles.profileImage} source={{uri: this.state.imageURI}}>
               {this.props.navigation.state.params.myProfile && (
-                <TouchableOpacity onPress={this.uploadOptions.bind(this)}>
+                <TouchableOpacity style={styles.editPhoto} onPress={this.uploadOptions.bind(this)}>
                   <View style={styles.editPhoto}>
                     <Image style={styles.edit} source={Images.EDIT}/>
                     <Text> Edit </Text>
@@ -299,7 +310,7 @@ export default class Profile extends Component {
             </Image>}
             {this.props.navigation.state.params.myProfile && (
               <TouchableOpacity onPress={this.signOut.bind(this)}>
-                <Image style={styles.signout} source={Images.SIGN_OUT}/>
+                <Text style={styles.signout}>Sign Out</Text>
               </TouchableOpacity>
             )}
             {!this.props.navigation.state.params.myProfile && (

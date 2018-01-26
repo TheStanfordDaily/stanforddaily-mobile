@@ -16,18 +16,18 @@ const styles= StyleSheet.create({
       alignItems: ALIGNMENTS.CENTER
     },
     back: {
+      width: 60,
       marginLeft: 14,
     },
     signout: {
-      width: 26,
-      height: 24,
+      width: 60,
       marginTop: 8,
-      tintColor: COLORS.WHITE,
+      color: COLORS.WHITE,
       marginRight: 14,
       top: 0,
     },
     closeWrapper: {
-      height: height/6.6,
+      height: 0.46667 * width/2,
       backgroundColor: COLORS.CARDINAL,
       flexDirection: ALIGNMENTS.ROW,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
@@ -36,10 +36,6 @@ const styles= StyleSheet.create({
     },
     statusBarBackground: {
       height: 20 + addedTopMargin,
-      backgroundColor: COLORS.CARDINAL,
-    },
-    header:{
-      height: height/6.6,
       backgroundColor: COLORS.CARDINAL,
     },
     profileImage: {
@@ -61,7 +57,7 @@ const styles= StyleSheet.create({
       fontSize: 20,
       color: COLORS.DARK_GRAY,
       fontWeight: '500',
-      marginTop: 6,
+      marginTop: 16,
       marginBottom: 8
     },
     editPhoto: {
