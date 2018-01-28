@@ -1,6 +1,8 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
 import {HEIGHTS, Images, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
+const {height, width} = Dimensions.get('window');
+width = width <= height ? width : height;
 
 var styles = StyleSheet.create({
   container: {
@@ -26,7 +28,7 @@ var styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 8,
     paddingBottom: 8,
-    width: Dimensions.get('window').width,
+    width: width,
     marginTop: 10
   },
   detailed: {
@@ -37,7 +39,7 @@ var styles = StyleSheet.create({
     paddingRight: 20,
     paddingTop: 8,
     paddingBottom: 8,
-    width: Dimensions.get('window').width,
+    width: width,
   },
   post: {
     flexDirection: ALIGNMENTS.ROW,
@@ -74,7 +76,7 @@ var styles = StyleSheet.create({
   message: {
     marginLeft: 1,
     marginRight: 8,
-    width: Dimensions.get('window').width-19-57,
+    width: width-19-57,
   },
   messageText: {
     color: COLORS.BLACK,

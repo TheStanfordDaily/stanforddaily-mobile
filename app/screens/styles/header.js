@@ -5,6 +5,7 @@ import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constant
 
 const iphone_x = Dimensions.get('window').height == 812;
 const top_margin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+MARGINS.NORMAL_HEADER_MARGINS : MARGINS.NORMAL_HEADER_MARGINS
+const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
       marginTop: top_margin
     },
     title: {
-      width: 243,
+      width: width >= 375 ? 243 : 200,
       height: 30,
       marginTop: top_margin
     },

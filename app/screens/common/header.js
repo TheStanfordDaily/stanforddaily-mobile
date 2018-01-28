@@ -54,7 +54,7 @@ export default class Header extends Component {
                       </View>
                     </TouchableOpacity>
                   )}
-                  {this.props.title === undefined && <Image source={Images.DAILY_FULL} style={styles.title}/>}
+                  {this.props.title === undefined && <Image source={Images.DAILY_FULL} resizeMode='contain' style={styles.title}/>}
                   {this.props.title !== undefined && (
                     <View style={styles.title}>
                       <Text numberOfLines={1} ellipsizeMode={ALIGNMENTS.MIDDLE} style={styles.wordsTitle}>

@@ -108,10 +108,7 @@ export default class NewPost extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar
-          hidden={true}
-        />
+      <View style={styles.container} onLayout={ this.onChangeLayout }>
         <View style={styles.header}>
           {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {(this.state.imageExists && !this.state.anon) && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
@@ -120,7 +117,7 @@ export default class NewPost extends Component {
           <Image style={styles.close} source={Images.CLOSE}/>
           </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView style={{flex: 1}} behavior={"height"}>
+        <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} behavior={STRINGS.PAD}>
           <TextInput
             style={styles.textInput}
             multiline = {true}

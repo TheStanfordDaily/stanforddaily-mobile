@@ -28,8 +28,15 @@ class Post extends Component {
      super(props);
      this.goBack = this.goBack.bind(this);
      this.state = {
-       post: {}
+       post: {},
+       width: width <= height ? width : height,
+       height: Dimensions.get('window').height,
      }
+     Dimensions.addEventListener('change', () => {
+       const {width, height} = Dimensions.get('window')
+       this.setState({width: width <= height ? width : height, height: height});
+       // console.warn("orientation changed");
+     });
    }
 
    //A function that triggers going back to headlines
@@ -62,7 +69,7 @@ class Post extends Component {
     var title = this.makeTitleHTML(postData.title, author, date);
     var featuredMedia = postData.featuredMedia;
     if(featuredMedia !== "") {
-        featuredMedia = '<img style="width: '+ width +'px; height: '+ width/2 +'px"src="'+featuredMedia+'"/>';
+        featuredMedia = '<img style="width: '+ this.state.width +'px; height: auto" src="'+featuredMedia+'"/>';
     }
     this.setState({
         post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
@@ -81,23 +88,26 @@ class Post extends Component {
   */
   render() {
     return (
-      <View style={{flex:1}}>
-        <StatusBar
-          barStyle="light-content"
-        />
+      <View style={{flex: 1}}>
         <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack}/>
-        <WebView
-         scalesPageToFit={false}
-         renderLoading={() => <ActivityIndicator/>}
-         ref={'webview'}
-         source={{html: this.state.post.content}}
-         onNavigationStateChange={(event) => {
-           if (event.url !== 'about:blank') { //Handles opening links by sending them to the default browser
-             this.refs.webview.stopLoading();
-             Linking.openURL(event.url);
-           }
-         }}
-        />
+        <View style={{flex:1, alignItems: 'center'}}>
+          <StatusBar
+            barStyle="light-content"
+          />
+          <WebView
+           scalesPageToFit={false}
+           renderLoading={() => <ActivityIndicator/>}
+           ref={'webview'}
+           style={{width: this.state.width}}
+           source={{html: this.state.post.content}}
+           onNavigationStateChange={(event) => {
+             if (event.url !== 'about:blank') { //Handles opening links by sending them to the default browser
+               this.refs.webview.stopLoading();
+               Linking.openURL(event.url);
+             }
+           }}
+          />
+        </View>
       </View>
     );
   }

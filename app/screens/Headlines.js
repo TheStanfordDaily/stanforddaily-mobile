@@ -27,7 +27,7 @@ import _ from 'lodash';
 import styles from './styles/headlines';
 
 //A map between categories names and their codes
-
+const {width, height} = Dimensions.get('window');
 const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
@@ -41,7 +41,9 @@ export default class Headlines extends Component {
             selectedCategoryData: [
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'},
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'}
-            ]
+            ],
+            width: width <= height ? width : height,
+            height: Dimensions.get('window').height,
         };
         // this.data = []; //A list of all current data
         this.currPosts = {}; //A hash of all current posts
@@ -60,6 +62,12 @@ export default class Headlines extends Component {
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
         this.searchHandler = this.searchHandler.bind(this);
+
+        Dimensions.addEventListener('change', () => {
+          const {width, height} = Dimensions.get('window')
+          this.setState({width: width <= height ? width : height, height: height});
+          // console.warn("orientation changed");
+        });
     }
 
     //Given data, it passes it to Post view
@@ -260,7 +268,7 @@ export default class Headlines extends Component {
       type={STRINGS.STATIC}
       ref={REFS.DRAWER}
       content={this.sideMenu()}
-      openDrawerOffset={0.25}
+      openDrawerOffset={0.4}
       styles={drawerStyles}
       tweenHandler={Drawer.tweenPresets.parallax}
       captureGestures={true}
@@ -269,12 +277,12 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
+        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
+        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE, alignItems:'center'}}>
         <StatusBar
           ref={REFS.STATUS_BAR}
           barStyle={STRINGS.LIGHT_CONTENT}
         />
-        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <SectionList
             ref={REFS.LIST}
             removeClippedSubviews={false}
@@ -287,6 +295,7 @@ export default class Headlines extends Component {
             renderItem={this._renderRow}
             renderSectionHeader={() => this.renderSectionHeader()}
             ListFooterComponent={() => <ActivityIndicator style={styles.loadingIndicator}/>}
+            contentContainerStyle={{width: this.state.width}}
         />
         </View>
       </Drawer>

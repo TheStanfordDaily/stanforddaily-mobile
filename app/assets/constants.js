@@ -64,7 +64,8 @@ const STRINGS = {
   VOTERS: "voters",
   PUBLIC_POSTS: "publicPosts",
   NAME: "name",
-  SEARCH: "Search"
+  SEARCH: "Search",
+  REPLY: "Reply"
 }
 
 const PATHS = {

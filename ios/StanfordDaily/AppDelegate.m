@@ -32,6 +32,8 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   [FIRApp configure];
+  [application setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
+  [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
   return YES;
 }
 

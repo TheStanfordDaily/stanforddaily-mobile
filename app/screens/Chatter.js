@@ -158,62 +158,71 @@ export default class Chatter extends Component {
     var view = this;
     var onpressFunc = () => this.props.navigation.navigate(STRINGS.SIGN_IN, {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
-        <TouchableOpacity style = {styles.failedLoginContainer} onPress={onpressFunc}>
-          <View style={styles.failedLoginContainer}>
-            <Text style={styles.failedLoginText}>Please sign in/up to use this service</Text>
-            <Text style={styles.failedLoginText}>Tap anywhere to go to sign in/up page</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.container}>
+          <TouchableOpacity style = {styles.failedLoginContainer} onPress={onpressFunc}>
+            <View style={styles.failedLoginContainer}>
+              <Text style={styles.failedLoginText}>Please sign in/up to use this service</Text>
+              <Text style={styles.failedLoginText}>Tap anywhere to go to sign in/up page</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
   pointToVerify() { //Shows a simple view asking user to verify their account
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
-        <TouchableOpacity onPress={this.makeSureUserSignedIn.bind(this)}>
-          <View style={styles.failedLoginContainer}>
-            <Text style={styles.failedLoginText}>Please verify your email to use this service</Text>
-            <Text style={styles.failedLoginText}>Tap anywhere once verified to load</Text>
-          </View>
-        </TouchableOpacity>
+        <View style={styles.container}>
+          <TouchableOpacity onPress={this.makeSureUserSignedIn.bind(this)}>
+            <View style={styles.failedLoginContainer}>
+              <Text style={styles.failedLoginText}>Please verify your email to use this service</Text>
+              <Text style={styles.failedLoginText}>Tap anywhere once verified to load</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
 
   loadTheView() { //Loads the list view
     return (
-      <View style={styles.container}>
+      <View style={{flex: 1}}>
         <Header title={STRINGS.CHATTER} toProfile={this.goToProfile} ref={REFS.HEADER}/>
-        <ListView
-          removeClippedSubviews={false}
-          refreshControl={
-              <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this._onRefresh.bind(this)}
-              />
-          }
-          onEndReached={this.loadMore.bind(this)}
-          dataSource={this.state.dataSource}
-          renderRow={this._renderItem.bind(this)}
-          enableEmptySections={true}
-          style={styles.listview}/>
+        <View style={styles.container}>
+          <ListView
+            removeClippedSubviews={false}
+            refreshControl={
+                <RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh.bind(this)}
+                />
+            }
+            onEndReached={this.loadMore.bind(this)}
+            dataSource={this.state.dataSource}
+            renderRow={this._renderItem.bind(this)}
+            enableEmptySections={true}
+            style={styles.listview}
+            contentContainerStyle={styles.listContents}/>
 
+        </View>
       </View>
     );
   }
 
   render() { //Renders the right view based on user status
+    var result = null;
     if(this.state.userStatus === STRINGS.NONE) {
-      return this.pointToSignIn();
+      result = this.pointToSignIn()
     } else if (this.state.userStatus === STRINGS.SIGNED_IN) {
-      return this.pointToVerify();
+      result = this.pointToVerify();
     } else {
-      return this.loadTheView()
+      result = this.loadTheView()
     }
+    return result;
   }
 
   // create the user object and push to database

@@ -2,14 +2,19 @@ const React = require('react-native')
 const {StyleSheet, Dimensions} = React
 
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
+const {height, width} = Dimensions.get('window');
+width = width <= height ? width : height;
+
 
 var styles = StyleSheet.create({
   container: {
     backgroundColor: "#f2f2f2",
     flex: 1,
+    alignItems: 'center',
   },
   listview: {
     flex: 1,
+    width: width,
   },
   newPost: {
     height: 67,

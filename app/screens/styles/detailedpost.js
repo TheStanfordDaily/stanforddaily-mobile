@@ -1,5 +1,7 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
+const {height, width} = Dimensions.get('window');
+width = width <= height ? width : height;
 
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
 

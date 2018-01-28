@@ -214,8 +214,11 @@ export default class DetailedPost extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={{flex:1, alignItems: 'center'}}>
+      <View style={{width: '100%'}}>
+        <Header title={this.props.navigation.state.params.name + STRINGS.CHATTER_POST_SUFFIX} goBack={this.goBack} ref={REFS.HEADER}/>
+      </View>
         <View style={styles.container}>
-          <Header title={this.props.navigation.state.params.name + STRINGS.CHATTER_POST_SUFFIX} goBack={this.goBack} ref={REFS.HEADER}/>
           <ScrollView>
             <TouchableOpacity onPress={() => Keyboard.dismiss()}>
             <View style={styles.mainView}>
@@ -258,6 +261,7 @@ export default class DetailedPost extends Component {
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingView>
+        </View>
         </View>
       </TouchableWithoutFeedback>
     );

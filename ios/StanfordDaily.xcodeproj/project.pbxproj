@@ -399,6 +399,7 @@
 		2BE99D71169E2CC9882C2E12 /* libPods-StanfordDaily-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-StanfordDaily-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E47B1E0B4A5D006451C7 /* StanfordDaily-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StanfordDaily-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* StanfordDaily-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StanfordDaily-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FB8E277201C6BF800E94B69 /* StanfordDaily.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = StanfordDaily.entitlements; path = StanfordDaily/StanfordDaily.entitlements; sourceTree = "<group>"; };
 		2FEB2E0B1F8716A300EF3661 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "StanfordDaily/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3402C46CA8C544C291C242C8 /* libActivityView.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libActivityView.a; sourceTree = "<group>"; };
 		3496FE8A54551926281D5551 /* Pods-StanfordDaily.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StanfordDaily.release.xcconfig"; path = "Pods/Target Support Files/Pods-StanfordDaily/Pods-StanfordDaily.release.xcconfig"; sourceTree = "<group>"; };
@@ -598,6 +599,7 @@
 		13B07FAE1A68108700A75B9A /* StanfordDaily */ = {
 			isa = PBXGroup;
 			children = (
+				2FB8E277201C6BF800E94B69 /* StanfordDaily.entitlements */,
 				2FEB2E0B1F8716A300EF3661 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -957,7 +959,34 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = XC8EY8PYFS;
+						DevelopmentTeam = 35E7AAGG2R;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.DataProtection = {
+								enabled = 0;
+							};
+							com.apple.GameCenter = {
+								enabled = 0;
+							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+							com.apple.InterAppAudio = {
+								enabled = 0;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 0;
+							};
+							com.apple.Push = {
+								enabled = 0;
+							};
+							com.apple.SafariKeychain = {
+								enabled = 0;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -1803,9 +1832,12 @@
 			baseConfigurationReference = E03523FA5E0433BE5529E239 /* Pods-StanfordDaily.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: The Stanford Daily Publishing Corporation (35E7AAGG2R)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: The Stanford Daily Publishing Corporation (35E7AAGG2R)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = XC8EY8PYFS;
+				DEVELOPMENT_TEAM = 35E7AAGG2R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1818,6 +1850,7 @@
 					"$(SRCROOT)/../node_modules/react-native-activity-view",
 				);
 				INFOPLIST_FILE = StanfordDaily/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1825,8 +1858,10 @@
 					"-lc++",
 					"-lsqlite3.0",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.StanfordDaily;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Stanford.Daily.App;
 				PRODUCT_NAME = StanfordDaily;
+				PROVISIONING_PROFILE = "0ef4cfdb-645a-4c29-9e19-6c47cfd384cd";
+				PROVISIONING_PROFILE_SPECIFIER = "Manual Dist";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1837,8 +1872,11 @@
 			baseConfigurationReference = 3496FE8A54551926281D5551 /* Pods-StanfordDaily.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: The Stanford Daily Publishing Corporation (35E7AAGG2R)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: The Stanford Daily Publishing Corporation (35E7AAGG2R)";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = XC8EY8PYFS;
+				DEVELOPMENT_TEAM = 35E7AAGG2R;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
@@ -1851,6 +1889,7 @@
 					"$(SRCROOT)/../node_modules/react-native-activity-view",
 				);
 				INFOPLIST_FILE = StanfordDaily/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1858,8 +1897,10 @@
 					"-lc++",
 					"-lsqlite3.0",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.StanfordDaily;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Stanford.Daily.App;
 				PRODUCT_NAME = StanfordDaily;
+				PROVISIONING_PROFILE = "0ef4cfdb-645a-4c29-9e19-6c47cfd384cd";
+				PROVISIONING_PROFILE_SPECIFIER = "Manual Dist";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -2071,7 +2112,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -2106,7 +2147,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

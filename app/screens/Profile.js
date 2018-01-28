@@ -251,9 +251,9 @@ export default class Profile extends Component {
         var firebaseApp = firebase.apps[0];
         const imageRef = firebaseApp.storage().ref(STRINGS.PROFILE_PICTURES).child(currUser);
         imageRef.delete().then(function() {
-          console.warn("Image deleted");
+          // console.warn("Image deleted");
         }).catch(function(error) {
-          console.warn(error);
+          // console.warn(error);
         });
       }
     });

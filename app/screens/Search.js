@@ -155,11 +155,7 @@ export default class Search extends Component {
   */
   render() {
     return (
-        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
-        <StatusBar
-          ref={REFS.STATUS_BAR}
-          barStyle={STRINGS.LIGHT_CONTENT}
-        />
+      <View style={{flex: 1, alignItems: 'center'}}>
         <View style={styles.header}>
           <View style={styles.close}/>
           <View style={[styles.textInputWrapper,{backgroundColor: this.state.focusColor, borderColor: this.state.focusColor}]}>
@@ -174,7 +170,7 @@ export default class Search extends Component {
               placeholderTextColor={COLORS.DARK_GRAY}
               selectionColor={COLORS.CARDINAL}
               onFocus={() => this.setState({focusColor: COLORS.WHITE})}
-              onEndEditing={() => this.setState({focusColor: COLORS.LIGHT_GRAY})}
+              onEndEditing={() => this.setState({focusColor: COLORS.PLACEHOLDER_LIGHT})}
               onChangeText={(text) => {
                 this.setState({input: text, loading: false, page: 1, posts: [], hashed: {}, allIsHere: false}, () => {
                   this.fetchDataIsBusy = false;
@@ -189,6 +185,11 @@ export default class Search extends Component {
             <Image style={styles.close} resizeMode='contain' source={Images.CLOSE}/>
           </TouchableOpacity>
         </View>
+        <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
+        <StatusBar
+          ref={REFS.STATUS_BAR}
+          barStyle={STRINGS.LIGHT_CONTENT}
+        />
         <FlatList
             ref={REFS.LIST}
             removeClippedSubviews={false}
@@ -199,8 +200,10 @@ export default class Search extends Component {
             renderItem={this._renderRow}
             renderSectionHeader={() => this.renderSectionHeader()}
             ListFooterComponent={() => {if(this.state.input.length !== 0 && !this.state.allIsHere) return (<ActivityIndicator style={styles.loadingIndicator}/>); return null;}}
+            contentContainerStyle={styles.list}
         />
         </View>
+      </View>
     )
   }
 }

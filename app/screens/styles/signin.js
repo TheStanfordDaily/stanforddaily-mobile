@@ -31,7 +31,7 @@ const styles= StyleSheet.create({
     flex: 1
   },
   card: {
-    width: 335,
+    width: 300,
     backgroundColor: COLORS.WHITE,
     borderRadius: 13,
     alignItems: ALIGNMENTS.CENTER
