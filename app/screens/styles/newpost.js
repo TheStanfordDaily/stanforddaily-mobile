@@ -15,7 +15,7 @@ const styles= StyleSheet.create({
       flexDirection: ALIGNMENTS.ROW,
       marginRight: 18,
       marginLeft: 18,
-      marginTop: 16,
+      marginTop: 16 + top_margin,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       alignItems: ALIGNMENTS.CENTER
     },
@@ -29,7 +29,6 @@ const styles= StyleSheet.create({
       fontSize: 20,
       fontFamily: FONTS.HNEUE,
       paddingRight: 10,
-      marginTop: top_margin
     },
     close: {
       width: 17,
@@ -37,13 +36,12 @@ const styles= StyleSheet.create({
     },
     textInput: {
       flex: 1,
-      marginRight: 14,
-      marginLeft: 14,
+      marginRight: 18,
+      marginLeft: 18,
       marginTop: 14,
       fontFamily: FONTS.HNEUE,
       fontSize: 20,
       fontWeight: '200',
-      marginLeft: 10
     },
     actionView: {
       height: 50,

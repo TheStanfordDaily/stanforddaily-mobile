@@ -83,6 +83,7 @@ export default class PostItem extends Component {
 
     componentWillMount() {
       this._mounted = true;
+      console.log("mounting");
       // this.propsCopy = this.props;
       this.setState({body: "", author: ""}); //Make sure that no references show up
       this.hiddenRefs.timeStamp = this.state.timeStamp;
@@ -134,7 +135,7 @@ export default class PostItem extends Component {
 
         //Puts a listener for votes and repliesCount to update them as soon as they change
         firebase.database().ref(STRINGS.POSTS).child(this.state.key).on(STRINGS.VAL, function(snapshot) {
-          if(snapshot.val() !== null) {
+          if(snapshot.val() !== null && view._mounted) {
             view.setState({
               repliesCount: snapshot.val().repliesCount,
               votes: snapshot.val().votes,
@@ -144,15 +145,22 @@ export default class PostItem extends Component {
         });
 
         //Puts a listener for deletes
-        firebase.database().ref(STRINGS.POSTS).child(this.state.key).on(STRINGS.CHILD_REMOVED, function(snapshot) {
-          view.setState({hide: true});
+        firebase.database().ref(STRINGS.POSTS).on(STRINGS.CHILD_REMOVED, function(snapshot) {
+          console.log(snapshot.val());
+          if(snapshot.child('body').val() === view.state.key && view._mounted) {
+            view.setState({hide: true});
+          }
+          // if(!snapshot.child('body').exists()) view.setState({hide: true});
         });
       }
     }
 
     componentWillUnmount() {
       this._mounted = false;
-      clearInterval(); //Stops updating the timestamp
+      // firebase.database().ref(STRINGS.POSTS).child(this.state.key).off();
+      // firebase.database().ref(STRINGS.POSTS).off();
+
+      // console.log("unmounting");
     }
 
     //Determines color of the up and down buttons
@@ -210,7 +218,7 @@ export default class PostItem extends Component {
     //Sets the timestamp in the "some time ago" format
     calculateTime(TimeStamp) {
       var time = moment(TimeStamp).fromNow();
-      this.setState({timeStamp: time});
+      if (this._mounted) this.setState({timeStamp: time});
     }
 
     toProfile() {

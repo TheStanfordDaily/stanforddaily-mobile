@@ -225,7 +225,7 @@ export default class Profile extends Component {
       destructiveButtonIndex: 2,
       title: 'Picture Source'
     },
-    (buttonIndex) => {
+    async (buttonIndex) => {
       var options = {
         width: width,
         height: width,
@@ -234,27 +234,29 @@ export default class Profile extends Component {
         mediaType: 'photo',
         includeBase64: true
       };
+      var firebaseApp = firebase.apps[0];
+      var view = this;
       if (buttonIndex === 0) {
-        var view = this;
         ImagePicker.openPicker(options).then(image => {
           view.uploadImage(image.path)
-              .then(url => console.log('uploaded'))
+              .then(url => {
+                  view.setState({imageURI: url, imageExists: true});
+              })
               .catch(error => console.log(error));
         });
       } else if (buttonIndex === 1) {
         ImagePicker.openCamera(options).then(image => {
           view.uploadImage(image.path)
-              .then(url => console.log('uploaded'))
+              .then(url => {
+                  view.setState({imageURI: url, imageExists: true});
+              })
               .catch(error => console.log(error));
         });
       } else if (buttonIndex === 2) {
-        var firebaseApp = firebase.apps[0];
         const imageRef = firebaseApp.storage().ref(STRINGS.PROFILE_PICTURES).child(currUser);
-        imageRef.delete().then(function() {
-          // console.warn("Image deleted");
-        }).catch(function(error) {
-          // console.warn(error);
-        });
+        await imageRef.delete();
+        view.setState({imageExists: false});
+        // console.warn("Image deleted");
       }
     });
   }

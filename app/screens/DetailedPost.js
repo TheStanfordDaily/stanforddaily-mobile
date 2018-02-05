@@ -11,14 +11,14 @@ import {
   Text,
   View,
   TouchableHighlight,
-  AlertIOS,
   Image,
   TouchableOpacity,
   KeyboardAvoidingView,
   Dimensions,
   Keyboard,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  AlertIOS
 } from 'react-native';
 
 import PostItem from './common/post-item';
@@ -49,6 +49,13 @@ export default class DetailedPost extends Component {
     this.items = [];
     this.goBack = this.goBack.bind(this);
     this.goToProfile = this.goToProfile.bind(this);
+  }
+
+  showAlert(title, message) {
+    AlertIOS.alert(
+      title,
+      message
+    );
   }
 
   goToProfile(userId) {
@@ -174,6 +181,10 @@ export default class DetailedPost extends Component {
     //Push body
     //Wait then push everything else
     //Exit
+    if(this.state.post.length === 0) {
+      this.showAlert("Empty Reply", "You cannot have an empty Reply");
+      return;
+    }
     var firebaseApp = firebase.apps[0];
     // firebase.apps[0].database().ref().once('value', (snap) =>  {
     //   console.log(snap.val());

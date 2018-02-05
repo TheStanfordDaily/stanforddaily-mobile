@@ -173,9 +173,11 @@ export default class Chatter extends Component {
   }
 
   pointToVerify() { //Shows a simple view asking user to verify their account
+    var view = this;
+    var onpressFunc = () => this.props.navigation.navigate(STRINGS.SIGN_IN, {...{loadPosts: view.makeSureUserSignedIn.bind(view)}});
     return (
       <View style={{flex: 1}}>
-        <Header title={STRINGS.CHATTER} ref={REFS.HEADER}/>
+        <Header title={STRINGS.CHATTER} toProfile={onpressFunc} ref={REFS.HEADER}/>
         <View style={styles.container}>
           <TouchableOpacity onPress={this.makeSureUserSignedIn.bind(this)}>
             <View style={styles.failedLoginContainer}>

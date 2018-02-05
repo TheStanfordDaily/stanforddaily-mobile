@@ -27,13 +27,17 @@ export default class SignIn extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-        marginRight: new Animated.Value(0),
-        marginLeft: new Animated.Value(0),
-        height: HEIGHTS.SIGN_IN_CARD,
-        currProcess: STRINGS.SIGN_IN,
-        signUpButtonLabel: 'Not a user? Sign Up'
-    };
+  }
+
+  state = {
+      marginRight: new Animated.Value(0),
+      marginLeft: new Animated.Value(0),
+      height: HEIGHTS.SIGN_IN_CARD,
+      currProcess: STRINGS.SIGN_IN,
+      signUpButtonLabel: 'Not a user? Sign Up',
+      email: "",
+      password: "",
+      displayName: ""
   }
 
   showAlert(title, message) {

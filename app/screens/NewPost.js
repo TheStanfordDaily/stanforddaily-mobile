@@ -14,7 +14,7 @@ import {
   KeyboardAvoidingView,
   Switch,
   Button,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import styles from './styles/newpost.js';
 import {NavigationActions} from 'react-navigation';
@@ -27,8 +27,16 @@ export default class NewPost extends Component {
     this.state = {
       anon: false,
       imageExists: false,
-      imageURI: ''
+      imageURI: '',
+      post: ''
     };
+  }
+
+  showAlert(title, message) {
+    AlertIOS.alert(
+      title,
+      message
+    );
   }
 
   componentWillMount() {
@@ -50,6 +58,10 @@ export default class NewPost extends Component {
     //Push body
     //Wait then push everything else
     //Exit
+    if(this.state.post === undefined || this.state.post === null || this.state.post.length === 0) {
+      this.showAlert("Empty Post", "You cannot upload an empty post");
+      return;
+    }
     var firebaseApp = firebase.apps[0];
     // firebase.apps[0].database().ref().once('value', (snap) =>  {
     //   console.log(snap.val());
@@ -109,6 +121,8 @@ export default class NewPost extends Component {
   render() {
     return (
       <View style={styles.container} onLayout={ this.onChangeLayout }>
+        <StatusBar
+          hidden={true}/>
         <View style={styles.header}>
           {(!this.state.imageExists || this.state.anon) && <Image style={styles.userImage} source={Images.ANON_SMALL}/>}
           {(this.state.imageExists && !this.state.anon) && <Image style={styles.userImage} source={{uri: this.state.imageURI}}/>}
