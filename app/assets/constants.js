@@ -182,7 +182,7 @@ const CONSTANT_NUMS = {
 };
 
 const KEYS = {
-  AMPLITUDE_API: '377e75f8a2462c6f4690f6c7fa6ebebb',
+  AMPLITUDE_API: 'cb7b28e023cfaaba93a588ee34ee9326',
 };
 
 const ICONS = {
