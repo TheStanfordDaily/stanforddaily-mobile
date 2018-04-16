@@ -2,6 +2,8 @@ import React from 'react';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import {STRINGS, MARGINS, HEIGHTS, KEYS} from '../assets/constants.js';
+import TabBarComponent from "../TabBarComponent"
+
 // const myIcon = ()
 
 import Headlines from '../screens/Headlines';
@@ -111,6 +113,7 @@ Chatter: {
   },
 }
 },{
+  tabBarComponent: TabBarComponent,
   tabBarOptions: {
     activeTintColor: '#A82029',
     inactiveTintColor: '#000000',

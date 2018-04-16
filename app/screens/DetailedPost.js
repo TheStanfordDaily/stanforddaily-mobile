@@ -236,6 +236,7 @@ export default class DetailedPost extends Component {
               <PostItem
                 item={this.props.navigation.state.params.data}
                 currUser={this.props.navigation.state.params.currUser}
+                removeAtIndex={() => this.goBack()}
                 goToProfile={this.goToProfile}
                 context={STRINGS.DETAILED_POST}
                 firebase={firebase}
@@ -253,7 +254,7 @@ export default class DetailedPost extends Component {
               onEndReached={this.fetchMoreReplies.bind(this)}
             />
             </ScrollView>
-          <KeyboardAvoidingView contentContainerStyle={styles.writeAReply} behavior={STRINGS.PAD}>
+          <View contentContainerStyle={styles.writeAReply} behavior={STRINGS.PAD}>
             <View style={[styles.writeAReply, {height: Math.min(height/4, Math.max(52, this.state.height+20))}]}>
               <View style={[styles.textInputWrapper, {height: Math.min(height/4-20, Math.max(32, this.state.height))}]}>
                 <TextInput
@@ -271,7 +272,7 @@ export default class DetailedPost extends Component {
                 <Image style={styles.post} source={Images.SEND}/>
               </TouchableOpacity>
             </View>
-          </KeyboardAvoidingView>
+          </View>
         </View>
         </View>
       </TouchableWithoutFeedback>

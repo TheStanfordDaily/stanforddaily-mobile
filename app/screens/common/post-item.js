@@ -241,7 +241,11 @@ export default class PostItem extends Component {
           this.state.preview += STRINGS.MORE_TEXT;
         }
       }
-      if (this.state.hide) return null;
+      if (this.state.hide) {
+        this.props.removeAtIndex(this.props.index);
+        return null;
+      }
+
 
       //Breakdown
       /*

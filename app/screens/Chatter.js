@@ -53,6 +53,7 @@ export default class Chatter extends Component {
     this.goToPost = this.goToPost.bind(this); //A function to handle going to posts
     this.goToProfile = this.goToProfile.bind(this); //A function to handle going to profile
     this.startNewPost = this.startNewPost.bind(this); //A function to handle going to NEWPOST view
+    this.removeAtIndex = this.removeAtIndex.bind(this);
     this.listenForItems = _.debounce(this.listenForItems, 150); //A function to regulate fetching from Firebase (places a 150ms interval at least between 2 calls)
     this.allLoadedPosts = {}; //A hashmap of all of the current posts
   }
@@ -90,6 +91,20 @@ export default class Chatter extends Component {
     } else { //Load more posts to waht exists
       return itemsRef.orderByChild(STRINGS.NEWEST_TO_OLDEST).startAt(this.items[this.items.length - 1].sortDate).limitToFirst(4); //The number doesn't really matter
     }
+  }
+
+  removeAtIndex(index) {
+    // var newArr = this.items.slice();
+    // newArr.splice(index, 1);
+    // console.warn(newArr.length)
+    // this.setState({
+    //   dataSource: this.state.dataSource.cloneWithRows(newArr),
+    // });
+
+    var newArr = this.items.slice();
+    newArr.splice(index, 1);
+    this.items = newArr;
+    this.state.dataSource = this.state.dataSource.cloneWithRows(newArr);
   }
 
   listenForItems(itemsRef,refresh) { //Sends requests to Firebase
@@ -282,13 +297,15 @@ export default class Chatter extends Component {
     });
   }
 
-  _renderItem(item) { //Renders a single list item
+  _renderItem(item, _, index) { //Renders a single list item
     if(item !== STRINGS.NEW_POST) { //Regular post
       return <PostItem
               key={item.key}
               item={item}
               firebase={firebase}
               currUser={currUser}
+              removeAtIndex={this.removeAtIndex}
+              index={index}
               goToPost={this.goToPost}
               goToProfile={this.goToProfile}
               context={STRINGS.LIST}

@@ -183,7 +183,7 @@ export default class SignIn extends Component {
             <Image style={styles.close} source={Images.CLOSE}/>
           </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView style={styles.cardWrapper} behavior={'padding'}>
+        <View style={styles.cardWrapper} behavior={'padding'}>
           <Animated.View style={[styles.card, {marginRight,marginLeft,height}]}>
             <Image style={styles.logo} source={Images.DAILY_S}/>
             <View style={styles.textWrapper}>
@@ -243,7 +243,7 @@ export default class SignIn extends Component {
               </TouchableHighlight>
             }
           </Animated.View>
-        </KeyboardAvoidingView>
+        </View>
       </ScrollView>
     );
   }

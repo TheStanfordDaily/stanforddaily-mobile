@@ -193,10 +193,11 @@ const ICONS = {
 }
 
 const FIREBASE_CONFIG = {
-    apiKey: "AIzaSyBIUCWibwkLZtyVKZ8cQ5E4uc51OXpn3iA",
-    authDomain: "grocerytest-95615.firebaseapp.com",
-    databaseURL: "https://grocerytest-95615.firebaseio.com",
-    storageBucket: "grocerytest-95615.appspot.com",
+  apiKey: "AIzaSyAXEUBb4ygFkI-Gjhtu2pZ8JdkDYSuit9o",
+  authDomain: "stanforddailyapp.firebaseapp.com",
+  databaseURL: "https://stanforddailyapp.firebaseio.com",
+  projectId: "stanforddailyapp",
+  storageBucket: "stanforddailyapp.appspot.com",
 };
 
 import Images from './modules.js';

@@ -131,7 +131,7 @@ export default class NewPost extends Component {
           <Image style={styles.close} source={Images.CLOSE}/>
           </TouchableOpacity>
         </View>
-        <KeyboardAvoidingView style={{flex: 1, justifyContent: 'center'}} behavior={STRINGS.PAD}>
+        <View style={{flex: 1, justifyContent: 'center'}} behavior={STRINGS.PAD}>
           <TextInput
             style={styles.textInput}
             multiline = {true}
@@ -150,7 +150,7 @@ export default class NewPost extends Component {
                 <Text style={styles.postText}>Post</Text>
               </TouchableHighlight>
           </View>
-        </KeyboardAvoidingView>
+        </View>
 
       </View>
     );

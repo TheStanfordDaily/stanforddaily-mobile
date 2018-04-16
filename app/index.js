@@ -1,9 +1,16 @@
 import React, { Component } from 'react';
+import {KeyboardAvoidingView } from 'react-native';
 import { Root, Tabs } from './config/router';
 
 class App extends Component {
   render() {
-    return <Root />;
+    return (
+    <KeyboardAvoidingView
+    	style={{flex:1}}
+    	behavior='padding'>
+    	<Root />
+    </KeyboardAvoidingView>
+    );
   }
 }
 

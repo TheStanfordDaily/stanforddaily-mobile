@@ -41,6 +41,7 @@ export default class Profile extends Component {
     this.goToPost = this.goToPost.bind(this);
     this.goToProfile = this.goToProfile.bind(this);
     this.deletePost = this.deletePost.bind(this);
+    this.removeAtIndex = this.removeAtIndex.bind(this);
     this.state = {
       dataSource: new ListView.DataSource({
         rowHasChanged: function(row1, row2) {
@@ -49,7 +50,8 @@ export default class Profile extends Component {
       }),
       displayName: "",
       imageURI: "",
-      imageExists: false
+      imageExists: false,
+      loadAllowed: true
     }
   }
 
@@ -109,6 +111,7 @@ export default class Profile extends Component {
 
   //Check Chatter.js for comments
   listenForItems(itemsRef,refresh) {
+    if (!this.state.loadAllowed) return;
     if(!this.loading && !(this.allLoaded && !refresh)) {
       this.loading = true;
       var view = this;
@@ -153,7 +156,6 @@ export default class Profile extends Component {
 
   //Loads more posts
   loadMore() {
-    var firebaseApp = firebase.apps[0];
     this.listenForItems(this.itemsRef, false);
   }
 
@@ -261,8 +263,14 @@ export default class Profile extends Component {
     });
   }
 
+  async removeAtIndex(index) {
+    var newArr = this.items.slice();
+    newArr.splice(index, 1);
+    this.state.dataSource = this.state.dataSource.cloneWithRows(newArr);
+  }
+
   //Decides the context based on whether it's the profile of the person viewing it or not then renders a post item
-  _renderItem(item) {
+  _renderItem(item,_,index) {
     var context = STRINGS.LIST;
     if (this.props.navigation.state.params.myProfile) {
       context = STRINGS.PROFILE;
@@ -273,6 +281,8 @@ export default class Profile extends Component {
           key={item.key}
           item={item}
           firebase={firebase}
+          removeAtIndex={this.removeAtIndex}
+          index={index}
           currUser={this.props.navigation.state.params.currUser}
           goToPost={this.goToPost}
           goToProfile={this.goToProfile}
@@ -283,6 +293,7 @@ export default class Profile extends Component {
   }
 
   render() {
+    // console.warn(this.state.dataSource.length);
     return (
       <View style={styles.container}>
         <View style={styles.statusBarBackground}/>

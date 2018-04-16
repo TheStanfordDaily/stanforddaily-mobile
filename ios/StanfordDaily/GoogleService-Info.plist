@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>357133723889-o5laerrumq5inuk5s8r3n6ds97q2d5ti.apps.googleusercontent.com</string>
+	<string>166745143282-5t2g0rg0uf3j964blmkqcjikhhoq3c7p.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.357133723889-o5laerrumq5inuk5s8r3n6ds97q2d5ti</string>
+	<string>com.googleusercontent.apps.166745143282-5t2g0rg0uf3j964blmkqcjikhhoq3c7p</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAW_UhFBtNffidl4aL6Njy-YBvecjc4e4U</string>
+	<string>AIzaSyCpHzqB-QmV7UqswWDkmUA6v9tJWjcy-AI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>357133723889</string>
+	<string>166745143282</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.StanfordDaily</string>
+	<string>com.Stanford.Daily.App</string>
 	<key>PROJECT_ID</key>
-	<string>grocerytest-95615</string>
+	<string>stanforddailyapp</string>
 	<key>STORAGE_BUCKET</key>
-	<string>grocerytest-95615.appspot.com</string>
+	<string>stanforddailyapp.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:357133723889:ios:95e1f92dba5bbb4b</string>
+	<string>1:166745143282:ios:bb66ed3a014cf8ef</string>
 	<key>DATABASE_URL</key>
-	<string>https://grocerytest-95615.firebaseio.com</string>
+	<string>https://stanforddailyapp.firebaseio.com</string>
 </dict>
 </plist>
