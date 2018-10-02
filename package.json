@@ -7,6 +7,9 @@
     "test": "jest"
   },
   "dependencies": {
+    "appcenter": "^1.8.1",
+    "appcenter-analytics": "^1.8.1",
+    "appcenter-crashes": "^1.8.1",
     "firebase": "^4.2.0",
     "moment": "^2.18.1",
     "react": "16.0.0-alpha.12",
@@ -27,10 +30,12 @@
     "react-native-menu": "^0.21.0",
     "react-native-optimized-flatlist": "^1.0.3",
     "react-native-popover-tooltip": "^1.0.6",
+    "react-native-share": "^1.1.2",
     "react-native-shimmer-placeholder": "^1.0.13",
     "react-native-swipe-gestures": "^1.0.2",
     "react-native-vector-icons": "^4.2.0",
-    "react-navigation": "1.0.0-beta.19"
+    "react-navigation": "1.0.0-beta.19",
+    "warning": "^4.0.2"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",
@@ -39,7 +44,12 @@
     "react-test-renderer": "16.0.0-alpha.12"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js",
+      "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
+      "<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js"
+    ]
   },
   "rnpm": {
     "assets": [

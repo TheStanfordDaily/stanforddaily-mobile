@@ -90,8 +90,8 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 26
+    buildToolsVersion "28.0.2"
 
     defaultConfig {
         applicationId "com.stanforddaily"
@@ -133,6 +133,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-share')
+    compile project(':appcenter-crashes')
+    compile project(':appcenter-analytics')
+    compile project(':appcenter')
     compile project(':react-native-amplitude-analytics')
     compile project(':react-native-google-analytics-bridge')
     compile project(':react-native-firebase-analytics')
