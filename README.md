@@ -2,6 +2,7 @@
 
 # Setup
 ```
+npm i
 npm i -g react-native-cli
 react-native link react-native-share
 react-native link
