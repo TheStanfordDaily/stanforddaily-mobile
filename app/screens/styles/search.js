@@ -48,8 +48,7 @@ const styles= StyleSheet.create({
     close: {
       width: 40,
       height: 20,
-      marginRight: 3,
-      tintColor: COLORS.WHITE,
+      marginRight: 3
     },
     list: {
       width: width
