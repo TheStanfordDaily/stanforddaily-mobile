@@ -15,6 +15,8 @@ import SignIn from '../screens/SignIn';
 import DetailedPost from '../screens/DetailedPost';
 import Profile from '../screens/Profile';
 import RNAmplitute from 'react-native-amplitude-analytics';
+import AuthorList from "../screens/authors/AuthorList";
+import AuthorDetail from "../screens/authors/AuthorDetail";
 
 
 const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
@@ -22,7 +24,7 @@ const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
 const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
 
-export const SearchStack = StackNavigator({
+const SearchStack = StackNavigator({
   Search: {
     screen: Search,
     navigationOptions: {
@@ -39,7 +41,7 @@ export const SearchStack = StackNavigator({
   headerMode: 'none',
 });
 
-export const NewsStack = StackNavigator({
+const NewsStack = StackNavigator({
   Headlines: {
     screen: Headlines,
     navigationOptions: {
@@ -56,7 +58,7 @@ export const NewsStack = StackNavigator({
   headerMode: 'none',
 });
 
-export const ChatterStack = StackNavigator({
+const ChatterStack = StackNavigator({
   Chatter: {
     screen: Chatter,
     navigationOptions: {
@@ -83,6 +85,23 @@ export const ChatterStack = StackNavigator({
   headerMode: 'none',
 });
 
+const AuthorStack = StackNavigator({
+  AuthorList: {
+    screen: AuthorList,
+    navigationOptions: {
+      title: 'Author List',
+    },
+  },
+  AuthorDetail: {
+    screen: AuthorDetail,
+    navigationOptions: {
+      title: 'Author Detail',
+    },
+  },
+}, {
+  headerMode: 'none',
+});
+
 export const Tabs = TabNavigator({
   News: {
     screen: NewsStack,
@@ -98,20 +117,34 @@ export const Tabs = TabNavigator({
       },
     },
   },
-Chatter: {
-  screen: ChatterStack,
-  navigationOptions: {
-    tabBarLabel: 'Chatter',
-    tabBarIcon: ({ tintColor }) => <Image
-      source={require('../media/Community.png')}
-      style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
-    />,
-    tabBarOnPress: (scene, jumpToIndex) => {
-        amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.CHATTER});
-        jumpToIndex(scene.index);
+  Author: {
+    screen: AuthorStack,
+    navigationOptions: {
+      tabBarLabel: 'Authors',
+      tabBarIcon: ({ tintColor }) => <Image
+        source={require('../media/Community.png')}
+        style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
+      />,
+      tabBarOnPress: (scene, jumpToIndex) => {
+          amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
+          jumpToIndex(scene.index);
+      },
     },
-  },
-}
+  }
+// Chatter: {
+//   screen: ChatterStack,
+//   navigationOptions: {
+//     tabBarLabel: 'Chatter',
+//     tabBarIcon: ({ tintColor }) => <Image
+//       source={require('../media/Community.png')}
+//       style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
+//     />,
+//     tabBarOnPress: (scene, jumpToIndex) => {
+//         amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.CHATTER});
+//         jumpToIndex(scene.index);
+//     },
+//   },
+// }
 },{
   tabBarComponent: TabBarComponent,
   tabBarOptions: {
@@ -131,7 +164,7 @@ Chatter: {
   lazy: true
 });
 
-export const NewPostStack = StackNavigator({
+const NewPostStack = StackNavigator({
   NewPost: {
     screen: NewPost,
     navigationOptions: {
@@ -142,7 +175,7 @@ export const NewPostStack = StackNavigator({
   headerMode: 'none',
 });
 
-export const SignInStack = StackNavigator({
+const SignInStack = StackNavigator({
   SignIn: {
     screen: SignIn,
     navigationOptions: {

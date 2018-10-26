@@ -47,6 +47,7 @@ const STRINGS = {
   POSTS_BODIES: "postsBodies",
   SIGN_IN: "SignIn",
   SIGN_UP: "SignUp",
+  AUTHORS: "Authors",
   CHATTER: "Chatter",
   SIGNED_IN: "signedIn",
   USERS: "Users",
