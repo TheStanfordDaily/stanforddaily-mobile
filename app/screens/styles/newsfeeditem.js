@@ -86,9 +86,8 @@ const styles = StyleSheet.create({
       marginTop: 2,
     },
     searchTitle: {
-      fontFamily: FONTS.PT_SERIF,
+      fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: 14,
-      fontWeight: STRINGS.BOLD,
       marginTop: 2,
     },
     searchDescription: {

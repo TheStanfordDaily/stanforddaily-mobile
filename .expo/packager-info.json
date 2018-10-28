@@ -1,6 +1,9 @@
 {
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://mc-vmn.anonymous.stanforddaily.exp.direct",
+  "packagerNgrokUrl": "https://packager.mc-vmn.anonymous.stanforddaily.exp.direct",
+  "ngrokPid": 9959,
+  "devToolsPort": 19002,
+  "packagerPort": 19001,
+  "packagerPid": 9942
 }

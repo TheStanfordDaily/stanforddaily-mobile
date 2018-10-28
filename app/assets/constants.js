@@ -144,7 +144,11 @@ const ALIGNMENTS = {
 const FONTS = {
   CENTURY: "Century",
   PT_SERIF:"PT Serif",
+  PT_SERIF_BOLD:"PT Serif Bold",
   HNEUE: "Helvetica Neue"
+  // CENTURY: "Times New Roman",
+  // PT_SERIF: "Times New Roman",
+  // HNEUE: "Times New Roman"
 };
 
 const FONT_SIZES = {

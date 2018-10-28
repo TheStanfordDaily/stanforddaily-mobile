@@ -25,9 +25,9 @@ import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
 import Header from './common/header';
 import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images, KEYS} from '../assets/constants.js';
-// import RNAmplitute from 'react-native-amplitude-analytics';
+import {Amplitude} from 'expo';
 
-const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
+const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window');
 
 
@@ -213,7 +213,7 @@ export default class DetailedPost extends Component {
       view.fetchMoreReplies();
     });
     this.setState({text: '', height: 0});
-    amplitude.logEvent(STRINGS.NEW_REPLY, {post: postKey});
+    Amplitude.logEvent(STRINGS.NEW_REPLY, {post: postKey});
   }
 
   _renderItem(item) {

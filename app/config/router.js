@@ -16,9 +16,10 @@ import DetailedPost from '../screens/DetailedPost';
 import Profile from '../screens/Profile';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
-import Expo from "expo";
+import {Amplitude} from 'expo';
+import {FONTS} from "../assets/constants";
 
-const amplitude = Expo.Amplitude.initialize(KEYS.AMPLITUDE_API);
+const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
 const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
@@ -111,7 +112,7 @@ export const Tabs = TabNavigator({
         style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
       />,
       tabBarOnPress: (scene, jumpToIndex) => {
-          amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
+          Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
           jumpToIndex(scene.index);
       },
     },
@@ -125,7 +126,7 @@ export const Tabs = TabNavigator({
         style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
       />,
       tabBarOnPress: (scene, jumpToIndex) => {
-          amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
+          Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
           jumpToIndex(scene.index);
       },
     },
@@ -139,7 +140,7 @@ export const Tabs = TabNavigator({
 //       style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
 //     />,
 //     tabBarOnPress: (scene, jumpToIndex) => {
-//         amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.CHATTER});
+//         Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.CHATTER});
 //         jumpToIndex(scene.index);
 //     },
 //   },
@@ -152,8 +153,8 @@ export const Tabs = TabNavigator({
     inactiveBackgroundColor: 'white',
     activeBackgroundColor: 'white',
     labelStyle: {
-      fontFamily: 'PT Serif',
-      marginBottom: labelBottomMargin,
+      fontFamily: FONTS.PT_SERIF,
+      marginBottom: labelBottomMargin
     },
     style: {
       height: tabBarHeight,

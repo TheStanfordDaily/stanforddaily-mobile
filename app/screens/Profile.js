@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import ReactNative from 'react-native';
 import _ from 'lodash';
-import RNFetchBlob from 'react-native-fetch-blob'
 import ImagePicker from 'react-native-image-crop-picker';
 import firebase from 'firebase';
 
@@ -21,11 +20,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import PostItem from './common/post-item';
 import {STRINGS, Images, ICONS, COLORS} from '../assets/constants.js';
 import styles from './styles/profile.js';
-
-const Blob = RNFetchBlob.polyfill.Blob
-const fs = RNFetchBlob.fs
-window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
-window.Blob = Blob
 const {width, height} = Dimensions.get('window');
 
 var currUser = "";
@@ -221,46 +215,7 @@ export default class Profile extends Component {
 
   //Image upload options handler
   uploadOptions() {
-    ActionSheetIOS.showActionSheetWithOptions({
-      options: ['Upload From Library', 'Upload From Camera', 'Delete', 'Cancel'],
-      cancelButtonIndex: 3,
-      destructiveButtonIndex: 2,
-      title: 'Picture Source'
-    },
-    async (buttonIndex) => {
-      var options = {
-        width: width,
-        height: width,
-        cropping: true,
-        cropperCircleOverlay: true,
-        mediaType: 'photo',
-        includeBase64: true
-      };
-      var firebaseApp = firebase.apps[0];
-      var view = this;
-      if (buttonIndex === 0) {
-        ImagePicker.openPicker(options).then(image => {
-          view.uploadImage(image.path)
-              .then(url => {
-                  view.setState({imageURI: url, imageExists: true});
-              })
-              .catch(error => console.log(error));
-        });
-      } else if (buttonIndex === 1) {
-        ImagePicker.openCamera(options).then(image => {
-          view.uploadImage(image.path)
-              .then(url => {
-                  view.setState({imageURI: url, imageExists: true});
-              })
-              .catch(error => console.log(error));
-        });
-      } else if (buttonIndex === 2) {
-        const imageRef = firebaseApp.storage().ref(STRINGS.PROFILE_PICTURES).child(currUser);
-        await imageRef.delete();
-        view.setState({imageExists: false});
-        // console.warn("Image deleted");
-      }
-    });
+
   }
 
   async removeAtIndex(index) {

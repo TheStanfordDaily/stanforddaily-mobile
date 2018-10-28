@@ -20,15 +20,17 @@ import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import RNAmplitute from 'react-native-amplitude-analytics';
 import _ from 'lodash';
 
 //Styles for the page
 import styles from './styles/headlines';
 
+import {Amplitude} from 'expo';
+
+const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+
 //A map between categories names and their codes
 const {width, height} = Dimensions.get('window');
-const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Headlines extends Component {
@@ -80,7 +82,7 @@ export default class Headlines extends Component {
       // tracker.setUser('12345678');
       var currentdate = new Date();
      // log an event
-     amplitude.logEvent(STRINGS.APP_OPENED);
+     Amplitude.logEvent(STRINGS.APP_OPENED);
     //  console.log("Logged");
     }
 
@@ -103,7 +105,7 @@ export default class Headlines extends Component {
         newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'});
         newArray.push({category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'});
       }
-      amplitude.logEvent(STRINGS.ARTICLES_PREVIEW_REQUEST, {category: selectedCategory});
+      Amplitude.logEvent(STRINGS.ARTICLES_PREVIEW_REQUEST, {category: selectedCategory});
       this.setState({selectedCategoryData: newArray});
     }
 
@@ -181,7 +183,7 @@ export default class Headlines extends Component {
       // this.currPosts[selectedCategory]["page"] = 1;
       selectedCategory = value;
       this.setState({selectedCategory: value});
-      amplitude.logEvent(STRINGS.CATEGORY_CHANGED, {category: selectedCategory});
+      Amplitude.logEvent(STRINGS.CATEGORY_CHANGED, {category: selectedCategory});
       // this.currPosts[selectedCategory] = {page: 1, posts:[], hashed:{}};
       this.convertDataToMap((' ' + selectedCategory).slice(1));
       this.refs.listview.scrollToLocation({animated: false, sectionIndex:0, itemIndex:0, viewPosition:2});

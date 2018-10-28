@@ -7,11 +7,12 @@ import {
     Dimensions,
     TouchableWithoutFeedback
 } from 'react-native';
-import HTMLText from '../../modified_modules/react-native-html-to-text';
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
 import styles from '../styles/newsfeeditem.js';
+import HTML from 'react-native-render-html';
 
+// const HTML = (props) => <Text style={props.text}>{props.html}</Text>;
 
 const {width, height} = Dimensions.get('window');
 
@@ -146,8 +147,8 @@ export default class NewsFeedItem extends Component {
                 <Text style={styles.author}> {this.state.author} </Text>
                 <Text style={styles.date}> {this.state.date} </Text>
               </View>
-              <HTMLText style={styles.title} html={this.state.title}/>
-              <HTMLText style={styles.description} html={this.state.description}/>
+              <HTML style={styles.title} html={this.state.title}/>
+              <HTML style={styles.description} html={this.state.description}/>
             </View>
           </TouchableWithoutFeedback>
         );
@@ -166,8 +167,8 @@ export default class NewsFeedItem extends Component {
                   <Text style={styles.author}> {this.state.author} </Text>
                   <Text style={styles.date}> {this.state.date} </Text>
                 </View>
-                <HTMLText style={styles.searchTitle} html={this.state.title}/>
-                <HTMLText style={styles.searchDescription} html={this.state.description}/>
+                <HTML style={styles.searchTitle} html={this.state.title}/>
+                <HTML style={styles.searchDescription} html={this.state.description}/>
               </View>
               {this.state.featuredMedia !== "" &&
                   <Image source={{uri: this.state.featuredMedia}} style={styles.searchImage}/>

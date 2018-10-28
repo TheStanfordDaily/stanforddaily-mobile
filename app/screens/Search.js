@@ -24,15 +24,14 @@ import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import RNAmplitute from 'react-native-amplitude-analytics';
 import _ from 'lodash';
 
 //Styles for the page
 import styles from './styles/search';
 
-//A map between categories names and their codes
+import {Amplitude} from 'expo';
 
-const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
+const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Search extends Component {
@@ -68,7 +67,7 @@ export default class Search extends Component {
       // console.log('hihi');
       // tracker.setUser('12345678');
      // log an event
-     // amplitude.logEvent(STRINGS.APP_OPENED);
+     // Amplitude.logEvent(STRINGS.APP_OPENED);
     //  console.log("Logged");
     }
 

@@ -6,7 +6,6 @@
 //Pre-made Components imports
 import React, {Component} from 'react';
 import {STRINGS, KEYS} from '../assets/constants.js';
-// import RNAmplitute from 'react-native-amplitude-analytics';
 // import HTML from 'react-native-render-html';
 import {
   View,
@@ -19,8 +18,11 @@ import {
 
 //Components for this app imports
 import Header from './common/header';
+import {Amplitude} from 'expo';
+import HTML from "react-native-render-html";
+import FONTS from "../assets/constants";
 
-const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
+const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window'); //Dimensions of the current device screen
 
 class Post extends Component {
@@ -54,14 +56,14 @@ class Post extends Component {
     var postData = this.props.navigation.state.params;
     this.setState({
         // post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
-        content: "Test contewnt",
+        content: postData.body,
         title: postData.title,
         author: postData.author,
         date: postData.date,
         featuredMedia: postData.featuredMedia,
         id: postData.id,
     });
-    amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, {ArticleId: postData.id})
+    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, {ArticleId: postData.id})
   }
   
   createMarkup(text) {
@@ -78,7 +80,7 @@ class Post extends Component {
             barStyle="light-content"
           />
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-          <Text style={{fontSize: 22, fontWeight: "bold", margin: 10}}>
+          <Text style={{fontSize: 22, fontFamily: FONTS.PT_SERIF_BOLD, margin: 10}}>
             {this.state.title}
           </Text>
           <View style={{flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10}}>
@@ -87,7 +89,7 @@ class Post extends Component {
           </View>
           <Image style={{width: this.state.width, height: 200, marginVertical: 5}} source={{uri: this.state.featuredMedia}} />
           <View style={{margin: 10}}>
-            {/* <HTML html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} /> */}
+            <HTML html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
           </View>
           </ScrollView>
         </View>
