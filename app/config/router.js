@@ -111,10 +111,10 @@ export const Tabs = createBottomTabNavigator({
         source={require('../media/Daily.png')}
         style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
       />,
-      tabBarOnPress: (scene, jumpToIndex) => {
-          Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
-          jumpToIndex(scene.index);
-      },
+      // tabBarOnPress: (scene, jumpToIndex) => {
+      //     Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
+      //     jumpToIndex(scene.index);
+      // },
     },
   },
   Author: {
@@ -125,10 +125,10 @@ export const Tabs = createBottomTabNavigator({
         source={require('../media/Community.png')}
         style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
       />,
-      tabBarOnPress: (scene, jumpToIndex) => {
-          Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
-          jumpToIndex(scene.index);
-      },
+      // tabBarOnPress: (scene, jumpToIndex) => {
+      //     Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
+      //     jumpToIndex(scene.index);
+      // },
     },
   }
 // Chatter: {
