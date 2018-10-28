@@ -3,7 +3,7 @@
 # Setup
 ```
 npm i
-npm i -S
+npm i -g expo-cli
 
 npm run ios
 
