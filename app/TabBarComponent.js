@@ -1,48 +1,48 @@
-import React from 'react'
-import { Keyboard } from 'react-native'
-import { TabBarBottom } from 'react-navigation'
+// import React from 'react'
+// import { Keyboard } from 'react-native'
+// import { TabBarBottom } from 'react-navigation'
 
-class TabBarComponent extends React.PureComponent {
+// class TabBarComponent extends React.PureComponent {
 
-  constructor(props) {
-    super(props)
+//   constructor(props) {
+//     super(props)
 
-    this.keyboardWillShow = this.keyboardWillShow.bind(this)
-    this.keyboardWillHide = this.keyboardWillHide.bind(this)
+//     this.keyboardWillShow = this.keyboardWillShow.bind(this)
+//     this.keyboardWillHide = this.keyboardWillHide.bind(this)
 
-    this.state = {
-      isVisible: true
-    }
-  }
+//     this.state = {
+//       isVisible: true
+//     }
+//   }
 
-  componentWillMount() {
-    this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
-    this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
-  }
+//   componentWillMount() {
+//     this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
+//     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
+//   }
 
-  componentWillUnmount() {
-    this.keyboardWillShowSub.remove()
-    this.keyboardWillHideSub.remove()
-  }
+//   componentWillUnmount() {
+//     this.keyboardWillShowSub.remove()
+//     this.keyboardWillHideSub.remove()
+//   }
 
-  keyboardWillShow = event => {
-    this.setState({
-      isVisible: false
-    })
-  }
+//   keyboardWillShow = event => {
+//     this.setState({
+//       isVisible: false
+//     })
+//   }
 
-  keyboardWillHide = event => {
-    this.setState({
-      isVisible: true
-    })
-  }
+//   keyboardWillHide = event => {
+//     this.setState({
+//       isVisible: true
+//     })
+//   }
 
-  render() {
-    return this.state.isVisible ?
-      <TabBarBottom {...this.props} />
-      :
-      null
-  }
-}
+//   render() {
+//     return this.state.isVisible ?
+//       <TabBarBottom {...this.props} />
+//       :
+//       null
+//   }
+// }
 
-export default TabBarComponent
+// export default TabBarComponent

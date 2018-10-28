@@ -1,8 +1,8 @@
 import React from 'react';
-import { TabNavigator, StackNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import {STRINGS, MARGINS, HEIGHTS, KEYS} from '../assets/constants.js';
-import TabBarComponent from "../TabBarComponent"
+// import TabBarComponent from "../TabBarComponent"
 
 // const myIcon = ()
 
@@ -24,7 +24,7 @@ const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
 const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
 
-const SearchStack = StackNavigator({
+const SearchStack = createStackNavigator({
   Search: {
     screen: Search,
     navigationOptions: {
@@ -41,7 +41,7 @@ const SearchStack = StackNavigator({
   headerMode: 'none',
 });
 
-const NewsStack = StackNavigator({
+const NewsStack = createStackNavigator({
   Headlines: {
     screen: Headlines,
     navigationOptions: {
@@ -58,7 +58,7 @@ const NewsStack = StackNavigator({
   headerMode: 'none',
 });
 
-const ChatterStack = StackNavigator({
+const ChatterStack = createStackNavigator({
   Chatter: {
     screen: Chatter,
     navigationOptions: {
@@ -85,7 +85,7 @@ const ChatterStack = StackNavigator({
   headerMode: 'none',
 });
 
-const AuthorStack = StackNavigator({
+const AuthorStack = createStackNavigator({
   AuthorList: {
     screen: AuthorList,
     navigationOptions: {
@@ -102,7 +102,7 @@ const AuthorStack = StackNavigator({
   headerMode: 'none',
 });
 
-export const Tabs = TabNavigator({
+export const Tabs = createBottomTabNavigator({
   News: {
     screen: NewsStack,
     navigationOptions: {
@@ -146,7 +146,7 @@ export const Tabs = TabNavigator({
 //   },
 // }
 },{
-  tabBarComponent: TabBarComponent,
+  // tabBarComponent: TabBarComponent,
   tabBarOptions: {
     activeTintColor: '#A82029',
     inactiveTintColor: '#000000',
@@ -164,7 +164,7 @@ export const Tabs = TabNavigator({
   lazy: true
 });
 
-const NewPostStack = StackNavigator({
+const NewPostStack = createStackNavigator({
   NewPost: {
     screen: NewPost,
     navigationOptions: {
@@ -175,7 +175,7 @@ const NewPostStack = StackNavigator({
   headerMode: 'none',
 });
 
-const SignInStack = StackNavigator({
+const SignInStack = createStackNavigator({
   SignIn: {
     screen: SignIn,
     navigationOptions: {
@@ -186,7 +186,7 @@ const SignInStack = StackNavigator({
   headerMode: 'none',
 });
 
-export const Root = StackNavigator({
+export const Root = createStackNavigator({
   Tabs: {
     screen: Tabs,
   },
