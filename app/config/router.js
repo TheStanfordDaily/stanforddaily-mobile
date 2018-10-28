@@ -14,12 +14,11 @@ import NewPost from '../screens/NewPost';
 import SignIn from '../screens/SignIn';
 import DetailedPost from '../screens/DetailedPost';
 import Profile from '../screens/Profile';
-import RNAmplitute from 'react-native-amplitude-analytics';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
+import Expo from "expo";
 
-
-const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
+const amplitude = Expo.Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
 const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;

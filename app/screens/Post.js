@@ -6,8 +6,8 @@
 //Pre-made Components imports
 import React, {Component} from 'react';
 import {STRINGS, KEYS} from '../assets/constants.js';
-import RNAmplitute from 'react-native-amplitude-analytics';
-import HTML from 'react-native-render-html';
+// import RNAmplitute from 'react-native-amplitude-analytics';
+// import HTML from 'react-native-render-html';
 import {
   View,
   StatusBar,
@@ -54,7 +54,7 @@ class Post extends Component {
     var postData = this.props.navigation.state.params;
     this.setState({
         // post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
-        content: postData.body,
+        content: "Test contewnt",
         title: postData.title,
         author: postData.author,
         date: postData.date,
@@ -87,7 +87,7 @@ class Post extends Component {
           </View>
           <Image style={{width: this.state.width, height: 200, marginVertical: 5}} source={{uri: this.state.featuredMedia}} />
           <View style={{margin: 10}}>
-            <HTML html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
+            {/* <HTML html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} /> */}
           </View>
           </ScrollView>
         </View>

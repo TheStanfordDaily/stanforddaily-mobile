@@ -16,7 +16,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {REFS, ICONS, Images, COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
 import styles from '../styles/header.js';
-import ActivityView from 'react-native-activity-view';
+// import ActivityView from 'react-native-activity-view';
 
 export default class Header extends Component {
     constructor() {
@@ -29,9 +29,9 @@ export default class Header extends Component {
     }
 
     shareHandler() {
-    ActivityView.show({
-      url: STRINGS.DAILY_URL + "?p=" + this.props.postID
-    });
+    // ActivityView.show({
+    //   url: STRINGS.DAILY_URL + "?p=" + this.props.postID
+    // });
   }
 
     render() {

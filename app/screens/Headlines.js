@@ -20,7 +20,7 @@ import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
 import Icon from 'react-native-vector-icons/Ionicons';
-import RNAmplitute from 'react-native-amplitude-analytics';
+// import RNAmplitute from 'react-native-amplitude-analytics';
 import _ from 'lodash';
 
 //Styles for the page

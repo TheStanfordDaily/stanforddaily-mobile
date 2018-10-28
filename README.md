@@ -16,6 +16,12 @@ react-native run-android
 - Delete everything in `ios/build` or `android/build` folder and try again.
 - Try resetting/rebooting iOS emulator.
 
+## Deploying
+cd android
+./gradlew assembleRelease
+
+
+https://github.com/facebook/react-native/issues/14925
 
 
 ## Files breakdown:

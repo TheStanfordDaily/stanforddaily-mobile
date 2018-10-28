@@ -19,7 +19,7 @@
 
 import {STRINGS, KEYS, COLORS, Images} from '../../assets/constants.js'; //Constants
 
-import RNAmplitute from 'react-native-amplitude-analytics';
+// import RNAmplitute from 'react-native-amplitude-analytics';
 const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API); //Analytics library and configuration
 
 moment().format();

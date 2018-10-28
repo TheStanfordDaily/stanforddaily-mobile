@@ -25,7 +25,7 @@ import PostItem from './common/post-item';
 import ReplyItem from './common/reply-item';
 import Header from './common/header';
 import {STRINGS,CONSTANT_NUMS, REFS, PATHS, Images, KEYS} from '../assets/constants.js';
-import RNAmplitute from 'react-native-amplitude-analytics';
+// import RNAmplitute from 'react-native-amplitude-analytics';
 
 const amplitude = new RNAmplitute(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window');

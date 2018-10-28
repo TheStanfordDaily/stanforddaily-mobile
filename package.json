@@ -1,60 +1,25 @@
 {
-  "name": "StanfordDaily",
-  "version": "0.0.1",
+  "name": "empty-project-template",
+  "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "eject": "expo eject"
   },
   "dependencies": {
-    "appcenter": "^1.8.1",
-    "appcenter-analytics": "^1.8.1",
-    "appcenter-crashes": "^1.8.1",
-    "firebase": "^4.2.0",
-    "moment": "^2.18.1",
-    "react": "16.0.0-alpha.12",
-    "react-native": "0.48.1",
+    "expo": "^30.0.1",
+    "firebase": "^5.5.6",
+    "moment": "^2.22.2",
+    "parse5": "^5.1.0",
+    "react": "16.3.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
     "react-native-activity-view": "^0.2.11",
-    "react-native-amplitude-analytics": "^0.1.8",
-    "react-native-collapsible-header": "^0.0.11",
-    "react-native-drawer": "^2.5.0",
-    "react-native-dropdown": "0.0.6",
-    "react-native-elements": "^0.9.7",
+    "react-native-amplitude-analytics": "^0.2.6",
+    "react-native-drawer": "^2.5.1",
     "react-native-fetch-blob": "^0.10.8",
-    "react-native-firebase-analytics": "^3.0.6",
-    "react-native-google-analytics-bridge": "^5.3.3",
-    "react-native-html-to-text": "0.0.5",
-    "react-native-image-crop-picker": "^0.16.1",
-    "react-native-lightbox": "^0.7.0",
-    "react-native-linear-gradient": "^2.3.0",
-    "react-native-menu": "^0.21.0",
-    "react-native-optimized-flatlist": "^1.0.3",
-    "react-native-popover-tooltip": "^1.0.6",
-    "react-native-render-html": "^3.10.0",
-    "react-native-share": "^1.1.2",
-    "react-native-shimmer-placeholder": "^1.0.13",
-    "react-native-swipe-gestures": "^1.0.2",
-    "react-native-vector-icons": "^4.2.0",
-    "react-navigation": "1.0.0-beta.19",
-    "warning": "^4.0.2"
-  },
-  "devDependencies": {
-    "babel-jest": "20.0.3",
-    "babel-preset-react-native": "2.1.0",
-    "jest": "20.0.4",
-    "react-test-renderer": "16.0.0-alpha.12"
-  },
-  "jest": {
-    "preset": "react-native",
-    "setupFiles": [
-      "<rootDir>/node_modules/appcenter/test/AppCenterMock.js",
-      "<rootDir>/node_modules/appcenter-analytics/test/AppCenterAnalyticsMock.js",
-      "<rootDir>/node_modules/appcenter-crashes/test/AppCenterCrashesMock.js"
-    ]
-  },
-  "rnpm": {
-    "assets": [
-      "./app/assets/fonts/"
-    ]
+    "react-native-image-crop-picker": "^0.21.3",
+    "react-navigation": "^2.18.2"
   }
 }
