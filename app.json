@@ -1,12 +1,15 @@
 {
+  "name": "StanfordDaily",
+  "displayName": "Stanford Daily",
   "expo": {
-    "name": "StanfordDaily",
-    "displayName": "Stanford Daily",
     "description": "This project is really great.",
     "slug": "StanfordDaily",
     "privacy": "public",
     "sdkVersion": "30.0.0",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
