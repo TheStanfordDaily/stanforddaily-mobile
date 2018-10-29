@@ -1,8 +1,9 @@
 {
   "expo": {
-    "name": "TSDApp",
+    "name": "StanfordDaily",
+    "displayName": "Stanford Daily",
     "description": "This project is really great.",
-    "slug": "TSDApp",
+    "slug": "StanfordDaily",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "platforms": ["ios", "android"],
