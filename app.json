@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.Stanford.Daily.App"
+    },
+    "android": {
+      "package": "com.Stanford.Daily.App"
     }
   }
 }
