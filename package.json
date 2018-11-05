@@ -23,5 +23,8 @@
     "react-native-render-html": "^3.10.0",
     "react-navigation": "^2.18.2",
     "react-navigation-tabs": "^0.8.4"
+  },
+  "devDependencies": {
+    "graceful-fs": "^4.1.15"
   }
 }
