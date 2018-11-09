@@ -2,8 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://9g-d2z.anonymous.stanforddaily-mobile.exp.direct",
   "packagerNgrokUrl": "https://packager.9g-d2z.anonymous.stanforddaily-mobile.exp.direct",
-  "ngrokPid": 29293,
+  "ngrokPid": 31955,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 29270
+  "packagerPid": 31931
 }
