@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://za-ece.anonymous.stanforddaily.exp.direct",
   "packagerNgrokUrl": "https://packager.za-ece.anonymous.stanforddaily.exp.direct",
@@ -6,4 +7,13 @@
   "devToolsPort": 19002,
   "packagerPort": 19001,
   "packagerPid": 11231
+=======
+  "expoServerPort": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
+  "devToolsPort": 19002,
+  "packagerPort": null,
+  "packagerPid": null
+>>>>>>> Stashed changes
 }
