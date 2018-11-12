@@ -42,27 +42,19 @@ export default class App extends React.Component {
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
 
                     {/* Cover photo */}
+                    <TouchableHighlight onPress={() => this.toggleStatus()} style={{ flex: 1 }} activeOpacity={.95}>
+                        <ImageBackground
+                            style={{
+                                flex: 1,
+                                flexDirection: "column",
+                                alignSelf: 'stretch',
+                                width: undefined,
+                                height: undefined,
+                                minHeight: 350
+                            }}
+                            source={require('../../media/cover.jpg')} >
 
-                    <ImageBackground
-                        style={{
-                            flex: 1,
-                            flexDirection: "row",
-                            alignSelf: 'stretch',
-                            width: undefined,
-                            height: undefined
-                        }}
-                        source={require('../../media/cover.jpg')} >
-
-
-
-                        {/* Create gradient and insert text */}
-                        {/* <TouchableHighlight onPress = { this.onClick } > */}
-
-
-
-                        <TouchableHighlight onPress={() => this.toggleStatus()}>
-                            {this.state.shown ? <View style={{ flex: 1, borderWidth: 1, borderColor: 'black' }}>
-
+                            {this.state.shown ? <View style={{ flex: 1 }}>
 
                                 <LinearGradient
                                     colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
@@ -74,27 +66,25 @@ export default class App extends React.Component {
                                     }} >
                                 </LinearGradient>
 
-
                                 <View style={{ position: 'absolute', bottom: 0 }}>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
                                         Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
                                         team and I'm interested in computer science!
-                        </Text>
+                                    </Text>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
                                         I'm from: La Jolla, CA
-                    {"\n"}I've been at The Daily for: 2 years
-                    {"\n"}My go-to TAP order is: waffle fries
-                    {"\n"}My favorite dining hall is: Casper
-                        </Text>
+                                        {"\n"}I've been at The Daily for: 2 years
+                                        {"\n"}My go-to TAP order is: waffle fries
+                                        {"\n"}My favorite dining hall is: Casper
+                                    </Text>
                                 </View>
-                            </View> : <View style={{ flex: 1, width: 200, height: 200, borderWidth: 1, borderColor: 'black' }}>
-                                    <Text>
-                                        HELLO
-                            </Text>
-                                </View>}
+                            </View> :
+                            
+                            <View style={{ flex: 1, height: '100%' }}></View>}
 
-                        </TouchableHighlight>
-                    </ImageBackground>
+
+                        </ImageBackground>
+                    </TouchableHighlight>
 
                 </View>
 
