@@ -18,6 +18,18 @@ import FONTS from "../../assets/constants";
 
 // export default () => <View style={{ flex: 1 }}>
 export default class App extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            shown: false
+        }
+    }
+
+    toggleStatus() {
+        this.setState({
+            shown: !this.state.shown
+        });
+    }
 
     render() {
         return (<View style={{ flex: 1 }}>
@@ -30,43 +42,65 @@ export default class App extends React.Component {
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
 
                     {/* Cover photo */}
+
                     <ImageBackground
                         style={{
                             flex: 1,
+                            flexDirection: "row",
                             alignSelf: 'stretch',
                             width: undefined,
                             height: undefined
                         }}
                         source={require('../../media/cover.jpg')} >
 
+
+
                         {/* Create gradient and insert text */}
                         {/* <TouchableHighlight onPress = { this.onClick } > */}
-                        <LinearGradient
-                            colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
-                            style={{
-                                flex: 1,
-                                alignSelf: 'stretch',
-                            }} >
-                        </LinearGradient>
-                        <View style={{ position: 'absolute', position: "absolute", bottom: 5, margin: 18 }}>
-                            <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
-                                Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
-                                team and I'm interested in computer science!
+
+
+
+                        <TouchableHighlight onPress={() => this.toggleStatus()}>
+                            {this.state.shown ? <View style={{ flex: 1, borderWidth: 1, borderColor: 'black' }}>
+
+
+                                <LinearGradient
+                                    colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
+                                    style={{
+                                        flex: 1,
+                                        width: '100%',
+                                        height: '100%',
+                                        alignSelf: 'stretch',
+                                    }} >
+                                </LinearGradient>
+
+
+                                <View style={{ position: 'absolute', bottom: 0 }}>
+                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
+                                        Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
+                                        team and I'm interested in computer science!
                         </Text>
-                            <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
-                                I'm from: La Jolla, CA
+                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
+                                        I'm from: La Jolla, CA
                     {"\n"}I've been at The Daily for: 2 years
                     {"\n"}My go-to TAP order is: waffle fries
                     {"\n"}My favorite dining hall is: Casper
                         </Text>
-                        </View>
-                        {/* </TouchableHighlight> */}
+                                </View>
+                            </View> : <View style={{ flex: 1, width: 200, height: 200, borderWidth: 1, borderColor: 'black' }}>
+                                    <Text>
+                                        HELLO
+                            </Text>
+                                </View>}
+
+                        </TouchableHighlight>
                     </ImageBackground>
+
                 </View>
 
                 {/* Bitmoji */}
                 <View style={{ flex: 0.1, backgroundColor: "white", flexDirection: "row" }}>
-                    <View style={{backgroundColor: "white", position: "absolute" }}>
+                    <View style={{ backgroundColor: "white", position: "absolute" }}>
                         <Image
                             style={{ marginLeft: 10, marginTop: 5, width: 80, height: 80 }}
                             source={require('../../media/bitmoji.png')}
@@ -74,7 +108,7 @@ export default class App extends React.Component {
                     </View>
                     {/* Staff details: name and position */}
                     <View style={{ flex: 3, marginTop: 20, marginLeft: 100, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 21, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
+                        <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
                             Alex Tsai
                 </Text>
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text", marginLeft: 5 }}>
@@ -93,7 +127,7 @@ export default class App extends React.Component {
                         backgroundColor: "white"
                     }}>
                         <Text style={{
-                            fontSize: 22, fontFamily: "Helvetica", fontWeight: "bold",
+                            fontSize: 20, fontFamily: "Helvetica", fontWeight: "bold",
                             marginTop: 5, textAlign: "center", textAlignVertical: "center"
                         }}>
                             48
@@ -113,48 +147,52 @@ export default class App extends React.Component {
                 <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5}}>
+                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
                             <Image
-                                style={{ flex: 1,
+                                style={{
+                                    flex: 1,
                                     resizeMode: 'contain',
                                     alignSelf: 'center',
                                     width: 150,
-                                    height: undefined }}
+                                    height: undefined
+                                }}
                                 source={require('../../media/football.jpg')}
                             />
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                             <TouchableHighlight onPress={() => Linking.openURL("https://www.stanforddaily.com/2018/10/22/stanford-concussion-education-initiative-partners-with-pop-warner/")}>
-                                <Text style={{ fontSize: 16, fontFamily: "Hoefler Text"}}>
+                                <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                     Stanford concussion education initiative partners with Pop Warner
                                 </Text>
                             </TouchableHighlight>
-                            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5}}>
-                                    October 22, 2018
+                            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
+                                October 22, 2018
                                 </Text>
                         </View>
                     </View>
 
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5}}>
+                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
                             <Image
-                                style={{ flex: 1,
+                                style={{
+                                    flex: 1,
                                     resizeMode: 'contain',
                                     alignSelf: 'center',
                                     width: 150,
-                                    height: undefined }}
+                                    height: undefined
+                                }}
                                 source={require('../../media/hoover.jpg')}
                             />
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                             <TouchableHighlight onPress={() => Linking.openURL("https://www.stanforddaily.com/2018/01/18/at-hoover-rex-tillerson-advocates-maintaining-u-s-presence-in-syria/")}>
-                                <Text style={{ fontSize: 16, fontFamily: "Hoefler Text"}}>
+                                <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                     At Hoover, Rex Tillerson advocates maintaining U.S. presence in Syria
                                 </Text>
                             </TouchableHighlight>
-                            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5}}>
-                                    January 18, 2018
+                            <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
+                                January 18, 2018
                                 </Text>
                         </View>
                     </View>
@@ -179,7 +217,7 @@ export default class App extends React.Component {
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
+                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
                     <TouchableHighlight onPress={() => Linking.openURL("http://www.facebook.com")}>
                         <Image
                             style={{ width: 30, height: 30 }}
@@ -188,7 +226,7 @@ export default class App extends React.Component {
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
+                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
                     <TouchableHighlight onPress={() => Linking.openURL("http://www.twitter.com")}>
                         <Image
                             style={{ width: 30, height: 30 }}
@@ -197,7 +235,7 @@ export default class App extends React.Component {
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
+                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
                     <TouchableHighlight onPress={() => Linking.openURL("http://www.instagram.com")}>
                         <Image
                             style={{ width: 30, height: 30 }}
@@ -206,7 +244,7 @@ export default class App extends React.Component {
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
+                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
                     <TouchableHighlight onPress={() => Linking.openURL("http://www.linkedin.com")}>
                         <Image
                             style={{ width: 30, height: 30 }}
