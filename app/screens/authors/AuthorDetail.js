@@ -67,11 +67,17 @@ export default class App extends React.Component {
                                 </LinearGradient>
 
                                 <View style={{ position: 'absolute', bottom: 0 }}>
-                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
+                                    <Text style={{ 
+                                        fontSize: 17, 
+                                        marginLeft: 15, marginRight: 15, marginBottom: 10, 
+                                        fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
                                         Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
                                         team and I'm interested in computer science!
                                     </Text>
-                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
+                                    <Text style={{ 
+                                        fontSize: 17, 
+                                        marginLeft: 15, marginRight: 15, marginBottom: 15, 
+                                        fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
                                         I'm from: La Jolla, CA
                                         {"\n"}I've been at The Daily for: 2 years
                                         {"\n"}My go-to TAP order is: waffle fries
@@ -89,10 +95,10 @@ export default class App extends React.Component {
                 </View>
 
                 {/* Bitmoji */}
-                <View style={{ flex: 0.1, backgroundColor: "white", flexDirection: "row" }}>
-                    <View style={{ backgroundColor: "white", position: "absolute" }}>
+                <View style={{ flex: 0.1, paddingTop: 1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
+                    <View style={{ marginBottom: 10, backgroundColor: "white", position: "absolute" }}>
                         <Image
-                            style={{ marginLeft: 10, marginTop: 5, width: 80, height: 80 }}
+                            style={{ marginLeft: 10, marginTop: 5, width: 73, height: 73 }}
                             source={require('../../media/bitmoji.png')}
                         />
                     </View>
@@ -100,7 +106,7 @@ export default class App extends React.Component {
                     <View style={{ flex: 3, marginTop: 20, marginLeft: 100, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
                             Alex Tsai
-                </Text>
+                        </Text>
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text", marginLeft: 5 }}>
                             Desk editor '21
                 </Text>
@@ -124,7 +130,7 @@ export default class App extends React.Component {
                 </Text>
                         <Text style={{
                             fontSize: 13, fontFamily: "Helvetica",
-                            textAlign: "center", textAlignVertical: "center"
+                            marginBottom: 5, textAlign: "center", textAlignVertical: "center"
                         }}>
                             articles
                 </Text>
@@ -134,16 +140,16 @@ export default class App extends React.Component {
 
 
                 {/* TODO: populate "recent article list" with data (Vivian) */}
-                <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+                <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", paddingTop: 7, flexDirection: "column" }}>
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
+                        <View style={{ flex: 2, padding: 7, aspectRatio: 3/2 }}>
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'contain',
+                                    resizeMode: 'resize',
                                     alignSelf: 'center',
-                                    width: 150,
+                                    width: '100%',
                                     height: undefined
                                 }}
                                 source={require('../../media/football.jpg')}
@@ -163,13 +169,13 @@ export default class App extends React.Component {
 
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
+                        <View style={{ flex: 2, padding: 7, aspectRatio: 3/2 }}>
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'contain',
+                                    resizeMode: 'resize',
                                     alignSelf: 'center',
-                                    width: 150,
+                                    width: '100%',
                                     height: undefined
                                 }}
                                 source={require('../../media/hoover.jpg')}
