@@ -5,10 +5,7 @@ Each time to run again: call "npm run ios"
 */
 'use strict';
 import React, { Component } from 'react';
-import NestedListView, {NestedRow} from 'react-native-nested-listview';
-import { STRINGS, KEYS } from '../../assets/constants.js';
-import RNAmplitute from 'react-native-amplitude-analytics';
-//import HTML from 'react-native-render-html';
+import NestedListView, { NestedRow } from 'react-native-nested-listview';
 import {
   View,
   StatusBar,
@@ -18,18 +15,36 @@ import {
   Image
 } from 'react-native';
 
+import {
+  COLORS,
+  FONTS,
+  FONT_SIZES,
+} from '../../assets/constants';
+
 import Header from '../common/header';
 
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
+
 const styles = {
   header: {
-    backgroundColor: "red",
+    borderRadius: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: COLORS.LIGHT_GRAY,
+  },
+  headerText: {
+    fontSize: FONT_SIZES.DEFAULT_MEDIUM,
+    fontFamily: FONTS.PT_SERIF_BOLD,
   },
   author: {
-    backgroundColor: "green",
+    borderRadius: 10,
+    borderBottomColor: COLORS.LIGHT_GRAY,
+    borderBottomWidth: 0.5,
   },
+  authorText: {
+    fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+    fontFamily: FONTS.PT_SERIF,
+  }
 }
-
 
 class Post extends Component {
   constructor(props) {
@@ -44,7 +59,6 @@ class Post extends Component {
     Dimensions.addEventListener('change', () => {
       const { width, height } = Dimensions.get('window')
       this.setState({ width: width <= height ? width : height, height: height });
-      // console.warn("orientation changed");
     });
   }
 
@@ -59,20 +73,18 @@ class Post extends Component {
   }
 
   //Gets data and makes it look as expected
-  //"Music", "Culture", "Screen"
   fetchData() {
-    var postData = this.props.navigation.state.params;
-    this.setState({
-      data: [{"name":"Arts and Life","members":[{"name":"Alex Tsai","id":1001790},{"name":"Shana Hadi","id":1001803}]},{"name":"Tech","members":[{"name":"Ashwin Ramaswami","id":1001827},{"name":"John Doe","id":1001714}]}],
-    });
-    //amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, {ArticleId: postData.id})
+    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/authors/")
+      .then(e => e.json()) //convert to json
+      .then(e => {
+        this.setState({ data: e });
+      })
   }
 
   createMarkup(text) {
     return text;
   }
   render() {
-
 
     return (
       <View style={{ flex: 1 }}>
@@ -82,22 +94,24 @@ class Post extends Component {
             barStyle="light-content"
           />
           <ScrollView style={{ flex: 1, flexDirection: "row", backgroundColor: "white" }}
-          contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
-            
+            contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
+
             <NestedListView
               data={this.state.data}
-              getChildrenName={(node) => 'members'}
-              onNodePressed={(node) => alert('Selected node')}
+              getChildrenName={(node) => 'members'} //children of the categories
+              onNodePressed={
+                (node) => node.id && this.props.navigation.navigate("AuthorDetail", {id: node.id})
+              }
               renderNode={(node, level) => (
                 <NestedRow
                   level={level}
-                  style={level == 1 ? styles.header : styles.author}
-                >
-                  <Text>{node.name}</Text>
+                  style={level == 1 ? styles.header : styles.author}>
+                  <Text 
+                    style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
+                  </Text>
                 </NestedRow>
               )}
             />
-
           </ScrollView>
         </View>
       </View>
