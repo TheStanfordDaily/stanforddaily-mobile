@@ -65,14 +65,13 @@ export default class App extends React.Component {
                         </LinearGradient>
                         <View style={{ position: 'absolute', position: "absolute", bottom: 5, margin: 18 }}>
                             <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
-                                Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
-                                team and I'm interested in computer science!
+                                {this.state.details.blurb}
                         </Text>
                             <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
                                 I'm from: La Jolla, CA
-                    {"\n"}I've been at The Daily for: 2 years
-                    {"\n"}My go-to TAP order is: waffle fries
-                    {"\n"}My favorite dining hall is: Casper
+                    {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
+                    {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
+                    {"\n"}My favorite dining hall is: {this.state.details.diningHall}
                         </Text>
                         </View>
                         {/* </TouchableHighlight> */}
