@@ -68,7 +68,7 @@ export default class App extends React.Component {
                                 {this.state.details.blurb}
                         </Text>
                             <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
-                                I'm from: La Jolla, CA
+                                I'm from: {this.state.details.hometown}
                     {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
                     {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
                     {"\n"}My favorite dining hall is: {this.state.details.diningHall}
