@@ -1,6 +1,5 @@
 /*
 Note: using the post.js as a template for this page; hoping it mostly works!
-
 Each time to run again: call "npm run ios"
 */
 'use strict';

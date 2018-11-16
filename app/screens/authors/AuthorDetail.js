@@ -9,7 +9,8 @@ import {
     ImageBackground,
     TouchableHighlight,
     Linking,
-    Switch
+    Switch,
+    ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo';
 import Header from '../common/header';
@@ -21,7 +22,9 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            shown: false
+            shown: false,
+            posts: null,
+            details: null
         }
     }
 
@@ -30,13 +33,21 @@ export default class App extends React.Component {
             shown: !this.state.shown
         });
     }
+    componentDidMount() {
+        Promise.all([fetch("https://www.stanforddaily.com/wp-json/wp/v2/posts?author=1001628").then(e => e.json()),fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/authors/1001803").then(e => e.json())]).then(values => this.setState({
+            posts: values[0],
+            details: values[1]
+        }));
+    }
 
     render() {
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
+                
+                {!this.state.details && <ActivityIndicator/>}
 
-            <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
+                {this.state.details && <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
 
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
@@ -68,14 +79,13 @@ export default class App extends React.Component {
 
                                 <View style={{ position: 'absolute', bottom: 0 }}>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
-                                        Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
-                                        team and I'm interested in computer science!
+                                    {this.state.details.blurb}
                                     </Text>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
-                                        I'm from: La Jolla, CA
-                                        {"\n"}I've been at The Daily for: 2 years
-                                        {"\n"}My go-to TAP order is: waffle fries
-                                        {"\n"}My favorite dining hall is: Casper
+                                    I'm from: {this.state.details.hometown}
+                    {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
+                    {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
+                    {"\n"}My favorite dining hall is: {this.state.details.diningHall}
                                     </Text>
                                 </View>
                             </View> :
@@ -99,7 +109,7 @@ export default class App extends React.Component {
                     {/* Staff details: name and position */}
                     <View style={{ flex: 3, marginTop: 20, marginLeft: 100, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
-                            Alex Tsai
+                            {this.state.details.name}
                 </Text>
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text", marginLeft: 5 }}>
                             Desk editor '21
@@ -189,7 +199,7 @@ export default class App extends React.Component {
 
                 </View>
 
-            </ScrollView>
+            </ScrollView>}
 
 
             {/* Fixed footer of social media links (outside of ScrollView) */}
