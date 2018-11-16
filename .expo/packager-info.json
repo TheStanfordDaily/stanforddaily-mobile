@@ -2,14 +2,8 @@
   "expoServerPort": 19000,
   "expoServerNgrokUrl": "https://za-ece.epicfaace.stanforddaily.exp.direct",
   "packagerNgrokUrl": "https://packager.za-ece.epicfaace.stanforddaily.exp.direct",
-  "ngrokPid": 6964,
+  "ngrokPid": 13460,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "expoServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "devToolsPort": 19002,
-  "packagerPort": null,
-  "packagerPid": null
+  "packagerPid": 13427
 }

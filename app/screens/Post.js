@@ -20,10 +20,10 @@ import {
 import Header from './common/header';
 import { Amplitude } from 'expo';
 import FONTS from "../assets/constants";
-import { StyledText } from 'react-native-styled-text';
+const h2p = require('html2plaintext')
 
 const HTML = (props) => {
-  return <StyledText style={props.style} text={props.html} />
+  return <Text style={props.style}>{h2p(props.html)}</Text>
 }
 
 
@@ -86,7 +86,7 @@ class Post extends Component {
           />
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
             <Text style={{ fontSize: 22, fontFamily: FONTS.PT_SERIF_BOLD, margin: 10 }}>
-              {this.state.title}
+              <HTML html={this.state.title} />
             </Text>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>

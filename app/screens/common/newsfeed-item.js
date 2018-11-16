@@ -10,10 +10,10 @@ import {
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
 import styles from '../styles/newsfeeditem.js';
-import { StyledText } from 'react-native-styled-text';
+const h2p = require('html2plaintext')
 
 const HTML = (props) => {
-  return <StyledText style={props.style} text={props.html} />
+  return <Text style={props.style}>{h2p(props.html)}</Text>
 }
 
 
