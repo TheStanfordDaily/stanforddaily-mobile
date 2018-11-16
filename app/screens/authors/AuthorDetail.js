@@ -15,7 +15,7 @@ import {
 import { LinearGradient } from 'expo';
 import Header from '../common/header';
 import HTML from "react-native-render-html";
-import FONTS from "../../assets/constants";
+import {FONTS, STRINGS} from "../../assets/constants";
 
 // export default () => <View style={{ flex: 1 }}>
 export default class App extends React.Component {
@@ -34,20 +34,22 @@ export default class App extends React.Component {
         });
     }
     componentDidMount() {
-        Promise.all([fetch("https://www.stanforddaily.com/wp-json/wp/v2/posts?author=1001628").then(e => e.json()),fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/authors/1001803").then(e => e.json())]).then(values => this.setState({
-            posts: values[0],
-            details: values[1]
-        }));
+        let authorId = this.props.navigation.state.params.id;
+        Promise.all([fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?author=" + authorId).then(e => e.json())
+            , fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())]).then(values => this.setState({
+                posts: values[0],
+                details: values[1]
+            }));
     }
 
     render() {
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
-                
-                {!this.state.details && <ActivityIndicator/>}
 
-                {this.state.details && <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
+            {!this.state.details && <ActivityIndicator />}
+
+            {this.state.details && <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
 
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
@@ -79,18 +81,18 @@ export default class App extends React.Component {
 
                                 <View style={{ position: 'absolute', bottom: 0 }}>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
-                                    {this.state.details.blurb}
+                                        {this.state.details.blurb}
                                     </Text>
                                     <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
-                                    I'm from: {this.state.details.hometown}
-                    {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
-                    {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
-                    {"\n"}My favorite dining hall is: {this.state.details.diningHall}
+                                        I'm from: {this.state.details.hometown}
+                                        {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
+                                        {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
+                                        {"\n"}My favorite dining hall is: {this.state.details.diningHall}
                                     </Text>
                                 </View>
                             </View> :
-                            
-                            <View style={{ flex: 1, height: '100%' }}></View>}
+
+                                <View style={{ flex: 1, height: '100%' }}></View>}
 
 
                         </ImageBackground>
@@ -110,9 +112,9 @@ export default class App extends React.Component {
                     <View style={{ flex: 3, marginTop: 20, marginLeft: 100, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
                             {this.state.details.name}
-                </Text>
+                        </Text>
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text", marginLeft: 5 }}>
-                            Desk editor '21
+                            {this.state.details.position}
                 </Text>
                     </View>
                     {/* Article count */}

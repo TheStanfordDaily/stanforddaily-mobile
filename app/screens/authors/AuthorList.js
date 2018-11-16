@@ -18,6 +18,7 @@ import {
   COLORS,
   FONTS,
   FONT_SIZES,
+  STRINGS
 } from '../../assets/constants';
 
 import Header from '../common/header';
@@ -73,7 +74,7 @@ class Post extends Component {
 
   //Gets data and makes it look as expected
   fetchData() {
-    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/authors/")
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/")
       .then(e => e.json()) //convert to json
       .then(e => {
         this.setState({ data: e });
