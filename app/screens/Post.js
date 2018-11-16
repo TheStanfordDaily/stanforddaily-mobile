@@ -19,8 +19,13 @@ import {
 //Components for this app imports
 import Header from './common/header';
 import { Amplitude } from 'expo';
-import HTML from "react-native-render-html";
 import FONTS from "../assets/constants";
+import { StyledText } from 'react-native-styled-text';
+
+const HTML = (props) => {
+  return <StyledText style={props.style} text={props.html} />
+}
+
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -73,7 +78,7 @@ class Post extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1}}>
         <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack} />
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
@@ -84,13 +89,13 @@ class Post extends Component {
               {this.state.title}
             </Text>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
-              <Text>{this.state.author}</Text>
-              <Text>{this.state.date}</Text>
+              <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>
+              <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.date}</Text>
             </View>
             <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             <View style={{ margin: 10 }}>
               {this.state.content &&
-                <HTML html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
+                <HTML style={{fontFamily: FONTS.CENTURY}} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
               }
             </View>
           </ScrollView>

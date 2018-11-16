@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, Text } from 'react-native';
+import { KeyboardAvoidingView, View, ActivityIndicator, Text } from 'react-native';
 import { Root, Tabs } from './app/config/router';
 import { Font } from 'expo';
 class App extends Component {
@@ -18,7 +18,7 @@ class App extends Component {
   }
   render() {
     if (!this.state.loaded) {
-      return <View><Text>Loading...</Text></View>;
+      return <View><ActivityIndicator /></View>;
     }
     return (
       <KeyboardAvoidingView

@@ -1,13 +1,10 @@
 {
-<<<<<<< Updated upstream
   "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://za-ece.anonymous.stanforddaily.exp.direct",
-  "packagerNgrokUrl": "https://packager.za-ece.anonymous.stanforddaily.exp.direct",
-  "ngrokPid": 11249,
+  "expoServerNgrokUrl": "https://za-ece.epicfaace.stanforddaily.exp.direct",
+  "packagerNgrokUrl": "https://packager.za-ece.epicfaace.stanforddaily.exp.direct",
+  "ngrokPid": 6964,
   "devToolsPort": 19002,
   "packagerPort": 19001,
-  "packagerPid": 11231
-=======
   "expoServerPort": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
@@ -15,5 +12,4 @@
   "devToolsPort": 19002,
   "packagerPort": null,
   "packagerPid": null
->>>>>>> Stashed changes
 }

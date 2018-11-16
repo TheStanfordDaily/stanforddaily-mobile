@@ -10,9 +10,12 @@ import {
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
 import styles from '../styles/newsfeeditem.js';
-import HTML from 'react-native-render-html';
+import { StyledText } from 'react-native-styled-text';
 
-// const HTML = (props) => <Text style={props.text}>{props.html}</Text>;
+const HTML = (props) => {
+  return <StyledText style={props.style} text={props.html} />
+}
+
 
 const {width, height} = Dimensions.get('window');
 
