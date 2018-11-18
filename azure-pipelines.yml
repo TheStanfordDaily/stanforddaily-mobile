@@ -15,5 +15,6 @@ steps:
 - script: |
     npm install
     npm install -g expo-cli
+    expo login -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
     expo eject --non-interactive --eject-method expoKit
   displayName: 'npm install and expo eject'
