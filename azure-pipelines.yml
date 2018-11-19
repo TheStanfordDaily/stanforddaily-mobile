@@ -18,6 +18,7 @@ steps:
   displayName: 'npm install'
 
 - script: |
+    chmod +x build.sh
     ./build.sh
   displayName: 'build script'
   env:
