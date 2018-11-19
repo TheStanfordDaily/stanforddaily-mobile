@@ -24,7 +24,7 @@ steps:
     git checkout master
     expo login --non-interactive -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
     expo eject --non-interactive --eject-method expoKit
-    displayName: 'expo build script'
+  displayName: 'expo build script'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
     EXPO_PASSWORD: $(EXPO_PASSWORD)
