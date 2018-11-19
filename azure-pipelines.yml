@@ -16,3 +16,10 @@ steps:
     npm install
     npm install -g expo-cli
   displayName: 'npm install'
+
+- script: |
+    ./build.sh
+  displayName: 'build script'
+  env:
+    EXPO_USERNAME: $(EXPO_USERNAME)
+    EXPO_PASSWORD: $(EXPO_PASSWORD)
