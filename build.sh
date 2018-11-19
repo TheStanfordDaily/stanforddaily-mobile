@@ -1,4 +1,4 @@
-npm i -g expo
+npm i -g expo-cli
 expo login --non-interactive -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
 expo eject --non-interactive --eject-method expoKit
 git add -A
