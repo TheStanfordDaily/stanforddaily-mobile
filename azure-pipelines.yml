@@ -9,15 +9,23 @@ pool:
 steps:
 - checkout: self 
   persistCredentials: true
-
+ 
+- task: InstallSSHKey@0
+  inputs:
+    hostName: tsdcipublickey
+    sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC82NmuEdEiUfpPYu9Yh0bWkshBwSoN2/RnL3o33JcKZO1vug+V0l+64hhA/H8PFkPaQ4c2mM6hyuDcMkh9ertGILgvlN2XPie3PUz65xbNUXy+e/HqaDdLmwmjPvSnLFE3WxIUO/BxI84Zn9+ToYH9EUAAKaUmgLV/1dwl0w6EdBHyzfYOwGNL+CU9slta3CW3UafeIQvIKzbUw2hC6yzSFR2DoYwIYW5t6SS4eqTQ4DLHZX0kdF3o12SgEdCEWlTz3wfgLrqdzOpYBBN0YyYLmL1arNFLNz0HQpNhiwoSANieRvei5Il4Q9OKgmNHrCMzQoccs3WdAt2F1rZOPxTF arama@DNa1de7b5.SUNet
+    #sshPassphrase: # Optional
+    sshKeySecureFile: stanforddaily_mobile_rsa
+    
 - script: |
     git config --global user.name "Azure DevOps CI Server"
     git config --global user.email "ashwin@stanforddaily.com"
     touch test.md
+    git checkout -b ci
     git add -A
     git commit -m "Eject to ExpoKit"
-    git remote add release https://dev.azure.com/stanforddaily/StanfordDaily_Mobile/_git/StanfordDaily_Mobile
-    git -c http.extraheader="AUTHORIZATION: basic ${token}" push release HEAD:master
+    git remote add release git@ssh.dev.azure.com:v3/stanforddaily/StanfordDaily_Mobile/StanfordDaily_Mobile
+    git push -f release ci:master
   displayName: 'git push to VSTS repo'
   env:
     token: $(System.AccessToken)
