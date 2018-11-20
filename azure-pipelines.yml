@@ -10,6 +10,20 @@ steps:
 - checkout: self 
   persistCredentials: true
 
+- script: |
+    git config --global user.name "Azure DevOps CI Server"
+    git config --global user.email "ashwin@stanforddaily.com"
+    touch test.md
+    git add -A
+    git commit -m "Eject to ExpoKit"
+    git remote add release https://dev.azure.com/stanforddaily/StanfordDaily_Mobile/_git/StanfordDaily_Mobile
+    git config http.https://github.com/TheStanfordDaily/StanfordDaily_Mobile.extraheader "AUTHORIZATION: basic ${token}"
+    git push -f release HEAD:master
+  displayName: 'git push to VSTS repo'
+  env:
+    token: $(System.AccessToken)
+    
+
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'
@@ -29,14 +43,3 @@ steps:
     EXPO_USERNAME: $(EXPO_USERNAME)
     EXPO_PASSWORD: $(EXPO_PASSWORD)
 
-- script: |
-    git config --global user.name "Azure DevOps CI Server"
-    git config --global user.email "ashwin@stanforddaily.com"
-    git add -A
-    git commit -m "Eject to ExpoKit"
-    #git remote add release git@ssh.dev.azure.com:v3/stanforddaily/StanfordDaily_Mobile/StanfordDaily_Mobile
-    git remote add release https://stanforddaily@dev.azure.com/stanforddaily/StanfordDaily_Mobile/_git/StanfordDaily_Mobile
-    git -c http.extraheader="AUTHORIZATION: basic ${token}" push -f release HEAD:master
-  displayName: 'git push to VSTS repo'
-  env:
-    token: $(System.AccessToken)
