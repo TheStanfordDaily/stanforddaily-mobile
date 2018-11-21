@@ -19,7 +19,11 @@ steps:
     npm install
     npm install -g expo-cli
   displayName: 'npm install'
-
+  
+- script: |
+    node -e "console.log(process.platform)"
+  displayName: "check platform"
+  
 - script: |
     expo login --non-interactive -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
     expo eject --non-interactive --eject-method expoKit
