@@ -111,7 +111,7 @@ export default class App extends React.Component {
                             {this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
                                         <Text style={{
                                             fontSize: 15,
-                                            fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 22
+                                            fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 17
                                         }}>
                                             I'm from: {this.state.details.hometown}
                                             {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
@@ -121,7 +121,7 @@ export default class App extends React.Component {
                             {!this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
                                         <Text style={{
                                             fontSize: 15,
-                                            fontFamily: "Hoefler Text", color: "black", lineHeight: 22
+                                            fontFamily: "Hoefler Text", color: "black", lineHeight: 17
                                         }}>
                                             {this.state.details.blurb}
                                         </Text>
@@ -135,7 +135,7 @@ export default class App extends React.Component {
                     <View style={{ flex: 0.1, paddingTop: 1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
 
                         {/* Staff details: name and position */}
-                        <View style={{ flex: 3, margin: 20, backgroundColor: "white" }}>
+                        <View style={{ flex: 3, marginLeft: 20, backgroundColor: "white" }}>
                             <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginBottom: 5 }}>
                                 {this.state.details.name}
                             </Text>
