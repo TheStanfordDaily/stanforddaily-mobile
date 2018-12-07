@@ -59,6 +59,7 @@ export default class App extends React.Component {
 
 
     render() {
+        const defaultImage = 'https://pbs.twimg.com/profile_images/828118030605381636/G3wb0UIB_400x400.jpg'
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
@@ -80,8 +81,10 @@ export default class App extends React.Component {
                                     height: undefined,
                                     minHeight: 350
                                 }}
-                                source={{ uri: this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage} } >
+                                
+                                    source={{ uri: (this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage) || defaultImage} }>
                                 {this.state.shown ? <View style={{ flex: 1 }}>
+                                }
 
                                     <View style={{ position: 'absolute', bottom: 0 }}>
                                         <Text style={{
@@ -162,7 +165,7 @@ export default class App extends React.Component {
 
 
                     {/* TODO: populate "recent article list" with data (Vivian) */}
-                    { this.state.posts && this.state.posts.map(post=> <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+                    { this.state.posts && this.state.posts.map(post=> <View key={post.id} style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
                         <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
                             <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
@@ -174,7 +177,7 @@ export default class App extends React.Component {
                                         width: '100%',
                                         height: undefined
                                     }}
-                                    source={{uri: post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].source_url}}
+                                    source={{uri: (post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url) || defaultImage}}
                                 />
                             </View>
                             <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
