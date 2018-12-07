@@ -9,22 +9,20 @@ import {
     ImageBackground,
     TouchableHighlight,
     Linking,
-    Switch,
-    ActivityIndicator
+    Switch
 } from 'react-native';
 import { LinearGradient } from 'expo';
 import Header from '../common/header';
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 import HTML from "react-native-render-html";
-import {FONTS, STRINGS} from "../../assets/constants";
+import FONTS from "../../assets/constants";
 
 // export default () => <View style={{ flex: 1 }}>
 export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            shown: false,
-            posts: null,
-            details: null
+            shown: false
         }
     }
 
@@ -33,23 +31,13 @@ export default class App extends React.Component {
             shown: !this.state.shown
         });
     }
-    componentDidMount() {
-        let authorId = this.props.navigation.state.params.id;
-        Promise.all([fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?author=" + authorId).then(e => e.json())
-            , fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())]).then(values => this.setState({
-                posts: values[0],
-                details: values[1]
-            }));
-    }
 
     render() {
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
 
-            {!this.state.details && <ActivityIndicator />}
-
-            {this.state.details && <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
+            <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
 
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
@@ -80,19 +68,25 @@ export default class App extends React.Component {
                                 </LinearGradient>
 
                                 <View style={{ position: 'absolute', bottom: 0 }}>
-                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
-                                        {this.state.details.blurb}
+                                    <Text style={{ 
+                                        fontSize: 17, 
+                                        marginLeft: 15, marginRight: 15, marginBottom: 10, 
+                                        fontFamily: "Hoefler Text", color: "white", lineHeight: 22 }}>
+                                        Hi! I'm Alex and I'm a desk editor for The Daily's University beat. I'm a member of the varsity lacrosse
+                                        team and I'm interested in computer science!
                                     </Text>
-                                    <Text style={{ fontSize: 17, fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
-                                        I'm from: {this.state.details.hometown}
-                                        {"\n"}I've been at The Daily for: {this.state.details.timeAtDaily}
-                                        {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
-                                        {"\n"}My favorite dining hall is: {this.state.details.diningHall}
+                                    <Text style={{ 
+                                        fontSize: 17, 
+                                        marginLeft: 15, marginRight: 15, marginBottom: 15, 
+                                        fontFamily: "Hoefler Text", color: "white", fontStyle: "italic", lineHeight: 22 }}>
+                                        I'm from: La Jolla, CA
+                                        {"\n"}My go-to TAP order is: waffle fries
+                                        {"\n"}My favorite dining hall is: Casper
                                     </Text>
                                 </View>
                             </View> :
-
-                                <View style={{ flex: 1, height: '100%' }}></View>}
+                            
+                            <View style={{ flex: 1, height: '100%' }}></View>}
 
 
                         </ImageBackground>
@@ -100,28 +94,22 @@ export default class App extends React.Component {
 
                 </View>
 
-                {/* Bitmoji */}
-                <View style={{ flex: 0.1, backgroundColor: "white", flexDirection: "row" }}>
-                    <View style={{ backgroundColor: "white", position: "absolute" }}>
-                        <Image
-                            style={{ marginLeft: 10, marginTop: 5, width: 80, height: 80 }}
-                            source={require('../../media/bitmoji.png')}
-                        />
-                    </View>
+                <View style={{ flex: 0.1, paddingTop: 1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
+
                     {/* Staff details: name and position */}
-                    <View style={{ flex: 3, marginTop: 20, marginLeft: 100, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginLeft: 5 }}>
-                            {this.state.details.name}
+                    <View style={{ flex: 3, margin: 20, backgroundColor: "white" }}>
+                        <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginBottom: 5}}>
+                            Alex Tsai
                         </Text>
-                        <Text style={{ fontSize: 18, fontFamily: "Hoefler Text", marginLeft: 5 }}>
-                            {this.state.details.position}
+                        <Text style={{ fontSize: 18, fontFamily: "Hoefler Text"}}>
+                            Desk editor '21
                 </Text>
                     </View>
                     {/* Article count */}
                     <View style={{
                         flex: 0.85,
                         marginTop: 20,
-                        marginBottom: 10,
+                        marginBottom: 15,
                         marginLeft: 2,
                         marginRight: 20,
                         borderWidth: 1,
@@ -136,7 +124,7 @@ export default class App extends React.Component {
                 </Text>
                         <Text style={{
                             fontSize: 13, fontFamily: "Helvetica",
-                            textAlign: "center", textAlignVertical: "center"
+                            marginBottom: 5, textAlign: "center", textAlignVertical: "center"
                         }}>
                             articles
                 </Text>
@@ -146,16 +134,16 @@ export default class App extends React.Component {
 
 
                 {/* TODO: populate "recent article list" with data (Vivian) */}
-                <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+                <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", paddingTop: 7, flexDirection: "column" }}>
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
+                        <View style={{ flex: 2, padding: 7, aspectRatio: 3/2 }}>
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'contain',
+                                    resizeMode: 'resize',
                                     alignSelf: 'center',
-                                    width: 150,
+                                    width: '100%',
                                     height: undefined
                                 }}
                                 source={require('../../media/football.jpg')}
@@ -175,13 +163,13 @@ export default class App extends React.Component {
 
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                        <View style={{ flex: 2, paddingTop: 10, paddingLeft: 0, paddingBottom: 5 }}>
+                        <View style={{ flex: 2, padding: 7, aspectRatio: 3/2 }}>
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'contain',
+                                    resizeMode: 'resize',
                                     alignSelf: 'center',
-                                    width: 150,
+                                    width: '100%',
                                     height: undefined
                                 }}
                                 source={require('../../media/hoover.jpg')}
@@ -201,7 +189,7 @@ export default class App extends React.Component {
 
                 </View>
 
-            </ScrollView>}
+            </ScrollView>
 
 
             {/* Fixed footer of social media links (outside of ScrollView) */}
@@ -219,41 +207,16 @@ export default class App extends React.Component {
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
-                    <TouchableHighlight onPress={() => Linking.openURL("http://www.facebook.com")}>
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require('../../media/facebook.png')}
-                        />
+                <View style={{ flex: 3, backgroundColor: "white" }}>
+                    <TouchableHighlight onPress={() => Linking.openURL("mailto:aotsai@stanford.edu")}>
+                            <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 12}}>
+                                Email the author
+                                </Text>
                     </TouchableHighlight>
                 </View>
 
-                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
-                    <TouchableHighlight onPress={() => Linking.openURL("http://www.twitter.com")}>
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require('../../media/twitter.jpg')}
-                        />
-                    </TouchableHighlight>
-                </View>
 
-                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
-                    <TouchableHighlight onPress={() => Linking.openURL("http://www.instagram.com")}>
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require('../../media/instagram.png')}
-                        />
-                    </TouchableHighlight>
-                </View>
 
-                <View style={{ flex: 1, margin: 2, backgroundColor: "white" }}>
-                    <TouchableHighlight onPress={() => Linking.openURL("http://www.linkedin.com")}>
-                        <Image
-                            style={{ width: 30, height: 30 }}
-                            source={require('../../media/linkedin.jpg')}
-                        />
-                    </TouchableHighlight>
-                </View>
 
                 <View style={{ flex: 4, margin: 0, backgroundColor: "white" }}>
                 </View>
