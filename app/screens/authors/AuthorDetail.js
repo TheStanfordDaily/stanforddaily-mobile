@@ -26,11 +26,18 @@ export default class App extends React.Component {
         }
     }
 
-    toggleStatus() {
+    // toggleStatus() {
+    //     this.setState({
+    //         shown: !this.state.shown
+    //     });
+    // }
+
+    onSwipeLeft(gestureState) {
         this.setState({
             shown: !this.state.shown
-        });
+        })
     }
+
 
     render() {
         return (<View style={{ flex: 1 }}>
