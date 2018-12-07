@@ -88,7 +88,7 @@ class Post extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack} />
+        <Header ref='postHeader' postID={this.state.id} goBack={this.goBack} />
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
             barStyle="light-content"
