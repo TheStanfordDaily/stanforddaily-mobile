@@ -22,7 +22,7 @@ export default class App extends React.Component {
     constructor() {
         super();
         this.state = {
-            shown: false
+            funnyShown: false
         }
     }
 
@@ -32,9 +32,10 @@ export default class App extends React.Component {
     //     });
     // }
 
-    onSwipeLeft(gestureState) {
+    onSwipeRight(gestureState) {
+        
         this.setState({
-            shown: !this.state.shown
+            funnyShown: !this.state.funnyShown
         })
     }
 
@@ -50,7 +51,7 @@ export default class App extends React.Component {
                 <View style={{ flex: 10, margin: 0, backgroundColor: "transparent" }}>
 
                     {/* Cover photo */}
-                    <TouchableHighlight onPress={() => this.toggleStatus()} style={{ flex: 1 }} activeOpacity={.95}>
+                    <GestureRecognizer onSwipeRight={(state) => this.onSwipeRight(state)} style={{ flex: 1 }} activeOpacity={.95}>
                         <ImageBackground
                             style={{
                                 flex: 1,
@@ -60,19 +61,9 @@ export default class App extends React.Component {
                                 height: undefined,
                                 minHeight: 350
                             }}
-                            source={require('../../media/cover.jpg')} >
+                            source={ this.state.funnyShown ? require('../../media/football.jpg') : require('../../media/cover.jpg')} >
 
                             {this.state.shown ? <View style={{ flex: 1 }}>
-
-                                <LinearGradient
-                                    colors={['transparent', 'rgba(0, 0, 0, 0.8)']}
-                                    style={{
-                                        flex: 1,
-                                        width: '100%',
-                                        height: '100%',
-                                        alignSelf: 'stretch',
-                                    }} >
-                                </LinearGradient>
 
                                 <View style={{ position: 'absolute', bottom: 0 }}>
                                     <Text style={{ 
@@ -97,7 +88,7 @@ export default class App extends React.Component {
 
 
                         </ImageBackground>
-                    </TouchableHighlight>
+                    </GestureRecognizer>
 
                 </View>
 
@@ -148,7 +139,7 @@ export default class App extends React.Component {
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'resize',
+                                    // resizeMode: 'resize',
                                     alignSelf: 'center',
                                     width: '100%',
                                     height: undefined
@@ -174,7 +165,7 @@ export default class App extends React.Component {
                             <Image
                                 style={{
                                     flex: 1,
-                                    resizeMode: 'resize',
+                                    // resizeMode: 'resize',
                                     alignSelf: 'center',
                                     width: '100%',
                                     height: undefined
