@@ -108,13 +108,23 @@ export default class App extends React.Component {
 
                             </ImageBackground>
 
-                            {this.state.funnyShown && <View style = {{flex: 1}}>
-                                <Text>Funny text
-                                </Text>
+                            {this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
+                                        <Text style={{
+                                            fontSize: 15,
+                                            fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 22
+                                        }}>
+                                            I'm from: {this.state.details.hometown}
+                                            {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
+                                            {"\n"}My favorite dining hall is: {this.state.details.diningHall}
+                                        </Text>
                                 </View>}
-                            {!this.state.funnyShown && <View style = {{flex: 1}}>
-                                <Text>Serious text
-                                </Text>
+                            {!this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
+                                        <Text style={{
+                                            fontSize: 15,
+                                            fontFamily: "Hoefler Text", color: "black", lineHeight: 22
+                                        }}>
+                                            {this.state.details.blurb}
+                                        </Text>
                                 </View>}
                                 
                             
