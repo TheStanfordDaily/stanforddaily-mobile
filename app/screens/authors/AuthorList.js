@@ -85,6 +85,9 @@ class Post extends Component {
     return text;
   }
   render() {
+    //Find a way to include this dummy data on the side of the author profiles (with the name/profile)
+    //perhaps dummy for now, but how to link to direct images? 
+    {/* Bitmoji */ }
 
     return (
       <View style={{ flex: 1 }}>
@@ -100,15 +103,28 @@ class Post extends Component {
               data={this.state.data}
               getChildrenName={(node) => 'members'} //children of the categories
               onNodePressed={
-                (node) => node.id && this.props.navigation.navigate("AuthorDetail", {id: node.id})
+                (node) => node.id && this.props.navigation.navigate("AuthorDetail", { id: node.id })
               }
               renderNode={(node, level) => (
                 <NestedRow
                   level={level}
                   style={level == 1 ? styles.header : styles.author}>
-                  <Text 
-                    style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
-                  </Text>
+                  <View style={{ flex: 1 }}>
+                    {level != 1 &&
+                      <View
+                        style={{ flex: 1 }}>>
+                      <Image
+                          style={{ marginLeft: 2, marginTop: 5, width: 30, height: 30 }}
+                          source={{ uri: node.profileImage}}
+                        //source={require('../../media/bitmoji.png')}
+                        />
+                      </View>}
+                    <View
+                      style={{ flex: 1 }}>
+                      <Text style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
+                      </Text>
+                    </View>
+                  </View>
                 </NestedRow>
               )}
             />
