@@ -18,7 +18,7 @@ import { FONTS, STRINGS } from "../../assets/constants";
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
-  return <Text style={props.style}>{h2p(props.html)}</Text>
+    return <Text style={props.style}>{h2p(props.html)}</Text>
 }
 
 // export default () => <View style={{ flex: 1 }}>
@@ -38,10 +38,10 @@ export default class App extends React.Component {
             fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&author=" + authorId).then(e => e.json()),
             fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
         ]).then(values => this.setState({
-                posts: values[0],
-                details: values[1]
+            posts: values[0],
+            details: values[1]
 
-            }));
+        }));
     }
 
     // toggleStatus() {
@@ -80,7 +80,7 @@ export default class App extends React.Component {
                                     height: undefined,
                                     minHeight: 350
                                 }}
-                                source={{ uri: this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage} } >
+                                source={{ uri: this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage }} >
                                 {this.state.shown ? <View style={{ flex: 1 }}>
 
                                     <View style={{ position: 'absolute', bottom: 0 }}>
@@ -108,26 +108,26 @@ export default class App extends React.Component {
 
                             </ImageBackground>
 
-                            {this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
-                                        <Text style={{
-                                            fontSize: 15,
-                                            fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 17
-                                        }}>
-                                            I'm from: {this.state.details.hometown}
-                                            {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
-                                            {"\n"}My favorite dining hall is: {this.state.details.diningHall}
-                                        </Text>
-                                </View>}
-                            {!this.state.funnyShown && <View style = {{flex: 1, margin: 8}}>
-                                        <Text style={{
-                                            fontSize: 15,
-                                            fontFamily: "Hoefler Text", color: "black", lineHeight: 17
-                                        }}>
-                                            {this.state.details.blurb}
-                                        </Text>
-                                </View>}
-                                
-                            
+                            {this.state.funnyShown && <View style={{ flex: 1, margin: 8 }}>
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 17
+                                }}>
+                                    I'm from: {this.state.details.hometown}
+                                    {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
+                                    {"\n"}My favorite dining hall is: {this.state.details.diningHall}
+                                </Text>
+                            </View>}
+                            {!this.state.funnyShown && <View style={{ flex: 1, margin: 8 }}>
+                                <Text style={{
+                                    fontSize: 15,
+                                    fontFamily: "Hoefler Text", color: "black", lineHeight: 17
+                                }}>
+                                    {this.state.details.blurb}
+                                </Text>
+                            </View>}
+
+
                         </GestureRecognizer>
 
                     </View>
@@ -172,7 +172,7 @@ export default class App extends React.Component {
 
 
                     {/* TODO: populate "recent article list" with data (Vivian) */}
-                    { this.state.posts && this.state.posts.map(post=> <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+                    {this.state.posts && this.state.posts.map(post => <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
                         <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
                             <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
@@ -184,14 +184,14 @@ export default class App extends React.Component {
                                         width: '100%',
                                         height: undefined
                                     }}
-                                    source={{uri: post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].source_url}}
+                                    source={{ uri: post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].source_url }}
                                 />
                             </View>
                             <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                                 <TouchableHighlight onPress={() => Linking.openURL(post.link)}>
                                     <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                         <HTML html={post.title.rendered} />
-                                </Text>
+                                    </Text>
                                 </TouchableHighlight>
                                 <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
                                     {new Date(post.date).toLocaleDateString()}
@@ -206,27 +206,29 @@ export default class App extends React.Component {
 
             {/* Fixed footer of social media links (outside of ScrollView) */}
             {this.state.details &&
-                <View style={{ margin: 0, height: 30, backgroundColor: "white", flexDirection: "row" }}>
+                <View style={{ padding: 2, height: 30, backgroundColor: "white", flexDirection: "row" }}>
 
-                    <View style={{ flex: 4, margin: 0, backgroundColor: "white" }}>
+                    <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
                     </View>
 
                     <TouchableHighlight onPress={() => Linking.openURL("mailto:" + this.state.details.email)}>
-                        <View style={{ flex: 4, flexDirection: 'column' }}>
-                            {/* <Image
-                                style={{ width: 30, height: 30 }}
-                                source={require('../../media/mail.png')}
-                            /> */}
-                            <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black' }}>
-                                Email the author
+                        <View style={{ flex: 1 }}>
+                            <View style={{ flex: 1}}>
+                                <Image
+                                    style={{ width: 30, height: 30 }}
+                                    source={require('../../media/mail.png')}
+                                />
+                            </View>
+                            <View style={{ flex: 10 }}>
+                                <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 5, marginBottom: 4, marginLeft: 35 }}>
+                                    Email the author
                                 </Text>
+                            </View>
+
                         </View>
                     </TouchableHighlight>
 
-
-
-
-                    <View style={{ flex: 4, margin: 0, backgroundColor: "white" }}>
+                    <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
                     </View>
                 </View>}
         </View>
