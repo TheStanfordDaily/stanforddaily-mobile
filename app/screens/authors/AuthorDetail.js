@@ -15,7 +15,11 @@ import { LinearGradient } from 'expo';
 import Header from '../common/header';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { FONTS, STRINGS } from "../../assets/constants";
-import HTML from "react-native-render-html";
+const h2p = require('html2plaintext')
+
+const HTML = (props) => {
+  return <Text style={props.style}>{h2p(props.html)}</Text>
+}
 
 // export default () => <View style={{ flex: 1 }}>
 export default class App extends React.Component {
@@ -30,10 +34,13 @@ export default class App extends React.Component {
 
     componentDidMount() {
         let authorId = this.props.navigation.state.params.id;
-        Promise.all([fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?author=" + authorId).then(e => e.json())
-            , fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())]).then(values => this.setState({
+        Promise.all([
+            fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&author=" + authorId).then(e => e.json()),
+            fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
+        ]).then(values => this.setState({
                 posts: values[0],
                 details: values[1]
+
             }));
     }
 
@@ -145,7 +152,7 @@ export default class App extends React.Component {
 
 
                     {/* TODO: populate "recent article list" with data (Vivian) */}
-                    <View style={{ flex: 0.1, margin: 10, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", paddingTop: 7, flexDirection: "column" }}>
+                    { this.state.posts && this.state.posts.map(post=> <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
                         <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
                             <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
@@ -157,48 +164,22 @@ export default class App extends React.Component {
                                         width: '100%',
                                         height: undefined
                                     }}
-                                    source={require('../../media/football.jpg')}
+                                    source={{uri: post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].source_url}}
                                 />
                             </View>
                             <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
-                                <TouchableHighlight onPress={() => Linking.openURL("https://www.stanforddaily.com/2018/10/22/stanford-concussion-education-initiative-partners-with-pop-warner/")}>
+                                <TouchableHighlight onPress={() => Linking.openURL(post.link)}>
                                     <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
-                                        Stanford concussion education initiative partners with Pop Warner
+                                        <HTML html={post.title.rendered} />
                                 </Text>
                                 </TouchableHighlight>
                                 <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                                    October 22, 2018
+                                    {new Date(post.date).toLocaleDateString()}
                                 </Text>
                             </View>
                         </View>
 
-
-                        <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                            <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
-                                <Image
-                                    style={{
-                                        flex: 1,
-                                        // resizeMode: 'resize',
-                                        alignSelf: 'center',
-                                        width: '100%',
-                                        height: undefined
-                                    }}
-                                    source={require('../../media/hoover.jpg')}
-                                />
-                            </View>
-                            <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
-                                <TouchableHighlight onPress={() => Linking.openURL("https://www.stanforddaily.com/2018/01/18/at-hoover-rex-tillerson-advocates-maintaining-u-s-presence-in-syria/")}>
-                                    <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
-                                        At Hoover, Rex Tillerson advocates maintaining U.S. presence in Syria
-                                </Text>
-                                </TouchableHighlight>
-                                <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                                    January 18, 2018
-                                </Text>
-                            </View>
-                        </View>
-
-                    </View>
+                    </View>)}
 
                 </ScrollView>}
 
