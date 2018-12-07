@@ -80,8 +80,7 @@ export default class App extends React.Component {
                                     height: undefined,
                                     minHeight: 350
                                 }}
-                                source={{ uri: this.state.funnyShown ? (this.state.details.funnyImage || require('../../media/football.jpg')) : (this.state.details.coverImage || require('../../media/cover.jpg')) }} >
-
+                                source={{ uri: this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage} } >
                                 {this.state.shown ? <View style={{ flex: 1 }}>
 
                                     <View style={{ position: 'absolute', bottom: 0 }}>
@@ -108,6 +107,17 @@ export default class App extends React.Component {
 
 
                             </ImageBackground>
+
+                            {this.state.funnyShown && <View style = {{flex: 1}}>
+                                <Text>Funny text
+                                </Text>
+                                </View>}
+                            {!this.state.funnyShown && <View style = {{flex: 1}}>
+                                <Text>Serious text
+                                </Text>
+                                </View>}
+                                
+                            
                         </GestureRecognizer>
 
                     </View>
