@@ -111,11 +111,11 @@ export default class App extends React.Component {
                             {this.state.funnyShown && <View style={{ flex: 1, margin: 8 }}>
                                 <Text style={{
                                     fontSize: 15,
-                                    fontFamily: "Hoefler Text", color: "black", fontStyle: "italic", lineHeight: 17
+                                    fontFamily: "Hoefler Text", color: "black", lineHeight: 17
                                 }}>
-                                    I'm from: {this.state.details.hometown}
-                                    {"\n"}My go-to TAP order is: {this.state.details.tapOrder}
-                                    {"\n"}My favorite dining hall is: {this.state.details.diningHall}
+                                    •  I'm from: {this.state.details.hometown}
+                                    {"\n"}•  My go-to TAP order is: {this.state.details.tapOrder}
+                                    {"\n"}•  My favorite dining hall is: {this.state.details.diningHall}
                                 </Text>
                             </View>}
                             {!this.state.funnyShown && <View style={{ flex: 1, margin: 8 }}>
