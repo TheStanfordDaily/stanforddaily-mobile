@@ -33,8 +33,19 @@ export default class App extends React.Component {
             shown: !this.state.shown
         });
     }
+
     componentDidMount() {
-        let authorId = this.props.navigation.state.params.id;
+        this.fetchAuthor(this.props.navigation.state.params.id);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.navigation.state.params.id) {
+            this.setState({posts: [], details: []});
+          this.fetchAuthor(nextProps.navigation.state.params.id);
+        }
+      }
+
+    fetchAuthor(authorId) {
         Promise.all([fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?author=" + authorId).then(e => e.json())
             , fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())]).then(values => this.setState({
                 posts: values[0],
