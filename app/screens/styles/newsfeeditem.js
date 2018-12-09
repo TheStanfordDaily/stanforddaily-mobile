@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     title: {
       fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_LARGE,
-      lineHeight: HEIGHTS.TITLE_LINE_HEIGHT,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES,
@@ -44,7 +43,6 @@ const styles = StyleSheet.create({
     description: {
       fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
-      lineHeight: HEIGHTS.DESC_LINE_HEIGHT,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginBottom: MARGINS.ARTICLE_SIDES,
       opacity: 0.80,

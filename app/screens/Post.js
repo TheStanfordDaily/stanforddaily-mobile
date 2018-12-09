@@ -19,7 +19,8 @@ import {
 //Components for this app imports
 import Header from './common/header';
 import { Amplitude } from 'expo';
-import FONTS from "../assets/constants";
+import {FONTS} from "../assets/constants";
+import styles from './styles/post.js';
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
@@ -85,8 +86,8 @@ class Post extends Component {
             barStyle="light-content"
           />
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-            <Text style={{ fontSize: 22, fontFamily: FONTS.PT_SERIF_BOLD, margin: 10 }}>
-              <HTML html={this.state.title} />
+            <Text style={styles.title}>
+              <HTML style={{fontFamily: FONTS.CENTURY}} html={this.state.title} />
             </Text>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>

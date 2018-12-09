@@ -45,7 +45,7 @@ export default class App extends React.Component {
     render() {
         return (<View style={{ flex: 1 }}>
 
-            <Header share={true} postID={0} goBack={this.goBack} />
+            <Header postID={0} goBack={() => this.props.navigation.goBack()} />
 
             {!this.state.details && <ActivityIndicator />}
 
