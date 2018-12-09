@@ -49,7 +49,6 @@ const styles = {
 class Post extends Component {
   constructor(props) {
     super(props);
-    this.goBack = this.goBack.bind(this);
     this.state = {
       data: [],
       post: {},
@@ -60,11 +59,6 @@ class Post extends Component {
       const { width, height } = Dimensions.get('window')
       this.setState({ width: width <= height ? width : height, height: height });
     });
-  }
-
-  //A function that triggers going back to headlines
-  goBack() {
-    this.props.navigation.goBack();
   }
 
   //Once components load, load data. All data is passed down from previous screen
@@ -91,7 +85,7 @@ class Post extends Component {
 
     return (
       <View style={{ flex: 1 }}>
-        <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack} />
+        <Header ref='postHeader' postID={this.state.id} />
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
             barStyle="light-content"

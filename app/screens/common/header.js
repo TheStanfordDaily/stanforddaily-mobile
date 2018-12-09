@@ -10,7 +10,8 @@ import {
     StyleSheet,
     Image,
     TouchableOpacity,
-    Dimensions
+    Dimensions,
+    Share
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -28,10 +29,15 @@ export default class Header extends Component {
       this.props.toProfile(null);
     }
 
+    /*
+     * Shares the current post using the native share functionality.
+     */
     shareHandler() {
-    // ActivityView.show({
-    //   url: STRINGS.DAILY_URL + "?p=" + this.props.postID
-    // });
+      const url = STRINGS.DAILY_URL + "?p=" + this.props.postID;
+      Share.share({
+        message: url,
+        url: url
+      })
   }
 
     render() {
