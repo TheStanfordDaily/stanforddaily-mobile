@@ -86,7 +86,7 @@ const ChatterStack = createStackNavigator({
 });
 
 const AuthorStack = createStackNavigator({
-  AuthorList: {
+AuthorList: {
     screen: AuthorList,
     navigationOptions: {
       title: 'Author List',
@@ -97,7 +97,7 @@ const AuthorStack = createStackNavigator({
     navigationOptions: {
       title: 'Author Detail',
     },
-  },
+  },  
 }, {
   headerMode: 'none',
 });
