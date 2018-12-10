@@ -28,21 +28,33 @@ const { width, height } = Dimensions.get('window'); //Dimensions of the current 
 const styles = {
   header: {
     borderRadius: 8,
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
     borderBottomColor: COLORS.LIGHT_GRAY,
   },
   headerText: {
     fontSize: FONT_SIZES.DEFAULT_MEDIUM,
     fontFamily: FONTS.PT_SERIF_BOLD,
+    top: 8,
   },
   author: {
     borderRadius: 10,
     borderBottomColor: COLORS.LIGHT_GRAY,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
   },
   authorText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
     fontFamily: FONTS.PT_SERIF,
+    left: 36,
+    top: -11,
+  },
+  image: {
+    marginLeft: -8, 
+    marginTop: 8.5, 
+    width: 34, 
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: COLORS.LIGHT_GRAY,
+    borderBottomWidth: 1,
   }
 }
 
@@ -79,10 +91,6 @@ class Post extends Component {
     return text;
   }
   render() {
-    //Find a way to include this dummy data on the side of the author profiles (with the name/profile)
-    //perhaps dummy for now, but how to link to direct images? 
-    {/* Bitmoji */ }
-
     return (
       <View style={{ flex: 1 }}>
         <Header ref='postHeader' postID={this.state.id} />
@@ -108,9 +116,8 @@ class Post extends Component {
                       <View
                         style={{ flex: 1 }}>>
                       <Image
-                          style={{ marginLeft: 2, marginTop: 5, width: 30, height: 30 }}
+                          style={ styles.image }
                           source={{ uri: node.profileImage}}
-                        //source={require('../../media/bitmoji.png')}
                         />
                       </View>}
                     <View
