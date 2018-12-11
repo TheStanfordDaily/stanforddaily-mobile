@@ -12,19 +12,17 @@ import {
     ActivityIndicator,
     AppRegistry
 } from 'react-native';
-import { LinearGradient } from 'expo';
 import Header from '../common/header';
 import Swiper from 'react-native-swiper';
-import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { FONTS, STRINGS } from "../../assets/constants";
+// import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+// import { LinearGradient } from 'expo';
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
     return <Text style={props.style}>{h2p(props.html)}</Text>
 }
 
-
-// export default () => <View style={{ flex: 1 }}>
 export default class App extends React.Component {
     constructor() {
         super();
@@ -42,17 +40,18 @@ export default class App extends React.Component {
         ]).then(values => this.setState({
             posts: values[0],
             details: values[1]
-
         }));
     }
+
     render() {
+
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
 
             <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
-
+                {this.state.details &&
                 <View style={{ flex: 1 }}>
                     <Swiper
                         style={{}}
@@ -70,8 +69,7 @@ export default class App extends React.Component {
                                         width: undefined,
                                         height: 375
                                     }}
-                                    source={require('../../media/cover.jpg')}
-                                    // source={this.state.details.coverImage}
+                                    source={{uri: this.state.details.coverImage}}
                                 >
                                 </Image>
                             </View>
@@ -81,8 +79,7 @@ export default class App extends React.Component {
                                     margin: 10,
                                     fontFamily: "Hoefler Text", color: "black"
                                 }}>
-                                    Alex Tsai ’21 is a desk editor for The Daily’s University beat. She was born and raised in Hong Kong and moved to La Jolla, CA for high school. Alex is a member of the varsity lacrosse team and is interested in computer science. She is also developing the Daily mobile app. Contact her at aotsai 'at' stanford.edu.
-                                    {/* {this.state.details.blurb} */}
+                                    {this.state.details.blurb}
                                 </Text>
                             </View>
                         </View>
@@ -96,8 +93,7 @@ export default class App extends React.Component {
                                         width: undefined,
                                         height: 325
                                     }}
-                                    source={require('../../media/hoover.jpg')}
-                                // source={{uri: this.state.details.funnyImage}}
+                                    source={{uri: this.state.details.funnyImage}}
                                 >
                                 </Image>
                             </View>
@@ -107,28 +103,24 @@ export default class App extends React.Component {
                                     margin: 10,
                                     fontFamily: "Hoefler Text", color: "black"
                                 }}>
-                                    • I'm from: La Jolla, CA{"\n"}
-                                    • My go-to TAP order is: Waffle fries{"\n"}
-                                    • My favorite dining hall is: Casper
-                                    {/* • I'm from: {this.state.details.hometown}{"\n"}
+                                    • I'm from: {this.state.details.hometown}{"\n"}
                                     • My go-to TAP order is: {this.state.details.tapOrder}{"\n"}
-                                    • My favorite dining hall is: {this.state.details.diningHall} */}
+                                    • My favorite dining hall is: {this.state.details.diningHall}
                                 </Text>
                             </View>
                         </View>
 
                     </Swiper>
 
-                </View>
+                </View> }
 
-                {/* author details */}
+                {/* author name and position */}
                 <View style={{ flex: 0.1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
 
                     {/* Staff details: name and position */}
                     <View style={{ flex: 3, marginLeft: 20, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginBottom: 5 }}>
-                            {/* {this.state.details.name} */}
-                            Alexandra Tsai
+                            {this.state.details.name}
                             </Text>
 
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
@@ -163,8 +155,6 @@ export default class App extends React.Component {
 
                 </View>
 
-
-                {/* TODO: populate "recent article list" with data (Vivian) */}
                 {this.state.posts && this.state.posts.map(post => <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
                     <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
@@ -200,7 +190,7 @@ export default class App extends React.Component {
             {this.state.details &&
                 <View style={{ padding: 2, height: 35, backgroundColor: "white", flexDirection: "row" }}>
 
-                    <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
+                    <View style={{ flex: 1, margin: 0, backgroundColor: "white"}}>
                     </View>
 
                     <TouchableHighlight onPress={() => Linking.openURL("mailto:" + this.state.details.email)}>
