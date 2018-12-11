@@ -13,7 +13,8 @@ import {
   ScrollView,
   Dimensions,
   Text,
-  Image
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
 //Components for this app imports
@@ -65,6 +66,7 @@ class Post extends Component {
       content: postData.body,
       title: postData.title,
       author: postData.author,
+      authorID: postData.authorID,
       date: postData.date,
       featuredMedia: postData.featuredMedia,
       id: postData.id,
@@ -90,7 +92,9 @@ class Post extends Component {
               <HTML style={{fontFamily: FONTS.CENTURY}} html={this.state.title} />
             </Text>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
-              <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>
+            <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
+              <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>             
+                  </TouchableOpacity>
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.date}</Text>
             </View>
             <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />

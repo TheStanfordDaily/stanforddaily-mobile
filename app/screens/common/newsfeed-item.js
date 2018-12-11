@@ -5,7 +5,8 @@ import {
     Image,
     StyleSheet,
     Dimensions,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    TouchableOpacity,
 } from 'react-native';
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
@@ -94,6 +95,7 @@ export default class NewsFeedItem extends Component {
         let authorResponse = await fetch(this.props.data.postObj._links.author[0].href); //A reguest to get author info
         let authorData = await authorResponse.json(); //Author info JSON
         var author = authorData.name; //Author name
+        var authorID = authorData.id;
         var date = this.assembleDate(this.props.data.postObj.date); //Gets date from the given response
         var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
         var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
@@ -114,6 +116,7 @@ export default class NewsFeedItem extends Component {
           this.setState({
             id: this.props.postID,
             author: author,
+            authorID: authorID,
             date: date,
             title: title,
             featuredMedia: featuredMedia,
@@ -127,6 +130,10 @@ export default class NewsFeedItem extends Component {
     //Handles clicking on items
     toPost() {
       this.props.onPress(this.state);
+    }
+
+    toAuthor() {
+      this.props.onAuthorPress(this.state.authorID);
     }
 
     //Renders the view:
@@ -146,9 +153,13 @@ export default class NewsFeedItem extends Component {
                 <Image source={{uri: this.state.featuredMedia}} style={styles.image}/>
               </View>)
             }
+            
               <View style={styles.dateAndAuthor}>
-                <Text style={styles.author}> {this.state.author} </Text>
+              <TouchableOpacity onPress = {()=>this.toAuthor()}>
+                  <Text style={styles.author}> {this.state.author} </Text>
+                  </TouchableOpacity>
                 <Text style={styles.date}> {this.state.date} </Text>
+
               </View>
               <HTML style={styles.title} html={this.state.title}/>
               <HTML style={styles.description} html={this.state.description}/>
@@ -166,9 +177,12 @@ export default class NewsFeedItem extends Component {
           <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
             <View style={styles.searchContainer}>
               <View style={[styles.searchContent, {flex: 1}]}>
-                <View style={styles.searchDateAndAuthor}>
+                <View style={styles.searchDateAndAuthor}                >
+                  <TouchableOpacity onPress = {()=>this.toAuthor()}>
                   <Text style={styles.author}> {this.state.author} </Text>
+                  </TouchableOpacity>
                   <Text style={styles.date}> {this.state.date} </Text>
+                  
                 </View>
                 <HTML style={styles.searchTitle} html={this.state.title}/>
                 <HTML style={styles.searchDescription} html={this.state.description}/>

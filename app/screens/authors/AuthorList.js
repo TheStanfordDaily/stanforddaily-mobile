@@ -28,21 +28,33 @@ const { width, height } = Dimensions.get('window'); //Dimensions of the current 
 const styles = {
   header: {
     borderRadius: 8,
-    borderBottomWidth: 2,
+    borderBottomWidth: 3,
     borderBottomColor: COLORS.LIGHT_GRAY,
   },
   headerText: {
     fontSize: FONT_SIZES.DEFAULT_MEDIUM,
     fontFamily: FONTS.PT_SERIF_BOLD,
+    top: 8,
   },
   author: {
     borderRadius: 10,
     borderBottomColor: COLORS.LIGHT_GRAY,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1,
   },
   authorText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
     fontFamily: FONTS.PT_SERIF,
+    left: 36,
+    top: -11,
+  },
+  image: {
+    marginLeft: -8, 
+    marginTop: 8.5, 
+    width: 34, 
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: COLORS.LIGHT_GRAY,
+    borderBottomWidth: 1,
   }
 }
 
@@ -79,7 +91,6 @@ class Post extends Component {
     return text;
   }
   render() {
-
     return (
       <View style={{ flex: 1 }}>
         <Header ref='postHeader' postID={this.state.id} />
@@ -94,15 +105,27 @@ class Post extends Component {
               data={this.state.data}
               getChildrenName={(node) => 'members'} //children of the categories
               onNodePressed={
-                (node) => node.id && this.props.navigation.navigate("AuthorDetail", {id: node.id})
+                (node) => node.id && this.props.navigation.navigate("AuthorDetail", { id: node.id })
               }
               renderNode={(node, level) => (
                 <NestedRow
                   level={level}
                   style={level == 1 ? styles.header : styles.author}>
-                  <Text 
-                    style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
-                  </Text>
+                  <View style={{ flex: 1 }}>
+                    {level != 1 &&
+                      <View
+                        style={{ flex: 1 }}>>
+                      <Image
+                          style={ styles.image }
+                          source={{ uri: node.profileImage}}
+                        />
+                      </View>}
+                    <View
+                      style={{ flex: 1 }}>
+                      <Text style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
+                      </Text>
+                    </View>
+                  </View>
                 </NestedRow>
               )}
             />

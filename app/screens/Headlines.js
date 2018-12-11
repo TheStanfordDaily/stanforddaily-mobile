@@ -77,6 +77,7 @@ export default class Headlines extends Component {
       this.props.navigation.navigate(STRINGS.POST, { ...data });
     }
 
+
     componentDidMount() {
       // console.log('hihi');
       // tracker.setUser('12345678');
@@ -208,7 +209,9 @@ export default class Headlines extends Component {
   _renderRow(data) {
     // console.log("This is my id", data.item.key);
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
-      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}/>
+      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}
+      onAuthorPress = {authorID=>this.props.navigation.navigate("AuthorDetail", { id: authorID})} />
+    
     } else {
       return (
         <View>
