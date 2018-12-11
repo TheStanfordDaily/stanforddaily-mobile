@@ -151,7 +151,7 @@ export default class App extends React.Component {
                                 fontSize: 20, fontFamily: "Helvetica", fontWeight: "bold",
                                 marginTop: 5, textAlign: "center", textAlignVertical: "center"
                             }}>
-                                48
+                                {this.state.posts.length}
                 </Text>
                             <Text style={{
                                 fontSize: 13, fontFamily: "Helvetica",
