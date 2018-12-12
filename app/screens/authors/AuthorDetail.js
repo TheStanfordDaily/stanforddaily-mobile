@@ -58,8 +58,10 @@ export default class App extends React.Component {
                         height={500}
                         loop={false}
                         showsButtons={true}
+                        nextButton={<Text style={{marginBottom: 180, color: 'maroon', fontSize: 50,}}>›</Text>}
+                        prevButton={<Text style={{marginBottom: 180, color: 'maroon', fontSize: 50,}}>‹</Text>}
                         dotColor='grey'
-                        activeDotColor='black'>
+                        activeDotColor='maroon'>
 
                         <View style={{ flex: 1 }}>
                             <View style={{ flex: 2 }}>
@@ -91,7 +93,7 @@ export default class App extends React.Component {
                                     style={{
                                         flex: 1,
                                         width: undefined,
-                                        height: 325
+                                        // height: 325
                                     }}
                                     source={{uri: this.state.details.funnyImage}}
                                 >
@@ -115,6 +117,7 @@ export default class App extends React.Component {
                 </View> }
 
                 {/* author name and position */}
+                {this.state.details &&
                 <View style={{ flex: 0.1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
 
                     {/* Staff details: name and position */}
@@ -153,7 +156,7 @@ export default class App extends React.Component {
                 </Text>
                     </View>
 
-                </View>
+                </View>}
 
                 {this.state.posts && this.state.posts.map(post => <View style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
@@ -188,6 +191,7 @@ export default class App extends React.Component {
 
             {/* Fixed footer of social media links (outside of ScrollView) */}
             {this.state.details &&
+            
                 <View style={{ padding: 2, height: 35, backgroundColor: "white", flexDirection: "row" }}>
 
                     <View style={{ flex: 1, margin: 0, backgroundColor: "white"}}>
