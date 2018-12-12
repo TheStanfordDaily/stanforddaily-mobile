@@ -60,7 +60,7 @@ export default class App extends React.Component {
                         showsButtons={true}
                         nextButton={<Text style={{marginBottom: 180, color: 'maroon', fontSize: 50,}}>›</Text>}
                         prevButton={<Text style={{marginBottom: 180, color: 'maroon', fontSize: 50,}}>‹</Text>}
-                        dotColor='grey'
+                        dotColor='gray'
                         activeDotColor='maroon'>
 
                         <View style={{ flex: 1 }}>
