@@ -139,7 +139,8 @@ export default class Search extends Component {
     // console.log("This is my id", data.item.key);
     if(data.item.searchTerm !== this.state.input) return null;
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
-      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.SEARCH}/>
+      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}
+      onAuthorPress = {authorID=>this.props.navigation.navigate("AuthorDetail", { id: authorID})} />
     }
     return null;
   }
