@@ -14,7 +14,7 @@ import {
 import { LinearGradient } from 'expo';
 import Header from '../common/header';
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
-import { FONTS, STRINGS } from "../../assets/constants";
+import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
@@ -76,7 +76,6 @@ export default class App extends React.Component {
 
 
     render() {
-        const defaultImage = 'https://pbs.twimg.com/profile_images/828118030605381636/G3wb0UIB_400x400.jpg'
         return (<View style={{ flex: 1 }}>
 
             <Header share={true} postID={0} goBack={this.goBack} />
@@ -99,7 +98,7 @@ export default class App extends React.Component {
                                     minHeight: 350
                                 }}
                                 
-                                    source={{ uri: (this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage) || defaultImage} }>
+                                    source={{ uri: (this.state.funnyShown ? this.state.details.funnyImage : this.state.details.coverImage) || DEFAULT_IMAGE} }>
                                 {this.state.shown ? <View style={{ flex: 1 }}>
                                 }
 
@@ -204,7 +203,7 @@ export default class App extends React.Component {
                                         width: '100%',
                                         height: undefined
                                     }}
-                                    source={{uri: (post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url) || defaultImage}}
+                                    source={{uri: (post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url) || DEFAULT_IMAGE}}
                                 />
                             </View>
                             <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
