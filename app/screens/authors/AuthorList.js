@@ -108,7 +108,7 @@ class Post extends Component {
               onNodePressed={
                 (node) => node.id && this.props.navigation.navigate("AuthorDetail", { id: node.id })
               }
-              renderNode={(node, level) => (
+              renderNode={(node, level) => (node.name && node.name.trim() &&
                 <NestedRow
                   level={level}
                   style={level == 1 ? styles.header : styles.author}>
