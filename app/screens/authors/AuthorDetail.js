@@ -65,7 +65,7 @@ export default class App extends React.Component {
 
             <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
-                {this.state.details &&
+                {this.state.details && this.state.details.coverImage &&
                 <View style={{ flex: 1 }}>
                     <Swiper
                         style={{}}
@@ -119,9 +119,9 @@ export default class App extends React.Component {
                                     margin: 10,
                                     fontFamily: "Hoefler Text", color: "black"
                                 }}>
-                                    • I'm from: {this.state.details.hometown}{"\n"}
-                                    • My go-to TAP order is: {this.state.details.tapOrder}{"\n"}
-                                    • My favorite dining hall is: {this.state.details.diningHall}
+                                    {this.state.details.hometown && <React.Fragment>• I'm from: {this.state.details.hometown}{"\n"}</React.Fragment>}
+                                    {this.state.details.tapOrder && <React.Fragment>• My go-to TAP order is: {this.state.details.tapOrder}{"\n"}</React.Fragment>}
+                                    {this.state.details.diningHall && <React.Fragment>• My favorite dining hall is: {this.state.details.diningHall}</React.Fragment>}
                                 </Text>
                             </View>
                         </View>
