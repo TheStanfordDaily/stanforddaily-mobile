@@ -18,7 +18,8 @@ import {
   COLORS,
   FONTS,
   FONT_SIZES,
-  STRINGS
+  STRINGS,
+  DEFAULT_IMAGE
 } from '../../assets/constants';
 
 import Header from '../common/header';
@@ -117,7 +118,7 @@ class Post extends Component {
                         style={{ flex: 1 }}>>
                       <Image
                           style={ styles.image }
-                          source={{ uri: node.profileImage}}
+                          source={{ uri: node.profileImage || DEFAULT_IMAGE }}
                         />
                       </View>}
                     <View
