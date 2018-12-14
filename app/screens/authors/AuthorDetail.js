@@ -61,7 +61,7 @@ export default class App extends React.Component {
 
         return (<View style={{ flex: 1 }}>
 
-            <Header share={true} postID={0} goBack={this.goBack} />
+            <Header share={true} postID={0} goBack={() => this.props.navigation.goBack()} />
 
             <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
