@@ -15,6 +15,7 @@ import {
 import Header from '../common/header';
 import Swiper from 'react-native-swiper';
 import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
+import _ from "lodash";
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
@@ -183,7 +184,7 @@ export default class App extends React.Component {
                                     width: '100%',
                                     height: undefined
                                 }}
-                                source={{uri: (post._embedded && post._embedded["wp:featuredmedia"] && post._embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url) || DEFAULT_IMAGE}}
+                                source={{uri: _.get(post, "_embedded.wp:featuredmedia.0.media_details.sizes.thumbnail.source_url", DEFAULT_IMAGE) }}
                             />
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
