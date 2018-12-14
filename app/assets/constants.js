@@ -195,7 +195,8 @@ const ICONS = {
   BACK: "ios-arrow-back",
   MENU: "ios-menu",
   SEARCH: "ios-search",
-  SHARE: "ios-share-outline"
+  SHARE: "ios-share-outline",
+  CLOSE: "ios-close"
 }
 
 const FIREBASE_CONFIG = {
@@ -209,5 +210,5 @@ const FIREBASE_CONFIG = {
 const DEFAULT_IMAGE = 'https://pbs.twimg.com/profile_images/828118030605381636/G3wb0UIB_400x400.jpg';
 
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, FIREBASE_CONFIG, DEFAULT_IMAGE};
+module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE};
 // module.exports = CATEGORIES;
