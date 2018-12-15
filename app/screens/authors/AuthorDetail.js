@@ -142,8 +142,8 @@ export default class App extends React.Component {
                             </Text>
 
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
-                            Desk Editor '21
-                            {/* {this.state.details.section} */}
+                            {/* Desk Editor '21 */}
+                            {this.state.details.position}
                         </Text>
                     </View>
                     {/* Article count */}
@@ -189,6 +189,7 @@ export default class App extends React.Component {
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                             <TouchableHighlight onPress={() => Linking.openURL(post.link)}>
+                            {/* to do - link posts */}
                                 <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                     <HTML html={post.title.rendered} />
                                 </Text>
