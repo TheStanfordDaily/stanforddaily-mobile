@@ -13,6 +13,8 @@ class App extends Component {
   componentDidMount() {
     Font.loadAsync({
       'Century': require('./app/assets/fonts/century/century.ttf'),
+      'Helvetica': require('./app/assets/fonts/century/century.ttf'),
+      'Hoefler Serif': require('./app/assets/fonts/century/century.ttf'),
       'PT Serif': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif Bold': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf')
     }).then(() => this.setState({ loaded: true }));
