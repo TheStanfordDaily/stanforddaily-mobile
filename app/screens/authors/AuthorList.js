@@ -54,8 +54,8 @@ const styles = {
     width: 34, 
     height: 34,
     borderRadius: 17,
-    backgroundColor: COLORS.LIGHT_GRAY,
     borderBottomWidth: 1,
+    overflow: "hidden"
   }
 }
 
@@ -113,9 +113,9 @@ class Post extends Component {
                   level={level}
                   style={level == 1 ? styles.header : styles.author}>
                   <View style={{ flex: 1 }}>
-                    {level != 1 &&
+                  {level != 1 &&
                       <View
-                        style={{ flex: 1 }}>>
+                        style={{ flex: 1 }}>
                       <Image
                           style={ styles.image }
                           source={{ uri: node.profileImage || DEFAULT_IMAGE }}
@@ -123,7 +123,8 @@ class Post extends Component {
                       </View>}
                     <View
                       style={{ flex: 1 }}>
-                      <Text style={level == 1 ? styles.headerText : styles.authorText}>{node.name}
+                      <Text style={level == 1 ? styles.headerText : styles.authorText}>
+                      {node.name}
                       </Text>
                     </View>
                   </View>
