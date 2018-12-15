@@ -131,22 +131,19 @@ export default class App extends React.Component {
 
                 </View> }
 
-                {/* author name and position */}
                 {this.state.details &&
                 <View style={{ flex: 0.1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
 
-                    {/* Staff details: name and position */}
+
                     <View style={{ flex: 3, marginLeft: 20, backgroundColor: "white" }}>
                         <Text style={{ fontSize: 25, fontFamily: "HoeflerText-Black", marginTop: 5, marginBottom: 5 }}>
                             {this.state.details.name}
                             </Text>
 
                         <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
-                            {/* Desk Editor '21 */}
                             {this.state.details.position}
                         </Text>
                     </View>
-                    {/* Article count */}
                     <View style={{
                         flex: 0.85,
                         marginTop: 0,
@@ -189,7 +186,6 @@ export default class App extends React.Component {
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                             <TouchableHighlight onPress={() => Linking.openURL(post.link)}>
-                            {/* to do - link posts */}
                                 <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                     <HTML html={post.title.rendered} />
                                 </Text>
@@ -205,7 +201,6 @@ export default class App extends React.Component {
             </ScrollView>
 
 
-            {/* Fixed footer of social media links (outside of ScrollView) */}
             {this.state.details &&
             
                 <View style={{ padding: 2, height: 35, backgroundColor: "white", flexDirection: "row" }}>

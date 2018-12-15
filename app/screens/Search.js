@@ -183,7 +183,6 @@ export default class Search extends Component {
           </View>
           <TouchableOpacity onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
             <Icon name={ICONS.CLOSE} style={{width: 40}} size={40} color={COLORS.WHITE}/>
-            {/* <Image style={styles.close} resizeMode='contain' source={Images.CLOSE}/> */}
           </TouchableOpacity>
         </View>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
