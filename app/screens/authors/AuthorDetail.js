@@ -66,6 +66,7 @@ export default class App extends React.Component {
 
             <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
+                {!this.state.details && <ActivityIndicator />}
                 {this.state.details && this.state.details.coverImage &&
                 <View style={{ flex: 1 }}>
                     <Swiper
