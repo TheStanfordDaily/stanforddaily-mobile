@@ -136,7 +136,7 @@ export default class App extends React.Component {
 
 
                     <View style={{ flex: 3, marginLeft: 20, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 25, fontFamily: "HoeflerText", marginTop: 5, marginBottom: 5 }}>
+                        <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5 }}>
                             {this.state.details.name}
                             </Text>
 
