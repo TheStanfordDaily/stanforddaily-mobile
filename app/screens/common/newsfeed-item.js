@@ -51,15 +51,6 @@ export default class NewsFeedItem extends Component {
       this._mounted = false;
     }
 
-    //Given a UTC formated date from the WP object, returns a date string in the expected mm/dd/yyyy format
-    assembleDate(dateObj) {
-      var dt = new Date(dateObj);
-      var month = dt.getUTCMonth();
-      var day = dt.getUTCDate();
-      var year = dt.getUTCFullYear();
-      return month+1 + '/' + day + '/' + year;
-    }
-
     chooseMediaSize = async () => {
       let featuredMediaData = await (await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media)).json();
       return {url: _.get(featuredMediaData, "media_details.sizes.medium.source_url", ""), caption: _.get(featuredMediaData, "caption.rendered", "")};
@@ -71,7 +62,7 @@ export default class NewsFeedItem extends Component {
         let authorData = await authorResponse.json(); //Author info JSON
         var author = authorData.name; //Author name
         var authorID = authorData.id;
-        var date = this.assembleDate(this.props.data.postObj.date); //Gets date from the given response
+        var date = new Date(this.props.data.postObj.date).toLocaleDateString(); //Gets date from the given response
         var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
         var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
         var featuredMediaObject = await this.chooseMediaSize();
@@ -153,7 +144,7 @@ export default class NewsFeedItem extends Component {
           <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
             <View style={styles.searchContainer}>
               <View style={[styles.searchContent, {flex: 1}]}>
-                <View style={styles.searchDateAndAuthor}                >
+                <View style={styles.searchDateAndAuthor}>
                   <TouchableOpacity onPress = {()=>this.toAuthor()}>
                   <Text style={styles.author}> {this.state.author} </Text>
                   </TouchableOpacity>

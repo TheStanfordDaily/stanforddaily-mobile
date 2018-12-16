@@ -15,6 +15,7 @@ import {
   Text,
   Image,
   TouchableOpacity,
+  ActivityIndicator
 } from 'react-native';
 
 //Components for this app imports
@@ -22,6 +23,7 @@ import Header from './common/header';
 import { Amplitude } from 'expo';
 import {FONTS} from "../assets/constants";
 import styles from './styles/post.js';
+import _ from "lodash";
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
@@ -55,11 +57,15 @@ class Post extends Component {
 
   //Once components load, load data. All data is passed down from previous screen
   componentDidMount() {
-    this.fetchData();
+    if (this.props.navigation.state.params.postID) {
+      this.fetchData(this.props.navigation.state.params.postID);
+    }
+    else {
+      this.fetchDataFromParams();
+    }
   }
 
-  //Gets data and makes it look as expected
-  async fetchData() {
+  async fetchDataFromParams() {
     var postData = this.props.navigation.state.params;
     this.setState({
       // post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
@@ -75,6 +81,22 @@ class Post extends Component {
     Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postData.id })
   }
 
+  //Gets data and makes it look as expected
+  async fetchData(id) {
+    let postData = await fetch(`${STRINGS.DAILY_URL}wp-json/wp/v2/posts/${id}?_embed`).then(e => e.json())
+    this.setState({
+      content: _.get(postData, "content.rendered", ""),
+      title: _.get(postData, "title.rendered", ""),
+      author: _.get(postData, "_embedded.author.name", ""),
+      authorID: postData.author,
+      date: new Date(postData.date).toLocaleDateString(),
+      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.medium_large.source_url"),
+      featuredMediaCaption: _.get(postData, "_embedded.wp:featuredmedia.caption.rendered"),
+      id: id
+    });
+    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: id })
+  }
+
   createMarkup(text) {
     return text;
     // todo: HTML purify this if needed.
@@ -84,6 +106,8 @@ class Post extends Component {
     return (
       <View style={{ flex: 1}}>
         <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack} />
+        {!this.state.id && <ActivityIndicator />}
+        {this.state.id &&
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
             barStyle="light-content"
@@ -98,7 +122,8 @@ class Post extends Component {
                   </TouchableOpacity>
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.date}</Text>
             </View>
-            <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+            {this.state.featuredMedia && <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+            }
             {this.state.featuredMediaCaption && 
               <Text style={{marginLeft: 10, fontFamily: FONTS.CENTURY}}>Photo Credits: {h2p(this.state.featuredMediaCaption)}</Text>
             }
@@ -108,7 +133,7 @@ class Post extends Component {
               }
             </View>
           </ScrollView>
-        </View>
+        </View>}
       </View>
     );
   }

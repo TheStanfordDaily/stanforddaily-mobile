@@ -186,7 +186,7 @@ export default class App extends React.Component {
                             />
                         </View>
                         <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
-                            <TouchableHighlight onPress={() => Linking.openURL(post.link)}>
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
                                 <Text style={{ fontSize: 16, fontFamily: "Hoefler Text" }}>
                                     <HTML html={post.title.rendered} />
                                 </Text>
