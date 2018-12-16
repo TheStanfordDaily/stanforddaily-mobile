@@ -11,6 +11,7 @@ import {
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
 import styles from '../styles/newsfeeditem.js';
+import _ from "lodash";
 const h2p = require('html2plaintext')
 
 const HTML = (props) => {
@@ -60,34 +61,8 @@ export default class NewsFeedItem extends Component {
     }
 
     chooseMediaSize = async () => {
-      try {
-        var featuredMedia = ""; //We assume that there is no featured media till we find one
-        // console.warn(this.props.data.postObj.title.rendered + " " + this.props.data.postObj.featured_media);
-        if(this.props.data.postObj.featured_media !== 0) {
-          let featuredMediaResponse = await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media);
-          let featuredMediaData = await featuredMediaResponse.json();
-          if(width > CONSTANT_NUMS.PHONE_MAX_WIDTH) {
-            if(featuredMediaData.media_details.sizes["big-slider"] !== undefined) {
-              featuredMedia = featuredMediaData.media_details.sizes["big-slider"].source_url;
-            } else {
-              featuredMedia = featuredMediaData.source_url;
-            }
-          } else {
-            if(featuredMediaData.media_details.sizes.medium_large !== undefined) {
-              featuredMedia = featuredMediaData.media_details.sizes.medium_large.source_url;
-            } else if (featuredMediaData.media_details.sizes.large !== undefined) {
-              featuredMedia = featuredMediaData.media_details.sizes.large.source_url;
-            } else if (featuredMediaData.media_details.sizes.medium !== undefined) {
-              featuredMedia = featuredMediaData.media_details.sizes.medium.source_url;
-            } else {
-              featuredMedia = featuredMediaData.source_url;
-            }
-          }
-        }
-        return featuredMedia;
-      } catch (exception) {
-        return "";
-      }
+      let featuredMediaData = await (await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media)).json();
+      return {url: _.get(featuredMediaData, "media_details.sizes.medium.source_url", ""), caption: _.get(featuredMediaData, "caption.rendered", "")};
     }
 
     //Async fetch data from the WP server
@@ -99,7 +74,7 @@ export default class NewsFeedItem extends Component {
         var date = this.assembleDate(this.props.data.postObj.date); //Gets date from the given response
         var title = this.props.data.postObj.title.rendered; //Gets title in HTML from the given response
         var description = this.props.data.postObj.excerpt.rendered; //Gets desc in HTML from the given response
-        var featuredMedia = await this.chooseMediaSize();
+        var featuredMediaObject = await this.chooseMediaSize();
         //Cutting the allowed number of characters for the desc
         var cut = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.SOFT_DESC_LIMIT : CONSTANT_NUMS.SOFT_SEARCH_DESC_LIMIT;
         var hardLimit = this.props.context === STRINGS.HEADLINES ? CONSTANT_NUMS.HARD_DESC_LIMIT : CONSTANT_NUMS.HARD_SEARCH_DESC_LIMIT;
@@ -119,7 +94,8 @@ export default class NewsFeedItem extends Component {
             authorID: authorID,
             date: date,
             title: title,
-            featuredMedia: featuredMedia,
+            featuredMedia: featuredMediaObject.url,
+            featuredMediaCaption: featuredMediaObject.caption,
             description: description.substring(0,cut)+STRINGS.MORE_TEXT,
             body: this.props.data.postObj.content.rendered,
             loaded: true

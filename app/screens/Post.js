@@ -69,6 +69,7 @@ class Post extends Component {
       authorID: postData.authorID,
       date: postData.date,
       featuredMedia: postData.featuredMedia,
+      featuredMediaCaption: postData.featuredMediaCaption,
       id: postData.id,
     });
     Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postData.id })
@@ -98,6 +99,9 @@ class Post extends Component {
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.date}</Text>
             </View>
             <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+            {this.state.featuredMediaCaption && 
+              <Text style={{marginLeft: 10, fontFamily: FONTS.CENTURY}}>Photo Credits: {h2p(this.state.featuredMediaCaption)}</Text>
+            }
             <View style={{ margin: 10 }}>
               {this.state.content &&
                 <HTML style={{fontFamily: FONTS.CENTURY}} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
