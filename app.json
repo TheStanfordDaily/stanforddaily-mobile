@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.Stanford.Daily.App",
-      "versionCode": "2"
+      "versionCode": 2
     }
   }
 }
