@@ -13,7 +13,7 @@ import {
     Dimensions,
     Share
 } from 'react-native';
-
+import { AndroidBackHandler } from 'react-navigation-backhandler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {REFS, ICONS, Images, COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
 import styles from '../styles/header.js';
@@ -38,11 +38,26 @@ export default class Header extends Component {
         message: url,
         url: url
       })
-  }
+    }
+    onBackButtonPressAndroid() {
+      /*
+      *   Returning `true` from `onBackButtonPressAndroid` denotes that we have handled the event,
+      *   and react-navigation's lister will not get called, thus not popping the screen.
+      *
+      *   Returning `false` will cause the event to bubble up and react-navigation's listener will pop the screen.
+      * */
+  
+      if (this.props.goBack) {
+        this.props.goBack();
+        return true;
+      }
+      return false;
+    };
 
     render() {
 
         return (
+          <AndroidBackHandler onBackPress={() => this.onBackButtonPressAndroid()}>
             <View ref={REFS.CONTAINER}>
                 <View style={styles.container}>
                   {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={styles.leftButton}/>}
@@ -99,6 +114,7 @@ export default class Header extends Component {
                   )}
                 </View>
             </View>
+          </AndroidBackHandler>
         )
 
     }
