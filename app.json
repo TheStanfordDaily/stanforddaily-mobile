@@ -29,7 +29,8 @@
       "bundleIdentifier": "com.Stanford.Daily.App"
     },
     "android": {
-      "package": "com.Stanford.Daily.App"
+      "package": "com.Stanford.Daily.App",
+      "versionCode": "2"
     }
   }
 }
