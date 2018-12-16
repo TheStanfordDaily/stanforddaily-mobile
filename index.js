@@ -14,6 +14,7 @@ class App extends Component {
     Font.loadAsync({
       'Century': require('./app/assets/fonts/century/century.ttf'),
       'Helvetica': require('./app/assets/fonts/century/century.ttf'),
+      'Helvetica-Bold': require('./app/assets/fonts/century/century.ttf'),
       'Hoefler Text': require('./app/assets/fonts/century/century.ttf'),
       'PT Serif': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif Bold': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf')
