@@ -27,7 +27,8 @@ export default class App extends React.Component {
         super();
         this.state = {
             posts: null,
-            details: null
+            details: null,
+            postCount: null
         }
     }
 
@@ -50,7 +51,13 @@ export default class App extends React.Component {
 
     fetchAuthor(authorId) {
         Promise.all([
-            fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&author=" + authorId).then(e => e.json()),
+            // Todo: post pagination
+            fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&per_page=100&author=" + authorId).then(e => {
+                this.setState({
+                    postCount: e.headers["X-WP-Total"]
+                })
+                return e.json();
+            }),
             fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
         ]).then(values => this.setState({
             posts: values[0],
@@ -159,7 +166,7 @@ export default class App extends React.Component {
                             fontSize: 20, fontFamily: "Helvetica", fontWeight: "bold",
                             marginTop: 5, textAlign: "center", textAlignVertical: "center"
                         }}>
-                            {this.state.posts.length}
+                            {this.state.postCount || this.state.posts.length}
                         </Text>
                         <Text style={{
                             fontSize: 13, fontFamily: "Helvetica",
