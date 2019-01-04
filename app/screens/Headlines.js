@@ -233,9 +233,9 @@ export default class Headlines extends Component {
 
   setTextStyle(category) {
     if (category === selectedCategory) {
-      return {color: COLORS.CARDINAL, fontFamily: FONTS.CENTURY};
+      return {color: COLORS.CARDINAL, fontFamily: FONTS.CENTURY, textAlign: ALIGNMENTS.CENTER};
     }
-    return {color: COLORS.DARK_GRAY, fontFamily: FONTS.CENTURY};
+    return {color: COLORS.DARK_GRAY, fontFamily: FONTS.CENTURY, textAlign: ALIGNMENTS.CENTER};
   }
   //A method to render the drawer/side menu
   sideMenu() {

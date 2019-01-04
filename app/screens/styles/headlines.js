@@ -24,15 +24,19 @@ const styles= StyleSheet.create({
     },
     sideBarTitle: {
       height: HEIGHTS.APP_HEADER,
-      width: '100%',
       justifyContent: ALIGNMENTS.CENTER,
-      alignItems: ALIGNMENTS.CENTER,
       borderBottomWidth: 2,
+      alignSelf: 'stretch',
+      flexDirection: 'column',
+      paddingTop: HEIGHTS.APP_HEADER_TOP,
       borderBottomColor: COLORS.LIGHT_GRAY
     },
     sideBarTitleText: {
       color: COLORS.DARK_GRAY,
       fontFamily: FONTS.CENTURY,
+      textAlign: 'center',
+      flex: 1,
+      justifyContent: 'center',
       fontSize: FONT_SIZES.DEFAULT_MEDIUM
     },
     flatListStyle: {
@@ -43,9 +47,8 @@ const styles= StyleSheet.create({
       width: '100%',
       height: HEIGHTS.SIDE_MENU_ITEM,
       justifyContent: ALIGNMENTS.CENTER,
-      alignItems: ALIGNMENTS.CENTER,
       borderBottomColor: COLORS.LIGHT_GRAY,
-      borderBottomWidth: 1
+      borderBottomWidth: 1,
     },
     categoriesHeaderContainer: {
       height: 45,
