@@ -8,6 +8,10 @@ let onLinkPress = (event, href, htmlAttributes) => {
 }
 
 export default (props) => {
-  return <HTML containerStyle={props.style || {}} baseFontStyle={{fontFamily: FONTS.PT_SERIF}} html={props.html} onLinkPress={(a, b, c) => onLinkPress(a, b, c)} />;
+  return <HTML
+    containerStyle={props.containerStyle || {}}
+    baseFontStyle={{fontFamily: FONTS.PT_SERIF, ...(props.baseFontStyle || {})}}
+    html={props.html}
+    onLinkPress={(a, b, c) => onLinkPress(a, b, c)} />;
 }
 
