@@ -6,7 +6,6 @@
 //Pre-made Components imports
 import React, { Component } from 'react';
 import { STRINGS, KEYS } from '../assets/constants.js';
-// import HTML from 'react-native-render-html';
 import {
   View,
   StatusBar,
@@ -24,12 +23,8 @@ import { Amplitude } from 'expo';
 import {FONTS} from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
-const h2p = require('html2plaintext')
-
-const HTML = (props) => {
-  return <Text style={props.style}>{h2p(props.html)}</Text>
-}
-
+import HTML from '../HTML.js';
+const h2p = require('html2plaintext');
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen

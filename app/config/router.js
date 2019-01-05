@@ -198,7 +198,7 @@ export const Root = createStackNavigator({
   },
   Search: {
     screen: SearchStack,
-  }
+  },
 }, {
   mode: 'modal',
   headerMode: 'none'

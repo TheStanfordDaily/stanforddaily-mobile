@@ -33,21 +33,19 @@ const styles = StyleSheet.create({
     },
 
     title: {
-      fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_LARGE,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: MARGINS.ARTICLE_SIDES,
+      marginRight: MARGINS.ARTICLE_SIDES
     },
 
     description: {
-      fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginBottom: MARGINS.ARTICLE_SIDES,
       opacity: 0.80,
       marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: MARGINS.ARTICLE_SIDES,
+      marginRight: MARGINS.ARTICLE_SIDES
     },
 
     image: {

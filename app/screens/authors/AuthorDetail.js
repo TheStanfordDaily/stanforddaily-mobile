@@ -16,11 +16,7 @@ import Header from '../common/header';
 import Swiper from 'react-native-swiper';
 import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 import _ from "lodash";
-const h2p = require('html2plaintext')
-
-const HTML = (props) => {
-    return <Text style={props.style}>{h2p(props.html)}</Text>
-}
+import HTML from '../../HTML';
 
 export default class App extends React.Component {
     constructor() {

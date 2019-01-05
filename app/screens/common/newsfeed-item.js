@@ -11,11 +11,7 @@ import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
 import styles from '../styles/newsfeeditem.js';
 import _ from "lodash";
-const h2p = require('html2plaintext')
-
-const HTML = (props) => {
-  return <Text style={props.style}>{h2p(props.html)}</Text>
-}
+import HTML from '../../HTML';
 
 
 const {width, height} = Dimensions.get('window');
