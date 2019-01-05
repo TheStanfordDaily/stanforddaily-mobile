@@ -4,7 +4,7 @@ const {width, height} = Dimensions.get('window');
 width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
 
-const styles = StyleSheet.create({
+const styles = ({
     content: {
         borderTopColor: COLORS.LIGHT_GRAY,
         borderTopWidth: 1,
@@ -32,20 +32,24 @@ const styles = StyleSheet.create({
       opacity: 0.60
     },
 
-    title: {
-      fontSize: FONT_SIZES.DEFAULT_LARGE,
+    titleFont: {
+      fontSize: FONT_SIZES.DEFAULT_LARGE
+    },
+    titleContainer: {
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES
     },
 
-    description: {
-      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+    descriptionContainer: {
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginBottom: MARGINS.ARTICLE_SIDES,
       opacity: 0.80,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES
+    },
+    descriptionFont: {
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL
     },
 
     image: {

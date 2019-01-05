@@ -109,7 +109,7 @@ class Post extends Component {
           />
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
             <Text style={styles.title}>
-              <HTML style={{fontFamily: FONTS.CENTURY}} html={this.state.title} />
+              <HTML baseFontStyle={{fontFamily: FONTS.CENTURY}} html={this.state.title} />
             </Text>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
             <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
@@ -124,7 +124,7 @@ class Post extends Component {
             }
             <View style={{ margin: 10 }}>
               {this.state.content &&
-                <HTML style={{fontFamily: FONTS.CENTURY}} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
+                <HTML baseFontStyle={{fontFamily: FONTS.CENTURY}} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
               }
             </View>
           </ScrollView>

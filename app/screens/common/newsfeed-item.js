@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Placeholder from './placeholder';
 import {STRINGS, CONSTANT_NUMS} from '../../assets/constants.js';
-import styles from '../styles/newsfeeditem.js';
+import styles from '../styles/newsfeeditem';
 import _ from "lodash";
 import HTML from '../../HTML';
 
@@ -123,8 +123,8 @@ export default class NewsFeedItem extends Component {
                 <Text style={styles.date}> {this.state.date} </Text>
 
               </View>
-              <HTML style={styles.title} html={this.state.title}/>
-              <HTML style={styles.description} html={this.state.description}/>
+              <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={this.state.title}/>
+              <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={this.state.description}/>
             </View>
           </TouchableWithoutFeedback>
         );
@@ -146,8 +146,8 @@ export default class NewsFeedItem extends Component {
                   <Text style={styles.date}> {this.state.date} </Text>
                   
                 </View>
-                <HTML style={styles.searchTitle} html={this.state.title}/>
-                <HTML style={styles.searchDescription} html={this.state.description}/>
+                <HTML containerStyle={styles.searchTitle} html={this.state.title}/>
+                <HTML containerStyle={styles.searchDescription} html={this.state.description}/>
               </View>
               {this.state.featuredMedia !== "" &&
                   <Image source={{uri: this.state.featuredMedia}} style={styles.searchImage}/>
