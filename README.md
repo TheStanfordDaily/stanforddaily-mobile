@@ -11,3 +11,9 @@ npm run ios
 npm run android
 npm start
 ```
+
+# Release
+expo build:ios --release-channel production
+expo build:android --release-channel production
+
+expo publish

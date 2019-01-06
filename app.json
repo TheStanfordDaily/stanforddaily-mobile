@@ -10,7 +10,7 @@
       "ios",
       "android"
     ],
-    "version": "1.1.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "com.Stanford.Daily.App",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }
