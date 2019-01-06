@@ -7,6 +7,8 @@ const styles = {
         borderRadius: 8,
         borderBottomWidth: 3,
         borderBottomColor: COLORS.LIGHT_GRAY,
+        paddingLeft: 15,
+        paddingBottom: 15
     },
     headerText: {
         fontSize: FONT_SIZES.DEFAULT_MEDIUM,
@@ -17,15 +19,21 @@ const styles = {
         borderRadius: 10,
         borderBottomColor: COLORS.LIGHT_GRAY,
         borderBottomWidth: 1,
+        paddingLeft: 15,
+        flexDirection: 'column',
+        paddingBottom: 10
     },
     authorText: {
         fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
         fontFamily: FONTS.PT_SERIF,
-        left: 36,
-        top: -11,
+        flex: 1,
+        left: 45,
+        bottom: 5,
+        position: 'absolute'
     },
     image: {
-        marginLeft: -8,
+        flex: 1,
+        marginLeft: 0,
         marginTop: 8.5,
         width: 34,
         height: 34,
