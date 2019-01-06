@@ -86,7 +86,7 @@ export default class NestedListView extends React.Component {
             )}
             sections={this.state.data}
             extraData={this.state.data}
-            keyExtractor={(item, index) => item + index}
+            keyExtractor={(item, index) => item.name}
         />);
     }
 }
