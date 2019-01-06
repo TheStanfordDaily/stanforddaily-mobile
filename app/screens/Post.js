@@ -108,9 +108,9 @@ class Post extends Component {
             barStyle="light-content"
           />
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-            <Text style={styles.title}>
-              <HTML baseFontStyle={{fontFamily: FONTS.CENTURY}} html={this.state.title} />
-            </Text>
+            <View style={styles.title}>
+              <HTML baseFontStyle={styles.titleText} html={this.state.title} />
+            </View>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
             <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
               <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>             
