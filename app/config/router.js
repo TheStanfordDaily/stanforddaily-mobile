@@ -16,6 +16,7 @@ import DetailedPost from '../screens/DetailedPost';
 import Profile from '../screens/Profile';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
+import Map from "../screens/map/Map";
 import {Amplitude} from 'expo';
 import {FONTS} from "../assets/constants";
 
@@ -102,6 +103,18 @@ AuthorList: {
   headerMode: 'none',
 });
 
+const MapStack = createStackNavigator({
+  Map: {
+      screen: Map,
+      navigationOptions: {
+        title: 'Map',
+      },
+    },  
+  }, {
+    headerMode: 'none',
+  });
+  
+
 export const Tabs = createBottomTabNavigator({
   News: {
     screen: NewsStack,
@@ -124,13 +137,19 @@ export const Tabs = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => <Image
         source={require('../media/Community.png')}
         style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
-      />,
-      // tabBarOnPress: (scene, jumpToIndex) => {
-      //     Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.AUTHORS});
-      //     jumpToIndex(scene.index);
-      // },
+      />
     },
-  }
+  },
+  Map: {
+    screen: MapStack,
+    navigationOptions: {
+      tabBarLabel: 'Map',
+      tabBarIcon: ({ tintColor }) => <Image
+        source={require('../media/Community.png')}
+        style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
+      />
+    },
+  },
 // Chatter: {
 //   screen: ChatterStack,
 //   navigationOptions: {
