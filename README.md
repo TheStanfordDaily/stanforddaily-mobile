@@ -16,4 +16,4 @@ npm start
 expo build:ios --release-channel production
 expo build:android --release-channel production
 
-expo publish
+expo publish --release-channel production
