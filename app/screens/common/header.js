@@ -33,7 +33,12 @@ export default class Header extends Component {
      * Shares the current post using the native share functionality.
      */
     shareHandler() {
-      const url = STRINGS.DAILY_URL + "?p=" + this.props.postID;
+      let url = STRINGS.DAILY_URL;
+      if (this.props.postID !== undefined) {
+        url += "?p=" + this.props.postID;
+      } else if (this.props.authorID !== undefined) {
+        url += "?author=" + this.props.authorID;
+      }
       Share.share({
         message: url,
         url: url
@@ -46,7 +51,7 @@ export default class Header extends Component {
       *
       *   Returning `false` will cause the event to bubble up and react-navigation's listener will pop the screen.
       * */
-  
+
       if (this.props.goBack) {
         this.props.goBack();
         return true;

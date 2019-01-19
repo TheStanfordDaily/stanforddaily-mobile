@@ -65,7 +65,7 @@ export default class App extends React.Component {
 
         return (<View style={{ flex: 1 }}>
 
-            <Header share={true} postID={0} goBack={() => this.props.navigation.goBack()} />
+            <Header share={true} authorID={this.props.navigation.state.params.id} goBack={() => this.props.navigation.goBack()} />
 
             <ScrollView style={{ flex: 1, flexDirection: "column", backgroundColor: "white" }}
                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
@@ -204,7 +204,7 @@ export default class App extends React.Component {
 
 
             {this.state.details &&
-            
+
                 <View style={{ padding: 2, height: 35, backgroundColor: "white", flexDirection: "row" }}>
 
                     <View style={{ flex: 1, margin: 0, backgroundColor: "white"}}>
