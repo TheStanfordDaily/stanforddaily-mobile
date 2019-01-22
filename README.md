@@ -9,7 +9,6 @@ npm run ios
 
 # or
 npm run android
-npm start
 ```
 
 # Release
