@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { MapView } from 'expo'; //takes place of react-native-maps
-//mport MapView, { Marker, ProviderPropType } from 'react-native-maps';
+//import MapView, { Marker, ProviderPropType } from 'react-native-maps';
 
 var markers = [
   {
@@ -19,6 +19,7 @@ var markers = [
   }
 ];
 
+//Took default, w/ more changes
 var styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -57,8 +58,8 @@ export default class App extends React.Component {
         }}>
       <MapView.Marker
         coordinate={{latitude: 37.425690, longitude: -122.170600}}
-        title={"test run"}
-        description={"marker.description"}
+        title={"The Stanford Daily Building"}
+        description={"Where the magic happens! :)"}
       />
       </MapView>
       </View>
@@ -68,7 +69,7 @@ export default class App extends React.Component {
   
 }
 /*
-        {this.state.markers.map(marker => (//List of markers to render
+        {this.state.markers.map(markers => (//List of markers to render
           <Marker
             coordinate={marker.latlng}
             title={marker.title}
@@ -77,3 +78,10 @@ export default class App extends React.Component {
         ))}
 */
 //Goal: add geotag locations onto the map
+
+/*
+
+
+
+
+*/
