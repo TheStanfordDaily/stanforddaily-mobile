@@ -25,13 +25,17 @@ class App extends Component {
       return <View><ActivityIndicator /></View>;
     }
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.CARDINAL }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior='padding'>
-          <Root />
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+      <React.Fragment>
+        { /*https://stackoverflow.com/a/52458846/2603230 */ }
+        <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.CARDINAL }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior='padding'>
+            <Root />
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </React.Fragment>
     );
   }
 }
