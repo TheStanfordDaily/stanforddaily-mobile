@@ -26,7 +26,7 @@ class App extends Component {
     }
     return (
       <React.Fragment>
-        { /*https://stackoverflow.com/a/52458846/2603230 */ }
+        {/* https://stackoverflow.com/a/52458846/2603230 */}
         <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.CARDINAL }} />
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
           <KeyboardAvoidingView
