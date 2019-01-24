@@ -22,8 +22,8 @@ import {FONTS} from "../assets/constants";
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
-const labelBottomMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+3 : 3;
-const tabBarHeight = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.TAB_BAR_HEIGHT : HEIGHTS.TAB_BAR_HEIGHT;
+const labelBottomMargin = 3;
+const tabBarHeight = HEIGHTS.TAB_BAR_HEIGHT;
 
 const SearchStack = createStackNavigator({
   Search: {
@@ -98,7 +98,7 @@ AuthorList: {
     navigationOptions: {
       title: 'Author Detail',
     },
-  },  
+  },
 }, {
   headerMode: 'none',
 });
@@ -109,11 +109,11 @@ const MapStack = createStackNavigator({
       navigationOptions: {
         title: 'Map',
       },
-    },  
+    },
   }, {
     headerMode: 'none',
   });
-  
+
 
 export const Tabs = createBottomTabNavigator({
   News: {
@@ -177,6 +177,10 @@ export const Tabs = createBottomTabNavigator({
     },
     style: {
       height: tabBarHeight,
+      // Ref:
+      // https://github.com/react-navigation/react-navigation/issues/3882
+      // https://github.com/react-navigation/react-navigation/issues/3055
+      // So we have to hard-code the marginBottom to avoid extra gap.
       marginBottom: iphone_x ? -34 : 0
     }
   },
