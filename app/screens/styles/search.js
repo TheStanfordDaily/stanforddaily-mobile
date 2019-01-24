@@ -4,9 +4,6 @@ const {width, height} = Dimensions.get('window');
 width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
 
-const iphone_x = height == 812;
-const top_padding = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
-
 const styles= StyleSheet.create({
     container: {
         flex: 1,
@@ -22,9 +19,9 @@ const styles= StyleSheet.create({
       width: '100%',
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       alignItems: ALIGNMENTS.CENTER,
-      height: iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.APP_HEADER : HEIGHTS.APP_HEADER,
+      height: HEIGHTS.APP_HEADER,
       backgroundColor: COLORS.CARDINAL,
-      paddingTop: iphone_x ? 25 : 12
+      paddingTop: 12
     },
     textInput: {
       fontFamily: FONTS.HNEUE,
