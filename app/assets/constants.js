@@ -21,7 +21,7 @@ const STRINGS = {
   LIGHT_CONTENT: "light-content",
   MORE_TEXT: "...",
   MEDIA_URL: 'http://stanforddaily.com/wp-json/wp/v2/media/',
-  DAILY_URL: 'http://stanforddaily.com/',
+  DAILY_URL: 'http://stanforddaily2.staging.wpengine.com/',
   PROFILE: "Profile",
   CHILD_REMOVED: "child_removed",
   REPLIES: "replies",
