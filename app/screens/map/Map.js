@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Button, Image, AppRegistry, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Alert, Image, AppRegistry, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-//import renderIf from './renderIf'
 import _ from "lodash";
 import HTML from '../../HTML';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView from 'react-native-maps';
 import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
-import Header from '../common/header';
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
@@ -149,9 +147,13 @@ export default class MapExample extends Component {
 
 
         {this.state.shown ?
-          <View style={{ flex: 1, backgroundColor: "white" }}>
+          <View style={{ 
+            flex: 1, 
+            backgroundColor: "white", 
+            borderTopLeftRadius: 20, 
+            borderTopRightRadius: 20}}>
             }
-  
+
           <View style={{
               marginTop: 5,
               flex: 0.2,
@@ -187,8 +189,9 @@ export default class MapExample extends Component {
                 backgroundColor: "maroon"
               }}>
                 <TouchableOpacity
-                  onPress={() => { 
-                    Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')}}>
+                  onPress={() => {
+                    Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                  }}>
                   <Text style={{
                     margin: 5,
                     fontSize: 15,
