@@ -138,8 +138,7 @@ export default class MapExample extends Component {
             <MapView.Marker
               coordinate={{ latitude: 37.425690, longitude: -122.170600 }}
               title={"The Stanford Daily Building"}
-              description={"Where the magic happens!"}
-
+              //onMarkerPress={() => this.toggleStatus()}
               onPress={() => this.toggleStatus()}
             />
           </MapView>
@@ -188,7 +187,8 @@ export default class MapExample extends Component {
                 backgroundColor: "maroon"
               }}>
                 <TouchableOpacity
-                  onPress={() => { Alert.alert('You are now following articles about Rodin Sculpture Garden!') }}>
+                  onPress={() => { 
+                    Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')}}>
                   <Text style={{
                     margin: 5,
                     fontSize: 15,
