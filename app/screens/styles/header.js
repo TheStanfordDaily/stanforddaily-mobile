@@ -3,8 +3,7 @@ const {StyleSheet, Dimensions} = React
 
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
 
-const iphone_x = Dimensions.get('window').height == 812;
-const top_margin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+MARGINS.NORMAL_HEADER_MARGINS : MARGINS.NORMAL_HEADER_MARGINS
+const top_margin = MARGINS.NORMAL_HEADER_MARGINS
 const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
@@ -12,7 +11,7 @@ const styles = StyleSheet.create({
         flexDirection: ALIGNMENTS.ROW,
         justifyContent: ALIGNMENTS.SPACE_BETWEEN,
         alignItems: ALIGNMENTS.CENTER,
-        height: iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION+HEIGHTS.APP_HEADER : HEIGHTS.APP_HEADER,
+        height: HEIGHTS.APP_HEADER,
         backgroundColor: COLORS.CARDINAL,
     },
     leftButton: {
