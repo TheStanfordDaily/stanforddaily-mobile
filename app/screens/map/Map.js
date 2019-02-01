@@ -176,7 +176,6 @@ export default class MapExample extends Component {
             backgroundColor: "white",
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20}}>
-            }
 
           <View style={{
               marginTop: 5,
