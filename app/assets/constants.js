@@ -196,7 +196,7 @@ const ICONS = {
   BACK: "ios-arrow-back",
   MENU: "ios-menu",
   SEARCH: "ios-search",
-  SHARE: "ios-share-outline",
+  SHARE: "ios-share",
   CLOSE: "ios-close"
 }
 

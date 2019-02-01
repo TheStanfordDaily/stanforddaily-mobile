@@ -3,7 +3,7 @@ const {StyleSheet, Dimensions} = React
 
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
 const {height, width} = Dimensions.get('window');
-width = width <= height ? width : height;
+//width = width <= height ? width : height;
 
 
 var styles = StyleSheet.create({

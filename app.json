@@ -5,7 +5,7 @@
     "description": "Stanford Daily Mobile App",
     "slug": "StanfordDaily",
     "privacy": "public",
-    "sdkVersion": "30.0.0",
+    "sdkVersion": "32.0.0",
     "platforms": [
       "ios",
       "android"

@@ -1,7 +1,7 @@
 import React from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
-width = width <= height ? width : height;
+//width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
 
 const styles= StyleSheet.create({

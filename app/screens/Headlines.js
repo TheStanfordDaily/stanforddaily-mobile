@@ -31,7 +31,7 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
 //A map between categories names and their codes
 const {width, height} = Dimensions.get('window');
-const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
+var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Headlines extends Component {
     constructor(props) {
@@ -211,7 +211,7 @@ export default class Headlines extends Component {
     if(data.item.postObj !== STRINGS.PLACEHOLDER) {
       return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}
       onAuthorPress = {authorID=>this.props.navigation.navigate("AuthorDetail", { id: authorID})} />
-    
+
     } else {
       return (
         <View>

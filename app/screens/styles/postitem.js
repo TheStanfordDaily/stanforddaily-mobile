@@ -2,7 +2,7 @@ const React = require('react-native')
 const {StyleSheet, Dimensions} = React
 import {HEIGHTS, Images, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
 const {height, width} = Dimensions.get('window');
-width = width <= height ? width : height;
+//width = width <= height ? width : height;
 
 var styles = StyleSheet.create({
   container: {
