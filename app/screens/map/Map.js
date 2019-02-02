@@ -156,7 +156,7 @@ export default class MapExample extends Component {
           {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
-                coordinate={{latitude: marker.coordinates[0], 
+                coordinate={{latitude: marker.coordinates[0],
                   longitude: marker.coordinates[1]}}
                 title={marker.name}
                 description={marker.description}
@@ -171,12 +171,11 @@ export default class MapExample extends Component {
 
 
         {this.state.shown ?
-          <View style={{ 
-            flex: 1, 
-            backgroundColor: "white", 
-            borderTopLeftRadius: 20, 
+          <View style={{
+            flex: 1,
+            backgroundColor: "white",
+            borderTopLeftRadius: 20,
             borderTopRightRadius: 20}}>
-            }
 
           <View style={{
               marginTop: 5,
@@ -267,7 +266,7 @@ export default class MapExample extends Component {
             </ScrollView>
           </View>
 
-          : <View>  </View>}
+          : <View></View>}
 
       </View >
 

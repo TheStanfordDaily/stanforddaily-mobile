@@ -3,7 +3,7 @@ const {StyleSheet, Dimensions} = React
 import {HEIGHTS, Images, MARGINS, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
 
 const {width, height} = Dimensions.get('window');
-width = width <= height ? width : height;
+//width = width <= height ? width : height;
 const iphone_x = height == HEIGHTS.IPHONE_X;
 const addedTopMargin = iphone_x ? MARGINS.IPHONEX_HEADER_ADDITION : 0;
 

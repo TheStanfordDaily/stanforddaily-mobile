@@ -23,7 +23,7 @@ import {NavigationActions} from 'react-navigation';
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 
 //Styles for the page
@@ -159,7 +159,7 @@ export default class Search extends Component {
         <View style={styles.header}>
           <View style={styles.close}/>
           <View style={[styles.textInputWrapper,{backgroundColor: this.state.focusColor, borderColor: this.state.focusColor}]}>
-            <Icon name={ICONS.SEARCH} size={20} style={{backgroundColor: 'rgba(0,0,0,0)'}} color={COLORS.DARK_GRAY}/>
+            <Ionicons name={ICONS.SEARCH} size={20} style={{backgroundColor: 'rgba(0,0,0,0)'}} color={COLORS.DARK_GRAY}/>
             <TextInput
               ref={'textInput'}
               style={[styles.textInput,{backgroundColor: this.state.focusColor, borderColor: this.state.focusColor}]}
@@ -182,7 +182,7 @@ export default class Search extends Component {
             />
           </View>
           <TouchableOpacity onPress={() => this.props.navigation.dispatch(NavigationActions.back())}>
-            <Icon name={ICONS.CLOSE} style={{width: 40}} size={40} color={COLORS.WHITE}/>
+            <Ionicons name={ICONS.CLOSE} style={{width: 40}} size={40} color={COLORS.WHITE}/>
           </TouchableOpacity>
         </View>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
