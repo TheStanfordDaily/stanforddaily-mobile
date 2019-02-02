@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 import {NavigationActions} from 'react-navigation';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import PostItem from './common/post-item';
 import {STRINGS, Images, ICONS, COLORS} from '../assets/constants.js';
 import styles from './styles/profile.js';
@@ -254,7 +254,7 @@ export default class Profile extends Component {
         <View style={styles.statusBarBackground}/>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.closeWrapper}>
-            <Icon name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
+            <Ionicons name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
             {!this.state.imageExists &&
               <Image style={styles.profileImage} source={Images.ANON_BIG}>
                 {this.props.navigation.state.params.myProfile && (

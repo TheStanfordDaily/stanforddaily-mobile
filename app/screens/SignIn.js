@@ -17,7 +17,6 @@ import {
 } from 'react-native';
 
 import styles from './styles/signin.js';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {NavigationActions} from 'react-navigation';
 import {HEIGHTS, STRINGS, Images, ICONS, COLORS} from '../assets/constants.js';
 

@@ -19,7 +19,6 @@ import Drawer from 'react-native-drawer'
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
-import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 
 //Styles for the page

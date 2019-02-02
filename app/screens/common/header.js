@@ -14,7 +14,7 @@ import {
     Share
 } from 'react-native';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
-import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
 import {REFS, ICONS, Images, COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
 import styles from '../styles/header.js';
 // import ActivityView from 'react-native-activity-view';
@@ -69,14 +69,14 @@ export default class Header extends Component {
                   {this.props.goBack !== undefined && (
                       <TouchableOpacity onPress={() => this.props.goBack()}>
                         <View style={styles.leftButton}>
-                          <Icon name={ICONS.BACK} size={34} color={COLORS.WHITE}/>
+                          <Ionicons name={ICONS.BACK} size={34} color={COLORS.WHITE}/>
                         </View>
                       </TouchableOpacity>
                   )}
                   {this.props.drawerHandler !== undefined && (
                     <TouchableOpacity onPress={() => this.props.drawerHandler()}>
                       <View style={styles.leftButton}>
-                        <Icon name={ICONS.MENU} size={34} color={COLORS.WHITE}/>
+                        <Ionicons name={ICONS.MENU} size={34} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   )}
@@ -98,7 +98,7 @@ export default class Header extends Component {
                   {this.props.share !== undefined &&
                     <TouchableOpacity onPress={this.shareHandler.bind(this)}>
                       <View style={styles.rightButton}>
-                        <Icon name={ICONS.SHARE} size={34} color={COLORS.WHITE}/>
+                        <Ionicons name={ICONS.SHARE} size={34} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   }
@@ -113,7 +113,7 @@ export default class Header extends Component {
                   {this.props.searchHandler !== undefined && (
                     <TouchableOpacity onPress={() => this.props.searchHandler()}>
                       <View style={styles.rightButton}>
-                        <Icon name={ICONS.SEARCH} size={34} color={COLORS.WHITE}/>
+                        <Ionicons name={ICONS.SEARCH} size={34} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   )}
