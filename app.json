@@ -5,13 +5,20 @@
     "slug": "StanfordDaily",
     "privacy": "public",
     "sdkVersion": "32.0.0",
+    "version": "1.1.2",
     "platforms": [
       "ios",
       "android"
     ],
-    "version": "1.1.2",
+    "githubUrl": "https://github.com/TheStanfordDaily/StanfordDaily_Mobile",
     "orientation": "portrait",
+    "primaryColor": "#94171C",
     "icon": "./assets/icon.png",
+    "scheme": "stanforddaily",
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#94171C"
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,14 +31,16 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.Stanford.Daily.App"
+      "bundleIdentifier": "com.Stanford.Daily.App",
+      "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
+      "supportsTablet": true
     },
     "android": {
       "package": "com.Stanford.Daily.App",
       "versionCode": 3,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.Stanford.Daily.App",
       "permissions": [
-        "ACCESS_COARSE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
       ]
     }
   }
