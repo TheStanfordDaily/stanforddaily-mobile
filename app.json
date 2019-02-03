@@ -1,8 +1,7 @@
 {
-  "name": "Stanford Daily",
-  "displayName": "Stanford Daily",
   "expo": {
-    "description": "Stanford Daily Mobile App",
+    "name": "Stanford Daily",
+    "description": "The Stanford Daily Mobile App",
     "slug": "StanfordDaily",
     "privacy": "public",
     "sdkVersion": "32.0.0",
