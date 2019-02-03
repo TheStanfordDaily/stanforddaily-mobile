@@ -161,8 +161,8 @@ export default class MapExample extends Component {
                 title={marker.name}
                 description={marker.description}>
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
-                <View style={[styles.markerBackground, { backgroundColor: 'black' }]}>
-                  <MaterialCommunityIcons name={marker.icon} size={20} color={COLORS.WHITE} style={styles.markerInnerIcon} />
+                <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
+                  <MaterialCommunityIcons name={marker.icon} size={20} color={marker.iconColor} style={styles.markerInnerIcon} />
                 </View>
               </MapView.Marker>
             ))}
@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: 'white',
   },
   markerInnerIcon: {
     width: 20,
