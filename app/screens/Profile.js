@@ -254,7 +254,7 @@ export default class Profile extends Component {
         <View style={styles.statusBarBackground}/>
         <ScrollView contentContainerStyle={styles.scrollView}>
           <View style={styles.closeWrapper}>
-            <Ionicons name={ICONS.BACK} style={styles.back} size={34} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
+            <Ionicons name={ICONS.BACK} style={styles.back} size={32} color={COLORS.WHITE} onPress={this.dismissScreen.bind(this)}/>
             {!this.state.imageExists &&
               <Image style={styles.profileImage} source={Images.ANON_BIG}>
                 {this.props.navigation.state.params.myProfile && (
