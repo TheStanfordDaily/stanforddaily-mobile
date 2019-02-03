@@ -29,7 +29,10 @@
     },
     "android": {
       "package": "com.Stanford.Daily.App",
-      "versionCode": 3
+      "versionCode": 3,
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+      ]
     }
   }
 }
