@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, Image, ImageBackground, AppRegistry, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Alert, Image, AppRegistry, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
-import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -160,9 +160,10 @@ export default class MapExample extends Component {
                 }}
                 title={marker.name}
                 description={marker.description}>
-                <ImageBackground source={require("../../media/mail.png")} style={styles.markerBackground}>
-                  <Ionicons name="logo-pinterest" size={20} color={COLORS.WHITE} style={styles.markerInnerIcon} />
-                </ImageBackground>
+                {/* https://stackoverflow.com/a/33471432/2603230 */}
+                <View style={[styles.markerBackground, { backgroundColor: 'yellow' }]}>
+                  <MaterialCommunityIcons name="office-building" size={20} color={COLORS.CARDINAL} style={styles.markerInnerIcon} />
+                </View>
               </MapView.Marker>
             ))}
           </MapView>
@@ -285,13 +286,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   markerBackground: {
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   markerInnerIcon: {
     width: 20,
     height: 20,
-    left: 20,
-    top: 20,
+    left: 10,
+    top: 10,
   }
 });
