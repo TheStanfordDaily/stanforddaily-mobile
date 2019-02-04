@@ -4,7 +4,8 @@ import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
-import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
@@ -12,9 +13,6 @@ const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-function randomColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
 export default class MapExample extends Component {
   constructor() {
     super();
@@ -43,13 +41,13 @@ export default class MapExample extends Component {
     this.fetchAuthor(1001803);
 
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations")
-    .then(e => e.json()) //convert to json
-    .then(markers => {
-      // for (let section of markers) {
-      // }
-      this.setState({ markers: markers });
-    })
-    .catch(e => {throw e});
+      .then(e => e.json()) //convert to json
+      .then(markers => {
+        // for (let section of markers) {
+        // }
+        this.setState({ markers: markers });
+      })
+      .catch(e => { throw e });
 
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -153,16 +151,21 @@ export default class MapExample extends Component {
               onPress={() => this.toggleStatus()}
             />
 
-          {this.state.markers && this.state.markers.map(marker => (
+            {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
-                coordinate={{latitude: marker.coordinates[0],
-                  longitude: marker.coordinates[1]}}
+                coordinate={{
+                  latitude: marker.coordinates[0],
+                  longitude: marker.coordinates[1]
+                }}
                 title={marker.name}
-                description={marker.description}
-                pinColor = {randomColor()}
-              />
-          ))}
+                description={marker.description}>
+                {/* https://stackoverflow.com/a/33471432/2603230 */}
+                <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
+                  <MaterialCommunityIcons name={marker.icon} size={20} color={marker.iconColor} style={styles.markerInnerIcon} />
+                </View>
+              </MapView.Marker>
+            ))}
           </MapView>
         </View>
 
@@ -175,9 +178,10 @@ export default class MapExample extends Component {
             flex: 1,
             backgroundColor: "white",
             borderTopLeftRadius: 20,
-            borderTopRightRadius: 20}}>
+            borderTopRightRadius: 20
+          }}>
 
-          <View style={{
+            <View style={{
               marginTop: 5,
               flex: 0.2,
               alignContent: "center",
@@ -268,7 +272,7 @@ export default class MapExample extends Component {
 
           : <View></View>}
 
-      </View >
+      </View>
 
 
 
@@ -280,5 +284,17 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     width: '100%',
+  },
+  markerBackground: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+  },
+  markerInnerIcon: {
+    width: 20,
+    height: 20,
+    left: 8,
+    top: 8,
   }
 });
