@@ -101,11 +101,12 @@ export default class MapExample extends Component {
   }
 
   fetchLocationInput(textInput) {
-    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
+
+    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
+    //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
     .then(e => {
       return e.json();
     }).then(e => {
-      //Alert.alert('fetch working!');
       this.setState({ textInputLocations: e })
     })
   }
@@ -113,12 +114,11 @@ export default class MapExample extends Component {
   //Calls a fetch to get the relevant locations
   handleLocationInput(textInput) {
     this.fetchLocationInput(textInput);
-    //Alert.alert('now onto set state!');
 
     this.setState({
        region: {
-          latitude: 45,
-          longitude: -123,
+          latitude: 37,
+          longitude: LONGITUDE,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA,
         }
@@ -129,30 +129,6 @@ export default class MapExample extends Component {
     }
   }
 
-  //take textinput and then use for search via endpoint
-  //Changed the onChangeText to onSubmitEditing in render function
-  // handleLocationInput(textInput) {
-  //   fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
-  //   //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
-  //   .then(e => {
-  //     return e.json();
-  //   }).then(e => {
-  //     Alert.alert('working!');
-  //     //loop through all the returned locations and then pop them up and change region
-
-
-  //     this.setState({
-  //       //change latitude to be a number/zone for zooming in, once you find the nodes
-  //       region: {
-  //         latitude: 40,
-  //         longitude: -123,
-  //         latitudeDelta: LATITUDE_DELTA,
-  //         longitudeDelta: LONGITUDE_DELTA,
-  //       }
-  //     });
-  //   })
-  // }
-
   onMapReady = (e) => {
     if(!this.state.ready) {
       this.setState({ready: true});
@@ -162,12 +138,6 @@ export default class MapExample extends Component {
   handleMapRegionChange = region => {
     this.setState({ region });
   };
-  
-  //For testing
-  handleRegionChangeComplete = region => {
-    this.setState({ region });
-    //Alert.alert('Change fired');
-  }
 
   componentWillMount() {
     this.index = 0;
@@ -207,9 +177,9 @@ export default class MapExample extends Component {
             initialRegion={this.state.region}
             //region={ this.state.region }
             //minZoomLevel = {12}
-            onRegionChange={this.handleMapRegionChange}
+            //onRegionChange={this.handleMapRegionChange}
             //onRegionChangeComplete={this.handleRegionChangeComplete}
-            //onRegionChange={region => this.setState({ region })}
+            onRegionChange={region => this.setState({ region })}
             onRegionChangeComplete={region => this.setState({ region })}
           //setMapBoundaries: {true}
 
