@@ -38,8 +38,7 @@ export default class MapExample extends Component {
   }
 
   componentDidMount() {
-    this.fetchAuthor(1001803);
-
+    
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations")
       .then(e => e.json()) //convert to json
       .then(markers => {
@@ -82,16 +81,16 @@ export default class MapExample extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
       this.setState({ posts: [], details: [] });
-      this.fetchAuthor(nextProps.navigation.state.params.id);
+      this.fetchLocation(nextProps.navigation.state.params.id);
     }
   }
 
 
 
-  fetchAuthor(authorId) {
+  fetchLocation(locationID) {
 
     // Todo: post pagination
-    fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed").then(e => {
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?").then(e => {
       return e.json();
     }).then(e => {
       this.setState({ posts: e })
@@ -144,12 +143,6 @@ export default class MapExample extends Component {
           //setMapBoundaries: {true}
 
           >
-            <MapView.Marker
-              coordinate={{ latitude: 37.425690, longitude: -122.170600 }}
-              title={"The Stanford Daily Building"}
-              //onMarkerPress={() => this.toggleStatus()}
-              onPress={() => this.toggleStatus()}
-            />
 
             {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
@@ -159,7 +152,16 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]
                 }}
                 title={marker.name}
-                description={marker.description}>
+                
+                description={marker.description}
+                onPress={() => 
+                  {
+                    this.toggleStatus()
+                    this.setState({name: marker.name})
+                    this.fetchLocation(marker.id);
+                  }
+                }
+                >
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
                 <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
                   <MaterialCommunityIcons name={marker.icon} size={20} color={marker.iconColor} style={styles.markerInnerIcon} />
@@ -195,29 +197,33 @@ export default class MapExample extends Component {
                 />
               </View>
 
-              <View style={{ flex: 7 }}>
+              <View style={{ flex: 7, justifyContent: "center" }}>
                 <Text style={{
                   flex: 1,
-                  marginTop: 10,
+                  paddingTop: 12,
                   fontSize: 16,
                   fontFamily: "Hoefler Text",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
+                  alignContent: "center",
                 }}>
                   Articles related to: {"\n"}
-                  Rodin Sculpture Garden
+                  {this.state.name}
               </Text>
               </View>
-
+                
+              <View style = {{flex: 3, justifyContent: "center"}}>  
               <TouchableHighlight style={{
-                flex: 3,
-                margin: 8,
-                borderRadius: 5,
+                height: 30,
+                width: 30,
+                margin: 2,
+                borderRadius: 100,
                 alignSelf: "center",
-                backgroundColor: "maroon"
+                backgroundColor: "grey"
               }}>
                 <TouchableOpacity
                   onPress={() => {
-                    Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                    // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                    this.toggleStatus();
                   }}>
                   <Text style={{
                     margin: 5,
@@ -225,10 +231,11 @@ export default class MapExample extends Component {
                     color: "white",
                     alignSelf: "center"
                   }}>
-                    Follow
+                    X
                   </Text>
                 </TouchableOpacity>
               </TouchableHighlight>
+              </View>
 
 
 
@@ -256,10 +263,10 @@ export default class MapExample extends Component {
                   </View>
                   <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                     <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
-                      <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
+                      <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.post_title} />
                     </TouchableHighlight>
                     <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                      {new Date(post.date).toLocaleDateString()}
+                      {new Date(post.post_date.replace(' ', 'T')).toLocaleDateString()}
                     </Text>
                   </View>
                 </View>
