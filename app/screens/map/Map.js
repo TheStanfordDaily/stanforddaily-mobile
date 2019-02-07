@@ -15,6 +15,14 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 function randomColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
+
+const initialRegion = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+}
+
 export default class MapExample extends Component {
   constructor() {
     super();
@@ -101,32 +109,42 @@ export default class MapExample extends Component {
   }
 
   fetchLocationInput(textInput) {
-
     fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
     //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
     .then(e => {
       return e.json();
     }).then(e => {
-      this.setState({ textInputLocations: e })
+      let region = {
+           latitude: e[0].coordinates[0],
+           longitude: e[0].coordinates[1],
+           latitudeDelta: LATITUDE_DELTA,
+           longitudeDelta: LONGITUDE_DELTA,
+      }
+      this.map.animateToRegion(region);
+      //this.setState({ textInputLocations: e })
     })
   }
 
   //Calls a fetch to get the relevant locations
   handleLocationInput(textInput) {
-    this.fetchLocationInput(textInput);
+    this.fetchLocationInput(textInput)
 
-    this.setState({
-       region: {
-          latitude: 37,
-          longitude: LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }
-    });
 
-    if(this.state.ready) {
-      setTimeout(() => this.map.animateToRegion(this.state.region), 10);
-    }
+
+//    .then(e => {
+    //   this.setState({
+    //     region: {
+    //        latitude: 37.5,
+    //        longitude: LONGITUDE,
+    //        latitudeDelta: LATITUDE_DELTA,
+    //        longitudeDelta: LONGITUDE_DELTA,
+    //      }
+    //  });
+    //} )
+
+    // if(this.state.ready) {
+    //   setTimeout(() => this.map.animateToRegion(this.state.region), 10);
+    // }
   }
 
   onMapReady = (e) => {
@@ -174,13 +192,13 @@ export default class MapExample extends Component {
             showsCompass={true}
             ref={map => this.map = map}
             onMapReady={this.onMapReady}
-            initialRegion={this.state.region}
+            initialRegion={initialRegion}
             //region={ this.state.region }
             //minZoomLevel = {12}
             //onRegionChange={this.handleMapRegionChange}
             //onRegionChangeComplete={this.handleRegionChangeComplete}
-            onRegionChange={region => this.setState({ region })}
-            onRegionChangeComplete={region => this.setState({ region })}
+            //onRegionChange={region => this.setState({ region })}
+            //onRegionChangeComplete={region => this.setState({ region })}
           //setMapBoundaries: {true}
 
           >
@@ -198,6 +216,10 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]}}
                 title={marker.name}
                 description={marker.description}
+                icon={marker.icon}
+                //iconBackgroundColor={marker.iconBackgroundColor}
+                //iconBorderColor={marker.iconBorderColor}
+                //iconColor={marker.iconColor}
                 //pinColor = {randomColor()}
               />
           ))}
