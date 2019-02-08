@@ -38,7 +38,7 @@ export default class MapExample extends Component {
   }
 
   componentDidMount() {
-    
+
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations")
       .then(e => e.json()) //convert to json
       .then(markers => {
@@ -152,9 +152,9 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]
                 }}
                 title={marker.name}
-                
+
                 description={marker.description}
-                onPress={() => 
+                onPress={() =>
                   {
                     this.toggleStatus()
                     this.setState({name: marker.name})
@@ -210,8 +210,8 @@ export default class MapExample extends Component {
                   {this.state.name}
               </Text>
               </View>
-                
-              <View style = {{flex: 3, justifyContent: "center"}}>  
+
+              <View style = {{flex: 3, justifyContent: "center"}}>
               <TouchableHighlight style={{
                 height: 30,
                 width: 30,
@@ -263,10 +263,10 @@ export default class MapExample extends Component {
                   </View>
                   <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
                     <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
-                      <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.post_title} />
+                      <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
                     </TouchableHighlight>
                     <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                      {new Date(post.post_date.replace(' ', 'T')).toLocaleDateString()}
+                      {new Date(post.date.replace(' ', 'T')).toLocaleDateString()}
                     </Text>
                   </View>
                 </View>
