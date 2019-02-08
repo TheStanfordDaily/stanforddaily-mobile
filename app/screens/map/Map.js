@@ -266,7 +266,7 @@ export default class MapExample extends Component {
                       <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
                     </TouchableHighlight>
                     <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                      {new Date(post.date.replace(' ', 'T')).toLocaleDateString()}
+                      {new Date(post.date).toLocaleDateString()}
                     </Text>
                   </View>
                 </View>
