@@ -139,6 +139,7 @@ export default class MapExample extends Component {
                   fontFamily: "Hoefler Text",
                   fontWeight: "bold",
                   alignSelf: "center",
+                  textAlign: 'center',
                   color: COLORS.WHITE
                 }}>
                   Articles related to {this.state.name}
