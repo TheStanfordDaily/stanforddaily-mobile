@@ -128,7 +128,7 @@ export default class MapExample extends Component {
     console.log("yeppppp", post);
     if (post.id) {
       return (
-        <View key={post.id} style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+        <View key={post.id} style={{ flex: 0.1, padding: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
           <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
             <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
               <Image
@@ -218,7 +218,6 @@ export default class MapExample extends Component {
             );
           }}
         />
-
 
         <Animated.View
           style={{
