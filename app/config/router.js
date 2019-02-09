@@ -124,7 +124,7 @@ export const Tabs = createBottomTabNavigator({
       tabBarLabel: 'Daily News',
       tabBarIcon: ({ tintColor }) => <Image
         source={require('../media/Daily.png')}
-        style={{tintColor: tintColor, width: 21, height: 21, marginTop: 6}}
+        style={{tintColor: tintColor, width: 25, height: 25, marginTop: 6}}
       />,
       // tabBarOnPress: (scene, jumpToIndex) => {
       //     Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
