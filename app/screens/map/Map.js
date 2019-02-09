@@ -12,7 +12,7 @@ const LATITUDE = 37.4275;
 const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-const initialPostsViewHeight = 300;
+const OPENED_POSTS_VIEW_HEIGHT = 300;
 const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
 });
@@ -112,8 +112,8 @@ export default class MapExample extends Component {
 
   render() {
     var headMov = this.state.scrollY.interpolate({
-      inputRange: [0, initialPostsViewHeight, height],
-      outputRange: [0, -initialPostsViewHeight, -height]
+      inputRange: [0, OPENED_POSTS_VIEW_HEIGHT, height],
+      outputRange: [0, -OPENED_POSTS_VIEW_HEIGHT, -height]
     });
     return (
       <View style={{ flex: 1 }}>
@@ -273,7 +273,7 @@ export default class MapExample extends Component {
       Animated.timing(                    // Animate over time
         this.state.scrollY,             // The animated value to drive, this would be a new Animated.Value(0) object.
         {
-          toValue: initialPostsViewHeight,                   // Animate the value
+          toValue: OPENED_POSTS_VIEW_HEIGHT,                   // Animate the value
           duration: 500,                 // Make it take a while
         }
       ).start(() => { this.state.scrollY.extractOffset(); });
@@ -311,7 +311,7 @@ export default class MapExample extends Component {
         scrollEventThrottle={16}
 
         contentContainerStyle={{
-          paddingTop: height - 125 - initialPostsViewHeight,  // 125 seems to be the best number
+          paddingTop: height - 125 - OPENED_POSTS_VIEW_HEIGHT,  // 125 seems to be the best number
         }}
 
         // Declarative API for animations ->
