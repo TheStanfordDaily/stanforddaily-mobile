@@ -177,15 +177,26 @@ export default class MapExample extends Component {
           style={{
             position: "absolute",
             height: '100%',
-            width: width,
+            width: '100%',
             top: 0,
             justifyContent: "flex-end",
             flexDirection: "column",
             transform: [{ translateY: headMov }]
           }}
         >
+          <SearchBar style={{ width: "100%", flex: 1 }}
+            onChangeText={this.handleLocationInput}
+            //onClearText={someMethod}
+
+            showLoading={true}
+            lightTheme
+            platform="default"
+            round={true}
+            cancelButtonTitle="Cancel"
+            placeholder="Search..." />
+
           <MapView
-            style={{ bottom: 0, width: width, height: '100%' }}
+            style={{ bottom: 0, width: '100%', flex: 1 }}
             showsUserLocation={true}
             //followsUserLocation = {true}
             showsCompass={true}
@@ -194,10 +205,8 @@ export default class MapExample extends Component {
             //minZoomLevel = {12}
             onRegionChange={region => this.setState({ region })}
             onRegionChangeComplete={region => this.setState({ region })}
-          //setMapBoundaries: {true}
-
+            //setMapBoundaries: {true}
           >
-
             {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
