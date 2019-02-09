@@ -88,7 +88,7 @@ export default class MapExample extends Component {
 
   fetchLocation(locationID) {
     // Todo: post pagination
-    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?").then(e => {
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?_embed").then(e => {
       return e.json();
     }).then(e => {
       this.setState({ dataSource: ds.cloneWithRows(e) });
