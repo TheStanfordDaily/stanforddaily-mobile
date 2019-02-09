@@ -1,7 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
-import {STRINGS, MARGINS, HEIGHTS, KEYS} from '../assets/constants.js';
+import {STRINGS, MARGINS, HEIGHTS, KEYS, ICONS, COLORS} from '../assets/constants.js';
+import { Ionicons } from '@expo/vector-icons';
 // import TabBarComponent from "../TabBarComponent"
 
 // const myIcon = ()
@@ -19,6 +20,7 @@ import AuthorDetail from "../screens/authors/AuthorDetail";
 import Map from "../screens/map/Map";
 import {Amplitude} from 'expo';
 import {FONTS} from "../assets/constants";
+import { colors } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
@@ -134,20 +136,14 @@ export const Tabs = createBottomTabNavigator({
     screen: AuthorStack,
     navigationOptions: {
       tabBarLabel: 'Authors',
-      tabBarIcon: ({ tintColor }) => <Image
-        source={require('../media/Community.png')}
-        style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
-      />
+      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.AUTHORS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   },
   Map: {
     screen: MapStack,
     navigationOptions: {
       tabBarLabel: 'Map',
-      tabBarIcon: ({ tintColor }) => <Image
-        source={require('../media/Community.png')}
-        style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
-      />
+      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.MAP_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   },
 // Chatter: {
@@ -167,7 +163,7 @@ export const Tabs = createBottomTabNavigator({
 },{
   // tabBarComponent: TabBarComponent,
   tabBarOptions: {
-    activeTintColor: '#A82029',
+    activeTintColor: COLORS.CARDINAL,
     inactiveTintColor: '#000000',
     inactiveBackgroundColor: 'white',
     activeBackgroundColor: 'white',

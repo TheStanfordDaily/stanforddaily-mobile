@@ -196,6 +196,8 @@ const KEYS = {
 
 const ICONS = Platform.select({
   android: {
+    AUTHORS_PAGE: "md-contacts",
+    MAP_PAGE: "md-map",
     BACK: "md-arrow-back",
     MENU: "md-menu",
     SEARCH: "md-search",
@@ -203,6 +205,8 @@ const ICONS = Platform.select({
     CLOSE: "md-close"
   },
   ios: {
+    AUTHORS_PAGE: "ios-contacts",
+    MAP_PAGE: "ios-map",
     BACK: "ios-arrow-back",
     MENU: "ios-menu",
     SEARCH: "ios-search",
