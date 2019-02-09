@@ -13,17 +13,15 @@ const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const initialPostsViewHeight = 300;
+const ds = new ListView.DataSource({
+  rowHasChanged: (r1, r2) => r1 !== r2
+});
 
 export default class MapExample extends Component {
   constructor() {
     super();
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
     this.state = {
       shown: false,
-      posts: null,
-      details: null,
       postCount: null,
       region: {
         latitude: LATITUDE,
@@ -33,7 +31,6 @@ export default class MapExample extends Component {
       },
       scrollY: new Animated.Value(0),
       dataSource: ds.cloneWithRows([]),
-      ViewScale: new Animated.Value(300),
     };
   }
 
@@ -87,7 +84,6 @@ export default class MapExample extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
-      this.setState({ posts: [], details: [] });
       this.fetchLocation(nextProps.navigation.state.params.id);
     }
   }
@@ -95,17 +91,11 @@ export default class MapExample extends Component {
 
 
   fetchLocation(locationID) {
-
-    let ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2,
-    });
-
     // Todo: post pagination
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?").then(e => {
       return e.json();
     }).then(e => {
       this.setState({ dataSource: ds.cloneWithRows(e) });
-      console.log(this.state.dataSource);
     })
   }
 
@@ -125,7 +115,7 @@ export default class MapExample extends Component {
 
 
   renderRow(post) {
-    console.log("yeppppp", post);
+    //console.log("post: ", post);
     if (post.id) {
       return (
         <View key={post.id} style={{ flex: 0.1, padding: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
@@ -153,7 +143,7 @@ export default class MapExample extends Component {
         </View>
       );
     }
-    return (<View><Text>Loading</Text></View>);
+    return (<View><Text>Loading...</Text></View>);
   }
 
 
@@ -300,30 +290,33 @@ export default class MapExample extends Component {
     if (this.state.shown) {
       this.state.scrollY.flattenOffset();
 
-      Animated.timing(                    // Animate over time
-        this.state.scrollY,             // The animated value to drive, this would be a new Animated.Value(0) object.
+      Animated.timing(
+        this.state.scrollY,
         {
-          toValue: 0,                   // Animate the value
-          duration: 500,                 // Make it take a while
+          toValue: 0,
+          duration: 500,
         }
       ).start(() => { this.toggleShownStatus(); });
     }
   }
 
   _handleScroll(e) {
-    console.log(e.nativeEvent.contentOffset.y, "test");
-    console.log(height);
+    //console.log(e.nativeEvent.contentOffset.y, "test");
   }
 
+  /*
+  Ref:
+  https://blog.nativebase.io/butter-smooth-scrolling-animations-in-react-native-49edbba6a38a
+  https://github.com/Jasbir23/ScrollSwagger
+  */
   renderScroll(props) {
-    console.log("haha");
     return (
       <Animated.ScrollView
         {...props}
         scrollEventThrottle={16}
 
         contentContainerStyle={{
-          paddingTop: height - 125 - initialPostsViewHeight,
+          paddingTop: height - 125 - initialPostsViewHeight,  // 125 seems to be the best number
         }}
 
         // Declarative API for animations ->
@@ -342,6 +335,7 @@ export default class MapExample extends Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   markerBackground: {
     width: 40,
