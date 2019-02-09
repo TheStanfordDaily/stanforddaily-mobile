@@ -162,18 +162,8 @@ export default class MapExample extends Component {
       inputRange: [0, initialPostsViewHeight, height],
       outputRange: [0, -initialPostsViewHeight, -height]
     });
-    var headColor = this.state.scrollY.interpolate({
-      inputRange: [0, 100],
-      outputRange: ["green", "blue"]
-    });
     return (
       <View style={{ flex: 1 }}>
-        {/*<ListView
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
-          renderScrollComponent={this.renderScroll.bind(this)}
-          style={{backgroundColor: "red"}}
-        />*/}
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this.renderRow.bind(this)}
@@ -184,67 +174,50 @@ export default class MapExample extends Component {
           renderSectionHeader={() => {
             return (
               <View style={{
-                flex: 1,
-                alignContent: "center",
-                flexDirection: "row",
-                backgroundColor: "red"
+                backgroundColor: COLORS.CARDINAL,
+                paddingTop: 12,
+                paddingBottom: 12,
               }}
               >
+                <MaterialCommunityIcons name={this.state.icon} size={30} color="white" style={{ alignSelf: "center" }} />
+                <Text style={{
+                  marginTop: 6,
+                  fontSize: 16,
+                  fontFamily: "Hoefler Text",
+                  fontWeight: "bold",
+                  alignSelf: "center",
+                  color: COLORS.WHITE
+                }}>
+                  Articles related to {this.state.name}
+                </Text>
 
-                <View style={{ flex: 2 }}>
-                  <Image
-                    style={{ marginTop: 7, width: 16, height: 35, alignSelf: "center" }}
-                    source={require('../../media/pin.png')}
-                  />
-                </View>
-
-                <View style={{ flex: 7, justifyContent: "center" }}>
-                  <Text style={{
-                    flex: 1,
-                    paddingTop: 12,
-                    fontSize: 16,
-                    fontFamily: "Hoefler Text",
-                    fontWeight: "bold",
-                    alignContent: "center",
-                  }}>
-                    Articles related to: {"\n"}
-                    {this.state.name}
-                  </Text>
-                </View>
-
-                <View style={{ flex: 3, justifyContent: "center" }}>
-                  <TouchableHighlight style={{
-                    height: 30,
-                    width: 30,
-                    margin: 2,
-                    borderRadius: 100,
-                    alignSelf: "center",
-                    backgroundColor: "grey"
-                  }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
-                        this.closePostsView();
-                      }}>
-                      <Text style={{
-                        margin: 5,
-                        fontSize: 15,
-                        color: "white",
-                        alignSelf: "center"
-                      }}>
-                        X
-                    </Text>
-                    </TouchableOpacity>
-                  </TouchableHighlight>
-                </View>
+                <TouchableHighlight style={{
+                  position: "absolute",
+                  top: 15,
+                  right: 15,
+                  height: 30,
+                  width: 30,
+                  borderRadius: 100,
+                  alignSelf: "center",
+                  backgroundColor: "black"
+                }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                      this.closePostsView();
+                    }}>
+                    <Text style={{
+                      margin: 5,
+                      fontSize: 15,
+                      color: "white",
+                      alignSelf: "center"
+                    }}>&times;</Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
               </View>
             );
           }}
-        >
-
-
-
-        </ListView>
+        />
 
 
         <Animated.View
@@ -293,7 +266,7 @@ export default class MapExample extends Component {
                   this.setState({ name: marker.name })
                   this.fetchLocation(marker.id);*/
 
-                  this.setState({ name: marker.name });
+                  this.setState({ name: marker.name, icon: marker.icon });
                   this.fetchLocation(marker.id);
                   this.toggle();
                 }
