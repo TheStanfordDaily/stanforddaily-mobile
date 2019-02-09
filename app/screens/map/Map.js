@@ -35,11 +35,7 @@ export default class MapExample extends Component {
   }
 
 
-  toggleShownStatus() {
-    this.setState({
-      shown: !this.state.shown
-    });
-  }
+
 
   componentDidMount() {
 
@@ -111,39 +107,6 @@ export default class MapExample extends Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
-  }
-
-
-  renderRow(post) {
-    //console.log("post: ", post);
-    if (post.id) {
-      return (
-        <View key={post.id} style={{ flex: 0.1, padding: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
-          <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-            <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
-              <Image
-                style={{
-                  flex: 1,
-                  alignSelf: 'center',
-                  width: '100%',
-                  height: undefined
-                }}
-                source={{ uri: _.get(post, "_embedded.wp:featuredmedia.0.media_details.sizes.thumbnail.source_url", DEFAULT_IMAGE) }}
-              />
-            </View>
-            <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
-              <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
-                <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
-              </TouchableHighlight>
-              <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                {new Date(post.date).toLocaleDateString()}
-              </Text>
-            </View>
-          </View>
-        </View>
-      );
-    }
-    return (<View><Text>Loading...</Text></View>);
   }
 
 
@@ -242,22 +205,14 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]
                 }}
                 title={marker.name}
-
                 description={marker.description}
                 onPress={() => {
-                  /*this.toggleStatus()
-                  this.setState({ name: marker.name })
-                  this.fetchLocation(marker.id);*/
                   this.closePostsView();
                 }}
                 onCalloutPress={() => {
-                  /*this.toggleStatus()
-                  this.setState({ name: marker.name })
-                  this.fetchLocation(marker.id);*/
-
                   this.setState({ name: marker.name, icon: marker.icon });
                   this.fetchLocation(marker.id);
-                  this.toggle();
+                  this.openPostsView();
                 }
                 }
               >
@@ -273,7 +228,46 @@ export default class MapExample extends Component {
     );
   }
 
-  toggle() {
+  renderRow(post) {
+    //console.log("post: ", post);
+    if (post.id) {
+      return (
+        <View key={post.id} style={{ flex: 0.1, padding: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+          <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
+            <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
+              <Image
+                style={{
+                  flex: 1,
+                  alignSelf: 'center',
+                  width: '100%',
+                  height: undefined
+                }}
+                source={{ uri: _.get(post, "_embedded.wp:featuredmedia.0.media_details.sizes.thumbnail.source_url", DEFAULT_IMAGE) }}
+              />
+            </View>
+            <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
+              <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
+                <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
+              </TouchableHighlight>
+              <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
+                {new Date(post.date).toLocaleDateString()}
+              </Text>
+            </View>
+          </View>
+        </View>
+      );
+    }
+    return (<View><Text>Loading...</Text></View>);
+  }
+
+
+  toggleShownStatus() {
+    this.setState({
+      shown: !this.state.shown
+    });
+  }
+
+  openPostsView() {
     if (!this.state.shown) {
       this.toggleShownStatus();
       Animated.timing(                    // Animate over time
@@ -299,6 +293,7 @@ export default class MapExample extends Component {
       ).start(() => { this.toggleShownStatus(); });
     }
   }
+
 
   _handleScroll(e) {
     //console.log(e.nativeEvent.contentOffset.y, "test");
