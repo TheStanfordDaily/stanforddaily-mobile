@@ -5,6 +5,7 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Modal from 'react-native-modalbox'
 import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -157,15 +158,8 @@ export default class MapExample extends Component {
                 onPress={() =>
                   {
                     console.log(this.state.name)
-                    if ((this.state.name == undefined)
-                       || (this.state.name != marker.name) && (this.state.isOpen == false)) {
-                      this.toggleStatus()
-                      this.setState({isOpen: true})
-                    }
-                    if (this.state.name == marker.name ) {
-                      this.toggleStatus()
-                      this.setState({isOpen: false})
-                    }
+                    this.toggleStatus()
+                    this.refs.modal.open()
                     this.setState({name: marker.name})
                     this.fetchLocation(marker.id);
                   }
@@ -183,44 +177,86 @@ export default class MapExample extends Component {
 
 
 
-
-        {this.state.shown ?
+        <Modal 
+            style = {{
+              height: '60%',
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20
+              }}
+            position = {"bottom"}
+            ref = {"modal"}
+            swipeArea = {150}
+            onClosed={() => this.setState({shown: false})}>
+          
           <View style={{
             flex: 1,
             backgroundColor: "white",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20
           }}>
 
+          <View style = {{
+            flex: 0.1,
+            marginTop: -10, 
+            alignSelf: "center",
+            flexDirection: "row"
+          }}>
+            <Text style = {{fontSize: 30}}> ⌄ </Text>
+          </View>
+
             <View style={{
-              marginTop: 5,
-              flex: 0.2,
+              flex: 0.18,
               alignContent: "center",
               flexDirection: "row"
             }}>
 
               <View style={{ flex: 2 }}>
                 <Image
-                  style={{ marginTop: 7, width: 16, height: 35, alignSelf: "center" }}
+                  style={{ marginTop: 7, width: 15, height: 33, alignSelf: "center" }}
                   source={require('../../media/pin.png')}
                 />
               </View>
 
-              <View style={{ flex: 7, justifyContent: "center" }}>
+              <View style={{ flex: 7, alignItems: "flex-start", justifyContent: "center" }}>
                 <Text style={{
                   flex: 1,
                   paddingTop: 12,
                   fontSize: 16,
                   fontFamily: "Hoefler Text",
                   fontWeight: "bold",
-                  alignContent: "center",
                 }}>
                   Articles related to: {"\n"}
                   {this.state.name}
               </Text>
               </View>
 
-              <View style = {{flex: 3, justifyContent: "center"}}>
+              <View style = {{flex: 4, justifyContent: "center"}}>
+              <TouchableHighlight style={{
+                height: 27,
+                width: 85,
+                borderRadius: 5,
+                alignSelf: "center",
+                justifyContent: 'center',
+                backgroundColor: "maroon"
+              }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert(
+                      'You will now receive push notifications alerting you about new articles related to ' + this.state.name + '!')
+                  }}>
+                  <Text style={{
+                    margin: 5,
+                    fontSize: 15,
+                    color: "white",
+                    alignSelf: "center"
+                  }}>
+                    Follow
+                  </Text>
+                </TouchableOpacity>
+              </TouchableHighlight>
+              </View>
+
+              {/* Close button */}
+              {/* <View style = {{flex: 3, justifyContent: "center"}}>
+              
               <TouchableHighlight style={{
                 height: 30,
                 width: 30,
@@ -232,22 +268,23 @@ export default class MapExample extends Component {
                 <TouchableOpacity
                   onPress={() => {
                     // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                    this.refs.modal.close()
                     this.toggleStatus();
                   }}>
                   <Text style={{
                     margin: 5,
+                    fontFamily: "Helvetica",
+                    fontWeight: "bold",
                     fontSize: 15,
                     color: "white",
                     alignSelf: "center"
                   }}>
-                    X
+                    x
                   </Text>
                 </TouchableOpacity>
               </TouchableHighlight>
-              </View>
-
-
-
+              
+              </View> */}
 
 
             </View>
@@ -286,7 +323,7 @@ export default class MapExample extends Component {
             </ScrollView>
           </View>
 
-          : <View></View>}
+          </Modal>
 
       </View>
 
