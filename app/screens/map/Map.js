@@ -156,7 +156,10 @@ export default class MapExample extends Component {
                 description={marker.description}
                 onPress={() =>
                   {
-                    this.toggleStatus()
+                    console.log(this.state.name)
+                    if (this.state.name == undefined || this.state.name == marker.name) {
+                      this.toggleStatus()
+                    }
                     this.setState({name: marker.name})
                     this.fetchLocation(marker.id);
                   }

@@ -26,6 +26,7 @@
     "react-native-image-slider": "^2.0.3",
     "react-native-linear-gradient": "^2.4.3",
     "react-native-maps": "^0.23.0",
+    "react-native-modalbox": "^1.7.1",
     "react-native-nested-listview": "^0.6.0",
     "react-native-render-html": "^3.10.0",
     "react-native-styled-text": "^0.2.0",
