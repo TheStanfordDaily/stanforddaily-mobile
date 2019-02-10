@@ -157,8 +157,14 @@ export default class MapExample extends Component {
                 onPress={() =>
                   {
                     console.log(this.state.name)
-                    if (this.state.name == undefined || this.state.name == marker.name) {
+                    if ((this.state.name == undefined)
+                       || (this.state.name != marker.name) && (this.state.isOpen == false)) {
                       this.toggleStatus()
+                      this.setState({isOpen: true})
+                    }
+                    if (this.state.name == marker.name ) {
+                      this.toggleStatus()
+                      this.setState({isOpen: false})
                     }
                     this.setState({name: marker.name})
                     this.fetchLocation(marker.id);
