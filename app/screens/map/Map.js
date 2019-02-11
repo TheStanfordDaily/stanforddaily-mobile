@@ -108,7 +108,6 @@ export default class MapExample extends Component {
     .then(e => {
       return e.json();
     }).then(e => {
-      //throw e.length;
       //Algorithm for finding center of min/max longitudes and latitudes and centering map there.
       let latitudes = e.map(element => element.coordinates[0]);
       let longitudes = e.map(element => element.coordinates[1]);
@@ -128,19 +127,13 @@ export default class MapExample extends Component {
            longitudeDelta: LONGITUDE_DELTA * ZOOM_MULTIPLIER,
       }
       this.map.animateToRegion(region);
-
-     // e.map(element => element[0].toggleStatus());
-
-     
+ 
       if(e && e[0]) {    
         this.markers[e[0].id].showCallout();   
         this.toggleStatus();
         this.setState({name: e[0].name})
         this.fetchLocation(e[0].id);
       }
-
-      //this.setState({ textInputLocations: e.map(marker)})
-
     })
   }
 
@@ -193,14 +186,6 @@ export default class MapExample extends Component {
             ref={map => this.map = map}
             onMapReady={this.onMapReady}
             initialRegion={initialRegion}
-            //region={ this.state.region }
-            //minZoomLevel = {12}
-            //onRegionChange={this.handleMapRegionChange}
-            //onRegionChangeComplete={this.handleRegionChangeComplete}
-            //onRegionChange={region => this.setState({ region })}
-            //onRegionChangeComplete={region => this.setState({ region })}
-          //setMapBoundaries: {true}
-
           >
 
             {this.state.markers && this.state.markers.map(marker => (
