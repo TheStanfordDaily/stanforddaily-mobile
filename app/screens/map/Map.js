@@ -5,12 +5,14 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
 import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
+//import { emit } from 'cluster';
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
 const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const ZOOM_MULTIPLIER = 0.5;
 
 function randomColor() {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -87,16 +89,12 @@ export default class MapExample extends Component {
     );
   }
 
-
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
       this.setState({ posts: [], details: [] });
       this.fetchAuthor(nextProps.navigation.state.params.id);
     }
   }
-
-
 
   fetchAuthor(authorId) {
 
@@ -108,43 +106,42 @@ export default class MapExample extends Component {
     })
   }
 
-  fetchLocationInput(textInput) {
-    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
-    //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
+  //Calls a fetch to get the relevant locations
+  handleLocationInput(textInput) {
+    //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
+    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
     .then(e => {
       return e.json();
     }).then(e => {
+      //throw e.length;
+      //Algorithm for finding center of min/max longitudes and latitudes and centering map there.
+      let latitudes = e.map(element => element.coordinates[0]);
+      let longitudes = e.map(element => element.coordinates[1]);
+      
+      let minLat = Math.min(...latitudes);
+      let maxLat = Math.max(...latitudes);
+      let minLong = Math.min(...longitudes);
+      let maxLong = Math.max(...longitudes);
+
+      let centerLat = (minLat + maxLat)/2.0;
+      let centerLong = (minLong + maxLong)/2.0;
+
       let region = {
-           latitude: e[0].coordinates[0],
-           longitude: e[0].coordinates[1],
-           latitudeDelta: LATITUDE_DELTA,
-           longitudeDelta: LONGITUDE_DELTA,
+           latitude: centerLat,
+           longitude: centerLong,
+           latitudeDelta: LATITUDE_DELTA * ZOOM_MULTIPLIER,
+           longitudeDelta: LONGITUDE_DELTA * ZOOM_MULTIPLIER,
       }
       this.map.animateToRegion(region);
-      //this.setState({ textInputLocations: e })
+
+      e.map(element => element[0].toggleStatus());
+//this.toggleStatus()
+//this.setState({name: element[0].name})
+//this.fetchLocation(element[0].id})
+
+      //this.setState({ textInputLocations: e.map(marker)})
+
     })
-  }
-
-  //Calls a fetch to get the relevant locations
-  handleLocationInput(textInput) {
-    this.fetchLocationInput(textInput)
-
-
-
-//    .then(e => {
-    //   this.setState({
-    //     region: {
-    //        latitude: 37.5,
-    //        longitude: LONGITUDE,
-    //        latitudeDelta: LATITUDE_DELTA,
-    //        longitudeDelta: LONGITUDE_DELTA,
-    //      }
-    //  });
-    //} )
-
-    // if(this.state.ready) {
-    //   setTimeout(() => this.map.animateToRegion(this.state.region), 10);
-    // }
   }
 
   onMapReady = (e) => {
@@ -174,10 +171,13 @@ export default class MapExample extends Component {
         <View style={{ flex: 1 }}>
           <View>
             <SearchBar style={{ position: "fixed", flex: 1 }}
-              onSubmitEditing={e => this.handleLocationInput(e)}
-              //onClearText={someMethod}
 
-              showLoading={true}
+              onChangeText={search => {
+                this.setState({ search: search});
+              }}
+              value={this.state.search}
+              onSubmitEditing={e => this.handleLocationInput(this.state.search)}
+             showLoading={true}
               lightTheme
               platform="default"
               round={true}
