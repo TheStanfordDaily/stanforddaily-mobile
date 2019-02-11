@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 const STRINGS = {
   ALL: "All",
   FEATURED_HEADLINES: "Featured Headlines",
@@ -192,13 +194,26 @@ const KEYS = {
   AMPLITUDE_API: 'cb7b28e023cfaaba93a588ee34ee9326',
 };
 
-const ICONS = {
-  BACK: "ios-arrow-back",
-  MENU: "ios-menu",
-  SEARCH: "ios-search",
-  SHARE: "ios-share",
-  CLOSE: "ios-close"
-}
+const ICONS = Platform.select({
+  android: {
+    AUTHORS_PAGE: "md-contacts",
+    MAP_PAGE: "md-map",
+    BACK: "md-arrow-back",
+    MENU: "md-menu",
+    SEARCH: "md-search",
+    SHARE: "md-share",
+    CLOSE: "md-close"
+  },
+  ios: {
+    AUTHORS_PAGE: "ios-contacts",
+    MAP_PAGE: "ios-map",
+    BACK: "ios-arrow-back",
+    MENU: "ios-menu",
+    SEARCH: "ios-search",
+    SHARE: "ios-share",
+    CLOSE: "ios-close"
+  },
+});
 
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAXEUBb4ygFkI-Gjhtu2pZ8JdkDYSuit9o",

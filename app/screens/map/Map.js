@@ -4,8 +4,8 @@ import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
-import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
-//import { emit } from 'cluster';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
@@ -13,10 +13,6 @@ const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const ZOOM_MULTIPLIER = 0.5;
-
-function randomColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
 
 const initialRegion = {
   latitude: LATITUDE,
@@ -50,16 +46,15 @@ export default class MapExample extends Component {
   }
 
   componentDidMount() {
-    this.fetchAuthor(1001803);
 
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations")
-    .then(e => e.json()) //convert to json
-    .then(markers => {
-      // for (let section of markers) {
-      // }
-      this.setState({ markers: markers });
-    })
-    .catch(e => {throw e});
+      .then(e => e.json()) //convert to json
+      .then(markers => {
+        // for (let section of markers) {
+        // }
+        this.setState({ markers: markers });
+      })
+      .catch(e => { throw e });
 
     navigator.geolocation.getCurrentPosition(
       position => {
@@ -92,14 +87,13 @@ export default class MapExample extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
       this.setState({ posts: [], details: [] });
-      this.fetchAuthor(nextProps.navigation.state.params.id);
+      this.fetchLocation(nextProps.navigation.state.params.id);
     }
   }
 
-  fetchAuthor(authorId) {
-
+  fetchLocation(locationID) {
     // Todo: post pagination
-    fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed").then(e => {
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?").then(e => {
       return e.json();
     }).then(e => {
       this.setState({ posts: e })
@@ -202,27 +196,31 @@ export default class MapExample extends Component {
           //setMapBoundaries: {true}
 
           >
-            <MapView.Marker
-              coordinate={{ latitude: 37.425690, longitude: -122.170600 }}
-              title={"The Stanford Daily Building"}
-              //onMarkerPress={() => this.toggleStatus()}
-              onPress={() => this.toggleStatus()}
-            />
 
-          {this.state.markers && this.state.markers.map(marker => (
+            {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
-                coordinate={{latitude: marker.coordinates[0],
-                  longitude: marker.coordinates[1]}}
+                coordinate={{
+                  latitude: marker.coordinates[0],
+                  longitude: marker.coordinates[1]
+                }}
                 title={marker.name}
+
                 description={marker.description}
-                icon={marker.icon}
-                //iconBackgroundColor={marker.iconBackgroundColor}
-                //iconBorderColor={marker.iconBorderColor}
-                //iconColor={marker.iconColor}
-                //pinColor = {randomColor()}
-              />
-          ))}
+                onPress={() =>
+                  {
+                    this.toggleStatus()
+                    this.setState({name: marker.name})
+                    this.fetchLocation(marker.id);
+                  }
+                }
+                >
+                {/* https://stackoverflow.com/a/33471432/2603230 */}
+                <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
+                  <MaterialCommunityIcons name={marker.icon} size={20} color={marker.iconColor} style={styles.markerInnerIcon} />
+                </View>
+              </MapView.Marker>
+            ))}
           </MapView>
         </View>
 
@@ -235,9 +233,10 @@ export default class MapExample extends Component {
             flex: 1,
             backgroundColor: "white",
             borderTopLeftRadius: 20,
-            borderTopRightRadius: 20}}>
+            borderTopRightRadius: 20
+          }}>
 
-          <View style={{
+            <View style={{
               marginTop: 5,
               flex: 0.2,
               alignContent: "center",
@@ -251,29 +250,33 @@ export default class MapExample extends Component {
                 />
               </View>
 
-              <View style={{ flex: 7 }}>
+              <View style={{ flex: 7, justifyContent: "center" }}>
                 <Text style={{
                   flex: 1,
-                  marginTop: 10,
+                  paddingTop: 12,
                   fontSize: 16,
                   fontFamily: "Hoefler Text",
-                  fontWeight: "bold"
+                  fontWeight: "bold",
+                  alignContent: "center",
                 }}>
                   Articles related to: {"\n"}
-                  Rodin Sculpture Garden
+                  {this.state.name}
               </Text>
               </View>
 
+              <View style = {{flex: 3, justifyContent: "center"}}>
               <TouchableHighlight style={{
-                flex: 3,
-                margin: 8,
-                borderRadius: 5,
+                height: 30,
+                width: 30,
+                margin: 2,
+                borderRadius: 100,
                 alignSelf: "center",
-                backgroundColor: "maroon"
+                backgroundColor: "grey"
               }}>
                 <TouchableOpacity
                   onPress={() => {
-                    Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                    // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                    this.toggleStatus();
                   }}>
                   <Text style={{
                     margin: 5,
@@ -281,10 +284,11 @@ export default class MapExample extends Component {
                     color: "white",
                     alignSelf: "center"
                   }}>
-                    Follow
+                    X
                   </Text>
                 </TouchableOpacity>
               </TouchableHighlight>
+              </View>
 
 
 
@@ -328,7 +332,7 @@ export default class MapExample extends Component {
 
           : <View></View>}
 
-      </View >
+      </View>
 
 
 
@@ -340,5 +344,17 @@ const styles = StyleSheet.create({
     flex: 1,
     height: '100%',
     width: '100%',
+  },
+  markerBackground: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+  },
+  markerInnerIcon: {
+    width: 20,
+    height: 20,
+    left: 8,
+    top: 8,
   }
 });
