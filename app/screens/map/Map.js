@@ -24,6 +24,7 @@ const initialRegion = {
 export default class MapExample extends Component {
   constructor() {
     super();
+    this.markers = {};
     this.state = {
       shown: false,
       posts: null,
@@ -128,10 +129,15 @@ export default class MapExample extends Component {
       }
       this.map.animateToRegion(region);
 
-      e.map(element => element[0].toggleStatus());
-//this.toggleStatus()
-//this.setState({name: element[0].name})
-//this.fetchLocation(element[0].id})
+     // e.map(element => element[0].toggleStatus());
+
+     
+      if(e && e[0]) {    
+        this.markers[e[0].id].showCallout();   
+        this.toggleStatus();
+        this.setState({name: e[0].name})
+        this.fetchLocation(e[0].id);
+      }
 
       //this.setState({ textInputLocations: e.map(marker)})
 
@@ -214,6 +220,8 @@ export default class MapExample extends Component {
                     this.fetchLocation(marker.id);
                   }
                 }
+                ref={currMarker => this.markers[marker.id] = currMarker}
+
                 >
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
                 <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
