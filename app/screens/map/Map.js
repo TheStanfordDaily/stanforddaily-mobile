@@ -262,14 +262,10 @@ export default class MapExample extends Component {
                   this.closePostsView();
                 }}
                 onCalloutPress={() => {
-                  this.setState({ name: marker.name, icon: marker.icon });
-                  this.fetchLocation(marker.id);
-                  this.openPostsView();
+                  this.locationOnClick(marker);
                 }
                 }
-
                 ref={currMarker => this.markers[marker.id] = currMarker}
-
                 >
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
                 <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
@@ -315,6 +311,12 @@ export default class MapExample extends Component {
     return (<View><Text>Loading...</Text></View>);
   }
 
+
+  locationOnClick(marker) {
+    this.setState({ name: marker.name, icon: marker.icon });
+    this.fetchLocation(marker.id);
+    this.openPostsView();
+  }
 
   toggleShownStatus() {
     this.setState({
