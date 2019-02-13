@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Animated, ListView, Image, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Alert, Image, Animated, ListView, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
@@ -12,6 +12,15 @@ const LATITUDE = 37.4275;
 const LONGITUDE = -122.1697;
 const LATITUDE_DELTA = 0.0300;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const ZOOM_MULTIPLIER = 0.5;
+
+const initialRegion = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+}
+
 const OPENED_POSTS_VIEW_HEIGHT = 300;
 const ds = new ListView.DataSource({
   rowHasChanged: (r1, r2) => r1 !== r2
@@ -20,6 +29,7 @@ const ds = new ListView.DataSource({
 export default class MapExample extends Component {
   constructor() {
     super();
+    this.markers = {};
     this.state = {
       shown: false,
       postCount: null,
@@ -76,15 +86,11 @@ export default class MapExample extends Component {
     );
   }
 
-
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
       this.fetchLocation(nextProps.navigation.state.params.id);
     }
   }
-
-
 
   fetchLocation(locationID) {
     // Todo: post pagination
@@ -95,15 +101,53 @@ export default class MapExample extends Component {
     })
   }
 
-
+  //Calls a fetch to get the relevant locations
   handleLocationInput(textInput) {
-    this.setState({
-      region: {
-        latitude: textInput
+    //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
+    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
+    .then(e => {
+      return e.json();
+    }).then(e => {
+      //Algorithm for finding center of min/max longitudes and latitudes and centering map there.
+      let latitudes = e.map(element => element.coordinates[0]);
+      let longitudes = e.map(element => element.coordinates[1]);
+
+      let minLat = Math.min(...latitudes);
+      let maxLat = Math.max(...latitudes);
+      let minLong = Math.min(...longitudes);
+      let maxLong = Math.max(...longitudes);
+
+      let centerLat = (minLat + maxLat)/2.0;
+      let centerLong = (minLong + maxLong)/2.0;
+
+      let region = {
+           latitude: centerLat,
+           longitude: centerLong,
+           latitudeDelta: LATITUDE_DELTA * ZOOM_MULTIPLIER,
+           longitudeDelta: LONGITUDE_DELTA * ZOOM_MULTIPLIER,
       }
-    });
+      this.map.animateToRegion(region);
+
+      if(e && e[0]) {
+        this.markers[e[0].id].showCallout();
+      }
+    })
   }
 
+  onMapReady = (e) => {
+    if(!this.state.ready) {
+      this.setState({ready: true});
+    }
+  };
+
+  handleMapRegionChange = region => {
+    this.setState({ region });
+  };
+
+  componentWillMount() {
+    this.index = 0;
+    this.animation = new Animated.Value(0);
+  }
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
@@ -184,28 +228,26 @@ export default class MapExample extends Component {
             transform: [{ translateY: headMov }]
           }}
         >
-          <SearchBar style={{ width: "100%", flex: 1 }}
-            onChangeText={this.handleLocationInput}
-            //onClearText={someMethod}
-
+          <SearchBar style={{ position: "fixed", flex: 1 }}
+            onChangeText={search => {
+              this.setState({ search: search });
+            }}
+            value={this.state.search}
+            onSubmitEditing={e => this.handleLocationInput(this.state.search)}
             showLoading={true}
             lightTheme
             platform="default"
             round={true}
             cancelButtonTitle="Cancel"
             placeholder="Search..." />
-
           <MapView
             style={{ bottom: 0, width: '100%', flex: 1 }}
             showsUserLocation={true}
             //followsUserLocation = {true}
             showsCompass={true}
-            initialRegion={this.state.region}
-            //region={ this.state.region }
-            //minZoomLevel = {12}
-            onRegionChange={region => this.setState({ region })}
-            onRegionChangeComplete={region => this.setState({ region })}
-            //setMapBoundaries: {true}
+            ref={map => this.map = map}
+            onMapReady={this.onMapReady}
+            initialRegion={initialRegion}
           >
             {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
@@ -225,7 +267,10 @@ export default class MapExample extends Component {
                   this.openPostsView();
                 }
                 }
-              >
+
+                ref={currMarker => this.markers[marker.id] = currMarker}
+
+                >
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
                 <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
                   <MaterialCommunityIcons name={marker.icon} size={20} color={marker.iconColor} style={styles.markerInnerIcon} />
