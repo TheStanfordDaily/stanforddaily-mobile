@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Image, Animated, ListView, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Alert, Image, Animated, ListView, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions, Keyboard } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
@@ -313,6 +313,7 @@ export default class MapExample extends Component {
 
 
   locationOnClick(marker) {
+    Keyboard.dismiss();
     this.setState({ name: marker.name, icon: marker.icon });
     this.fetchLocation(marker.id);
     this.openPostsView();
