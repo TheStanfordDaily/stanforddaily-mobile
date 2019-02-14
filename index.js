@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
-import { Root, Tabs } from './app/config/router';
+import { RootContainer, Tabs } from './app/config/router';
 import {COLORS} from './app/assets/constants';
 import { Font } from 'expo';
 class App extends Component {
@@ -32,7 +32,7 @@ class App extends Component {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior='padding'>
-            <Root />
+            <RootContainer />
           </KeyboardAvoidingView>
         </SafeAreaView>
       </React.Fragment>
