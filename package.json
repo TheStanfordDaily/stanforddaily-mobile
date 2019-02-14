@@ -34,7 +34,6 @@
     "react-native-swiper": "^1.5.14",
     "react-navigation": "^3.2.3",
     "react-navigation-backhandler": "^1.2.0",
-    "react-navigation-tabs": "^0.8.4",
     "react-transition-group": "^2.5.3",
     "render-if": "^0.1.1"
   },
