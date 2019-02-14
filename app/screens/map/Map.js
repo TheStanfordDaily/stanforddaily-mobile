@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Image, Animated, AppRegistry, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions } from 'react-native';
+import { Alert, Image, Animated, ListView, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions, Keyboard } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
@@ -21,30 +21,31 @@ const initialRegion = {
   longitudeDelta: LONGITUDE_DELTA,
 }
 
+const OPENED_POSTS_VIEW_HEIGHT = 300;
+const ds = new ListView.DataSource({
+  rowHasChanged: (r1, r2) => r1 !== r2
+});
+
 export default class MapExample extends Component {
   constructor() {
     super();
     this.markers = {};
     this.state = {
       shown: false,
-      posts: null,
-      details: null,
       postCount: null,
       region: {
         latitude: LATITUDE,
         longitude: LONGITUDE,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
-      }
+      },
+      scrollY: new Animated.Value(0),
+      dataSource: ds.cloneWithRows([]),
     };
   }
 
 
-  toggleStatus() {
-    this.setState({
-      shown: !this.state.shown
-    });
-  }
+
 
   componentDidMount() {
 
@@ -87,17 +88,16 @@ export default class MapExample extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.navigation.state.params.id) {
-      this.setState({ posts: [], details: [] });
       this.fetchLocation(nextProps.navigation.state.params.id);
     }
   }
 
   fetchLocation(locationID) {
     // Todo: post pagination
-    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?").then(e => {
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?_embed").then(e => {
       return e.json();
     }).then(e => {
-      this.setState({ posts: e })
+      this.setState({ dataSource: ds.cloneWithRows(e) });
     })
   }
 
@@ -111,7 +111,7 @@ export default class MapExample extends Component {
       //Algorithm for finding center of min/max longitudes and latitudes and centering map there.
       let latitudes = e.map(element => element.coordinates[0]);
       let longitudes = e.map(element => element.coordinates[1]);
-      
+
       let minLat = Math.min(...latitudes);
       let maxLat = Math.max(...latitudes);
       let minLong = Math.min(...longitudes);
@@ -127,12 +127,9 @@ export default class MapExample extends Component {
            longitudeDelta: LONGITUDE_DELTA * ZOOM_MULTIPLIER,
       }
       this.map.animateToRegion(region);
- 
-      if(e && e[0]) {    
-        this.markers[e[0].id].showCallout();   
-        this.toggleStatus();
-        this.setState({name: e[0].name})
-        this.fetchLocation(e[0].id);
+
+      if(e && e[0]) {
+        this.markers[e[0].id].showCallout();
       }
     })
   }
@@ -158,28 +155,93 @@ export default class MapExample extends Component {
 
 
   render() {
+    var headMov = this.state.scrollY.interpolate({
+      inputRange: [0, OPENED_POSTS_VIEW_HEIGHT, height],
+      outputRange: [0, -OPENED_POSTS_VIEW_HEIGHT, -height]
+    });
     return (
       <View style={{ flex: 1 }}>
-
-        <View style={{ flex: 1 }}>
-          <View>
-            <SearchBar style={{ position: "fixed", flex: 1 }}
-
-              onChangeText={search => {
-                this.setState({ search: search});
+        <ListView
+          dataSource={this.state.dataSource}
+          renderRow={this.renderRow.bind(this)}
+          renderScrollComponent={this.renderScroll.bind(this)}
+          withSections={false}
+          enableEmptySections={true}
+          stickySectionHeadersEnable={true}
+          renderSectionHeader={() => {
+            return (
+              <View style={{
+                backgroundColor: COLORS.CARDINAL,
+                paddingTop: 12,
+                paddingBottom: 12,
               }}
-              value={this.state.search}
-              onSubmitEditing={e => this.handleLocationInput(this.state.search)}
-             showLoading={true}
-              lightTheme
-              platform="default"
-              round={true}
-              cancelButtonTitle="Cancel"
-              placeholder="Search" />
-          </View>
+              >
+                <MaterialCommunityIcons name={this.state.icon} size={30} color="white" style={{ alignSelf: "center" }} />
+                <Text style={{
+                  marginTop: 6,
+                  fontSize: 16,
+                  fontFamily: "Hoefler Text",
+                  fontWeight: "bold",
+                  alignSelf: "center",
+                  textAlign: 'center',
+                  color: COLORS.WHITE
+                }}>
+                  Articles related to {this.state.name}
+                </Text>
 
+                <TouchableHighlight style={{
+                  position: "absolute",
+                  top: 15,
+                  right: 15,
+                  height: 30,
+                  width: 30,
+                  borderRadius: 100,
+                  alignSelf: "center",
+                  backgroundColor: "black"
+                }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
+                      this.closePostsView();
+                    }}>
+                    <Text style={{
+                      margin: 5,
+                      fontSize: 15,
+                      color: "white",
+                      alignSelf: "center"
+                    }}>&times;</Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
+              </View>
+            );
+          }}
+        />
+
+        <Animated.View
+          style={{
+            position: "absolute",
+            height: '100%',
+            width: '100%',
+            top: 0,
+            justifyContent: "flex-end",
+            flexDirection: "column",
+            transform: [{ translateY: headMov }]
+          }}
+        >
+          <SearchBar style={{ position: "fixed", flex: 1 }}
+            onChangeText={search => {
+              this.setState({ search: search });
+            }}
+            value={this.state.search}
+            onSubmitEditing={e => this.handleLocationInput(this.state.search)}
+            showLoading={true}
+            lightTheme
+            platform="default"
+            round={true}
+            cancelButtonTitle="Cancel"
+            placeholder="Search..." />
           <MapView
-            style={styles.container}
+            style={{ bottom: 0, width: '100%', flex: 1 }}
             showsUserLocation={true}
             //followsUserLocation = {true}
             showsCompass={true}
@@ -187,7 +249,6 @@ export default class MapExample extends Component {
             onMapReady={this.onMapReady}
             initialRegion={initialRegion}
           >
-
             {this.state.markers && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
@@ -196,17 +257,15 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]
                 }}
                 title={marker.name}
-
                 description={marker.description}
-                onPress={() =>
-                  {
-                    this.toggleStatus()
-                    this.setState({name: marker.name})
-                    this.fetchLocation(marker.id);
-                  }
+                onPress={() => {
+                  this.closePostsView();
+                }}
+                onCalloutPress={() => {
+                  this.locationOnClick(marker);
+                }
                 }
                 ref={currMarker => this.markers[marker.id] = currMarker}
-
                 >
                 {/* https://stackoverflow.com/a/33471432/2603230 */}
                 <View style={[styles.markerBackground, { backgroundColor: marker.iconBackgroundColor, borderColor: marker.iconBorderColor }]}>
@@ -215,129 +274,122 @@ export default class MapExample extends Component {
               </MapView.Marker>
             ))}
           </MapView>
-        </View>
-
-
-
-
-
-        {this.state.shown ?
-          <View style={{
-            flex: 1,
-            backgroundColor: "white",
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20
-          }}>
-
-            <View style={{
-              marginTop: 5,
-              flex: 0.2,
-              alignContent: "center",
-              flexDirection: "row"
-            }}>
-
-              <View style={{ flex: 2 }}>
-                <Image
-                  style={{ marginTop: 7, width: 16, height: 35, alignSelf: "center" }}
-                  source={require('../../media/pin.png')}
-                />
-              </View>
-
-              <View style={{ flex: 7, justifyContent: "center" }}>
-                <Text style={{
-                  flex: 1,
-                  paddingTop: 12,
-                  fontSize: 16,
-                  fontFamily: "Hoefler Text",
-                  fontWeight: "bold",
-                  alignContent: "center",
-                }}>
-                  Articles related to: {"\n"}
-                  {this.state.name}
-              </Text>
-              </View>
-
-              <View style = {{flex: 3, justifyContent: "center"}}>
-              <TouchableHighlight style={{
-                height: 30,
-                width: 30,
-                margin: 2,
-                borderRadius: 100,
-                alignSelf: "center",
-                backgroundColor: "grey"
-              }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
-                    this.toggleStatus();
-                  }}>
-                  <Text style={{
-                    margin: 5,
-                    fontSize: 15,
-                    color: "white",
-                    alignSelf: "center"
-                  }}>
-                    X
-                  </Text>
-                </TouchableOpacity>
-              </TouchableHighlight>
-              </View>
-
-
-
-
-
-            </View>
-
-
-            <ScrollView showsVerticalScrollIndicator={true} style={{ flex: 1, flexDirection: "column" }}
-              contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
-
-              {this.state.posts && this.state.posts.map(post => <View key={post.id} style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
-
-                <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
-                  <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
-                    <Image
-                      style={{
-                        flex: 1,
-                        alignSelf: 'center',
-                        width: '100%',
-                        height: undefined
-                      }}
-                      source={{ uri: _.get(post, "_embedded.wp:featuredmedia.0.media_details.sizes.thumbnail.source_url", DEFAULT_IMAGE) }}
-                    />
-                  </View>
-                  <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
-                    <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
-                      <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
-                    </TouchableHighlight>
-                    <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
-                      {new Date(post.date).toLocaleDateString()}
-                    </Text>
-                  </View>
-                </View>
-
-              </View>
-              )}
-
-            </ScrollView>
-          </View>
-
-          : <View></View>}
-
+        </Animated.View>
       </View>
+    );
+  }
+
+  renderRow(post) {
+    //console.log("post: ", post);
+    if (post.id) {
+      return (
+        <View key={post.id} style={{ flex: 0.1, padding: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
+          <View style={{ flex: 1, marginTop: 1, backgroundColor: "white", flexDirection: "row" }}>
+            <View style={{ flex: 2, padding: 7, aspectRatio: 3 / 2 }}>
+              <Image
+                style={{
+                  flex: 1,
+                  alignSelf: 'center',
+                  width: '100%',
+                  height: undefined
+                }}
+                source={{ uri: _.get(post, "_embedded.wp:featuredmedia.0.media_details.sizes.thumbnail.source_url", DEFAULT_IMAGE) }}
+              />
+            </View>
+            <View style={{ flex: 3, paddingTop: 20, paddingBottom: 10, paddingLeft: 5, paddingRight: 10 }}>
+              <TouchableHighlight onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: post.id })}>
+                <HTML baseFontStyle={{ fontSize: 16, fontFamily: "Hoefler Text" }} html={post.title.rendered} />
+              </TouchableHighlight>
+              <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: 'gray', paddingTop: 5 }}>
+                {new Date(post.date).toLocaleDateString()}
+              </Text>
+            </View>
+          </View>
+        </View>
+      );
+    }
+    return (<View><Text>Loading...</Text></View>);
+  }
 
 
+  locationOnClick(marker) {
+    Keyboard.dismiss();
+    this.setState({ name: marker.name, icon: marker.icon });
+    this.fetchLocation(marker.id);
+    this.openPostsView();
+  }
 
+  toggleShownStatus() {
+    this.setState({
+      shown: !this.state.shown
+    });
+  }
+
+  openPostsView() {
+    if (!this.state.shown) {
+      this.toggleShownStatus();
+      Animated.timing(                    // Animate over time
+        this.state.scrollY,             // The animated value to drive, this would be a new Animated.Value(0) object.
+        {
+          toValue: OPENED_POSTS_VIEW_HEIGHT,                   // Animate the value
+          duration: 500,                 // Make it take a while
+        }
+      ).start(() => { this.state.scrollY.extractOffset(); });
+    }
+  }
+
+  closePostsView() {
+    if (this.state.shown) {
+      this.state.scrollY.flattenOffset();
+
+      Animated.timing(
+        this.state.scrollY,
+        {
+          toValue: 0,
+          duration: 500,
+        }
+      ).start(() => { this.toggleShownStatus(); });
+    }
+  }
+
+
+  _handleScroll(e) {
+    //console.log(e.nativeEvent.contentOffset.y, "test");
+  }
+
+  /*
+  Ref:
+  https://blog.nativebase.io/butter-smooth-scrolling-animations-in-react-native-49edbba6a38a
+  https://github.com/Jasbir23/ScrollSwagger
+  */
+  renderScroll(props) {
+    return (
+      <Animated.ScrollView
+        {...props}
+        scrollEventThrottle={16}
+
+        contentContainerStyle={{
+          paddingTop: height - 125 - OPENED_POSTS_VIEW_HEIGHT,  // 125 seems to be the best number
+        }}
+
+        // Declarative API for animations ->
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: { contentOffset: { y: this.state.scrollY } }
+            }
+          ],
+          { listener: this._handleScroll.bind(this) },
+          {
+            useNativeDriver: true // <- Native Driver used for animated events
+          }
+        )}
+      />
     );
   }
 }
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: '100%',
-    width: '100%',
-  },
   markerBackground: {
     width: 40,
     height: 40,
