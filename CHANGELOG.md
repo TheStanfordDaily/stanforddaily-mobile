@@ -1,6 +1,6 @@
 # 1.1.3 (2/13/18?)
-- Fix permissions so it works on Android
-- Fix app name spaces
+- Fix permissions so the app only requires the minimum permissions, to comply with Play Store requirements
+- Fix app name spaces on Android
 - Fix flourish embed html
 - Improved icons on navbar
 - Update expo from 30 to 32
