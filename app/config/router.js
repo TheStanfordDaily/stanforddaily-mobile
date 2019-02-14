@@ -139,13 +139,13 @@ export const Tabs = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.AUTHORS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   },
-  Map: {
-    screen: MapStack,
-    navigationOptions: {
-      tabBarLabel: 'Map',
-      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.MAP_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
-    },
-  },
+  // Map: {
+  //   screen: MapStack,
+  //   navigationOptions: {
+  //     tabBarLabel: 'Map',
+  //     tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.MAP_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
+  //   },
+  // },
 // Chatter: {
 //   screen: ChatterStack,
 //   navigationOptions: {
