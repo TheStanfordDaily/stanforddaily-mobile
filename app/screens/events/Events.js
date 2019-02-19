@@ -22,13 +22,13 @@ export default () => (<View style={{ flex: 1 }}>
                     The Stanford Daily Presents: Publication Roast{"\n"}
                 </Text>
                 {"\n"}
-                Saturday at 7:30 PM – 9 PM
+                Saturday, 2/23/18 from 7:30 PM – 9 PM
             {"\n"}
-                Roble Theater
+                At Roble Theater
         </Text>
             <Image source={require("./qr.png")} style={{margin: 30, marginBottom: 5}} />
             <Text style={{marginBottom: 10}}>
-            Show this QR code for admission.
+            Show this QR code for admission
             </Text>
             <Text style={styles.link} onPress={() => WebBrowser.openBrowserAsync("https://www.facebook.com/events/409871419583104/")}>
                 Open Facebook event
