@@ -197,7 +197,7 @@ export default class MapExample extends Component {
                 }}>
                 <TouchableOpacity
                   onPress={() => {
-                    Alert.alert('You will now receive push notifications alerting you about new articles related to ' + this.state.name + '!')
+                    Alert.alert('You will now receive notifications for new articles related to ' + this.state.name + '!')
                   }}>
                   <Text style={{
                     margin: 5,
