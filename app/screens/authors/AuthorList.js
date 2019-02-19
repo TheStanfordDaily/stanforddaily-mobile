@@ -5,14 +5,17 @@ Each time to run again: call "npm run ios"
 'use strict';
 import React, { Component } from 'react';
 import {
+  Alert,
   View,
   StatusBar,
   ScrollView,
   Dimensions,
+  TouchableHighlight,
+  TouchableOpacity,
+  StyleSheet,
   Text,
   Image,
   SectionList,
-  TouchableOpacity
 } from 'react-native';
 
 import {
@@ -60,18 +63,19 @@ class AuthorList extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "white", opacity: 1}}>
         <Header ref='postHeader' postID={this.state.id} />
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "white"}}>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "white", opacity: 1}}>
           <StatusBar
             barStyle="light-content"
           />
-          <ScrollView style={{ flex: 1, flexDirection: "row", backgroundColor: "white" }}
+          <ScrollView style={{ flex: 1, flexDirection: "row", backgroundColor: "white", opacity: 1 }}
             contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>
             {this.state.data.length ?
               <NestedListView
-                data={this.state.data}
-                navigate={id => this.props.navigation.navigate("AuthorDetail", { id: id })}
+                data={this.state.data}   
+                text = {"food"}            
+                navigate={id => this.props.navigation.navigate("AuthorDetail", { id: id })}              
               /> : <View />}
           </ScrollView>
         </View>

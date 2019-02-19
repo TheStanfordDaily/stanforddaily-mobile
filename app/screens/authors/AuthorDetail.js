@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+    Alert,
     View,
     StatusBar,
     ScrollView,
@@ -205,7 +206,7 @@ export default class App extends React.Component {
 
             {this.state.details &&
 
-                <View style={{ padding: 2, height: 35, backgroundColor: "white", flexDirection: "row" }}>
+                <View style={{ padding: 1, height: 35, backgroundColor: "white", flexDirection: "row" }}>
 
                     <View style={{ flex: 1, margin: 0, backgroundColor: "white"}}>
                     </View>
@@ -220,12 +221,30 @@ export default class App extends React.Component {
                             </View>
                             <View style={{ flex: 10 }}>
                                 <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 5, marginBottom: 4, marginLeft: 35 }}>
-                                    Email the author
+                                    Email the author   
                                 </Text>
                             </View>
 
                         </View>
                     </TouchableHighlight>
+
+                    <TouchableHighlight onPress={() => alert('You will now be notified for future articles!')}>
+                        <View style={{ marginLeft: 10, flex: 1 }}>
+                            <View style={{ flex: 1 }}>
+                                <Image
+                                    style={{ width: 30, height: 30 }}
+                                    source={require('../../media/follow_icon.png')}
+                                />
+                            </View>
+                            <View style={{ flex: 10 }}>
+                                <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 5, marginBottom: 4, marginLeft: 35 }}>
+                                    Subscribe to author
+                                </Text>
+                            </View>
+
+                        </View>
+                    </TouchableHighlight>
+                    
 
                     <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
                     </View>
