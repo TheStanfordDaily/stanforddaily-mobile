@@ -190,6 +190,29 @@ export default class MapExample extends Component {
                 </Text>
 
                 <TouchableHighlight style={{
+                margin: 8,
+                borderRadius: 5,
+                alignSelf: "center",
+                backgroundColor: "maroon"
+                }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    Alert.alert('You will now receive push notifications alerting you about new articles related to ' + this.state.name + '!')
+                  }}>
+                  <Text style={{
+                    margin: 5,
+                    fontSize: 15,
+                    fontFamily: "Hoefler Text",
+                    fontWeight: "bold",
+                    color: COLORS.WHITE,
+                    alignSelf: "center"
+                  }}>
+                    Press for Future Notifications 
+                  </Text>
+                </TouchableOpacity>
+                </TouchableHighlight>
+
+                <TouchableHighlight style={{
                   position: "absolute",
                   top: 15,
                   right: 15,
