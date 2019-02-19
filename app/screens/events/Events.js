@@ -15,8 +15,8 @@ const styles = {
 
 export default () => (<View style={{ flex: 1 }}>
     <Header />
-    <ScrollView style={{ flex: 1, backgroundColor: 'white', paddingTop: 10 }}>
-        <View style={{ alignItems: 'center' }}>
+    <ScrollView style={{ flex: 1, backgroundColor: 'white', paddingTop: 10, paddingBottom: 40 }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={{ fontSize: 20, textAlign: 'center' }}>
                 <Text style={{ fontWeight: 'bold' }}>
                     The Stanford Daily Presents: Publication Roast{"\n"}
@@ -28,7 +28,7 @@ export default () => (<View style={{ flex: 1 }}>
         </Text>
             <Image source={require("./qr.png")} style={{margin: 30, marginBottom: 5}} />
             <Text style={{marginBottom: 10}}>
-            Show this QR code for admission
+            Show this QR code for admission.
             </Text>
             <Text style={styles.link} onPress={() => WebBrowser.openBrowserAsync("https://www.facebook.com/events/409871419583104/")}>
                 Open Facebook event
@@ -41,6 +41,9 @@ export default () => (<View style={{ flex: 1 }}>
         </Text>
             <Text style={styles.link} onPress={() => WebBrowser.openBrowserAsync("https://soundcloud.com/dailybrew/")}>
                 The Daily Brew podcast
+        </Text>
+        <Text style={{color: 'white', height: 100}} onPress={() => WebBrowser.openBrowserAsync("https://soundcloud.com/dailybrew/")}>
+                test
         </Text>
         </View>
     </ScrollView>
