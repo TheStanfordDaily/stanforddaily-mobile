@@ -15,4 +15,5 @@ npm run android
 expo build:ios --release-channel production
 expo build:android --release-channel production
 
+## Push OTA updates
 expo publish --release-channel production
