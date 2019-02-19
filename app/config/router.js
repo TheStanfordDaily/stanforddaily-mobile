@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
+import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import {STRINGS, MARGINS, HEIGHTS, KEYS, ICONS, COLORS} from '../assets/constants.js';
 import { Ionicons } from '@expo/vector-icons';
@@ -205,7 +205,7 @@ const SignInStack = createStackNavigator({
   headerMode: 'none',
 });
 
-export const Root = createStackNavigator({
+const Root = createStackNavigator({
   Tabs: {
     screen: Tabs,
   },
@@ -222,3 +222,6 @@ export const Root = createStackNavigator({
   mode: 'modal',
   headerMode: 'none'
 });
+
+// https://reactnavigation.org/docs/en/app-containers.html
+export const RootContainer = createAppContainer(Root);
