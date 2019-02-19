@@ -21,6 +21,7 @@ import Map from "../screens/map/Map";
 import {Amplitude} from 'expo';
 import {FONTS} from "../assets/constants";
 import { colors } from 'react-native-elements';
+import Events from '../screens/events/Events.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
@@ -116,6 +117,17 @@ const MapStack = createStackNavigator({
     headerMode: 'none',
   });
 
+const EventStack = createStackNavigator({
+  Map: {
+      screen: Events,
+      navigationOptions: {
+        title: 'Map',
+      },
+    },
+  }, {
+    headerMode: 'none',
+  });
+
 
 export const Tabs = createBottomTabNavigator({
   News: {
@@ -139,6 +151,13 @@ export const Tabs = createBottomTabNavigator({
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.AUTHORS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   },
+  Event: {
+    screen: EventStack,
+    navigationOptions: {
+      tabBarLabel: 'Events',
+      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.CALENDAR} size={27} color={tintColor} style={{ marginTop: 5 }} />
+    },
+  }
   // Map: {
   //   screen: MapStack,
   //   navigationOptions: {

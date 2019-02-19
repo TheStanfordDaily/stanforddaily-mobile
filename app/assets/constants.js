@@ -197,21 +197,29 @@ const KEYS = {
 const ICONS = Platform.select({
   android: {
     AUTHORS_PAGE: "md-contacts",
+    CALENDAR: "md-calendar",
     MAP_PAGE: "md-map",
     BACK: "md-arrow-back",
     MENU: "md-menu",
     SEARCH: "md-search",
     SHARE: "md-share",
-    CLOSE: "md-close"
+    CLOSE: "md-close",
+    FACEBOOK: "logo-facebook",
+    INSTAGRAM: "logo-instagram",
+    PODCAST: "musical-notes"
   },
   ios: {
     AUTHORS_PAGE: "ios-contacts",
+    CALENDAR: "ios-calendar",
     MAP_PAGE: "ios-map",
     BACK: "ios-arrow-back",
     MENU: "ios-menu",
     SEARCH: "ios-search",
     SHARE: "ios-share",
-    CLOSE: "ios-close"
+    CLOSE: "ios-close",
+    FACEBOOK: "logo-facebook",
+    INSTAGRAM: "logo-instagram",
+    PODCAST: "musical-notes"
   },
 });
 

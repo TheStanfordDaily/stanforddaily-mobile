@@ -1,4 +1,7 @@
-# 1.1.3 (2/13/18?)
+# 1.1.4 (2/19/18)
+- Add "events" tab which has check in for the first event.
+
+# 1.1.3 (2/13/18)
 - Fix permissions so the app only requires the minimum permissions, to comply with Play Store requirements
 - Fix app name spaces on Android
 - Fix flourish embed html
