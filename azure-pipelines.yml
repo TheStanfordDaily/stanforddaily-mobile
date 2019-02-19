@@ -26,17 +26,8 @@ steps:
   
 - script: |
     expo login --non-interactive -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
-    expo eject --non-interactive --eject-method expoKit
-  displayName: 'expo build and eject'
+    expo publish --non-interactive --release-channel dev
+  displayName: 'expo build and publish'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
     EXPO_PASSWORD: $(EXPO_PASSWORD)
-
-- script: |
-    git config --global user.name "Azure DevOps CI Server"
-    git config --global user.email "ashwin@stanforddaily.com"
-    git checkout -b build
-    git add -A
-    git commit -m "Eject to ExpoKit"
-    git push -f origin build
-  displayName: 'git push to build branch'
