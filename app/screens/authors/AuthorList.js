@@ -44,7 +44,8 @@ class AuthorList extends Component {
 
   //Gets data and makes it look as expected
   fetchData() {
-    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/")
+    //temporary, change fetch string 
+    fetch("https://www.stanforddaily.com/wp-json/tsd/v1/authors/")
       .then(e => e.json()) //convert to json
       .then(data => {
         for (let section of data) {
@@ -61,7 +62,7 @@ class AuthorList extends Component {
     return (
       <View style={{ flex: 1 }}>
         <Header ref='postHeader' postID={this.state.id} />
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "white"}}>
           <StatusBar
             barStyle="light-content"
           />
