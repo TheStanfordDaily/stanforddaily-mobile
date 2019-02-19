@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
+import { Alert, KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
 import { Root, Tabs } from './app/config/router';
-import {COLORS} from './app/assets/constants';
-import { Font } from 'expo';
+import { COLORS } from './app/assets/constants';
+import { Font, Updates } from 'expo';
+import { AppState } from "react-native";
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loaded: false
+      loaded: false,
+      appState: ""
     }
   }
   componentDidMount() {
@@ -19,6 +22,33 @@ class App extends Component {
       'PT Serif': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif Bold': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf')
     }).then(() => this.setState({ loaded: true }));
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange = async (nextAppState) => {
+    console.log(this.state.appState, nextAppState);
+    if (__DEV__ !== true && this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      // console.log('App has come to the foreground!')
+      // Updates.reload();
+      const update = await Updates.checkForUpdateAsync();
+      if (update.isAvailable) {
+        await Updates.fetchUpdateAsync();
+        Alert.alert(
+          'Updates Available',
+          'Would you like to install the latest updates?',
+          [
+            { text: 'Later', onPress: () => console.log('updates install skipped') },
+            { text: 'Yes', onPress: () => Updates.reloadFromCache() },
+          ],
+          { cancelable: false }
+        );
+      }
+    }
+    this.setState({ appState: nextAppState });
   }
   render() {
     if (!this.state.loaded) {
