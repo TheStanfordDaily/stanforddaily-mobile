@@ -36,6 +36,6 @@ async function isFollowingCategory(category_id) {
 async function isFollowingAuthor(author_id) {
     authors_followed = JSON.parse(await AsyncStorage.getItem('authors_followed') || "[]");
     var index = authors_followed.indexOf(author_id);
-    if (index != -1) return true;
+    if (index !== -1) return true;
     else return false;
 }
