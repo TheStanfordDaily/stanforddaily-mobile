@@ -5,8 +5,10 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE, DAILY_URL } from "../../assets/constants";
+import { ICONS, COLORS, HEIGHTS, STRINGS, DEFAULT_IMAGE, DAILY_URL } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
+const iphone_x = height == HEIGHTS.IPHONE_X;
+
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
 const LONGITUDE = -122.1697;
@@ -363,13 +365,18 @@ export default class MapExample extends Component {
   https://github.com/Jasbir23/ScrollSwagger
   */
   renderScroll(props) {
+    // Numbers based on testing
+    var scrollViewPaddingTop = height - 70 - OPENED_POSTS_VIEW_HEIGHT;
+    if (iphone_x) {
+      scrollViewPaddingTop -= 58;
+    }
     return (
       <Animated.ScrollView
         {...props}
         scrollEventThrottle={16}
 
         contentContainerStyle={{
-          paddingTop: height - 125 - OPENED_POSTS_VIEW_HEIGHT,  // 125 seems to be the best number
+          paddingTop: scrollViewPaddingTop,
         }}
 
         // Declarative API for animations ->
