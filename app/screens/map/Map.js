@@ -5,7 +5,7 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import MapView from 'react-native-maps';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
+import { ICONS, COLORS, STRINGS, DEFAULT_IMAGE, DAILY_URL } from "../../assets/constants";
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.4275;
@@ -104,7 +104,7 @@ export default class MapExample extends Component {
   //Calls a fetch to get the relevant locations
   handleLocationInput(textInput) {
     //fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=Memorial%20Church")
-    fetch("http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
+    fetch(DAILY_URL + "/wp-json/tsd/v1/locations?q=" + encodeURIComponent(textInput))
     .then(e => {
       return e.json();
     }).then(e => {
@@ -249,7 +249,7 @@ export default class MapExample extends Component {
             onMapReady={this.onMapReady}
             initialRegion={initialRegion}
           >
-            {this.state.markers && this.state.markers.map(marker => (
+            {this.state.markers && this.state.markers.length && this.state.markers.map(marker => (
               <MapView.Marker
                 key={marker.id}
                 coordinate={{
