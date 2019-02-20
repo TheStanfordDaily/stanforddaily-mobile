@@ -29,7 +29,7 @@ async function unfollowAuthor(author_id) {
 async function isFollowingCategory(category_id) {
     categories_followed = JSON.parse(await AsyncStorage.getItem('categories_followed') || "[]");
     var index = categories_followed.indexOf(category_id);
-    if (index != -1) return true;
+    if (index !== -1) return true;
     else return false;
 }
 
