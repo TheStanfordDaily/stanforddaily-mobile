@@ -1,5 +1,13 @@
 import {AsyncStorage} from "react-native"
 
+export async function getToken() {
+    return await AsyncStorage.getItem('token') || "";
+}
+
+export async function setToken(token) {
+    return await AsyncStorage.setItem('token', token);
+}
+
 export async function followCategory(category_id) {
     categories_followed = JSON.parse(await AsyncStorage.getItem('categories_followed') || "[]"); // store an array
     categories_followed.push(category_id);                                                       // add category_id to categories_followed
