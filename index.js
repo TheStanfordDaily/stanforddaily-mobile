@@ -3,12 +3,15 @@ import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'rea
 import { RootContainer, Tabs } from './app/config/router';
 import {COLORS} from './app/assets/constants';
 import { Font } from 'expo';
+import { registerForPushNotificationsAsync } from './app/helper/PushNotification.js'
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loaded: false
     }
+
+    registerForPushNotificationsAsync();
   }
   componentDidMount() {
     Font.loadAsync({
