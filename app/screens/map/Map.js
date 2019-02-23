@@ -259,7 +259,7 @@ export default class MapExample extends Component {
                   longitude: marker.coordinates[1]
                 }}
                 title={marker.name}
-                description={marker.description}
+                description="See More&hellip;"
                 onPress={() => {
                   this.closePostsView();
                 }}
