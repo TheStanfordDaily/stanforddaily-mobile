@@ -25,14 +25,15 @@ export async function registerForPushNotificationsAsync() {
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExpoPushTokenAsync();
 
-  console.log(JSON.stringify({
-    token: {
-      value: token,
+  let requestBody = {
+    subscribing: {
+      category_ids: ["test_1"],
+      author_ids: ["test_2"],
+      location_ids: ["test_3"],
     },
-    user: {
-      username: 'Brent',
-    },
-  }));
+  };
+
+  console.log(JSON.stringify(requestBody));
 
   // POST the token to your backend server from where you can retrieve it to send push notifications.
   return fetch(PUSH_ENDPOINT + "/" + token, {
@@ -41,12 +42,6 @@ export async function registerForPushNotificationsAsync() {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      subscribing: {
-        category_ids: ["test_1"],
-        author_ids: ["test_2"],
-        location_ids: ["test_3"],
-      },
-    }),
+    body: JSON.stringify(requestBody),
   });
 }
