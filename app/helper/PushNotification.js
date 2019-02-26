@@ -1,6 +1,6 @@
 import { Permissions, Notifications } from 'expo';
 
-const PUSH_ENDPOINT = 'http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/push-notification/update-user';
+const PUSH_ENDPOINT = 'http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/push-notification/users';
 
 export async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Permissions.getAsync(
@@ -35,18 +35,17 @@ export async function registerForPushNotificationsAsync() {
   }));
 
   // POST the token to your backend server from where you can retrieve it to send push notifications.
-  return fetch(PUSH_ENDPOINT, {
-    method: 'POST',
+  return fetch(PUSH_ENDPOINT + "/" + token, {
+    method: 'PUT',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      token: {
-        value: token,
-      },
-      user: {
-        username: 'Brent',
+      subscribing: {
+        category_ids: ["test_1"],
+        author_ids: ["test_2"],
+        location_ids: ["test_3"],
       },
     }),
   });
