@@ -39,6 +39,9 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            isOnBreakingNews: false,
+            isOnEveryDay: false,
+            isOnEveryWeek: false,
             isModalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -289,10 +292,10 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-              <Modal 
+          <Modal 
           style = {{
             backgroundColor: 'white'}}
-          isVisible={this.state.isModalVisible}>
+            isVisible={this.state.isModalVisible}>
 
         {/* Header */}
         <View 
@@ -301,7 +304,7 @@ export default class Headlines extends Component {
             borderBottomWidth: 4,
             borderColor: 'grey',
             alignItems: 'center',
-            flex: 0.6, 
+            flex: 0.4, 
           }}> 
           
           <Text style= {{
@@ -333,13 +336,13 @@ export default class Headlines extends Component {
               <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Important stories, as they happen</Text>
             </View>
 
-            <View style = {{marginTop: 15, flex: 1, alignItems: 'center'}}>
+            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
             <ToggleSwitch
-              isOn={this.state.isOn}
+              isOn={this.state.isOnBreakingNews}
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ (isOn) => console.log('changed to : ', isOn) }/>
+              onToggle={ isOnBreakingNews => this.setState(( {isOnBreakingNews})) }/>
             </View>
 
           </View>
@@ -358,13 +361,13 @@ export default class Headlines extends Component {
               <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Daily news roundup</Text>
             </View>
 
-            <View style = {{marginTop: 15, flex: 1, alignItems: 'center'}}>
+            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
             <ToggleSwitch
-              isOn={false}
+              isOn={this.state.isOnEveryDay}
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ (isOn) => console.log('changed to : ', isOn) }/>
+              onToggle={ isOnEveryDay => this.setState(( {isOnEveryDay})) }/>
             </View>
 
           </View>
@@ -383,13 +386,13 @@ export default class Headlines extends Component {
               <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekly Leland's Digest</Text>
             </View>
 
-            <View style = {{marginTop: 15, flex: 1, alignItems: 'center'}}>
+            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
             <ToggleSwitch
-              isOn={false}
+              isOn={this.state.isOnEveryWeek}
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ (isOn) => console.log('changed to : ', isOn) }/>
+              onToggle={ isOnEveryWeek => this.setState(( {isOnEveryWeek})) }/>
             </View>
 
           </View>
