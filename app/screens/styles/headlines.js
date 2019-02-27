@@ -50,7 +50,7 @@ const styles= StyleSheet.create({
       borderBottomWidth: 1,
     },
     categoriesHeaderContainer: {
-      height: 45,
+      height: 60,
       backgroundColor:COLORS.WHITE,
       alignItems:ALIGNMENTS.CENTER,
       justifyContent:ALIGNMENTS.CENTER

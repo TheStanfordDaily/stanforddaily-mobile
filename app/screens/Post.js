@@ -107,6 +107,7 @@ class Post extends Component {
           <StatusBar
             barStyle="light-content"
           />
+          
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
             <View style={styles.title}>
               <HTML baseFontStyle={styles.titleText} html={this.state.title} />

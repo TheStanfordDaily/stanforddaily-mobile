@@ -1,6 +1,7 @@
 import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {
+    Alert,
     View,
     Text,
     Dimensions,
@@ -11,6 +12,7 @@ import {
     NetInfo,
     FlatList,
     TouchableOpacity,
+    TouchableHighlight,
     SectionList
 } from 'react-native';
 import Drawer from 'react-native-drawer'
@@ -191,6 +193,22 @@ export default class Headlines extends Component {
       await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
 
+    //DUMMY CALL for following articles
+    followCategoryArticles(authorId) {
+      Promise.all([
+          // // Todo: post pagination
+          // fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&per_page=100&author=" + authorId).then(e => {
+          //     this.setState({
+          //         postCount: e.headers["X-WP-Total"]
+          //     })
+          //     return e.json();
+          // }),
+          // fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
+      ]).then(values => this.setState({
+          // posts: values[0],
+          // details: values[1]
+      }));
+  }
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
@@ -200,7 +218,35 @@ export default class Headlines extends Component {
                {selectedCategory}
              </Text>
            </View>
-         </View>
+           
+           <View>
+           <TouchableHighlight style={{
+                  //margin: 8,
+                  borderRadius: 3,
+                  alignSelf: "flex-end",
+                  //backgroundColor: COLORS.PLACEHOLDER_LIGHT
+                }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      Alert.alert('You will now receive notifications for new articles related to ' + selectedCategory + '!');
+                      this.followCategoryArticles(selectedCategory);
+                    }}>
+                    <Text style={{
+                      //margin: 5,
+                      fontSize: 12,
+                      fontFamily: "Hoefler Text",
+                      fontWeight: "bold",
+                      color: "maroon",
+                      alignSelf: "center"
+                    }}>
+                      <Text>
+                      Follow
+                      </Text>
+                  </Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
+           </View>
+         </View>   
      )
    }
 

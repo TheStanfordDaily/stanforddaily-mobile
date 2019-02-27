@@ -62,6 +62,24 @@ export default class App extends React.Component {
         }));
     }
 
+    //DUMMY CALL for following articles
+    followAuthorArticles(authorId) {
+        Promise.all([
+            // Todo: post pagination
+            fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&per_page=100&author=" + authorId).then(e => {
+                this.setState({
+                    postCount: e.headers["X-WP-Total"]
+                })
+                return e.json();
+            }),
+            fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
+        ]).then(values => this.setState({
+            posts: values[0],
+            details: values[1]
+        }));
+    }
+
+
     render() {
 
         return (<View style={{ flex: 1 }}>
@@ -137,20 +155,30 @@ export default class App extends React.Component {
                 </View> }
 
                 {this.state.details &&
-                <View style={{ flex: 0.1, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
-
-
-                    <View style={{ flex: 3, marginLeft: 20, backgroundColor: "white" }}>
-                        <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5 }}>
-                            {this.state.details.name}
-                            </Text>
-
-                        <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
-                            {this.state.details.position}
-                        </Text>
-                    </View>
+                <View style={{ flex: 0.15, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
+                    <TouchableHighlight
+                        onPress={() => {
+                            Alert.alert('You are now following new articles written by ' + this.state.details.name + '!');
+                            this.followAuthorArticles(this.props.navigation.state.params.id);
+                    }}>
+                        <View style={{ flex: 1, flexWrap: "wrap", marginLeft: 20, backgroundColor: "white" }}>
+                            <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5 , marginRight: 10}}>
+                                {this.state.details.name} <Text>{""}</Text>
+                                <Image
+                                    style={{paddingLeft: 20, width: 25, height: 25 }}
+                                    source={require('../../media/follow_icon.png')}
+                                />
+                                </Text>
+                            <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
+                                {this.state.details.position}
+                            </Text> 
+                        </View>
+                    </TouchableHighlight>   
+                    <View style={{flex: 0.4 /*to look better on screen*/}}></View> 
+                    
                     <View style={{
-                        flex: 0.85,
+                        flex: 0.75,
+                        height: 59, //needs to be hardcoded or else stretches out if user has no articles
                         marginTop: 0,
                         marginBottom: 15,
                         marginLeft: 2,
@@ -170,7 +198,7 @@ export default class App extends React.Component {
                             marginBottom: 5, textAlign: "center", textAlignVertical: "center"
                         }}>
                             articles
-                </Text>
+                        </Text>
                     </View>
 
                 </View>}
@@ -227,25 +255,6 @@ export default class App extends React.Component {
 
                         </View>
                     </TouchableHighlight>
-
-                    <TouchableHighlight onPress={() => alert('You will now be notified for future articles!')}>
-                        <View style={{ marginLeft: 10, flex: 1 }}>
-                            <View style={{ flex: 1 }}>
-                                <Image
-                                    style={{ width: 30, height: 30 }}
-                                    source={require('../../media/follow_icon.png')}
-                                />
-                            </View>
-                            <View style={{ flex: 10 }}>
-                                <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 5, marginBottom: 4, marginLeft: 35 }}>
-                                    Subscribe to author
-                                </Text>
-                            </View>
-
-                        </View>
-                    </TouchableHighlight>
-                    
-
                     <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
                     </View>
                 </View>}
