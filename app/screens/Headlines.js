@@ -217,14 +217,15 @@ export default class Headlines extends Component {
              <Text style={styles.categoriesText}>
                {selectedCategory}
              </Text>
-           </View>
-           
-           <View>
-           <TouchableHighlight style={{
-                  //margin: 8,
-                  borderRadius: 3,
-                  alignSelf: "flex-end",
-                  //backgroundColor: COLORS.PLACEHOLDER_LIGHT
+
+             <View>
+              <TouchableHighlight style={{
+                  margin: 8,
+                  borderRadius: 5,
+                  flex: 2,
+                  //alignSelf: "flex-end",
+                  backgroundColor: "maroon",
+                  //height: 35,
                 }}>
                   <TouchableOpacity
                     onPress={() => {
@@ -232,12 +233,14 @@ export default class Headlines extends Component {
                       this.followCategoryArticles(selectedCategory);
                     }}>
                     <Text style={{
-                      //margin: 5,
-                      fontSize: 12,
+                      margin: 5,
+                      fontSize: 15,
                       fontFamily: "Hoefler Text",
                       fontWeight: "bold",
-                      color: "maroon",
-                      alignSelf: "center"
+                      color: "white",
+                      alignSelf: "center",
+                      justifyContent: "center",
+                      
                     }}>
                       <Text>
                       Follow
@@ -245,7 +248,8 @@ export default class Headlines extends Component {
                   </Text>
                   </TouchableOpacity>
                 </TouchableHighlight>
-           </View>
+             </View>
+           </View>           
          </View>   
      )
    }

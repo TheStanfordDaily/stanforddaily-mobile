@@ -52,12 +52,15 @@ const styles= StyleSheet.create({
     categoriesHeaderContainer: {
       height: 60,
       backgroundColor:COLORS.WHITE,
-      alignItems:ALIGNMENTS.CENTER,
-      justifyContent:ALIGNMENTS.CENTER
+      alignItems:ALIGNMENTS.LEFT,
+      justifyContent:ALIGNMENTS.LEFT,
     },
     categoriesText: {
+      marginTop: MARGINS.DEFAULT_MARGIN,
+      marginLeft: MARGINS.ARTICLE_SIDES, //match category side with article edge
       fontFamily:FONTS.CENTURY,
-      fontSize:28
+      fontSize:28,
+      flex: 2,
     }
 })
 
