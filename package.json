@@ -26,14 +26,17 @@
     "react-native-image-slider": "^2.0.3",
     "react-native-linear-gradient": "^2.4.3",
     "react-native-maps": "^0.23.0",
+    "react-native-modal": "^7.0.2",
     "react-native-nested-listview": "^0.6.0",
     "react-native-render-html": "^3.10.0",
     "react-native-styled-text": "^0.2.0",
     "react-native-swiper": "^1.5.14",
     "react-navigation": "^3.2.3",
     "react-navigation-backhandler": "^1.2.0",
+    "react-switch": "^4.1.0",
     "react-transition-group": "^2.5.3",
-    "render-if": "^0.1.1"
+    "render-if": "^0.1.1",
+    "toggle-switch-react-native": "^2.0.2"
   },
   "devDependencies": {
     "graceful-fs": "^4.1.15"
