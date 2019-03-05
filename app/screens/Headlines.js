@@ -28,6 +28,7 @@ import _ from 'lodash';
 import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
+import { addNotificationSetting, removeNotificationSetting, isBeingNotified } from './FollowInfoStorage.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -39,9 +40,9 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnBreakingNews: false,
-            isOnEveryDay: false,
-            isOnEveryWeek: false,
+            isOnBreakingNews: isBeingNotified(1),
+            isOnEveryDay: isBeingNotified(2),
+            isOnEveryWeek: isBeingNotified(3),
             isModalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -342,7 +343,18 @@ export default class Headlines extends Component {
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ isOnBreakingNews => this.setState(( {isOnBreakingNews})) }/>
+              onToggle={ isOnBreakingNews => {
+                if (this.state.isOnBreakingNews) {
+                  removeNotificationSetting(1);
+                  alert('You will no longer receive push notifications for breaking news.');
+                } else if (!this.state.isOnBreakingNews) {
+                  addNotificationSetting(1);
+                  alert('You will now receive push notifications for breaking news.')
+                }
+                this.setState(( {isOnBreakingNews} )) 
+                }
+                }/>
+  
             </View>
 
           </View>
@@ -367,7 +379,17 @@ export default class Headlines extends Component {
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ isOnEveryDay => this.setState(( {isOnEveryDay})) }/>
+              onToggle={ isOnEveryDay => {
+                if (this.state.isOnEveryDay) {
+                  removeNotificationSetting(2);
+                  alert('You will no longer receive push notifications once a day.');
+                } else if (!this.state.isOnEveryDay) {
+                  addNotificationSetting(2);
+                  alert('You will now receive push notifications once a day.')
+                }
+                this.setState(( {isOnEveryDay} )) 
+                }
+                }/>
             </View>
 
           </View>
@@ -392,7 +414,17 @@ export default class Headlines extends Component {
               onColor='maroon'
               offColor='grey'
               size='small'
-              onToggle={ isOnEveryWeek => this.setState(( {isOnEveryWeek})) }/>
+              onToggle={ isOnEveryWeek => {
+                if (this.state.isOnEveryWeek) {
+                  removeNotificationSetting(3);
+                  alert('You will no longer receive push notifications once a week.');
+                } else if (!this.state.isOnEveryWeek) {
+                  addNotificationSetting(3);
+                  alert('You will now receive push notifications once a week.')
+                }
+                this.setState(( {isOnEveryWeek} )) 
+                }
+                }/>
             </View>
 
           </View>
