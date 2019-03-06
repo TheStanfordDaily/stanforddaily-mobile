@@ -32,7 +32,7 @@ export async function followCategory(category_id) {
 }
 
 export async function unfollowCategory(category_id) {
-    categories_followed = getCategoriesFollowed(); 
+    let categories_followed = await getCategoriesFollowed(); 
     var index = categories_followed.indexOf(category_id);
     if (index !== -1) categories_followed.splice(index);                                     // remove category_id from list
     updateBackend();
