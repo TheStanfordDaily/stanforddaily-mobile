@@ -91,7 +91,7 @@ export async function isFollowingLocation(location_id) {
 }
 
 export async function addNotificationSetting(notification_id) {
-    notification_settings = getNotificationSettings();  
+    let notification_settings = await getNotificationSettings();  
     notification_settings.push(notification_id);                                                        
     await updateBackend();
     return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
