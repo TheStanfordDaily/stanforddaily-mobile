@@ -24,6 +24,7 @@ import Drawer from 'react-native-drawer'
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
+import SettingsPageModal from './SettingsPage.js';
 import _ from 'lodash';
 
 //Styles for the page
@@ -36,14 +37,15 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 //A map between categories names and their codes
 const {width, height} = Dimensions.get('window');
 var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
+//var SettingsPageModal = require('./SettingsPage.js');
 
 export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnBreakingNews: false,
-            isOnEveryDay: false,
-            isOnEveryWeek: false,
+            // isOnBreakingNews: false,
+            // isOnEveryDay: false,
+            // isOnEveryWeek: false,
             isModalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -326,9 +328,11 @@ export default class Headlines extends Component {
      <MenuContext states that we will use the Menu component>
      <ListView for the articles>
   */
+
+  
   render() {
     return (
-      
+      //find a way to call the settingspage modal from the render function
       <Drawer
       type={STRINGS.STATIC}
       ref={REFS.DRAWER}
@@ -342,146 +346,11 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-          <Modal 
-          style = {{
-            backgroundColor: 'white'}}
-            isVisible={this.state.isModalVisible}>
+      {/*uses the modal page, called at top of render function*/}
+      <View> 
+        <SettingsPageModal />
 
-        {/* Header */}
-        <View 
-          style = {{
-            marginTop: 40,
-            borderBottomWidth: 4,
-            borderColor: 'grey',
-            alignItems: 'center',
-            flex: 0.4, 
-          }}> 
-          
-          <Text style= {{
-            fontFamily: 'PT Serif', 
-            fontSize: 24
-          }}>Notifications</Text>
-          
-          <Text style= {{
-            fontFamily: 'PT Serif'
-          }}>How often do you want to hear from The Daily?</Text>
-        
-        </View>
-
-        <View 
-          style = {{
-            flex: 1, 
-            backgroundColor: 'white',
-          }}> 
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
-              style={{ width: 35, height: 35 }}
-              source={require('../media/breaking.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Breaking News</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Important stories, as they happen</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnBreakingNews}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnBreakingNews => this.setState(( {isOnBreakingNews})) }/>
-            </View>
-
-          </View>
-
-
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
-              style={{ width: 35, height: 35 }}
-              source={require('../media/sunicon.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every day</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Daily news roundup</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnEveryDay}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnEveryDay => this.setState(( {isOnEveryDay})) }/>
-            </View>
-
-          </View>
-
-
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
-              style={{ width: 32, height: 32 }}
-              source={require('../media/calendaricon.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every week</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekly Leland's Digest</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnEveryWeek}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnEveryWeek => this.setState(( {isOnEveryWeek})) }/>
-            </View>
-
-          </View>
-
-
-
-
-
-        </View>
-
-        <View 
-          style = {{
-            flex: 3, 
-            backgroundColor: 'white',
-          }}> 
-        </View>
-
-        <View style = {{margin: 20, alignItems: 'center'}}>
-            <TouchableOpacity 
-              style = {{ 
-                height: 40,
-                width: 200,
-                padding: 10,
-                borderRadius: 10,
-                alignItems: 'center',
-                backgroundColor:'maroon'}}
-              onPress={this._toggleModal}>
-              <Text style={{
-                alignSelf: 'center', 
-                color: 'white',
-                fontFamily: 'Arial'
-                }}>Close</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* <View style = {{flex: 0.2}}>
-          </View> */}
-
-        </Modal>
+      </View>
 
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE, alignItems:'center'}}>
@@ -512,3 +381,5 @@ export default class Headlines extends Component {
 const drawerStyles = {
   drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3},
 }
+
+//
