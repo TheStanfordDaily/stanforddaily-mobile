@@ -68,3 +68,23 @@ export async function isFollowingLocation(location_id) {
     else return false;
 }
 
+export async function addNotificationSetting(notification_id) {
+    notification_settings = JSON.parse(await AsyncStorage.getItem('notification_settings') || "[]");  
+    notification_settings.push(notification_id);                                                        
+    return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
+}
+
+export async function removeNotificationSetting(notification_id) {
+    notification_settings = JSON.parse(await AsyncStorage.getItem('notification_settings') || "[]"); 
+    var index = notification_settings.indexOf(notification_id);
+    if (index !== -1) notification_settings.splice(index);                                     // remove notification option from list
+    return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
+}
+
+export async function isBeingNotified(notification_id) {
+    notification_settings = JSON.parse(await AsyncStorage.getItem('notification_settings') || "[]");
+    var index = notification_settings.indexOf(notification_id);
+    if (index !== -1) return true;
+    else return false;
+}
+
