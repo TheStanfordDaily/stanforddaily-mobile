@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
 import { RootContainer, Tabs } from './app/config/router';
-import {COLORS} from './app/assets/constants';
+import { STRINGS, COLORS } from './app/assets/constants';
 import { Font } from 'expo';
-import { registerForPushNotificationsAsync } from './app/helper/PushNotification.js'
+import NavigationService from './app/helper/NavigationService';
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loaded: false
     }
-
-    registerForPushNotificationsAsync();
   }
   componentDidMount() {
     Font.loadAsync({
@@ -22,6 +21,11 @@ class App extends Component {
       'PT Serif': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif Bold': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf')
     }).then(() => this.setState({ loaded: true }));
+  }
+  componentDidUpdate() {
+    if (this.props.notificationData) {
+      NavigationService.navigate(STRINGS.POST, { test: 'test2' });
+    }
   }
   render() {
     if (!this.state.loaded) {
@@ -35,7 +39,10 @@ class App extends Component {
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior='padding'>
-            <RootContainer />
+            <RootContainer ref={navigatorRef => {
+              // https://reactnavigation.org/docs/en/navigating-without-navigation-prop.html
+              NavigationService.setTopLevelNavigator(navigatorRef);
+            }} />
           </KeyboardAvoidingView>
         </SafeAreaView>
       </React.Fragment>
