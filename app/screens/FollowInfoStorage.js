@@ -35,7 +35,7 @@ export async function unfollowCategory(category_id) {
     let categories_followed = await getCategoriesFollowed(); 
     var index = categories_followed.indexOf(category_id);
     if (index !== -1) categories_followed.splice(index);                                     // remove category_id from list
-    updateBackend();
+    await updateBackend();
     return await AsyncStorage.setItem('categories_followed', JSON.stringify(categories_followed));
 }
 
