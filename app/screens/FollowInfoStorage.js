@@ -101,7 +101,7 @@ export async function removeNotificationSetting(notification_id) {
     notification_settings = getNotificationSettings(); 
     var index = notification_settings.indexOf(notification_id);
     if (index !== -1) notification_settings.splice(index);                                     // remove notification option from list
-    updateBackend();
+    await updateBackend();
     return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
 }
 
