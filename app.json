@@ -32,6 +32,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.Stanford.Daily.App",
+      "buildNumber": 2,
       "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
       "supportsTablet": true
     },
