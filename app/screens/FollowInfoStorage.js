@@ -1,4 +1,5 @@
 import {AsyncStorage} from "react-native"
+import { STRINGS } from '../assets/constants.js'
 
 export async function getToken() {
     return await AsyncStorage.getItem('token') || "" ;
@@ -113,7 +114,7 @@ export async function isBeingNotified(notification_id) {
 }
 
 async function updateBackend() {
-    return fetch('https://www.stanforddaily.com/wp-json/tsd/v1/push-notification/users/' + await getToken(), {
+    return fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
         method: 'PUT',
         headers: {
         Accept: 'application/json',
