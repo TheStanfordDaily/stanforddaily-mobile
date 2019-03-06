@@ -84,7 +84,7 @@ export async function isFollowingAuthor(author_id) {
 }
 
 export async function isFollowingLocation(location_id) {
-    locations_followed = getLocationsFollowed();
+    locations_followed = await getLocationsFollowed();
     var index = locations_followed.indexOf(location_id);
     if (index !== -1) return true;
     else return false;
