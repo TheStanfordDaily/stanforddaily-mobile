@@ -21,7 +21,7 @@ export async function getLocationsFollowed() {
 }
 
 export async function getNotificationSettings() {
-    JSON.parse(await AsyncStorage.getItem('notification_settings') || "[]");
+    return JSON.parse(await AsyncStorage.getItem('notification_settings') || "[]");
 }
 
 export async function followCategory(category_id) {
