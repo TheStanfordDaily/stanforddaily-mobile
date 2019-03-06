@@ -27,7 +27,7 @@ export async function getNotificationSettings() {
 export async function followCategory(category_id) {
     categories_followed = getCategoriesFollowed(); // store an array
     categories_followed.push(category_id);                                                       // add category_id to categories_followed
-    updateBackend();
+    await updateBackend();
     return await AsyncStorage.setItem('categories_followed', JSON.stringify(categories_followed));
 }
 
