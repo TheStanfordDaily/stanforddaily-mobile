@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
 import { RootContainer, Tabs } from './app/config/router';
 import { STRINGS, COLORS } from './app/assets/constants';
-import { Font } from 'expo';
+import { Font, WebBrowser } from 'expo';
 import NavigationService from './app/helper/NavigationService';
 
 class App extends Component {
@@ -26,6 +26,9 @@ class App extends Component {
     if (this.props.notificationData) {
       if (this.props.notificationData.post_id) {
         NavigationService.navigate(STRINGS.POST, { postID: this.props.notificationData.post_id });
+      }
+      if (this.props.notificationData.url) {
+        WebBrowser.openBrowserAsync(this.props.notificationData.url);
       }
     }
   }
