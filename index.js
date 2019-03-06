@@ -24,7 +24,9 @@ class App extends Component {
   }
   componentDidUpdate() {
     if (this.props.notificationData) {
-      NavigationService.navigate(STRINGS.POST, { test: 'test2' });
+      if (this.props.notificationData.post_id) {
+        NavigationService.navigate(STRINGS.POST, { postID: this.props.notificationData.post_id });
+      }
     }
   }
   render() {
