@@ -74,6 +74,8 @@ export default class Headlines extends Component {
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
         this.searchHandler = this.searchHandler.bind(this);
+        this.openSettings = this.openSettings.bind(this);
+        this.closeSettings = this.closeSettings.bind(this);
 
         Dimensions.addEventListener('change', () => {
           const {width, height} = Dimensions.get('window')
@@ -81,12 +83,17 @@ export default class Headlines extends Component {
           // console.warn("orientation changed");
         });
     }
+    openSettings() {
+      this.setState({isModalVisible: true});
+    }
+    closeSettings() {
+      this.setState({isModalVisible: false});
+    }
 
     //Given data, it passes it to Post view
     goToPost(data) {
       this.props.navigation.navigate(STRINGS.POST, { ...data });
     }
-
 
     componentDidMount() {
       // console.log('hihi');
@@ -229,9 +236,11 @@ export default class Headlines extends Component {
 
              <View>
               <TouchableHighlight style={{
-                  margin: 8,
+                  marginTop: 12,
+                  marginLeft: 4,
+                  marginRight: 12,
                   borderRadius: 5,
-                  flex: 2,
+                  flex: 1,
                   //alignSelf: "flex-end",
                   backgroundColor: "maroon",
                   //height: 35,
@@ -242,14 +251,14 @@ export default class Headlines extends Component {
                       this.followCategoryArticles(selectedCategory);
                     }}>
                     <Text style={{
-                      margin: 5,
+                      marginTop: 8,
+                      marginLeft: 4,
+                      marginRight: 4,
                       fontSize: 15,
                       fontFamily: "Hoefler Text",
                       fontWeight: "bold",
                       color: "white",
                       alignSelf: "center",
-                      justifyContent: "center",
-                      
                     }}>
                       <Text>
                       Follow
@@ -299,6 +308,7 @@ export default class Headlines extends Component {
   sideMenu() {
     return (
       <View style={styles.sideMenuContainer}>
+      
         <View style={styles.sideBarTitle}>
           <Text style={styles.sideBarTitleText}> Categories </Text>
         </View>
@@ -313,7 +323,32 @@ export default class Headlines extends Component {
             </TouchableOpacity>
           }
         />
+                <TouchableHighlight style={{
+                  margin: 8,
+                  borderRadius: 5,
+                  alignSelf: "center",
+                  backgroundColor: "maroon"
+                }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.setState({ isModalVisible: true });
+                      this.openSettings();
+                      Alert.alert("You will now be redirected to the settings page");
+                    }}>
+                    <Text style={{
+                      margin: 5,
+                      fontSize: 15,
+                      fontFamily: "Hoefler Text",
+                      fontWeight: "bold",
+                      color: COLORS.WHITE,
+                      alignSelf: "center"
+                    }}>
+                      Settings
+                  </Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
       </View>
+      
     )
   }
 
@@ -346,10 +381,9 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-      {/*uses the modal page, called at top of render function*/}
+      {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
       <View> 
-        <SettingsPageModal />
-
+        <SettingsPageModal isModalVisible ={this.isModalVisible}/>
       </View>
 
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
