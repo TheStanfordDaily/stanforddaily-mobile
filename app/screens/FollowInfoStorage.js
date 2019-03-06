@@ -113,7 +113,7 @@ export async function isBeingNotified(notification_id) {
 }
 
 async function updateBackend() {
-    fetch('https://www.stanforddaily.com/wp-json/tsd/v1/push-notification/users/' + await getToken(), {
+    return fetch('https://www.stanforddaily.com/wp-json/tsd/v1/push-notification/users/' + await getToken(), {
         method: 'PUT',
         headers: {
         Accept: 'application/json',
