@@ -354,8 +354,6 @@ export default class Headlines extends Component {
                 this.setState(( {isOnBreakingNews} )) 
                 }
                 }/>
-  
-            </View>
 
           </View>
 
