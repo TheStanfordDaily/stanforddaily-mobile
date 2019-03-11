@@ -24,7 +24,7 @@ import Drawer from 'react-native-drawer'
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
-import SettingsPageModal from './SettingsPage.js';
+import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
 
 //Styles for the page
@@ -85,6 +85,7 @@ export default class Headlines extends Component {
     }
     openSettings() {
       this.setState({isModalVisible: true});
+      //Alert.alert("settings are opened, headlines page");
     }
     closeSettings() {
       this.setState({isModalVisible: false});
@@ -236,7 +237,7 @@ export default class Headlines extends Component {
 
              <View>
               <TouchableHighlight style={{
-                  marginTop: 12,
+                  marginTop: 14,
                   marginLeft: 4,
                   marginRight: 12,
                   borderRadius: 5,
@@ -251,7 +252,7 @@ export default class Headlines extends Component {
                       this.followCategoryArticles(selectedCategory);
                     }}>
                     <Text style={{
-                      marginTop: 8,
+                      marginTop: 10,
                       marginLeft: 4,
                       marginRight: 4,
                       fontSize: 15,
@@ -333,18 +334,18 @@ export default class Headlines extends Component {
                     onPress={() => {
                       this.setState({ isModalVisible: true });
                       this.openSettings();
-                      Alert.alert("You will now be redirected to the settings page");
+                      //Alert.alert("You will now be redirected to the settings page");
                     }}>
-                    <Text style={{
-                      margin: 5,
-                      fontSize: 15,
-                      fontFamily: "Hoefler Text",
-                      fontWeight: "bold",
-                      color: COLORS.WHITE,
-                      alignSelf: "center"
-                    }}>
-                      Settings
-                  </Text>
+                      <Text style={{
+                        margin: 5,
+                        fontSize: 15,
+                        fontFamily: "Hoefler Text",
+                        fontWeight: "bold",
+                        color: COLORS.WHITE,
+                        alignSelf: "center"
+                      }}>
+                        Settings
+                    </Text>
                   </TouchableOpacity>
                 </TouchableHighlight>
       </View>
@@ -383,7 +384,7 @@ export default class Headlines extends Component {
       >
       {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
       <View> 
-        <SettingsPageModal isModalVisible ={this.isModalVisible}/>
+        <SettingsPage isModalVisible ={this.isModalVisible}/>
       </View>
 
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
