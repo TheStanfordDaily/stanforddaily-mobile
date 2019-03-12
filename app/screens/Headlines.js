@@ -279,7 +279,7 @@ export default class Headlines extends Component {
   */
   render() {
     return (
-      
+
       <Drawer
       type={STRINGS.STATIC}
       ref={REFS.DRAWER}
@@ -293,41 +293,41 @@ export default class Headlines extends Component {
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
       >
-          <Modal 
+          <Modal
           style = {{
             backgroundColor: 'white'}}
             isVisible={this.state.isModalVisible}>
 
         {/* Header */}
-        <View 
+        <View
           style = {{
             marginTop: 40,
             borderBottomWidth: 4,
             borderColor: 'grey',
             alignItems: 'center',
-            flex: 0.4, 
-          }}> 
-          
+            flex: 0.4,
+          }}>
+
           <Text style= {{
-            fontFamily: 'PT Serif', 
+            fontFamily: 'PT Serif',
             fontSize: 24
           }}>Notifications</Text>
-          
+
           <Text style= {{
             fontFamily: 'PT Serif'
           }}>How often do you want to hear from The Daily?</Text>
-        
+
         </View>
 
-        <View 
+        <View
           style = {{
-            flex: 1, 
+            flex: 1,
             backgroundColor: 'white',
-          }}> 
+          }}>
 
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
             <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
+              <Image
               style={{ width: 35, height: 35 }}
               source={require('../media/breaking.png')}></Image>
             </View>
@@ -351,17 +351,17 @@ export default class Headlines extends Component {
                   addNotificationSetting(1);
                   alert('You will now receive push notifications for breaking news.')
                 }
-                this.setState(( {isOnBreakingNews} )) 
+                this.setState(( {isOnBreakingNews} ))
                 }
                 }/>
-
+            </View>
           </View>
 
 
 
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
             <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
+              <Image
               style={{ width: 35, height: 35 }}
               source={require('../media/sunicon.png')}></Image>
             </View>
@@ -385,7 +385,7 @@ export default class Headlines extends Component {
                   addNotificationSetting(2);
                   alert('You will now receive push notifications once a day.')
                 }
-                this.setState(( {isOnEveryDay} )) 
+                this.setState(( {isOnEveryDay} ))
                 }
                 }/>
             </View>
@@ -394,9 +394,9 @@ export default class Headlines extends Component {
 
 
 
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
             <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image 
+              <Image
               style={{ width: 32, height: 32 }}
               source={require('../media/calendaricon.png')}></Image>
             </View>
@@ -420,7 +420,7 @@ export default class Headlines extends Component {
                   addNotificationSetting(3);
                   alert('You will now receive push notifications once a week.')
                 }
-                this.setState(( {isOnEveryWeek} )) 
+                this.setState(( {isOnEveryWeek} ))
                 }
                 }/>
             </View>
@@ -433,16 +433,16 @@ export default class Headlines extends Component {
 
         </View>
 
-        <View 
+        <View
           style = {{
-            flex: 3, 
+            flex: 3,
             backgroundColor: 'white',
-          }}> 
+          }}>
         </View>
 
         <View style = {{margin: 20, alignItems: 'center'}}>
-            <TouchableOpacity 
-              style = {{ 
+            <TouchableOpacity
+              style = {{
                 height: 40,
                 width: 200,
                 padding: 10,
@@ -451,7 +451,7 @@ export default class Headlines extends Component {
                 backgroundColor:'maroon'}}
               onPress={this._toggleModal}>
               <Text style={{
-                alignSelf: 'center', 
+                alignSelf: 'center',
                 color: 'white',
                 fontFamily: 'Arial'
                 }}>Close</Text>
