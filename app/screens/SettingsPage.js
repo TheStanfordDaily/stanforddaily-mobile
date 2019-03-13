@@ -42,7 +42,7 @@ export default class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isModalVisible: true,
+            //visible: this.props.modalVisible,
             isOnBreakingNews: false,
             isOnEveryDay: false,
             isOnEveryWeek: false,
@@ -65,7 +65,7 @@ export default class SettingsPage extends Component {
         <Modal 
             style = {{
               backgroundColor: 'white'}}
-              isVisible={this.props.isModalVisible}
+              visible={false}
               >
   
           {/* Header */}
@@ -185,7 +185,9 @@ export default class SettingsPage extends Component {
                   borderRadius: 10,
                   alignItems: 'center',
                   backgroundColor:'maroon'}}
-                onPress={() => this.props.closeSettings()}>
+                onPress={() => {this.props.setModalVisible(!this.props.modalVisible);
+                
+                }}>
                 <Text style={{
                   alignSelf: 'center', 
                   color: 'white',

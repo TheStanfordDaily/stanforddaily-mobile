@@ -46,7 +46,7 @@ export default class Headlines extends Component {
             // isOnBreakingNews: false,
             // isOnEveryDay: false,
             // isOnEveryWeek: false,
-            isModalVisible: true,
+            modalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
             loading: false,
@@ -74,8 +74,10 @@ export default class Headlines extends Component {
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
         this.searchHandler = this.searchHandler.bind(this);
-        this.openSettings = this.openSettings.bind(this);
-        this.closeSettings = this.closeSettings.bind(this);
+        
+        this.setModalVisible = this.setModalVisible.bind(this);
+       // this.openSettings = this.openSettings.bind(this);
+       // this.closeSettings = this.closeSettings.bind(this);
 
         Dimensions.addEventListener('change', () => {
           const {width, height} = Dimensions.get('window')
@@ -83,15 +85,19 @@ export default class Headlines extends Component {
           // console.warn("orientation changed");
         });
     }
-    openSettings() {
-      this.setState({isModalVisible: true});
-      Alert.alert("settings are opened, headlines page");
+    setModalVisible(visible) { //toggles modal
+      this.setState({modalVisible: visible});
+      Alert.alert("settings are toggled, headlines page");
     }
-    closeSettings() {
-      this.setState({isModalVisible: false});
-      Alert.alert("settings are closed, headlines page");
 
-    }
+    // openSettings() {
+    //   this.setState({modalVisible: visible});
+    //   Alert.alert("settings are opened, headlines page");
+    // }
+    // closeSettings() {
+    //   this.setState({isModalVisible: false});
+    //   Alert.alert("settings are closed, headlines page");
+    // }
 
     //Given data, it passes it to Post view
     goToPost(data) {
@@ -330,20 +336,26 @@ export default class Headlines extends Component {
                   margin: 8,
                   borderRadius: 5,
                   alignSelf: "center",
-                  backgroundColor: "maroon"
+                  //backgroundColor: "maroon"
                 }}>
                   <TouchableOpacity
                     onPress={() => {
-                      this.setState({ isModalVisible: true });
-                      this.openSettings();
-                      //Alert.alert("You will now be redirected to the settings page");
+                      this.setModalVisible(true);
+                      Alert.alert("You will now be redirected to the settings page");
                     }}>
+                          <Image
+                          style={{margin: 2, 
+                            alignSelf: "center", 
+                            width: 25, 
+                            height: 25 }}
+                          source={require('../media/gears.png')}
+                      />
                       <Text style={{
-                        margin: 5,
-                        fontSize: 15,
+                        //margin: 5,
+                        fontSize: 13,
                         fontFamily: "Hoefler Text",
-                        fontWeight: "bold",
-                        color: COLORS.WHITE,
+                        //fontWeight: "bold",
+                        color: COLORS.BLACK,
                         alignSelf: "center"
                       }}>
                         Settings
@@ -354,6 +366,9 @@ export default class Headlines extends Component {
       
     )
   }
+
+  _toggleModal = () =>
+  this.setState({ isModalVisible: !this.state.isModalVisible });
 
   //Required ReactNative function
   //For this screen we render
@@ -380,15 +395,17 @@ export default class Headlines extends Component {
       tapToClose={true}
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
-      >
+      > 
       {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
       <View> 
         <SettingsPage
-          isModalVisible={this.state.isModalVisible}
-          closeSettings ={this.closeSettings}
+          visible={this.state.modalVisible}
+          setModalVisible = {this.setModalVisible}
+          //isModalVisible={this.state.isModalVisible}
+          //closeSettings ={this.closeSettings}
         />
       </View>
-
+      
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE, alignItems:'center'}}>
         <StatusBar
