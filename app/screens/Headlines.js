@@ -346,10 +346,8 @@ export default class Headlines extends Component {
               onToggle={ isOnBreakingNews => {
                 if (this.state.isOnBreakingNews) {
                   removeNotificationSetting(1);
-                  alert('You will no longer receive push notifications for breaking news.');
                 } else if (!this.state.isOnBreakingNews) {
                   addNotificationSetting(1);
-                  alert('You will now receive push notifications for breaking news.')
                 }
                 this.setState(( {isOnBreakingNews} ))
                 }
@@ -380,10 +378,8 @@ export default class Headlines extends Component {
               onToggle={ isOnEveryDay => {
                 if (this.state.isOnEveryDay) {
                   removeNotificationSetting(2);
-                  alert('You will no longer receive push notifications once a day.');
                 } else if (!this.state.isOnEveryDay) {
                   addNotificationSetting(2);
-                  alert('You will now receive push notifications once a day.')
                 }
                 this.setState(( {isOnEveryDay} ))
                 }
@@ -415,10 +411,8 @@ export default class Headlines extends Component {
               onToggle={ isOnEveryWeek => {
                 if (this.state.isOnEveryWeek) {
                   removeNotificationSetting(3);
-                  alert('You will no longer receive push notifications once a week.');
                 } else if (!this.state.isOnEveryWeek) {
                   addNotificationSetting(3);
-                  alert('You will now receive push notifications once a week.')
                 }
                 this.setState(( {isOnEveryWeek} ))
                 }
