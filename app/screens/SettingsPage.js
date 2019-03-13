@@ -65,7 +65,7 @@ export default class SettingsPage extends Component {
         <Modal 
             style = {{
               backgroundColor: 'white'}}
-              visible={false}
+              isVisible={this.props.visible}
               >
   
           {/* Header */}

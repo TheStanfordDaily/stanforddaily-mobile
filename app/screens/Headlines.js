@@ -90,6 +90,10 @@ export default class Headlines extends Component {
       Alert.alert("settings are toggled, headlines page");
     }
 
+    _toggleModal = () =>
+  this.setState({ modalVisible: !this.state.modalVisible });
+
+
     // openSettings() {
     //   this.setState({modalVisible: visible});
     //   Alert.alert("settings are opened, headlines page");
@@ -344,7 +348,7 @@ export default class Headlines extends Component {
                       Alert.alert("You will now be redirected to the settings page");
                     }}>
                           <Image
-                          style={{margin: 2, 
+                          style={{margin: 3, 
                             alignSelf: "center", 
                             width: 25, 
                             height: 25 }}
@@ -366,9 +370,6 @@ export default class Headlines extends Component {
       
     )
   }
-
-  _toggleModal = () =>
-  this.setState({ isModalVisible: !this.state.isModalVisible });
 
   //Required ReactNative function
   //For this screen we render
@@ -400,7 +401,7 @@ export default class Headlines extends Component {
       <View> 
         <SettingsPage
           visible={this.state.modalVisible}
-          setModalVisible = {this.setModalVisible}
+          setModalVisible = {() => this._toggleModal()}
           //isModalVisible={this.state.isModalVisible}
           //closeSettings ={this.closeSettings}
         />
