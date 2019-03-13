@@ -83,17 +83,7 @@ export default class Headlines extends Component {
     }
   
     _toggleModal = () =>
-  this.setState({ modalVisible: !this.state.modalVisible });
-
-
-    // openSettings() {
-    //   this.setState({modalVisible: visible});
-    //   Alert.alert("settings are opened, headlines page");
-    // }
-    // closeSettings() {
-    //   this.setState({isModalVisible: false});
-    //   Alert.alert("settings are closed, headlines page");
-    // }
+    this.setState({ modalVisible: !this.state.modalVisible });
 
     //Given data, it passes it to Post view
     goToPost(data) {
@@ -240,37 +230,36 @@ export default class Headlines extends Component {
              </Text>
 
              <View>
-              <TouchableHighlight style={{
-                  marginTop: 14,
-                  marginLeft: 4,
-                  marginRight: 12,
-                  borderRadius: 5,
-                  flex: 1,
-                  //alignSelf: "flex-end",
-                  backgroundColor: "maroon",
-                  //height: 35,
-                }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      Alert.alert('You will now receive notifications for new articles related to ' + selectedCategory + '!');
-                      this.followCategoryArticles(selectedCategory);
-                    }}>
+              <TouchableOpacity
+                style={{
+                    marginTop: 15,
+                    marginBottom: 3,
+                    marginLeft: 4,
+                    marginRight: 12,
+                    borderRadius: 5,
+                    flex: 1,
+                    backgroundColor: "maroon",
+                  }}
+                onPress={() => {
+                  Alert.alert('You will now receive notifications for new articles related to ' + selectedCategory + '!');
+                  this.followCategoryArticles(selectedCategory);
+                }}
+                >                  
                     <Text style={{
-                      marginTop: 10,
+                      marginTop: 8,
                       marginLeft: 4,
                       marginRight: 4,
                       fontSize: 15,
-                      fontFamily: "Hoefler Text",
-                      fontWeight: "bold",
-                      color: "white",
-                      alignSelf: "center",
+                      fontFamily: 'Hoefler Text',
+                      fontWeight: 'bold',
+                      color: 'white',
+                      alignSelf: 'center',
                     }}>
                       <Text>
                       Follow
                       </Text>
-                  </Text>
-                  </TouchableOpacity>
-                </TouchableHighlight>
+                  </Text>                  
+                </TouchableOpacity>
              </View>
            </View>           
          </View>   
@@ -344,10 +333,8 @@ export default class Headlines extends Component {
                           source={require('../media/gears.png')}
                       />
                       <Text style={{
-                        //margin: 5,
                         fontSize: 13,
                         fontFamily: "Hoefler Text",
-                        //fontWeight: "bold",
                         color: COLORS.BLACK,
                         alignSelf: "center"
                       }}>
@@ -368,11 +355,8 @@ export default class Headlines extends Component {
      <MenuContext states that we will use the Menu component>
      <ListView for the articles>
   */
-
-  
   render() {
     return (
-      //find a way to call the settingspage modal from the render function
       <Drawer
       type={STRINGS.STATIC}
       ref={REFS.DRAWER}
@@ -391,8 +375,6 @@ export default class Headlines extends Component {
         <SettingsPage
           visible={this.state.modalVisible}
           setModalVisible = {() => this._toggleModal()}
-          //isModalVisible={this.state.isModalVisible}
-          //closeSettings ={this.closeSettings}
         />
       </View>
       

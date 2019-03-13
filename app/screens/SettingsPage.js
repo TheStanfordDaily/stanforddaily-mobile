@@ -42,23 +42,11 @@ export default class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            //visible: this.props.modalVisible,
             isOnBreakingNews: false,
             isOnEveryDay: false,
             isOnEveryWeek: false,
         };
-      //  this.openSettings = this.openSettings.bind(this);
-       // this.closeSettings = this.closeSettings.bind(this);
     }
-
-    // openSettings() {
-    //   this.setState({ isModalVisible: true});
-    //   Alert.alert("settings are opened, settings page");
-    // }
-   
-    // closeSettings() {
-    //   this.setState({ isModalVisible: false});
-    // }
 
     render() {
       return (      
@@ -189,9 +177,12 @@ export default class SettingsPage extends Component {
                 
                 }}>
                 <Text style={{
+                  marginTop: 2,
                   alignSelf: 'center', 
                   color: 'white',
-                  fontFamily: 'Arial'
+                  fontFamily: 'Hoefler Text',
+                  fontWeight: 'bold',
+                  fontSize: 15,
                   }}>Close</Text>
               </TouchableOpacity>
             </View>

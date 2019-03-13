@@ -9,6 +9,7 @@ import {
     Image,
     ImageBackground,
     TouchableHighlight,
+    TouchableOpacity,
     Linking,
     ActivityIndicator,
     AppRegistry
@@ -156,24 +157,60 @@ export default class App extends React.Component {
 
                 {this.state.details &&
                 <View style={{ flex: 0.15, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
-                    <TouchableHighlight
-                        onPress={() => {
-                            Alert.alert('You are now following new articles written by ' + this.state.details.name + '!');
-                            this.followAuthorArticles(this.props.navigation.state.params.id);
-                    }}>
+                    <TouchableHighlight>
                         <View style={{ flex: 1, flexWrap: "wrap", marginLeft: 20, backgroundColor: "white" }}>
                             <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5 , marginRight: 10}}>
                                 {this.state.details.name} <Text>{""}</Text>
-                                <Image
+                                {/*<Image
                                     style={{paddingLeft: 20, width: 25, height: 25 }}
                                     source={require('../../media/follow_icon.png')}
-                                />
+                                />*/}
                                 </Text>
                             <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
                                 {this.state.details.position}
                             </Text> 
                         </View>
                     </TouchableHighlight>   
+
+
+                    <View>
+                    <TouchableOpacity>
+                    <TouchableHighlight 
+                        style={{
+                            marginTop: 3,
+                            marginLeft: 4,
+                            marginRight: 12,
+                            marginBottom: 1,
+                            borderRadius: 5,
+                            flex: 1,
+                            //alignSelf: "flex-end",
+                            backgroundColor: "maroon",
+                            //height: 35,
+                        }}
+                        onPress={() => {
+                            Alert.alert('You are now following new articles written by ' + this.state.details.name + '!');
+                            this.followAuthorArticles(this.props.navigation.state.params.id);
+                        }}>
+                            <Text style={{
+                                marginTop: 8,
+                                marginBottom: 4,
+                                marginLeft: 4,
+                                marginRight: 4,
+                                fontSize: 15,
+                                fontFamily: "Hoefler Text",
+                                fontWeight: "bold",
+                                color: "white",
+                                alignSelf: "center",
+                            }}>
+                                <Text>
+                                Follow
+                                </Text>
+                            </Text>                        
+                        </TouchableHighlight>
+                        </TouchableOpacity>
+                    </View>
+                    
+
                     <View style={{flex: 0.4 /*to look better on screen*/}}></View> 
                     
                     <View style={{
