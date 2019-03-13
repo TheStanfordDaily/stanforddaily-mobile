@@ -74,10 +74,6 @@ export default class Headlines extends Component {
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
         this.searchHandler = this.searchHandler.bind(this);
-        
-        this.setModalVisible = this.setModalVisible.bind(this);
-       // this.openSettings = this.openSettings.bind(this);
-       // this.closeSettings = this.closeSettings.bind(this);
 
         Dimensions.addEventListener('change', () => {
           const {width, height} = Dimensions.get('window')
@@ -85,11 +81,7 @@ export default class Headlines extends Component {
           // console.warn("orientation changed");
         });
     }
-    setModalVisible(visible) { //toggles modal
-      this.setState({modalVisible: visible});
-      Alert.alert("settings are toggled, headlines page");
-    }
-
+  
     _toggleModal = () =>
   this.setState({ modalVisible: !this.state.modalVisible });
 
@@ -343,10 +335,7 @@ export default class Headlines extends Component {
                   //backgroundColor: "maroon"
                 }}>
                   <TouchableOpacity
-                    onPress={() => {
-                      this.setModalVisible(true);
-                      Alert.alert("You will now be redirected to the settings page");
-                    }}>
+                    onPress={() => this._toggleModal()}>
                           <Image
                           style={{margin: 3, 
                             alignSelf: "center", 
