@@ -47,29 +47,26 @@ export default class SettingsPage extends Component {
             isOnEveryDay: false,
             isOnEveryWeek: false,
         };
-        this.openSettings = this.openSettings.bind(this);
-        this.closeSettings = this.closeSettings.bind(this);
+      //  this.openSettings = this.openSettings.bind(this);
+       // this.closeSettings = this.closeSettings.bind(this);
     }
 
-    openSettings() {
-      this.setState({ isModalVisible: true});
-      Alert.alert("settings are opened, settings page");
-    }
+    // openSettings() {
+    //   this.setState({ isModalVisible: true});
+    //   Alert.alert("settings are opened, settings page");
+    // }
    
-    closeSettings() {
-      this.setState({ isModalVisible: false});
-    }
-
-  //Function not to be used; replaced with openSettings and closeSettings
-  //_toggleModal = () =>
-  //this.setState({ isModalVisible: !this.state.isModalVisible });
+    // closeSettings() {
+    //   this.setState({ isModalVisible: false});
+    // }
 
     render() {
       return (      
         <Modal 
             style = {{
               backgroundColor: 'white'}}
-              isVisible={this.state.isModalVisible}>
+              isVisible={this.props.isModalVisible}
+              >
   
           {/* Header */}
           <View 
@@ -188,7 +185,7 @@ export default class SettingsPage extends Component {
                   borderRadius: 10,
                   alignItems: 'center',
                   backgroundColor:'maroon'}}
-                onPress={() => this.closeSettings()}>
+                onPress={() => this.props.closeSettings()}>
                 <Text style={{
                   alignSelf: 'center', 
                   color: 'white',

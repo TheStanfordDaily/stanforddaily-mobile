@@ -85,10 +85,12 @@ export default class Headlines extends Component {
     }
     openSettings() {
       this.setState({isModalVisible: true});
-      //Alert.alert("settings are opened, headlines page");
+      Alert.alert("settings are opened, headlines page");
     }
     closeSettings() {
       this.setState({isModalVisible: false});
+      Alert.alert("settings are closed, headlines page");
+
     }
 
     //Given data, it passes it to Post view
@@ -353,9 +355,6 @@ export default class Headlines extends Component {
     )
   }
 
-  _toggleModal = () =>
-  this.setState({ isModalVisible: !this.state.isModalVisible });
-
   //Required ReactNative function
   //For this screen we render
   /* <View for the page>
@@ -384,7 +383,10 @@ export default class Headlines extends Component {
       >
       {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
       <View> 
-        <SettingsPage isModalVisible ={this.isModalVisible}/>
+        <SettingsPage
+          isModalVisible={this.state.isModalVisible}
+          closeSettings ={this.closeSettings}
+        />
       </View>
 
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
