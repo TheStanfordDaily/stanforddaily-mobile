@@ -40,9 +40,9 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnBreakingNews: isBeingNotified(1),
-            isOnEveryDay: isBeingNotified(2),
-            isOnEveryWeek: isBeingNotified(3),
+            isOnBreakingNews: false,
+            isOnEveryDay: false,
+            isOnEveryWeek: false,
             isModalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -85,12 +85,21 @@ export default class Headlines extends Component {
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
       // console.log('hihi');
       // tracker.setUser('12345678');
       var currentdate = new Date();
      // log an event
      Amplitude.logEvent(STRINGS.APP_OPENED);
+
+     let breakingNews = await isBeingNotified(1);
+     let everyDay = await isBeingNotified(2);
+     let everyWeek = await isBeingNotified(3);
+     
+     this.setState({isOnBreakingNews: breakingNews, 
+                       isOnEveryDay: everyDay, 
+                       isOnEveryWeek: everyWeek});
+
     //  console.log("Logged");
     }
 
