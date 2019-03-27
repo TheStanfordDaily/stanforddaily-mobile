@@ -1,7 +1,7 @@
 import { Permissions, Notifications } from 'expo';
-import {DAILY_URL} from '../assets/constants';
+import {STRINGS} from '../assets/constants';
 
-const PUSH_ENDPOINT = DAILY_URL + '/wp-json/tsd/v1/push-notification/users';
+const PUSH_ENDPOINT = STRINGS.DAILY_URL + '/wp-json/tsd/v1/push-notification/users';
 
 export async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Permissions.getAsync(
@@ -25,7 +25,6 @@ export async function registerForPushNotificationsAsync() {
 
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExpoPushTokenAsync();
-
   let requestBody = {
     subscribing: {
       category_ids: ["test_1"],
@@ -34,10 +33,8 @@ export async function registerForPushNotificationsAsync() {
     },
   };
 
-  console.log(JSON.stringify(requestBody));
-
   // POST the token to your backend server from where you can retrieve it to send push notifications.
-  return fetch(PUSH_ENDPOINT + "/" + token, {
+  let response = await fetch(PUSH_ENDPOINT + "/" + token, {
     method: 'PUT',
     headers: {
       Accept: 'application/json',
