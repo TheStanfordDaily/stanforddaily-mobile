@@ -31,7 +31,7 @@ import _ from 'lodash';
 import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
-import { addNotificationSetting, removeNotificationSetting, isBeingNotified } from './FollowInfoStorage.js';
+import { addNotificationSetting, removeNotificationSetting, isBeingNotified, followAuthor, followCategory, isFollowingCategory, unfollowCategory } from './FollowInfoStorage.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -44,9 +44,7 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // isOnBreakingNews: false,
-            // isOnEveryDay: false,
-            // isOnEveryWeek: false,
+            following: false,
             modalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -58,19 +56,14 @@ export default class Headlines extends Component {
             width: width <= height ? width : height,
             height: Dimensions.get('window').height,
         };
-        // this.data = []; //A list of all current data
         this.currPosts = {}; //A hash of all current posts
         for (var category in CATEGORIES) {
           // skip loop if the property is from prototype
           if (!CATEGORIES.hasOwnProperty(category)) continue;
-          // this.data.push({category: category, page: 1, posts:[]});
           this.currPosts[category] = {page: 1, posts:[], hashed:{}};
         }
-        // console.log(this.currPosts);
         this.fetchDataIsBusy = true; //Used to handle concurrency
-        // this.fetchData = _.debounce(this.fetchData, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.fetchData(false, (' ' + selectedCategory).slice(1)); //Fetches featured headlines and category articles
-        // this.loadMore = _.debounce(this.loadMore, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
@@ -93,8 +86,6 @@ export default class Headlines extends Component {
 
 
     async componentDidMount() {
-      // console.log('hihi');
-      // tracker.setUser('12345678');
       var currentdate = new Date();
      // log an event
      Amplitude.logEvent(STRINGS.APP_OPENED);
@@ -102,12 +93,16 @@ export default class Headlines extends Component {
      let breakingNews = await isBeingNotified(1);
      let everyDay = await isBeingNotified(2);
      let everyWeek = await isBeingNotified(3);
+     let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
+     let following = await isFollowingCategory(categoryId)
      
-     this.setState({isOnBreakingNews: breakingNews, 
-                       isOnEveryDay: everyDay, 
-                       isOnEveryWeek: everyWeek});
+      this.setState({
+        isOnBreakingNews: breakingNews,
+        isOnEveryDay: everyDay,
+        isOnEveryWeek: everyWeek,
+        following
+      });
 
-    //  console.log("Logged");
     }
 
     //Opens the drawer
@@ -215,22 +210,23 @@ export default class Headlines extends Component {
       await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
 
-    //DUMMY CALL for following articles
-    followCategoryArticles(authorId) {
-      Promise.all([
-          // // Todo: post pagination
-          // fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&per_page=100&author=" + authorId).then(e => {
-          //     this.setState({
-          //         postCount: e.headers["X-WP-Total"]
-          //     })
-          //     return e.json();
-          // }),
-          // fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
-      ]).then(values => this.setState({
-          // posts: values[0],
-          // details: values[1]
-      }));
-  }
+    async updateFollow() {
+      let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
+      this.setState({
+        following: await isFollowingCategory(categoryId)
+      });
+    }
+
+    async toggleFollow() {
+      let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
+      if (this.state.following) {
+        await unfollowCategory(categoryId);
+      }
+      else {
+        await followCategory(categoryId);
+      }
+      this.updateFollow();
+    }
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
@@ -251,10 +247,7 @@ export default class Headlines extends Component {
                     flex: 1,
                     backgroundColor: "maroon",
                   }}
-                onPress={() => {
-                  Alert.alert('You will now receive notifications for new articles related to ' + selectedCategory + '!');
-                  this.followCategoryArticles(selectedCategory);
-                }}
+                onPress={() => this.toggleFollow()}
                 >                  
                     <Text style={{
                       marginTop: 8,
@@ -267,7 +260,7 @@ export default class Headlines extends Component {
                       alignSelf: 'center',
                     }}>
                       <Text>
-                      Follow
+                      {this.state.following ? "Following": "Follow"}
                       </Text>
                   </Text>                  
                 </TouchableOpacity>
