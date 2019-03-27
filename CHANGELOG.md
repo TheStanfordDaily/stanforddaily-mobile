@@ -1,3 +1,7 @@
+# 1.3 (3/27/18?)
+- Maps -- view maps on campus and get around more easily.
+- Push notifications -- follow your favorite authors, locations, or articles! You can also subscribe to the daily, weekly, or monthly digest.
+
 # 1.1.2 (1/9/18) (OTA)
 - Increase image resolution for newsfeed items.
 
