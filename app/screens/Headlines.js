@@ -1,6 +1,7 @@
 import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {Image} from 'react-native';
+import {AsyncStorage} from "react-native";
 import Modal from "react-native-modal"
 import ToggleSwitch from 'toggle-switch-react-native'
 import {
@@ -31,7 +32,6 @@ import _ from 'lodash';
 import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
-import { addNotificationSetting, removeNotificationSetting, isBeingNotified, followAuthor, followCategory, isFollowingCategory, unfollowCategory } from './FollowInfoStorage.js';
 import FollowButton from './common/FollowButton.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
@@ -45,10 +45,10 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            modalVisible: true,
+            modalVisible: false,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
-            loading: false,
+            loading: true,
             selectedCategoryData: [
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'},
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'}
@@ -85,8 +85,11 @@ export default class Headlines extends Component {
     }
 
 
-    componentDidMount() {
+    async componentDidMount() {
       Amplitude.logEvent(STRINGS.APP_OPENED);
+      if (!Array.isArray(await AsyncStorage.getItem("notification_settings"))) {
+        this.setState({modalVisible: true});
+      }
     }
 
     //Opens the drawer
