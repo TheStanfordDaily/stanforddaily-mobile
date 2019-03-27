@@ -6,6 +6,7 @@ import HTML from '../../HTML';
 import MapView from 'react-native-maps';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ICONS, COLORS, HEIGHTS, STRINGS, DEFAULT_IMAGE, DAILY_URL } from "../../assets/constants";
+import FollowButton from '../common/FollowButton';
 let { width, height } = Dimensions.get('window');
 const iphone_x = height == HEIGHTS.IPHONE_X;
 
@@ -136,16 +137,6 @@ export default class MapExample extends Component {
     })
   }
 
-  followLocationArticles(locationID) {
-    // Todo: post pagination
-    Alert.alert('You are now following new articles related to ' + this.state.name + '!');
-    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?_embed").then(e => {
-      return e.json();
-    }).then(e => {
-      ////to do
-    })
-  }
-
 
   onMapReady = (e) => {
     if(!this.state.ready) {
@@ -208,21 +199,7 @@ export default class MapExample extends Component {
                   alignSelf: "center",
                   backgroundColor: "maroon"
                 }}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.followLocationArticles(this.state.name); //DUMMY API call, with an alert.
-                    }}>
-                    <Text style={{
-                      margin: 5,
-                      fontSize: 15,
-                      fontFamily: "Hoefler Text",
-                      fontWeight: "bold",
-                      color: COLORS.WHITE,
-                      alignSelf: "center"
-                    }}>
-                      Follow
-                  </Text>
-                  </TouchableOpacity>
+                  <FollowButton type="location" id={this.state.name} containerStyle={{}} />
                 </TouchableHighlight>
 
                 <TouchableHighlight style={{

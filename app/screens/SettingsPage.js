@@ -1,4 +1,4 @@
-import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS} from '../assets/constants.js';
+import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS, PN_RECEIVER_GROUPS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {Image} from 'react-native';
 import Modal from "react-native-modal"
@@ -18,18 +18,13 @@ import {
     TouchableHighlight,
     SectionList
 } from 'react-native';
-// import Drawer from 'react-native-drawer'
-
-// //Components for this app imports
-// import Header from './common/header';
-// import NewsFeedItem from './common/newsfeed-item';
-// import Placeholder from './common/placeholder';
 import _ from 'lodash';
 
 //Styles for the page
 import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
+import { isBeingNotified, addNotificationSetting, removeNotificationSetting } from './FollowInfoStorage.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -37,15 +32,50 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window');
 var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
-//Do I need props?
 export default class SettingsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnBreakingNews: false,
-            isOnEveryDay: false,
-            isOnEveryWeek: false,
+            isOn: {
+              [PN_RECEIVER_GROUPS.BREAKING]: false,
+              [PN_RECEIVER_GROUPS.DAILY]: false,
+              [PN_RECEIVER_GROUPS.WEEKLY]: false
+            }
         };
+    }
+
+    async componentDidMount() {
+      this.updateNotificationSettings();
+    }
+
+    async updateNotificationSettings() {
+      this.setState({
+        isOn: {
+          [PN_RECEIVER_GROUPS.BREAKING]: await isBeingNotified(PN_RECEIVER_GROUPS.BREAKING),
+          [PN_RECEIVER_GROUPS.DAILY]: await isBeingNotified(PN_RECEIVER_GROUPS.DAILY),
+          [PN_RECEIVER_GROUPS.WEEKLY]: await isBeingNotified(PN_RECEIVER_GROUPS.WEEKLY)
+        }
+      });
+    }
+
+    async toggleNotificationSetting(name) {
+      if (this.state.isOn[name]) {
+        await removeNotificationSetting(name);
+      }
+      else {
+        await addNotificationSetting(name);
+      }
+      await this.updateNotificationSettings();
+    }
+
+    ToggleSwitch = ({receiverGroup}) => {
+      return <ToggleSwitch
+      isOn={this.state.isOn[receiverGroup]}
+      onColor='maroon'
+      offColor='grey'
+      size='small'
+      onToggle={ () => this.toggleNotificationSetting(receiverGroup) }
+      />
     }
 
     render() {
@@ -59,7 +89,7 @@ export default class SettingsPage extends Component {
           {/* Header */}
           <View 
             style = {{
-              marginTop: 40,
+              marginTop: 0,
               borderBottomWidth: 4,
               borderColor: 'grey',
               alignItems: 'center',
@@ -96,13 +126,7 @@ export default class SettingsPage extends Component {
               </View>
   
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-              {<ToggleSwitch
-                isOn={this.state.isOnBreakingNews}
-                onColor='maroon'
-                offColor='grey'
-                size='small'
-                onToggle={ isOnBreakingNews => this.setState(( {isOnBreakingNews})) }
-                />}
+              <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.BREAKING}/>
               </View>
   
             </View>
@@ -120,13 +144,7 @@ export default class SettingsPage extends Component {
               </View>
   
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-              {<ToggleSwitch
-                isOn={this.state.isOnEveryDay}
-                onColor='maroon'
-                offColor='grey'
-                size='small'
-                onToggle={ isOnEveryDay => this.setState(( {isOnEveryDay})) }
-                /> }
+              <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.DAILY}/>
               </View>
   
             </View>
@@ -144,13 +162,7 @@ export default class SettingsPage extends Component {
               </View>
   
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-              { <ToggleSwitch
-                isOn={this.state.isOnEveryWeek}
-                onColor='maroon'
-                offColor='grey'
-                size='small'
-                onToggle={ isOnEveryWeek => this.setState(( {isOnEveryWeek})) }
-                /> }
+              <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.WEEKLY}/>
               </View>
   
             </View>

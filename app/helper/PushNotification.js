@@ -1,6 +1,7 @@
 import { Permissions, Notifications } from 'expo';
+import {DAILY_URL} from '../assets/constants';
 
-const PUSH_ENDPOINT = 'http://stanforddaily2.staging.wpengine.com/wp-json/tsd/v1/push-notification/users';
+const PUSH_ENDPOINT = DAILY_URL + '/wp-json/tsd/v1/push-notification/users';
 
 export async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Permissions.getAsync(
