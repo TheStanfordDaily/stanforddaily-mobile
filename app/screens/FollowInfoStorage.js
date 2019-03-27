@@ -122,10 +122,10 @@ async function updateBackend() {
         },
         body: JSON.stringify({
             subscribing: {
-                list: getNotificationSettings(),
-                category_ids: getCategoriesFollowed(),
-                author_ids: getAuthorsFollowed(),
-                location_ids: getLocationsFollowed()
+                list: await getNotificationSettings(),
+                category_ids: await getCategoriesFollowed(),
+                author_ids: await getAuthorsFollowed(),
+                location_ids: await getLocationsFollowed()
             },
         }),
     });
