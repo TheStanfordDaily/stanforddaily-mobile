@@ -22,7 +22,7 @@ const STRINGS = {
   STATIC: "static",
   LIGHT_CONTENT: "light-content",
   MORE_TEXT: "...",
-  MEDIA_URL: 'http://stanforddaily.com/wp-json/wp/v2/media/',
+  MEDIA_URL: 'https://www.stanforddaily.com/wp-json/wp/v2/media/',
   DAILY_URL: 'https://www.stanforddaily.com/',
   PROFILE: "Profile",
   CHILD_REMOVED: "child_removed",

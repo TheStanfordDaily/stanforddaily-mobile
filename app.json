@@ -5,7 +5,7 @@
     "slug": "StanfordDaily",
     "privacy": "public",
     "sdkVersion": "32.0.0",
-    "version": "1.1.2",
+    "version": "1.2",
     "platforms": [
       "ios",
       "android"
@@ -32,6 +32,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.Stanford.Daily.App",
+      "buildNumber": "3",
       "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
       "supportsTablet": true
     },

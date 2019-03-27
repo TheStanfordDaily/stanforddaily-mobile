@@ -31,6 +31,7 @@ import _ from 'lodash';
 import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
+import { addNotificationSetting, removeNotificationSetting, isBeingNotified } from './FollowInfoStorage.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -90,12 +91,22 @@ export default class Headlines extends Component {
       this.props.navigation.navigate(STRINGS.POST, { ...data });
     }
 
-    componentDidMount() {
+
+    async componentDidMount() {
       // console.log('hihi');
       // tracker.setUser('12345678');
       var currentdate = new Date();
      // log an event
      Amplitude.logEvent(STRINGS.APP_OPENED);
+
+     let breakingNews = await isBeingNotified(1);
+     let everyDay = await isBeingNotified(2);
+     let everyWeek = await isBeingNotified(3);
+     
+     this.setState({isOnBreakingNews: breakingNews, 
+                       isOnEveryDay: everyDay, 
+                       isOnEveryWeek: everyWeek});
+
     //  console.log("Logged");
     }
 
