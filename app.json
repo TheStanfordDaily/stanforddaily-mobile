@@ -41,7 +41,8 @@
       "versionCode": 7,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.Stanford.Daily.App",
       "permissions": [
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "NOTIFICATIONS"
       ]
     }
   }
