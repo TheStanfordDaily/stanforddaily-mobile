@@ -35,7 +35,7 @@ export async function followCategory(category_id) {
 export async function unfollowCategory(category_id) {
     let categories_followed = await getCategoriesFollowed(); 
     var index = categories_followed.indexOf(category_id);
-    if (index !== -1) categories_followed.splice(index);                                     // remove category_id from list
+    if (index !== -1) categories_followed.splice(index, 1);                                     // remove category_id from list
     await updateBackend();
     return await AsyncStorage.setItem('categories_followed', JSON.stringify(categories_followed));
 }
@@ -50,7 +50,7 @@ export async function followAuthor(author_id) {
 export async function unfollowAuthor(author_id) {
     let authors_followed = await getAuthorsFollowed(); 
     var index = authors_followed.indexOf(author_id);
-    if (index !== -1) authors_followed.splice(index);                                       // remove author_id from list
+    if (index !== -1) authors_followed.splice(index, 1);                                       // remove author_id from list
     await updateBackend();
     return await AsyncStorage.setItem('authors_followed', JSON.stringify(authors_followed));
 }
@@ -65,7 +65,7 @@ export async function followLocation(location_id) {
 export async function unfollowLocation(location_id) {
     let locations_followed = await getLocationsFollowed(); 
     var index = locations_followed.indexOf(location_id);
-    if (index !== -1) locations_followed.splice(index);                                       
+    if (index !== -1) locations_followed.splice(index, 1);                                       
     await updateBackend();
     return await AsyncStorage.setItem('locations_followed', JSON.stringify(locations_followed));
 }
@@ -101,7 +101,7 @@ export async function addNotificationSetting(notification_id) {
 export async function removeNotificationSetting(notification_id) {
     let notification_settings = await getNotificationSettings(); 
     var index = notification_settings.indexOf(notification_id);
-    if (index !== -1) notification_settings.splice(index);                                     // remove notification option from list
+    if (index !== -1) notification_settxings.splice(index, 1);                                     // remove notification option from list
     await updateBackend();
     return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
 }
