@@ -2,7 +2,7 @@ import {AsyncStorage} from "react-native"
 import { STRINGS } from '../assets/constants.js'
 
 export async function getToken() {
-    return await AsyncStorage.getItem('token') || "" ;
+    return await AsyncStorage.getItem('token') || (__DEV__ ? "tsd-dev": "") ;
 }
 
 export async function setToken(token) {
