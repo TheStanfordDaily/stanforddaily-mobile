@@ -1,4 +1,4 @@
-# 1.2.1 (3/27/18?)
+# 1.2 (3/27/18?)
 - Maps -- view maps on campus and get around more easily.
 - Push notifications -- follow your favorite authors, locations, or articles! You can also subscribe to the daily, weekly, or monthly digest.
 
