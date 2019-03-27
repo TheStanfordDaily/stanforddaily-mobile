@@ -78,7 +78,7 @@ export async function isFollowingCategory(category_id) {
 }
 
 export async function isFollowingAuthor(author_id) {
-    authors_followed = getAuthorsFollowed();
+    authors_followed = await getAuthorsFollowed();
     var index = authors_followed.indexOf(author_id);
     if (index !== -1) return true;
     else return false;

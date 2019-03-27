@@ -32,6 +32,7 @@ import styles from './styles/headlines';
 
 import {Amplitude} from 'expo';
 import { addNotificationSetting, removeNotificationSetting, isBeingNotified, followAuthor, followCategory, isFollowingCategory, unfollowCategory } from './FollowInfoStorage.js';
+import FollowButton from './common/FollowButton.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -44,7 +45,6 @@ export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            following: false,
             modalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
@@ -85,24 +85,8 @@ export default class Headlines extends Component {
     }
 
 
-    async componentDidMount() {
-      var currentdate = new Date();
-     // log an event
-     Amplitude.logEvent(STRINGS.APP_OPENED);
-
-     let breakingNews = await isBeingNotified(1);
-     let everyDay = await isBeingNotified(2);
-     let everyWeek = await isBeingNotified(3);
-     let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
-     let following = await isFollowingCategory(categoryId)
-     
-      this.setState({
-        isOnBreakingNews: breakingNews,
-        isOnEveryDay: everyDay,
-        isOnEveryWeek: everyWeek,
-        following
-      });
-
+    componentDidMount() {
+      Amplitude.logEvent(STRINGS.APP_OPENED);
     }
 
     //Opens the drawer
@@ -209,24 +193,7 @@ export default class Headlines extends Component {
       this.fetchDataIsBusy = true;
       await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
-
-    async updateFollow() {
-      let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
-      this.setState({
-        following: await isFollowingCategory(categoryId)
-      });
-    }
-
-    async toggleFollow() {
-      let categoryId = parseInt(CATEGORIES[this.state.selectedCategory]);
-      if (this.state.following) {
-        await unfollowCategory(categoryId);
-      }
-      else {
-        await followCategory(categoryId);
-      }
-      this.updateFollow();
-    }
+    
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
@@ -237,33 +204,7 @@ export default class Headlines extends Component {
              </Text>
 
              <View>
-              <TouchableOpacity
-                style={{
-                    marginTop: 15,
-                    marginBottom: 3,
-                    marginLeft: 4,
-                    marginRight: 12,
-                    borderRadius: 5,
-                    flex: 1,
-                    backgroundColor: "maroon",
-                  }}
-                onPress={() => this.toggleFollow()}
-                >                  
-                    <Text style={{
-                      marginTop: 8,
-                      marginLeft: 4,
-                      marginRight: 4,
-                      fontSize: 15,
-                      fontFamily: 'Hoefler Text',
-                      fontWeight: 'bold',
-                      color: 'white',
-                      alignSelf: 'center',
-                    }}>
-                      <Text>
-                      {this.state.following ? "Following": "Follow"}
-                      </Text>
-                  </Text>                  
-                </TouchableOpacity>
+              <FollowButton type="category" id={parseInt(CATEGORIES[this.state.selectedCategory])} />
              </View>
            </View>           
          </View>   
