@@ -136,6 +136,17 @@ export default class MapExample extends Component {
     })
   }
 
+  followLocationArticles(locationID) {
+    // Todo: post pagination
+    Alert.alert('You are now following new articles related to ' + this.state.name + '!');
+    fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?_embed").then(e => {
+      return e.json();
+    }).then(e => {
+      ////to do
+    })
+  }
+
+
   onMapReady = (e) => {
     if(!this.state.ready) {
       this.setState({ready: true});
@@ -192,6 +203,29 @@ export default class MapExample extends Component {
                 </Text>
 
                 <TouchableHighlight style={{
+                  margin: 8,
+                  borderRadius: 5,
+                  alignSelf: "center",
+                  backgroundColor: "maroon"
+                }}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.followLocationArticles(this.state.name); //DUMMY API call, with an alert.
+                    }}>
+                    <Text style={{
+                      margin: 5,
+                      fontSize: 15,
+                      fontFamily: "Hoefler Text",
+                      fontWeight: "bold",
+                      color: COLORS.WHITE,
+                      alignSelf: "center"
+                    }}>
+                      Follow
+                  </Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
+
+                <TouchableHighlight style={{
                   position: "absolute",
                   top: 15,
                   right: 15,
@@ -203,7 +237,6 @@ export default class MapExample extends Component {
                 }}>
                   <TouchableOpacity
                     onPress={() => {
-                      // Alert.alert('You will now receive push notifications alerting you about new articles related to the Rodin Sculpture Garden!')
                       this.closePostsView();
                     }}>
                     <Text style={{

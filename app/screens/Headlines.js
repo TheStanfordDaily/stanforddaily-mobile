@@ -4,6 +4,7 @@ import {Image} from 'react-native';
 import Modal from "react-native-modal"
 import ToggleSwitch from 'toggle-switch-react-native'
 import {
+    Alert,
     View,
     Text,
     Dimensions,
@@ -14,6 +15,7 @@ import {
     NetInfo,
     FlatList,
     TouchableOpacity,
+    TouchableHighlight,
     SectionList
 } from 'react-native';
 import Drawer from 'react-native-drawer'
@@ -22,6 +24,7 @@ import Drawer from 'react-native-drawer'
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
+import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
 
 //Styles for the page
@@ -35,15 +38,16 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 //A map between categories names and their codes
 const {width, height} = Dimensions.get('window');
 var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
+//var SettingsPageModal = require('./SettingsPage.js');
 
 export default class Headlines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isOnBreakingNews: false,
-            isOnEveryDay: false,
-            isOnEveryWeek: false,
-            isModalVisible: true,
+            // isOnBreakingNews: false,
+            // isOnEveryDay: false,
+            // isOnEveryWeek: false,
+            modalVisible: true,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
             loading: false,
@@ -78,6 +82,9 @@ export default class Headlines extends Component {
           // console.warn("orientation changed");
         });
     }
+  
+    _toggleModal = () =>
+    this.setState({ modalVisible: !this.state.modalVisible });
 
     //Given data, it passes it to Post view
     goToPost(data) {
@@ -208,6 +215,22 @@ export default class Headlines extends Component {
       await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
 
+    //DUMMY CALL for following articles
+    followCategoryArticles(authorId) {
+      Promise.all([
+          // // Todo: post pagination
+          // fetch(STRINGS.DAILY_URL + "wp-json/wp/v2/posts?_embed&per_page=100&author=" + authorId).then(e => {
+          //     this.setState({
+          //         postCount: e.headers["X-WP-Total"]
+          //     })
+          //     return e.json();
+          // }),
+          // fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/authors/" + authorId).then(e => e.json())
+      ]).then(values => this.setState({
+          // posts: values[0],
+          // details: values[1]
+      }));
+  }
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
@@ -216,8 +239,41 @@ export default class Headlines extends Component {
              <Text style={styles.categoriesText}>
                {selectedCategory}
              </Text>
-           </View>
-         </View>
+
+             <View>
+              <TouchableOpacity
+                style={{
+                    marginTop: 15,
+                    marginBottom: 3,
+                    marginLeft: 4,
+                    marginRight: 12,
+                    borderRadius: 5,
+                    flex: 1,
+                    backgroundColor: "maroon",
+                  }}
+                onPress={() => {
+                  Alert.alert('You will now receive notifications for new articles related to ' + selectedCategory + '!');
+                  this.followCategoryArticles(selectedCategory);
+                }}
+                >                  
+                    <Text style={{
+                      marginTop: 8,
+                      marginLeft: 4,
+                      marginRight: 4,
+                      fontSize: 15,
+                      fontFamily: 'Hoefler Text',
+                      fontWeight: 'bold',
+                      color: 'white',
+                      alignSelf: 'center',
+                    }}>
+                      <Text>
+                      Follow
+                      </Text>
+                  </Text>                  
+                </TouchableOpacity>
+             </View>
+           </View>           
+         </View>   
      )
    }
 
@@ -257,6 +313,7 @@ export default class Headlines extends Component {
   sideMenu() {
     return (
       <View style={styles.sideMenuContainer}>
+      
         <View style={styles.sideBarTitle}>
           <Text style={styles.sideBarTitleText}> Categories </Text>
         </View>
@@ -271,12 +328,35 @@ export default class Headlines extends Component {
             </TouchableOpacity>
           }
         />
+                <TouchableHighlight style={{
+                  margin: 8,
+                  borderRadius: 5,
+                  alignSelf: "center",
+                  //backgroundColor: "maroon"
+                }}>
+                  <TouchableOpacity
+                    onPress={() => this._toggleModal()}>
+                          <Image
+                          style={{margin: 3, 
+                            alignSelf: "center", 
+                            width: 25, 
+                            height: 25 }}
+                          source={require('../media/gears.png')}
+                      />
+                      <Text style={{
+                        fontSize: 13,
+                        fontFamily: "Hoefler Text",
+                        color: COLORS.BLACK,
+                        alignSelf: "center"
+                      }}>
+                        Settings
+                    </Text>
+                  </TouchableOpacity>
+                </TouchableHighlight>
       </View>
+      
     )
   }
-
-  _toggleModal = () =>
-  this.setState({ isModalVisible: !this.state.isModalVisible });
 
   //Required ReactNative function
   //For this screen we render
@@ -288,7 +368,6 @@ export default class Headlines extends Component {
   */
   render() {
     return (
-
       <Drawer
       type={STRINGS.STATIC}
       ref={REFS.DRAWER}
@@ -301,171 +380,15 @@ export default class Headlines extends Component {
       tapToClose={true}
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
-      >
-          <Modal
-          style = {{
-            backgroundColor: 'white'}}
-            isVisible={this.state.isModalVisible}>
-
-        {/* Header */}
-        <View
-          style = {{
-            marginTop: 40,
-            borderBottomWidth: 4,
-            borderColor: 'grey',
-            alignItems: 'center',
-            flex: 0.4,
-          }}>
-
-          <Text style= {{
-            fontFamily: 'PT Serif',
-            fontSize: 24
-          }}>Notifications</Text>
-
-          <Text style= {{
-            fontFamily: 'PT Serif'
-          }}>How often do you want to hear from The Daily?</Text>
-
-        </View>
-
-        <View
-          style = {{
-            flex: 1,
-            backgroundColor: 'white',
-          }}>
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image
-              style={{ width: 35, height: 35 }}
-              source={require('../media/breaking.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Breaking News</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Important stories, as they happen</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnBreakingNews}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnBreakingNews => {
-                if (this.state.isOnBreakingNews) {
-                  removeNotificationSetting(1);
-                } else if (!this.state.isOnBreakingNews) {
-                  addNotificationSetting(1);
-                }
-                this.setState(( {isOnBreakingNews} ))
-                }
-                }/>
-            </View>
-          </View>
-
-
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image
-              style={{ width: 35, height: 35 }}
-              source={require('../media/sunicon.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every day</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Daily news roundup</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnEveryDay}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnEveryDay => {
-                if (this.state.isOnEveryDay) {
-                  removeNotificationSetting(2);
-                } else if (!this.state.isOnEveryDay) {
-                  addNotificationSetting(2);
-                }
-                this.setState(( {isOnEveryDay} ))
-                }
-                }/>
-            </View>
-
-          </View>
-
-
-
-          <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}>
-            <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-              <Image
-              style={{ width: 32, height: 32 }}
-              source={require('../media/calendaricon.png')}></Image>
-            </View>
-
-            <View style = {{flex: 4, margin: 5}}>
-              <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every week</Text>
-              <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekly Leland's Digest</Text>
-            </View>
-
-            <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
-            <ToggleSwitch
-              isOn={this.state.isOnEveryWeek}
-              onColor='maroon'
-              offColor='grey'
-              size='small'
-              onToggle={ isOnEveryWeek => {
-                if (this.state.isOnEveryWeek) {
-                  removeNotificationSetting(3);
-                } else if (!this.state.isOnEveryWeek) {
-                  addNotificationSetting(3);
-                }
-                this.setState(( {isOnEveryWeek} ))
-                }
-                }/>
-            </View>
-
-          </View>
-
-
-
-
-
-        </View>
-
-        <View
-          style = {{
-            flex: 3,
-            backgroundColor: 'white',
-          }}>
-        </View>
-
-        <View style = {{margin: 20, alignItems: 'center'}}>
-            <TouchableOpacity
-              style = {{
-                height: 40,
-                width: 200,
-                padding: 10,
-                borderRadius: 10,
-                alignItems: 'center',
-                backgroundColor:'maroon'}}
-              onPress={this._toggleModal}>
-              <Text style={{
-                alignSelf: 'center',
-                color: 'white',
-                fontFamily: 'Arial'
-                }}>Close</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* <View style = {{flex: 0.2}}>
-          </View> */}
-
-        </Modal>
-
+      > 
+      {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
+      <View> 
+        <SettingsPage
+          visible={this.state.modalVisible}
+          setModalVisible = {() => this._toggleModal()}
+        />
+      </View>
+      
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE, alignItems:'center'}}>
         <StatusBar
@@ -495,3 +418,5 @@ export default class Headlines extends Component {
 const drawerStyles = {
   drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3},
 }
+
+//
