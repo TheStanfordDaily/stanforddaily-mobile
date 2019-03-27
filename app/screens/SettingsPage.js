@@ -59,7 +59,7 @@ export default class SettingsPage extends Component {
           {/* Header */}
           <View 
             style = {{
-              marginTop: 40,
+              marginTop: 0,
               borderBottomWidth: 4,
               borderColor: 'grey',
               alignItems: 'center',
