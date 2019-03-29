@@ -20,9 +20,6 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 
-//Styles for the page
-import styles from './styles/headlines';
-
 import {Amplitude} from 'expo';
 import { isBeingNotified, addNotificationSetting, removeNotificationSetting } from './FollowInfoStorage.js';
 
@@ -32,6 +29,10 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const {width, height} = Dimensions.get('window');
 var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
+
+const styles = {
+  listItem: { flex: 1, maxHeight: 60, flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}
+}
 export default class SettingsPage extends Component {
     constructor(props) {
         super(props);
@@ -93,7 +94,9 @@ export default class SettingsPage extends Component {
               borderBottomWidth: 4,
               borderColor: 'grey',
               alignItems: 'center',
-              flex: 0.4, 
+              justifyContent: 'center',
+              flex: 1, 
+              maxHeight: 80
             }}> 
             
             <Text style= {{
@@ -109,11 +112,11 @@ export default class SettingsPage extends Component {
   
           <View 
             style = {{
-              flex: 1, 
+              flex: 2, 
               backgroundColor: 'white',
             }}> 
   
-            <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+            <View style = {styles.listItem}> 
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
                 <Image 
                 style={{ width: 35, height: 35 }}
@@ -131,7 +134,7 @@ export default class SettingsPage extends Component {
   
             </View>
   
-            <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+            <View style = {styles.listItem}> 
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
                 <Image 
                 style={{ width: 35, height: 35 }}
@@ -149,7 +152,7 @@ export default class SettingsPage extends Component {
   
             </View>
   
-            <View style = {{ flex: 1 , flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}}> 
+            <View style = {styles.listItem}> 
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
                 <Image 
                 style={{ width: 32, height: 32 }}
@@ -168,13 +171,7 @@ export default class SettingsPage extends Component {
             </View>
   
           </View>
-  
-          <View 
-            style = {{
-              flex: 3, 
-              backgroundColor: 'white',
-            }}> 
-          </View>
+
   
           <View style = {{margin: 20, alignItems: 'center'}}>
               <TouchableOpacity 
