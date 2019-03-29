@@ -115,16 +115,6 @@ export async function isBeingNotified(notification_id) {
 }
 
 async function updateBackend() {
-    console.log("putting");
-    console.log(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken());
-    console.log(JSON.stringify({
-        subscribing: {
-            list: await getNotificationSettings(),
-            category_ids: await getCategoriesFollowed(),
-            author_ids: await getAuthorsFollowed(),
-            location_ids: await getLocationsFollowed()
-        },
-    }));
     let response = await fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
         method: 'PUT',
         headers: {
