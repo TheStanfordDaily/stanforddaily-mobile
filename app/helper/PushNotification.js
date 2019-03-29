@@ -21,5 +21,4 @@ export async function registerForPushNotificationsAsync() {
     // Todo: tell user that push notifications are disabled.
     return;
   }
-
 }
