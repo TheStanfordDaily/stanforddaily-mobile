@@ -130,5 +130,5 @@ async function updateBackend() {
             },
         }),
     });
-    console.log(response);
+    // Todo: add error handling here.
 }
