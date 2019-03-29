@@ -1,8 +1,6 @@
 import { Permissions, Notifications } from 'expo';
 import {STRINGS} from '../assets/constants';
 
-const PUSH_ENDPOINT = STRINGS.DAILY_URL + '/wp-json/tsd/v1/push-notification/users';
-
 export async function registerForPushNotificationsAsync() {
   const { status: existingStatus } = await Permissions.getAsync(
     Permissions.NOTIFICATIONS
@@ -20,26 +18,7 @@ export async function registerForPushNotificationsAsync() {
 
   // Stop here if the user did not grant permissions
   if (finalStatus !== 'granted') {
+    // Todo: tell user that push notifications are disabled.
     return;
   }
-
-  // Get the token that uniquely identifies this device
-  let token = await Notifications.getExpoPushTokenAsync();
-  let requestBody = {
-    subscribing: {
-      category_ids: ["test_1"],
-      author_ids: ["test_2"],
-      location_ids: ["test_3"],
-    },
-  };
-
-  // POST the token to your backend server from where you can retrieve it to send push notifications.
-  let response = await fetch(PUSH_ENDPOINT + "/" + token, {
-    method: 'PUT',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(requestBody),
-  });
 }

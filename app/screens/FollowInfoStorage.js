@@ -1,12 +1,13 @@
 import {AsyncStorage} from "react-native"
 import { STRINGS } from '../assets/constants.js'
+import { Notifications } from "expo";
 
 export async function getToken() {
-    return await AsyncStorage.getItem('token') || (__DEV__ ? "tsd-dev": "") ;
-}
-
-export async function setToken(token) {
-    return await AsyncStorage.setItem('token', token);
+    let token = await Notifications.getExpoPushTokenAsync();
+    if (__DEV__) {
+        console.log(token);
+    }
+    return token;
 }
 
 export async function getCategoriesFollowed() {
@@ -114,7 +115,7 @@ export async function isBeingNotified(notification_id) {
 }
 
 async function updateBackend() {
-    return fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
+    let response = await fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
         method: 'PUT',
         headers: {
         Accept: 'application/json',
@@ -129,4 +130,5 @@ async function updateBackend() {
             },
         }),
     });
+    // Todo: add error handling here.
 }
