@@ -64,12 +64,12 @@ export default class extends React.Component {
     render() {
         return <TouchableOpacity
             style={this.props.containerStyle || {
-                marginTop: 10,
                 marginLeft: 4,
-                marginRight: 12,
+                marginTop: "auto",
+                marginRight: 10,
                 borderRadius: 5,
                 // flex: 1,
-                padding: 5,
+                padding: 7,
                 width: 100,
                 backgroundColor: "maroon",
                 alignSelf: "center",
@@ -78,9 +78,6 @@ export default class extends React.Component {
             onPress={() => this.toggleFollow()}
         >
             <Text style={{
-                marginTop: 8,
-                marginLeft: 4,
-                marginRight: 4,
                 fontSize: 15,
                 fontFamily: 'Hoefler Text',
                 fontWeight: 'bold',

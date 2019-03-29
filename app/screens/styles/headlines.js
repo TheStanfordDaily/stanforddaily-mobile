@@ -59,7 +59,7 @@ const styles= StyleSheet.create({
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES, //match category side with article edge
       fontFamily:FONTS.CENTURY,
-      fontSize:28,
+      fontSize:25,
       flex: 2,
     }
 })
