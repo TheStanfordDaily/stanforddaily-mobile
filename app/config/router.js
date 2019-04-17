@@ -3,21 +3,14 @@ import { createBottomTabNavigator, createStackNavigator, createAppContainer } fr
 import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
 import {STRINGS, MARGINS, HEIGHTS, KEYS, ICONS, COLORS} from '../assets/constants.js';
 import { Ionicons } from '@expo/vector-icons';
-// import TabBarComponent from "../TabBarComponent"
-
-// const myIcon = ()
-
 import Headlines from '../screens/Headlines';
 import Search from '../screens/Search';
 import Post from '../screens/Post';
-import NewPost from '../screens/NewPost';
-import SignIn from '../screens/SignIn';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
 import Map from "../screens/map/Map";
 import {Amplitude} from 'expo';
 import {FONTS} from "../assets/constants";
-import { colors } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
@@ -115,23 +108,8 @@ export const Tabs = createBottomTabNavigator({
       tabBarLabel: 'Map',
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.MAP_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
-  },
-// Chatter: {
-//   screen: ChatterStack,
-//   navigationOptions: {
-//     tabBarLabel: 'Chatter',
-//     tabBarIcon: ({ tintColor }) => <Image
-//       source={require('../media/Community.png')}
-//       style={{tintColor: tintColor, width: 30, height: 27, marginTop: 5}}
-//     />,
-//     tabBarOnPress: (scene, jumpToIndex) => {
-//         Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.CHATTER});
-//         jumpToIndex(scene.index);
-//     },
-//   },
-// }
+  }
 },{
-  // tabBarComponent: TabBarComponent,
   tabBarOptions: {
     activeTintColor: COLORS.CARDINAL,
     inactiveTintColor: '#000000',
@@ -153,37 +131,9 @@ export const Tabs = createBottomTabNavigator({
   lazy: true
 });
 
-const NewPostStack = createStackNavigator({
-  NewPost: {
-    screen: NewPost,
-    navigationOptions: {
-      title: 'New Post',
-    },
-  },
-}, {
-  headerMode: 'none',
-});
-
-const SignInStack = createStackNavigator({
-  SignIn: {
-    screen: SignIn,
-    navigationOptions: {
-      title: 'Sign In',
-    },
-  },
-}, {
-  headerMode: 'none',
-});
-
 const Root = createStackNavigator({
   Tabs: {
     screen: Tabs,
-  },
-  NewPost: {
-    screen: NewPostStack,
-  },
-  SignIn: {
-    screen: SignInStack,
   },
   Search: {
     screen: SearchStack,
