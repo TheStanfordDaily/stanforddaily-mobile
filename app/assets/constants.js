@@ -42,13 +42,10 @@ const STRINGS = {
   APP_OPENED: "App opened",
   ARTICLES_PREVIEW_REQUEST: "Article preview request",
   ARTICLE_FULL_LOADED: "Article Clicked",
-  NEW_POST: "NewPost",
   NONE: "none",
   UNDEFINED: "undefined",
   NEWEST_TO_OLDEST: "sortDate",
   POSTS_BODIES: "postsBodies",
-  SIGN_IN: "SignIn",
-  SIGN_UP: "SignUp",
   AUTHORS: "Authors",
   CHATTER: "Chatter",
   SIGNED_IN: "signedIn",
@@ -91,13 +88,10 @@ const PATHS = {
   REPLY_ITEM: "reply-item.js",
   HEADLINES_STYLE: "headlines.js",
   NEWSFEED_STYLE: "newsfeeditem.js",
-  CHATTER: "chatter.js",
   CHATTER_POST: "DetailedPost.js",
   HEADLINES: "Headlines.js",
-  NEW_POST: "NewPost.js",
   POST: "Post.js",
-  PROFILE: "Profile.js",
-  SIGN_IN: "SignIn.js"
+  PROFILE: "Profile.js"
 }
 
 const CATEGORIES = {
