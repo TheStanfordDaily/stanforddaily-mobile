@@ -10,11 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import Headlines from '../screens/Headlines';
 import Search from '../screens/Search';
 import Post from '../screens/Post';
-import Chatter from '../screens/Chatter';
 import NewPost from '../screens/NewPost';
 import SignIn from '../screens/SignIn';
-import DetailedPost from '../screens/DetailedPost';
-import Profile from '../screens/Profile';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
 import Map from "../screens/map/Map";
@@ -55,33 +52,6 @@ const NewsStack = createStackNavigator({
     screen: Post,
     navigationOptions: {
       title: 'Post',
-    },
-  },
-}, {
-  headerMode: 'none',
-});
-
-const ChatterStack = createStackNavigator({
-  Chatter: {
-    screen: Chatter,
-    navigationOptions: {
-      title: 'Chatter',
-      headerStyle: {backgroundColor: '#A82029'},
-      headerTintColor: 'white',
-    },
-  },
-  DetailedPost: {
-    screen: DetailedPost,
-    navigationOptions: ({navigation}) => ({
-      headerStyle: {backgroundColor: '#A82029'},
-      headerTintColor: 'white',
-      title: navigation.state.params.name + "'s Post",
-    }),
-  },
-  Profile: {
-    screen: Profile,
-    navigationOptions: {
-      title: 'Profile',
     },
   },
 }, {
