@@ -1,6 +1,6 @@
 # 1.2.1 (4/25/19) (OTA)
 - Fix bug: "Notifications" popup is displayed every time when I open the app #189
-- Log Expo app version (which changes based on code push)
+- Log Expo app version (which changes based on OTA updates)
 - Remove some unused screens for Chatter / login
 
 # 1.2.0 (3/30/19?)
