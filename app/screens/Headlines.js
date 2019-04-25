@@ -87,7 +87,7 @@ export default class Headlines extends Component {
 
     async componentDidMount() {
       Amplitude.logEvent(STRINGS.APP_OPENED);
-      if (!Array.isArray(await AsyncStorage.getItem("notification_settings"))) {
+      if (!(await AsyncStorage.getItem('notification_settings'))) {
         this.setState({modalVisible: true});
       }
     }
