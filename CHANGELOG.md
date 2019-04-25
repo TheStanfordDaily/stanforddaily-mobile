@@ -1,3 +1,8 @@
+# 1.2.1 (4/25/19)
+- Fix bug: "Notifications" popup is displayed every time when I open the app #189
+- Log Expo app version (which changes based on code push)
+- Remove some unused screens for Chatter / login
+
 # 1.2.0 (3/30/19?)
 - Maps -- view maps on campus and get around more easily.
 - Push notifications -- follow your favorite authors, locations, or articles! You can also subscribe to the daily, weekly, or monthly digest.
