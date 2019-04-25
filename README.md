@@ -8,6 +8,11 @@ This is the Stanford Daily mobile app. Download the app at https://app.stanfordd
 npm i
 npm i -g expo-cli
 
+npm start
+# Open the app by getting the Expo app on your phone and scanning the QR code.
+
+# or
+
 npm run ios
 
 # or
