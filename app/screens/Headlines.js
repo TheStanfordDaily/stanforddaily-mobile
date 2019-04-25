@@ -27,6 +27,7 @@ import NewsFeedItem from './common/newsfeed-item';
 import Placeholder from './common/placeholder';
 import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
+import {version} from "../../app.json";
 
 //Styles for the page
 import styles from './styles/headlines';
@@ -86,6 +87,7 @@ export default class Headlines extends Component {
 
 
     async componentDidMount() {
+      Amplitude.setUserProperties({"expo_version": version});
       Amplitude.logEvent(STRINGS.APP_OPENED);
       if (!(await AsyncStorage.getItem('notification_settings'))) {
         this.setState({modalVisible: true});
