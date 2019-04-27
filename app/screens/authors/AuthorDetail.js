@@ -21,6 +21,7 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import FollowButton from '../common/FollowButton';
 import InitialDetails from './InitialDetails';
+import Introduction from './Introduction';
 
 export default class App extends React.Component {
     constructor() {
@@ -91,31 +92,7 @@ export default class App extends React.Component {
                         <InitialDetails details = {this.state.details} />
 
 
-                        <View style={{ flex: 1 }}>
-                            <View style={{ flex: 2 }}>
-                                <Image
-                                    style={{
-                                        flex: 1,
-                                        width: undefined,
-                                        // height: 325
-                                    }}
-                                    source={{uri: this.state.details.funnyImage || DEFAULT_IMAGE}}
-                                >
-                                </Image>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text style={{
-                                    fontSize: 16, lineHeight: 18,
-                                    margin: 10,
-                                    fontFamily: "Hoefler Text", color: "black"
-                                }}>
-                                    {this.state.details.hometown && <React.Fragment>• I'm from: {this.state.details.hometown}{"\n"}</React.Fragment>}
-                                    {this.state.details.tapOrder && <React.Fragment>• My go-to TAP order is: {this.state.details.tapOrder}{"\n"}</React.Fragment>}
-                                    {this.state.details.diningHall && <React.Fragment>• My favorite dining hall is: {this.state.details.diningHall}</React.Fragment>}
-                                </Text>
-                            </View>
-                        </View>
-
+                        <Introduction details = {this.state.details} />
                     </Swiper>
 
                 </View> }
