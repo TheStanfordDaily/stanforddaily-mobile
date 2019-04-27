@@ -22,6 +22,9 @@ import HTML from '../../HTML';
 import FollowButton from '../common/FollowButton';
 import InitialDetails from './InitialDetails';
 import Introduction from './Introduction';
+import Formatting from './Formatting';
+import email from './email';
+import name from './name';
 
 export default class App extends React.Component {
     constructor() {
@@ -99,51 +102,12 @@ export default class App extends React.Component {
 
                 {this.state.details &&
                 <View style={{ flex: 0.15, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
-                    <TouchableHighlight>
-                        <View style={{ flex: 1, flexWrap: "wrap", marginLeft: 20, backgroundColor: "white" }}>
-                            <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5, paddingBottom: 5, marginRight: 10}}>
-        {this.state.details.name} {this.state.details.section.map ((section)=><Text style={{fontStyle: "italic"}} >({section})</Text>)}
-                                {/*<Image
-                                    style={{paddingLeft: 20, width: 25, height: 25 }}
-                                    source={require('../../media/follow_icon.png')}
-                                />*/}
-                                </Text>
-                            {/* <Text style={{ fontSize: 18, fontFamily: "Hoefler Text" }}>
-                                {this.state.details.position}
-                            </Text>  */}
-                            <FollowButton type="author" id={this.props.navigation.state.params.id} />
-                        </View>
-                    </TouchableHighlight>
+                    <name details = {this.state.details} id = {this.props.navigation.state.params.id} />
                     
 
                     <View style={{flex: 0.4 /*to look better on screen*/}}></View> 
-                    
-                    <View style={{
-                        flex: 0.75,
-                        height: 59, //needs to be hardcoded or else stretches out if user has no articles
-                        marginTop: 0,
-                        marginBottom: 15,
-                        marginLeft: 2,
-                        marginRight: 20,
-                        borderWidth: 1,
-                        borderColor: "black",
-                        backgroundColor: "white"
-                    }}>
-                        <Text style={{
-                            fontSize: 20, fontFamily: "Helvetica", fontWeight: "bold",
-                            marginTop: 5, textAlign: "center", textAlignVertical: "center"
-                        }}>
-                            {this.state.postCount || this.state.posts.length}
-                        </Text>
-                        <Text style={{
-                            fontSize: 13, fontFamily: "Helvetica",
-                            marginBottom: 5, textAlign: "center", textAlignVertical: "center"
-                        }}>
-                            articles
-                        </Text>
-                    </View>
-
-                </View>}
+                    <Formatting details />
+                    </View>}
 
                 {this.state.posts && this.state.posts.map(post => <View key={post.id} style={{ flex: 0.1, margin: 2, backgroundColor: "white", borderTopWidth: 1, borderTopColor: "gray", flexDirection: "column" }}>
 
@@ -174,32 +138,7 @@ export default class App extends React.Component {
             </ScrollView>
 
 
-            {this.state.details &&
-
-                <View style={{ padding: 1, height: 35, backgroundColor: "white", flexDirection: "row" }}>
-
-                    <View style={{ flex: 1, margin: 0, backgroundColor: "white"}}>
-                    </View>
-
-                    <TouchableHighlight onPress={() => Linking.openURL("mailto:" + this.state.details.email)}>
-                        <View style={{ flex: 1 }}>
-                            <View style={{ flex: 1 }}>
-                                <Image
-                                    style={{ width: 30, height: 30 }}
-                                    source={require('../../media/mail.png')}
-                                />
-                            </View>
-                            <View style={{ flex: 10 }}>
-                                <Text style={{ fontSize: 14, fontFamily: "Hoefler Text", fontStyle: 'italic', color: 'black', marginTop: 5, marginBottom: 4, marginLeft: 35 }}>
-                                    Email the author   
-                                </Text>
-                            </View>
-
-                        </View>
-                    </TouchableHighlight>
-                    <View style={{ flex: 1, margin: 0, backgroundColor: "white" }}>
-                    </View>
-                </View>}
+            {this.state.details && <email email = {this.state.details.email} />}
         </View>
         );
     }
