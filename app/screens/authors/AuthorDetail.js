@@ -65,6 +65,7 @@ export default class App extends React.Component {
     }
 
 
+
     render() {
 
         return (<View style={{ flex: 1 }}>
@@ -144,7 +145,7 @@ export default class App extends React.Component {
                     <TouchableHighlight>
                         <View style={{ flex: 1, flexWrap: "wrap", marginLeft: 20, backgroundColor: "white" }}>
                             <Text style={{ fontSize: 25, fontFamily: "Hoefler Text", marginTop: 5, marginBottom: 5, paddingBottom: 5, marginRight: 10}}>
-                                {this.state.details.name} <Text>{""}</Text>
+        {this.state.details.name} {this.state.details.section.map ((section)=><Text style={{fontStyle: "italic"}} >({section})</Text>)}
                                 {/*<Image
                                     style={{paddingLeft: 20, width: 25, height: 25 }}
                                     source={require('../../media/follow_icon.png')}
