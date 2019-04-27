@@ -20,6 +20,7 @@ import { FONTS, STRINGS, DEFAULT_IMAGE } from "../../assets/constants";
 import _ from "lodash";
 import HTML from '../../HTML';
 import FollowButton from '../common/FollowButton';
+import InitialDetails from './InitialDetails';
 
 export default class App extends React.Component {
     constructor() {
@@ -87,28 +88,7 @@ export default class App extends React.Component {
                         dotColor='gray'
                         activeDotColor='maroon'>
 
-                        <View style={{ flex: 1 }}>
-                            <View style={{ flex: 2 }}>
-                                <Image
-                                    style={{
-                                        flex: 1,
-                                        width: undefined,
-                                        height: 375
-                                    }}
-                                    source={{uri: this.state.details.coverImage || DEFAULT_IMAGE}}
-                                >
-                                </Image>
-                            </View>
-                            <View style={{ flex: 1 }}>
-                                <Text style={{
-                                    fontSize: 16, lineHeight: 18,
-                                    margin: 10,
-                                    fontFamily: "Hoefler Text", color: "black"
-                                }}>
-                                    {this.state.details.blurb}
-                                </Text>
-                            </View>
-                        </View>
+                        <InitialDetails details = {this.state.details} />
 
 
                         <View style={{ flex: 1 }}>
