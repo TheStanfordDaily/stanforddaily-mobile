@@ -1,3 +1,6 @@
+# 1.2.2 (5/3/19) (OTA)
+- Fix bug #200: Can't scroll down from main page to view more articles
+
 # 1.2.1 (4/25/19) (OTA)
 - Fix bug: "Notifications" popup is displayed every time when I open the app #189
 - Log Expo app version (which changes based on OTA updates)
