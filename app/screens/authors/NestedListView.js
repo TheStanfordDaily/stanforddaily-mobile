@@ -1,5 +1,5 @@
 import React from "react";
-import { SectionList, TouchableOpacity, View, Text, Image } from "react-native";
+import { SectionList, TouchableOpacity, View, Text, Image, Dimensions } from "react-native";
 import { COLORS, FONTS, FONT_SIZES, DEFAULT_IMAGE } from "../../assets/constants";
 
 const styles = {
@@ -43,11 +43,44 @@ const styles = {
     }
 }
 
+class Item extends React.PureComponent {
+    render() {
+        if (!this.props.open) {
+            return <View />;
+        }
+        return <TouchableOpacity onPress={() => this.props.navigate(this.props.item.id)}>
+            <View style={styles.author}>
+                <View style={{ flex: 1 }}>
+                    <View
+                        style={{ flex: 1 }}>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: this.props.item.profileImage || DEFAULT_IMAGE }}
+                        />
+                        <Text style={styles.authorText}>{this.props.item.name}</Text>
+                    </View>
+                </View>
+            </View>
+        </TouchableOpacity>;
+    }
+}
+
+class SectionHeader extends React.PureComponent {
+    render() {
+        return <TouchableOpacity onPress={evt => this.props.onClick()}>
+            <View style={styles.header}>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.headerText}>{this.props.name}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>;
+    }
+}
+
 export default class NestedListView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: props.data.filter(node => node.name && node.name.trim()),
             open: {}
         }
     }
@@ -57,35 +90,17 @@ export default class NestedListView extends React.Component {
         });
     }
     render() {
+        const data = this.props.data.filter(node => node.name && node.name.trim());
         return (<SectionList
+            initialNumToRender={1000}
             renderItem={({ item, index, section }) =>
-                this.state.open[section.name] ?
-                <TouchableOpacity onPress={() => this.props.navigate(item.id)}>
-                    <View style={styles.author}>
-                        <View style={{ flex: 1 }}>
-                            <View
-                                style={{ flex: 1 }}>
-                                <Image
-                                    style={styles.image}
-                                    source={{ uri: item.profileImage || DEFAULT_IMAGE }}
-                                />
-                                <Text style={styles.authorText}>{item.name}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </TouchableOpacity> : <View />
+                <Item item={item} open={this.state.open[section.name]} navigate={e => this.props.navigate(e)} />
             }
             renderSectionHeader={({ section: { name } }) => (
-                <TouchableOpacity onPress={evt => this.onRowClick(name)}>
-                    <View style={styles.header}>
-                        <View style={{ flex: 1 }}>
-                            <Text style={styles.headerText}>{name}</Text>
-                        </View>
-                    </View>
-                </TouchableOpacity>
+                <SectionHeader name={name} onClick={e => this.onRowClick(name)} />
             )}
-            sections={this.state.data}
-            extraData={this.state.data}
+            sections={data}
+            extraData={data}
             keyExtractor={(item, index) => item.name}
         />);
     }
