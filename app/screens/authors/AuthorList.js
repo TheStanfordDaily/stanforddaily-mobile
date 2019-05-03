@@ -5,38 +5,30 @@ Each time to run again: call "npm run ios"
 'use strict';
 import React, { Component } from 'react';
 import {
-  Alert,
+  ActivityIndicator,
   View,
   StatusBar,
   ScrollView,
   Dimensions,
-  TouchableHighlight,
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  Image,
-  SectionList,
 } from 'react-native';
 
-import {
-  COLORS,
-  FONTS,
-  FONT_SIZES,
-  STRINGS,
-  DEFAULT_IMAGE
-} from '../../assets/constants';
+import {MARGINS} from '../../assets/constants';
+
 import NestedListView from "./NestedListView";
 
 import Header from '../common/header';
 
-const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
-
-
+const styles = {
+  loadingIndicator: {
+    marginTop: MARGINS.DEFAULT_MARGIN,
+    marginBottom: MARGINS.DEFAULT_MARGIN
+  }
+};
 class AuthorList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
+      data: null,
     }
   }
 
@@ -62,6 +54,9 @@ class AuthorList extends Component {
     return text;
   }
   render() {
+    if (!this.state.data) {
+      return <ActivityIndicator style={styles.loadingIndicator}/>;
+    }
     return (
       <View style={{ flex: 1, backgroundColor: "white", opacity: 1}}>
         <Header ref='postHeader' postID={this.state.id} />
