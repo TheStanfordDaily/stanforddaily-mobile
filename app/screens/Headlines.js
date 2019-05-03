@@ -49,7 +49,7 @@ export default class Headlines extends Component {
             modalVisible: false,
             selectedCategory: STRINGS.FEATURED_HEADLINES,
             refreshing: false,
-            loading: true,
+            loading: false,
             selectedCategoryData: [
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p1'},
               {category: selectedCategory, postObj: STRINGS.PLACEHOLDER, key: 'p2'}
@@ -64,7 +64,6 @@ export default class Headlines extends Component {
           this.currPosts[category] = {page: 1, posts:[], hashed:{}};
         }
         this.fetchDataIsBusy = true; //Used to handle concurrency
-        this.fetchData(false, (' ' + selectedCategory).slice(1)); //Fetches featured headlines and category articles
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
         this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
         this.drawerHandler = this.drawerHandler.bind(this); //A function used the header to handle drawer opening
@@ -92,6 +91,7 @@ export default class Headlines extends Component {
       if (!(await AsyncStorage.getItem('notification_settings'))) {
         this.setState({modalVisible: true});
       }
+      this.loadMore();
     }
 
     //Opens the drawer
@@ -166,14 +166,11 @@ export default class Headlines extends Component {
 
     //Handles loading more articles
     async loadMore(event) {
-      if(!this.state.loading) {
-        this.state.loading = true;
-        if(!this.fetchDataIsBusy) {
-          this.fetchDataIsBusy = true;
-          await this.fetchData(true, (' ' + selectedCategory).slice(1));
-          this.currPosts[selectedCategory][STRINGS.PAGE] += 1;
-        }
-        this.state.loading = false;
+      if (!this.state.loading) {
+        this.setState({loading: true}); // todo: properly wait for this to finish.
+        await this.fetchData(true, (' ' + selectedCategory).slice(1)); //Fetches featured headlines and category articles
+        this.currPosts[selectedCategory][STRINGS.PAGE] += 1;
+        this.setState({loading: false});
       }
     }
 
