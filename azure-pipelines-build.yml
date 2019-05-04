@@ -15,7 +15,21 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'stanforddaily.keystore'
+
 - script: |
     npm install
-    npm install -g expo-cli
+    npm install -g turtle-cli
   displayName: 'npm install'
+
+- script: |
+    turtle build:android --keystore-path stanforddaily.keystore --keystore-alias ${KEYSTORE_ALIAS}
+  displayName: 'build android'
+  env:
+    EXPO_USERNAME: $(EXPO_USERNAME)
+    EXPO_PASSWORD: $(EXPO_PASSWORD)
+    EXPO_ANDROID_KEYSTORE_PASSWORD: $(EXPO_ANDROID_KEYSTORE_PASSWORD)
+    EXPO_ANDROID_KEY_PASSWORD: $(EXPO_ANDROID_KEY_PASSWORD)
+    KEYSTORE_ALIAS: $(KEYSTORE_ALIAS)
