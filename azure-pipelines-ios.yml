@@ -29,10 +29,11 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    turtle build:ios --team-id ${TEAM_ID} --dist-p12-path StanfordDailyCertificate.p12 --provisioning-profile-path StanfordDaily.mobileprovision
+    turtle build:ios --team-id ${TEAM_ID} --dist-p12-path ${TEMP_DIRECTORY}/StanfordDailyCertificate.p12 --provisioning-profile-path ${TEMP_DIRECTORY}/StanfordDaily.mobileprovision
   displayName: 'build ios'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
     EXPO_PASSWORD: $(EXPO_PASSWORD)
     TEAM_ID: $(TEAM_ID)
     EXPO_IOS_DIST_P12_PASSWORD: $(EXPO_IOS_DIST_P12_PASSWORD)
+    TEMP_DIRECTORY: $(Agent.TempDirectory)

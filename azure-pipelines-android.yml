@@ -25,7 +25,7 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    turtle build:android --keystore-path stanforddaily.keystore --keystore-alias ${KEYSTORE_ALIAS}
+    turtle build:android --keystore-path ${TEMP_DIRECTORY}/stanforddaily.keystore --keystore-alias ${KEYSTORE_ALIAS}
   displayName: 'build android'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
@@ -33,3 +33,4 @@ steps:
     EXPO_ANDROID_KEYSTORE_PASSWORD: $(EXPO_ANDROID_KEYSTORE_PASSWORD)
     EXPO_ANDROID_KEY_PASSWORD: $(EXPO_ANDROID_KEY_PASSWORD)
     KEYSTORE_ALIAS: $(KEYSTORE_ALIAS)
+    TEMP_DIRECTORY: $(Agent.TempDirectory)
