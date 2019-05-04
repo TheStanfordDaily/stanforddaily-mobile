@@ -25,7 +25,7 @@ steps:
 
 - script: |
     npm install
-    npm install -g turtle-cli
+    npm install -g turtle-cli gulp-cli
   displayName: 'npm install'
 
 - script: |
