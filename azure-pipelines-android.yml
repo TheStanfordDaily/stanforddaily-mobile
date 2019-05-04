@@ -17,7 +17,7 @@ steps:
 
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: 'stanforddaily.keystore'
+    secureFile: 'StanfordDaily.jks'
 
 - script: |
     npm install

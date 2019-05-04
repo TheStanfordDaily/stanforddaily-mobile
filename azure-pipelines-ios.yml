@@ -17,7 +17,7 @@ steps:
 
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: 'StanfordDailyCertificate.p12'
+    secureFile: 'StanfordDaily_dist.p12'
 
 - task: DownloadSecureFile@1
   inputs:
@@ -29,7 +29,7 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    turtle build:ios --team-id ${TEAM_ID} --dist-p12-path ${TEMP_DIRECTORY}/StanfordDailyCertificate.p12 --provisioning-profile-path ${TEMP_DIRECTORY}/StanfordDaily.mobileprovision
+    turtle build:ios --team-id ${TEAM_ID} --dist-p12-path ${TEMP_DIRECTORY}/StanfordDaily_dist.p12 --provisioning-profile-path ${TEMP_DIRECTORY}/StanfordDaily.mobileprovision
   displayName: 'build ios'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
