@@ -19,11 +19,3 @@ steps:
     npm install
     npm install -g expo-cli
   displayName: 'npm install'
-
-- script: |
-    expo login --non-interactive -u ${EXPO_USERNAME} -p ${EXPO_PASSWORD}
-    expo publish --non-interactive --release-channel development
-  displayName: 'expo build and publish'
-  env:
-    EXPO_USERNAME: $(EXPO_USERNAME)
-    EXPO_PASSWORD: $(EXPO_PASSWORD)
