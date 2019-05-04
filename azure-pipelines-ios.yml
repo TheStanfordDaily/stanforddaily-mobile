@@ -17,7 +17,11 @@ steps:
 
 - task: DownloadSecureFile@1
   inputs:
-    secureFile: 'stanforddaily.keystore'
+    secureFile: 'StanfordDailyCertificate.p12'
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'StanfordDaily.mobileprovision'
 
 - script: |
     npm install
@@ -25,11 +29,10 @@ steps:
   displayName: 'npm install'
 
 - script: |
-    turtle build:android --keystore-path stanforddaily.keystore --keystore-alias ${KEYSTORE_ALIAS}
-  displayName: 'build android'
+    turtle build:ios --team-id ${TEAM_ID} --dist-p12-path StanfordDailyCertificate.p12 --provisioning-profile-path StanfordDaily.mobileprovision
+  displayName: 'build ios'
   env:
     EXPO_USERNAME: $(EXPO_USERNAME)
     EXPO_PASSWORD: $(EXPO_PASSWORD)
-    EXPO_ANDROID_KEYSTORE_PASSWORD: $(EXPO_ANDROID_KEYSTORE_PASSWORD)
-    EXPO_ANDROID_KEY_PASSWORD: $(EXPO_ANDROID_KEY_PASSWORD)
-    KEYSTORE_ALIAS: $(KEYSTORE_ALIAS)
+    TEAM_ID: $(TEAM_ID)
+    EXPO_IOS_DIST_P12_PASSWORD: $(EXPO_IOS_DIST_P12_PASSWORD)
