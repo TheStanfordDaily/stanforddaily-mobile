@@ -23,8 +23,8 @@ import FollowButton from '../common/FollowButton';
 import InitialDetails from './InitialDetails';
 import Introduction from './Introduction';
 import Formatting from './Formatting';
-import email from './email';
-import name from './name';
+import Email from './Estopmail';
+import Name from './Name';
 
 export default class App extends React.Component {
     constructor() {
@@ -102,7 +102,7 @@ export default class App extends React.Component {
 
                 {this.state.details &&
                 <View style={{ flex: 0.15, paddingBottom: 1, backgroundColor: "white", flexDirection: "row" }}>
-                    <name details = {this.state.details} id = {this.props.navigation.state.params.id} />
+                    <Name details = {this.state.details} id = {this.props.navigation.state.params.id} />
                     
 
                     <View style={{flex: 0.4 /*to look better on screen*/}}></View> 
@@ -138,7 +138,7 @@ export default class App extends React.Component {
             </ScrollView>
 
 
-            {this.state.details && <email email = {this.state.details.email} />}
+            {this.state.details && <Email email = {this.state.details.email} />}
         </View>
         );
     }

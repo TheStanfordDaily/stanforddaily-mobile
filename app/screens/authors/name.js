@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import FollowButton from '../common/FollowButton';
 import {
     Alert,
     View,
