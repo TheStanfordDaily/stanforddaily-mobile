@@ -260,6 +260,7 @@ export default class MapExample extends Component {
             ref={map => this.map = map}
             onMapReady={this.onMapReady}
             initialRegion={initialRegion}
+            loadingEnabled={true}
           >
             {this.state.markers && this.state.markers.length && this.state.markers.map(marker => (
               <MapView.Marker
