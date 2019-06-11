@@ -1,9 +1,11 @@
-<img src="https://user-images.githubusercontent.com/1689183/55673023-25239a00-5857-11e9-9699-5f2d0ab365cf.png" width="100">
+[![The Stanford Daily logo](https://github.com/TheStanfordDaily/stanforddaily-graphic-assets/raw/master/DailyLogo/DailyLogo.png)](https://www.stanforddaily.com/)
 
-# Stanford Daily mobile app
+# The Stanford Daily mobile app
+[![Build Status](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile.svg?branch=master)](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile)
+
 This is the Stanford Daily mobile app. Download the app at https://app.stanforddaily.com/. Contributions welcome!
 
-# Setup
+## Setup
 ```
 npm i
 npm i -g expo-cli
@@ -19,7 +21,7 @@ npm run ios
 npm run android
 ```
 
-# Release
+## Release
 ```
 expo build:ios --release-channel production
 expo build:android --release-channel production
