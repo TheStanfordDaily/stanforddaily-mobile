@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, Image, Animated, ListView, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions, Keyboard } from 'react-native';
+import { Alert, Image, Animated, SectionList, TouchableHighlight, TouchableOpacity, ScrollView, StyleSheet, View, Text, Dimensions, Keyboard } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import _ from "lodash";
 import HTML from '../../HTML';
@@ -25,9 +25,6 @@ const initialRegion = {
 }
 
 const OPENED_POSTS_VIEW_HEIGHT = 300;
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2
-});
 
 export default class MapExample extends Component {
   constructor() {
@@ -43,7 +40,7 @@ export default class MapExample extends Component {
         longitudeDelta: LONGITUDE_DELTA,
       },
       scrollY: new Animated.Value(0),
-      dataSource: ds.cloneWithRows([]),
+      dataSource: [],
     };
   }
 
@@ -100,7 +97,7 @@ export default class MapExample extends Component {
     fetch(STRINGS.DAILY_URL + "wp-json/tsd/v1/locations/" + locationID + "/posts?_embed").then(e => {
       return e.json();
     }).then(e => {
-      this.setState({ dataSource: ds.cloneWithRows(e) });
+      this.setState({ dataSource: e });
     })
   }
 
@@ -165,9 +162,9 @@ export default class MapExample extends Component {
     });
     return (
       <View style={{ flex: 1 }}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this.renderRow.bind(this)}
+        <SectionList
+          sections={[{ data: this.state.dataSource }]}
+          renderItem={({ item }) => this.renderRow(item)}
           renderScrollComponent={this.renderScroll.bind(this)}
           withSections={false}
           enableEmptySections={true}
