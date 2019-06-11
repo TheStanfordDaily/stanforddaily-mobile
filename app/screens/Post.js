@@ -126,7 +126,7 @@ class Post extends Component {
             }
             <View style={{ margin: 10 }}>
               {this.state.content &&
-                <HTML baseFontStyle={{fontFamily: FONTS.CENTURY}} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} />
+                <HTML baseFontStyle={{ fontFamily: FONTS.CENTURY }} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
               }
             </View>
           </ScrollView>
