@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import _ from 'lodash';
 
-import {Amplitude} from 'expo';
+import * as Amplitude from 'expo-analytics-amplitude';
 import { isBeingNotified, addNotificationSetting, removeNotificationSetting } from './FollowInfoStorage.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);

@@ -19,7 +19,7 @@ import {
 
 //Components for this app imports
 import Header from './common/header';
-import { Amplitude } from 'expo';
+import * as Amplitude from 'expo-analytics-amplitude';
 import {FONTS} from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";

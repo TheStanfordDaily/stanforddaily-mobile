@@ -32,7 +32,7 @@ import {version} from "../../app.json";
 //Styles for the page
 import styles from './styles/headlines';
 
-import {Amplitude} from 'expo';
+import * as Amplitude from 'expo-analytics-amplitude';
 import FollowButton from './common/FollowButton.js';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);

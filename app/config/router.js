@@ -9,7 +9,7 @@ import Post from '../screens/Post';
 import AuthorList from "../screens/authors/AuthorList";
 import AuthorDetail from "../screens/authors/AuthorDetail";
 import Map from "../screens/map/Map";
-import {Amplitude} from 'expo';
+import * as Amplitude from 'expo-analytics-amplitude';
 import {FONTS} from "../assets/constants";
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);

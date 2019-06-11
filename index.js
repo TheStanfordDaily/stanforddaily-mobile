@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
 import { RootContainer, Tabs } from './app/config/router';
 import { STRINGS, COLORS } from './app/assets/constants';
-import { Font, WebBrowser } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
+import * as Font from 'expo-font';
 import NavigationService from './app/helper/NavigationService';
 
 class App extends Component {

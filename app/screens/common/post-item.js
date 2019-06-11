@@ -19,7 +19,7 @@
 
 import {STRINGS, KEYS, COLORS, Images} from '../../assets/constants.js'; //Constants
 
-import {Amplitude} from 'expo';
+import * as Amplitude from 'expo-analytics-amplitude';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
