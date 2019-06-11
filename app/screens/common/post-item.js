@@ -6,7 +6,6 @@
 
  import {
    AppRegistry,
-   ListView,
    StyleSheet,
    Text,
    View,

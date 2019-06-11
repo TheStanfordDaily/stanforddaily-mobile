@@ -9,7 +9,6 @@ import {
     Text,
     Dimensions,
     RefreshControl,
-    ListView,
     StatusBar,
     ActivityIndicator,
     NetInfo,
@@ -80,102 +79,102 @@ export default class SettingsPage extends Component {
     }
 
     render() {
-      return (      
-        <Modal 
+      return (
+        <Modal
             style = {{
               backgroundColor: 'white'}}
               isVisible={this.props.visible}
               >
-  
+
           {/* Header */}
-          <View 
+          <View
             style = {{
               marginTop: 0,
               borderBottomWidth: 4,
               borderColor: 'grey',
               alignItems: 'center',
               justifyContent: 'center',
-              flex: 1, 
+              flex: 1,
               maxHeight: 80
-            }}> 
-            
+            }}>
+
             <Text style= {{
-              fontFamily: 'PT Serif', 
+              fontFamily: 'PT Serif',
               fontSize: 24
             }}>Notifications</Text>
-            
+
             <Text style= {{
               fontFamily: 'PT Serif'
             }}>How often do you want to hear from The Daily?</Text>
-          
+
           </View>
-  
-          <View 
+
+          <View
             style = {{
-              flex: 2, 
+              flex: 2,
               backgroundColor: 'white',
-            }}> 
-  
-            <View style = {styles.listItem}> 
+            }}>
+
+            <View style = {styles.listItem}>
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image 
+                <Image
                 style={{ width: 35, height: 35 }}
                 source={require('../media/breaking.png')}></Image>
               </View>
-  
+
               <View style = {{flex: 4, margin: 5}}>
                 <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Breaking News</Text>
                 <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Important stories, as they happen</Text>
               </View>
-  
+
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.BREAKING}/>
               </View>
-  
+
             </View>
-  
-            <View style = {styles.listItem}> 
+
+            <View style = {styles.listItem}>
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image 
+                <Image
                 style={{ width: 35, height: 35 }}
                 source={require('../media/sunicon.png')}></Image>
               </View>
-  
+
               <View style = {{flex: 4, margin: 5}}>
                 <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every day</Text>
                 <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Daily news roundup</Text>
               </View>
-  
+
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.DAILY}/>
               </View>
-  
+
             </View>
-  
-            <View style = {styles.listItem}> 
+
+            <View style = {styles.listItem}>
               <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image 
+                <Image
                 style={{ width: 32, height: 32 }}
                 source={require('../media/calendaricon.png')}></Image>
               </View>
-  
+
               <View style = {{flex: 4, margin: 5}}>
                 <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every week</Text>
                 <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekly Leland's Digest</Text>
               </View>
-  
+
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.WEEKLY}/>
               </View>
-  
+
             </View>
-  
+
           </View>
 
-  
+
           <View style = {{margin: 20, alignItems: 'center'}}>
-              <TouchableOpacity 
-                style = {{ 
+              <TouchableOpacity
+                style = {{
                   height: 40,
                   width: 200,
                   padding: 10,
@@ -183,11 +182,11 @@ export default class SettingsPage extends Component {
                   alignItems: 'center',
                   backgroundColor:'maroon'}}
                 onPress={() => {this.props.setModalVisible(!this.props.modalVisible);
-                
+
                 }}>
                 <Text style={{
                   marginTop: 2,
-                  alignSelf: 'center', 
+                  alignSelf: 'center',
                   color: 'white',
                   fontFamily: 'Hoefler Text',
                   fontWeight: 'bold',

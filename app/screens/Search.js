@@ -5,7 +5,6 @@ import {
     Text,
     Dimensions,
     RefreshControl,
-    ListView,
     StatusBar,
     ActivityIndicator,
     NetInfo,

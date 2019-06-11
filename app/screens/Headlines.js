@@ -10,7 +10,6 @@ import {
     Text,
     Dimensions,
     RefreshControl,
-    ListView,
     StatusBar,
     ActivityIndicator,
     NetInfo,
@@ -75,7 +74,7 @@ export default class Headlines extends Component {
           // console.warn("orientation changed");
         });
     }
-  
+
     _toggleModal = () =>
     this.setState({ modalVisible: !this.state.modalVisible });
 
@@ -195,7 +194,7 @@ export default class Headlines extends Component {
       this.fetchDataIsBusy = true;
       await this.fetchData(false, (' ' + selectedCategory).slice(1));
     }
-    
+
     //Renders the headers for the sections
     renderSectionHeader() {
        return (
@@ -208,8 +207,8 @@ export default class Headlines extends Component {
              <View>
               <FollowButton type="category" id={parseInt(CATEGORIES[this.state.selectedCategory])} />
              </View>
-           </View>           
-         </View>   
+           </View>
+         </View>
      )
    }
 
@@ -249,7 +248,7 @@ export default class Headlines extends Component {
   sideMenu() {
     return (
       <View style={styles.sideMenuContainer}>
-      
+
         <View style={styles.sideBarTitle}>
           <Text style={styles.sideBarTitleText}> Categories </Text>
         </View>
@@ -273,9 +272,9 @@ export default class Headlines extends Component {
                   <TouchableOpacity
                     onPress={() => this._toggleModal()}>
                           <Image
-                          style={{margin: 3, 
-                            alignSelf: "center", 
-                            width: 25, 
+                          style={{margin: 3,
+                            alignSelf: "center",
+                            width: 25,
                             height: 25 }}
                           source={require('../media/gears.png')}
                       />
@@ -290,7 +289,7 @@ export default class Headlines extends Component {
                   </TouchableOpacity>
                 </TouchableHighlight>
       </View>
-      
+
     )
   }
 
@@ -316,15 +315,15 @@ export default class Headlines extends Component {
       tapToClose={true}
       onOpenStart={() => StatusBar.setHidden(true)}
       onCloseStart={() => StatusBar.setHidden(false)}
-      > 
+      >
       {/*uses the modal page, called at top of render function, for when user first opens menu.*/}
-      <View> 
+      <View>
         <SettingsPage
           visible={this.state.modalVisible}
           setModalVisible = {() => this._toggleModal()}
         />
       </View>
-      
+
         <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler}/>
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE, alignItems:'center'}}>
         <StatusBar
