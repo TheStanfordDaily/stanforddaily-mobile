@@ -24,6 +24,7 @@ import {FONTS} from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
+import striptags from 'striptags';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -121,7 +122,7 @@ class Post extends Component {
               <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             }
             {this.state.featuredMediaCaption &&
-              <Text style={{marginLeft: 10, fontFamily: FONTS.CENTURY}}>Photo Credits: {this.state.featuredMediaCaption}</Text>
+              <Text style={{ marginLeft: 10, fontFamily: FONTS.CENTURY }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
             }
             <View style={{ margin: 10 }}>
               {this.state.content &&
