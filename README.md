@@ -1,7 +1,7 @@
 [![The Stanford Daily logo](https://github.com/TheStanfordDaily/stanforddaily-graphic-assets/raw/master/DailyLogo/DailyLogo.png)](https://www.stanforddaily.com/)
 
 # The Stanford Daily mobile app
-[![Build Status](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile.svg?branch=master)](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile)
+[![Build Status](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile.svg?branch=master)](https://travis-ci.com/TheStanfordDaily/stanforddaily-mobile) [![Greenkeeper badge](https://badges.greenkeeper.io/TheStanfordDaily/stanforddaily-mobile.svg)](https://greenkeeper.io/)
 
 This is the Stanford Daily mobile app. Download the app at https://app.stanforddaily.com/. Contributions welcome!
 
