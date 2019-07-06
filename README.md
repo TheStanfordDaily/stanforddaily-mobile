@@ -6,7 +6,7 @@
 This is the Stanford Daily mobile app. Download the app at https://app.stanforddaily.com/. Contributions welcome!
 
 ## Setup
-```
+```bash
 npm i
 npm i -g expo-cli
 
@@ -22,7 +22,7 @@ npm run android
 ```
 
 ## Release
-```
+```bash
 expo build:ios --release-channel production
 expo build:android --release-channel production
 
@@ -31,7 +31,7 @@ expo publish --release-channel production
 
 Or,
 
-```
+```bash
 expo build:ios --release-channel development
 expo build:android --release-channel development
 
