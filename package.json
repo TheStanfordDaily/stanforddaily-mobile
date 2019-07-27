@@ -14,7 +14,7 @@
     "expo-analytics-amplitude": "^5.0.1",
     "expo-font": "^5.0.1",
     "expo-permissions": "^5.0.1",
-    "expo-web-browser": "^5.0.3",
+    "expo-web-browser": "^6.0.0",
     "firebase": "^6.1.1",
     "moment": "^2.24.0",
     "react": "16.8.3",
