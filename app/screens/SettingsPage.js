@@ -160,7 +160,7 @@ export default class SettingsPage extends Component {
 
               <View style = {{flex: 4, margin: 5}}>
                 <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every week</Text>
-                <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekly Leland's Digest</Text>
+                <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekend roundup</Text>
               </View>
 
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
