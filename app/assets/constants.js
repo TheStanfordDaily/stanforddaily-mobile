@@ -108,6 +108,31 @@ const CATEGORIES = {
   "Data": '58277'
 };
 
+const CATEGORY_ICONS = Platform.select({
+  android: {
+    "All" : 'md-globe',
+    "Featured Headlines": 'md-star',
+    "News": 'md-paper',
+    "Sports": 'md-american-football',
+    "Opinions": 'md-chatbubbles',
+    "Arts & Life": 'md-color-palette',
+    "The Grind": 'md-quote',
+    "Satire": 'md-happy',
+    "Data": 'md-podium'
+  },
+  ios: {
+    "All" : 'ios-globe',
+    "Featured Headlines": 'ios-star',
+    "News": 'ios-paper',
+    "Sports": 'ios-american-football',
+    "Opinions": 'ios-chatbubbles',
+    "Arts & Life": 'ios-color-palette',
+    "The Grind": 'ios-quote',
+    "Satire": 'ios-happy',
+    "Data": 'ios-podium'
+  },
+});
+
 const REFS = {
   DRAWER: "drawer",
   VIEW: "view",
@@ -233,5 +258,5 @@ const PN_RECEIVER_GROUPS = {
 }
 
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
+module.exports = {STRINGS, CATEGORIES, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
 // module.exports = CATEGORIES;

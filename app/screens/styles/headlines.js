@@ -45,16 +45,17 @@ const styles= StyleSheet.create({
     },
     sideMenuItem: {
       width: '100%',
+      flexDirection: ALIGNMENTS.ROW,
       height: HEIGHTS.SIDE_MENU_ITEM,
-      justifyContent: ALIGNMENTS.CENTER,
+      alignItems:  ALIGNMENTS.CENTER,
       borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1,
     },
     categoriesHeaderContainer: {
       height: 60,
-      backgroundColor:COLORS.WHITE,
-      alignItems:ALIGNMENTS.LEFT,
-      justifyContent:ALIGNMENTS.LEFT,
+      backgroundColor: COLORS.WHITE,
+      alignItems: ALIGNMENTS.LEFT,
+      justifyContent: ALIGNMENTS.LEFT,
     },
     categoriesText: {
       marginTop: MARGINS.DEFAULT_MARGIN,
