@@ -17,26 +17,27 @@ const styles= StyleSheet.create({
     },
     sideMenuContainer: {
       flex: 1,
-      backgroundColor: COLORS.SIDE_BAR_GRAY,
+      backgroundColor: COLORS.WHITE,
       alignItems: ALIGNMENTS.CENTER,
       paddingTop: top_padding
     },
     sideBarTitle: {
       height: HEIGHTS.APP_HEADER,
       justifyContent: ALIGNMENTS.CENTER,
-      borderBottomWidth: 2,
+      borderBottomWidth: 1,
       alignSelf: 'stretch',
       flexDirection: 'column',
-      paddingTop: HEIGHTS.APP_HEADER_TOP,
-      borderBottomColor: COLORS.LIGHT_GRAY
+      paddingTop: HEIGHTS.SIDE_MENU_HEADER_TOP,
+      borderBottomColor: COLORS.LIGHT_GRAY,
     },
     sideBarTitleText: {
-      color: COLORS.DARK_GRAY,
-      fontFamily: FONTS.CENTURY,
-      textAlign: 'center',
+      color: COLORS.BLACK,
+      fontFamily: FONTS.OPEN_SANS_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+      //textAlign: 'center',
       flex: 1,
       justifyContent: 'center',
-      fontSize: FONT_SIZES.DEFAULT_MEDIUM
+      marginLeft: MARGINS.DEFAULT_MARGIN
     },
     flatListStyle: {
       flex: 1,

@@ -1,4 +1,4 @@
-import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS} from '../assets/constants.js';
+import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS, MARGINS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {Image} from 'react-native';
 import {AsyncStorage} from "react-native";
@@ -240,9 +240,9 @@ export default class Headlines extends Component {
 
   setTextStyle(category) {
     if (category === selectedCategory) {
-      return {color: COLORS.CARDINAL, fontFamily: FONTS.CENTURY, textAlign: ALIGNMENTS.CENTER};
+      return {color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES};
     }
-    return {color: COLORS.DARK_GRAY, fontFamily: FONTS.CENTURY, textAlign: ALIGNMENTS.CENTER};
+    return {color: COLORS.BLACK, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES};
   }
   //A method to render the drawer/side menu
   sideMenu() {
@@ -250,7 +250,7 @@ export default class Headlines extends Component {
       <View style={styles.sideMenuContainer}>
 
         <View style={styles.sideBarTitle}>
-          <Text style={styles.sideBarTitleText}> Categories </Text>
+          <Text style={styles.sideBarTitleText}> Sections </Text>
         </View>
         <FlatList
           data={this.constructSideMenuList()}
@@ -274,15 +274,14 @@ export default class Headlines extends Component {
                           <Image
                           style={{margin: 3,
                             alignSelf: "center",
-                            width: 25,
-                            height: 25 }}
+                            width: 20,
+                            height: 20 }}
                           source={require('../media/gears.png')}
                       />
                       <Text style={{
                         fontSize: 13,
-                        fontFamily: "Hoefler Text",
+                        fontFamily: FONTS.OPEN_SANS,
                         color: COLORS.BLACK,
-                        alignSelf: "center"
                       }}>
                         Settings
                     </Text>

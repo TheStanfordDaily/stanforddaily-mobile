@@ -116,7 +116,7 @@ export const Tabs = createBottomTabNavigator({
     inactiveBackgroundColor: 'white',
     activeBackgroundColor: 'white',
     labelStyle: {
-      fontFamily: FONTS.PT_SERIF,
+      fontFamily: "Open Sans", // FONTS.PT_SERIF
       marginBottom: labelBottomMargin
     },
     style: {
