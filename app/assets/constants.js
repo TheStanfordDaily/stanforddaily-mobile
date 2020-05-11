@@ -8,6 +8,8 @@ const STRINGS = {
   OPINIONS: "Opinions",
   ARTS: "Arts & Life",
   GRIND: "The Grind",
+  SATIRE: "Satire",
+  DATA: "Data",
   HEADLINES: "headlines",
   PLACEHOLDER: "placeholder",
   POST: "Post",
@@ -101,8 +103,35 @@ const CATEGORIES = {
   "Sports": '23',
   "Opinions": '24',
   "Arts & Life": '25',
-  "The Grind": '32278'
+  "The Grind": '32278',
+  "Satire": '55796',
+  "Data": '58277'
 };
+
+const CATEGORY_ICONS = Platform.select({
+  android: {
+    "All" : 'md-globe',
+    "Featured Headlines": 'md-star',
+    "News": 'md-paper',
+    "Sports": 'md-american-football',
+    "Opinions": 'md-chatbubbles',
+    "Arts & Life": 'md-color-palette',
+    "The Grind": 'md-quote',
+    "Satire": 'md-happy',
+    "Data": 'md-podium'
+  },
+  ios: {
+    "All" : 'ios-globe',
+    "Featured Headlines": 'ios-star',
+    "News": 'ios-paper',
+    "Sports": 'ios-american-football',
+    "Opinions": 'ios-chatbubbles',
+    "Arts & Life": 'ios-color-palette',
+    "The Grind": 'ios-quote',
+    "Satire": 'ios-happy',
+    "Data": 'ios-podium'
+  },
+});
 
 const REFS = {
   DRAWER: "drawer",
@@ -117,7 +146,7 @@ const REFS = {
 const COLORS = {
   WHITE: "#FFFFFF",
   SIDE_BAR_GRAY: "#F7F7F7",
-  LIGHT_GRAY: "#A5A5A5",
+  LIGHT_GRAY: "#E0E0E0", // "#A5A5A5",
   DARK_GRAY: "#4E4E4E",
   NEAR_WHITE: "#FCFCFC",
   PLACEHOLDER_LIGHT: "#F0F0F0",
@@ -141,7 +170,9 @@ const FONTS = {
   CENTURY: "Century",
   PT_SERIF:"PT Serif",
   PT_SERIF_BOLD:"PT Serif Bold",
-  HNEUE: "Helvetica Neue"
+  HNEUE: "Helvetica Neue",
+  OPEN_SANS: "Open Sans",
+  OPEN_SANS_BOLD: "Open Sans Bold"
   // CENTURY: "Times New Roman",
   // PT_SERIF: "Times New Roman",
   // HNEUE: "Times New Roman"
@@ -165,6 +196,7 @@ const MARGINS = {
 const HEIGHTS = {
   APP_HEADER: 64,
   APP_HEADER_TOP: 15,
+  SIDE_MENU_HEADER_TOP: 24,
   SIDE_MENU_ITEM: 45,
   TITLE_LINE_HEIGHT: 35,
   DESC_LINE_HEIGHT: 23.4,
@@ -226,5 +258,5 @@ const PN_RECEIVER_GROUPS = {
 }
 
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
+module.exports = {STRINGS, CATEGORIES, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
 // module.exports = CATEGORIES;

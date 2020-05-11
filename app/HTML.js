@@ -2,7 +2,7 @@ import React from "react";
 import HTML from 'react-native-render-html';
 import { Linking } from 'react-native';
 import { FONTS } from './assets/constants';
-import { WebView, View, Dimensions } from 'react-native';
+import { WebView, View, Dimensions, Text } from 'react-native';
 
 const onLinkPress = (event, href, htmlAttributes) => {
   Linking.openURL(href);
