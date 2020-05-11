@@ -8,6 +8,8 @@ const STRINGS = {
   OPINIONS: "Opinions",
   ARTS: "Arts & Life",
   GRIND: "The Grind",
+  SATIRE: "Satire",
+  DATA: "Data",
   HEADLINES: "headlines",
   PLACEHOLDER: "placeholder",
   POST: "Post",
@@ -102,6 +104,8 @@ const CATEGORIES = {
   "Opinions": '24',
   "Arts & Life": '25',
   "The Grind": '32278',
+  "Satire": '55796',
+  "Data": '58277'
 };
 
 const REFS = {
