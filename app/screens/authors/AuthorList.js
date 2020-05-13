@@ -62,7 +62,7 @@ class AuthorList extends Component {
         <Header ref='postHeader' postID={this.state.id} />
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: "white", opacity: 1}}>
           <StatusBar
-            barStyle="light-content"
+            barStyle="dark-content"
           />
           <ScrollView style={{ flex: 1, flexDirection: "row", backgroundColor: "white", opacity: 1 }}
             contentContainerStyle={{ flexGrow: 1, justifyContent: 'space-between' }}>

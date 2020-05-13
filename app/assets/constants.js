@@ -97,8 +97,8 @@ const PATHS = {
 }
 
 const CATEGORIES = {
-  "All" : '',
   "Featured Headlines": '1485',
+  "All" : '',
   "News": '3',
   "Sports": '23',
   "Opinions": '24',
@@ -194,7 +194,7 @@ const MARGINS = {
 };
 
 const HEIGHTS = {
-  APP_HEADER: 64,
+  APP_HEADER: 48,
   APP_HEADER_TOP: 15,
   SIDE_MENU_HEADER_TOP: 24,
   SIDE_MENU_ITEM: 45,
