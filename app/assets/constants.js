@@ -97,8 +97,8 @@ const PATHS = {
 }
 
 const CATEGORIES = {
-  "All" : '',
   "Featured Headlines": '1485',
+  "All" : '',
   "News": '3',
   "Sports": '23',
   "Opinions": '24',

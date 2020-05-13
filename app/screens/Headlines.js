@@ -197,7 +197,7 @@ export default class Headlines extends Component {
   }
 
   //Renders the headers for the sections
-  renderSectionHeader() {
+  /*renderSectionHeader() {
     return (
       <View style={styles.categoriesHeaderContainer}>
         <View style={{ flexDirection: ALIGNMENTS.ROW }}>
@@ -211,7 +211,7 @@ export default class Headlines extends Component {
         </View>
       </View>
     )
-  }
+  }*/
 
   //Handles rendering rows by calling the NewsFeedItem and passing data to it
   _renderRow(data) {
@@ -323,7 +323,11 @@ export default class Headlines extends Component {
           />
         </View>
 
-        <Header ref={REFS.HEADER} drawerHandler={this.drawerHandler} searchHandler={this.searchHandler} />
+        <Header 
+          ref={REFS.HEADER} 
+          drawerHandler={this.drawerHandler} 
+          searchHandler={this.searchHandler} 
+          title={this.state.selectedCategory === "Featured Headlines" ? undefined : this.state.selectedCategory} />
         <View ref={REFS.VIEW} style={{ flex: 1, backgroundColor: COLORS.GHOST_WHITE, alignItems: 'center' }}>
           <StatusBar
             ref={REFS.STATUS_BAR}
@@ -339,7 +343,7 @@ export default class Headlines extends Component {
             onEndReached={this.loadMore.bind(this)}
             sections={[{ data: this.state.selectedCategoryData, key: this.state.selectedCategory }]}
             renderItem={this._renderRow}
-            renderSectionHeader={() => this.renderSectionHeader()}
+            //renderSectionHeader={() => this.renderSectionHeader()}
             ListFooterComponent={() => <ActivityIndicator style={styles.loadingIndicator} />}
             contentContainerStyle={{ width: this.state.width }}
           />

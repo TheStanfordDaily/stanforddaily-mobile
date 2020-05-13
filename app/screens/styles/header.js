@@ -1,7 +1,7 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
 
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
+import {COLORS, FONTS, FONT_SIZES, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
 
 const top_margin = MARGINS.NORMAL_HEADER_MARGINS
 const {height, width} = Dimensions.get('window');
@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
     },
     wordsTitle: {
       color: COLORS.WHITE,
-      fontFamily:FONTS.HNEUE,
-      fontSize:20,
-      textAlign:ALIGNMENTS.CENTER
+      fontFamily: FONTS.OPEN_SANS_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+      textAlign: ALIGNMENTS.CENTER
     },
     rightButton: {
       width: 56,
