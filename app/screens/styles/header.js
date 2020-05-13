@@ -8,25 +8,27 @@ const {height, width} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: ALIGNMENTS.ROW,
-        justifyContent: ALIGNMENTS.SPACE_BETWEEN,
-        alignItems: ALIGNMENTS.CENTER,
-        height: HEIGHTS.APP_HEADER,
-        backgroundColor: COLORS.CARDINAL,
+      flexDirection: ALIGNMENTS.ROW,
+      justifyContent: ALIGNMENTS.SPACE_BETWEEN,
+      alignItems: ALIGNMENTS.CENTER,
+      height: HEIGHTS.APP_HEADER,
+      backgroundColor: COLORS.WHITE,
+      borderBottomColor: COLORS.LIGHT_GRAY,
+      borderBottomWidth: 1
     },
     leftButton: {
-      width:56,
+      width: 56,
       paddingLeft: 16,
       paddingRight: 16,
-      marginTop: top_margin
+      //marginTop: top_margin
     },
     title: {
       width: width >= 375 ? 243 : 200,
-      height: 30,
-      marginTop: top_margin
+      height: 26,
+      //marginTop: top_margin
     },
     wordsTitle: {
-      color: COLORS.WHITE,
+      color: COLORS.BLACK,
       fontFamily: FONTS.OPEN_SANS_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       textAlign: ALIGNMENTS.CENTER
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
       width: 56,
       paddingRight: 16,
       paddingLeft: 16,
-      marginTop: top_margin,
+      //marginTop: top_margin,
     },
     profileImage: {
       tintColor: COLORS.WHITE,
