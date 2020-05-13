@@ -5,7 +5,7 @@ const images = {
   CLOSE: require("../media/Close.png"),
   CHATTER: require("../media/Community.png"),
   DAILY_S: require("../media/Daily.png"),
-  DAILY_FULL: require("../media/DailyLogoCardinal.png"),
+  DAILY_FULL: require("../media/DailyLogo.png"),
   DELETE: require("../media/delete.png"),
   DOWN_VOTE: require("../media/downVote.png"),
   EDIT: require("../media/edit.png"),

@@ -27,7 +27,7 @@ const styles= StyleSheet.create({
       borderBottomWidth: 1,
       alignSelf: 'stretch',
       flexDirection: 'column',
-      paddingTop: MARGINS.NORMAL_HEADER_MARGINS,
+      paddingTop: HEIGHTS.SIDE_MENU_HEADER_TOP,
       borderBottomColor: COLORS.LIGHT_GRAY,
     },
     sideBarTitleText: {
