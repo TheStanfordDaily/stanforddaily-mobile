@@ -105,7 +105,7 @@ class Post extends Component {
         {this.state.id &&
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
-            barStyle="light-content"
+            barStyle="dark-content"
           />
 
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
