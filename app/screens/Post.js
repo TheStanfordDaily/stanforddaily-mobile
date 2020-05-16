@@ -112,11 +112,11 @@ class Post extends Component {
             <View style={styles.title}>
               <HTML baseFontStyle={styles.titleText} html={this.state.title} />
             </View>
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: MARGINS.ARTICLE_SIDES }}>
+            <View style={styles.authorAndDate}>
               <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
-                <Text style={{fontFamily: FONTS.OPEN_SANS }}>By {this.state.author}</Text>
+                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {this.state.author}</Text>
               </TouchableOpacity>
-              <Text style={{fontFamily: FONTS.OPEN_SANS }}>{this.state.date}</Text>
+              <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{this.state.date}</Text>
             </View>
             {this.state.featuredMedia !== "" &&
               <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />

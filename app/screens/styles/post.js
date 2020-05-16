@@ -12,6 +12,9 @@ export default {
     fontSize: FONT_SIZES.DEFAULT_LARGE,
     fontFamily: FONTS.PT_SERIF_BOLD,
   },
+  authorAndDate: {
+    margin: MARGINS.ARTICLE_SIDES,
+  },
   articleContainer: {
     marginHorizontal: MARGINS.ARTICLE_SIDES
   },
