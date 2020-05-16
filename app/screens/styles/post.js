@@ -4,7 +4,7 @@
 import { COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS } from '../../assets/constants.js';
 export default {
   title: {
-    marginTop: MARGINS.ARTICLE_SIDES,
+    marginTop: MARGINS.DEFAULT_MARGIN,
     marginLeft: MARGINS.ARTICLE_SIDES,
     marginRight: MARGINS.ARTICLE_SIDES,
   },
