@@ -5,7 +5,7 @@
 
 //Pre-made Components imports
 import React, { Component } from 'react';
-import { STRINGS, KEYS } from '../assets/constants.js';
+import { STRINGS, KEYS, MARGINS } from '../assets/constants.js';
 import {
   View,
   StatusBar,
@@ -112,7 +112,7 @@ class Post extends Component {
             <View style={styles.title}>
               <HTML baseFontStyle={styles.titleText} html={this.state.title} />
             </View>
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: MARGINS.ARTICLE_SIDES }}>
               <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
                 <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>
               </TouchableOpacity>
@@ -122,9 +122,9 @@ class Post extends Component {
               <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             }
             {this.state.featuredMediaCaption &&
-              <Text style={{ marginLeft: 10, fontFamily: FONTS.CENTURY, color: COLORS.DARK_GRAY, fontStyle: 'italic' }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
+              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.CENTURY, color: COLORS.DARK_GRAY, fontStyle: 'italic' }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
             }
-            <View style={{ margin: 10 }}>
+            <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
               {this.state.content &&
                 <HTML baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
               }

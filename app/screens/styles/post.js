@@ -12,10 +12,13 @@ export default {
     fontSize: FONT_SIZES.DEFAULT_LARGE,
     fontFamily: FONTS.CENTURY
   },
+  articleContainer: {
+    marginHorizontal: MARGINS.ARTICLE_SIDES
+  },
   articleText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+    lineHeight: 26,
   },
-
   body: {
     fontFamily: FONTS.PT_SERIF,
     fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
