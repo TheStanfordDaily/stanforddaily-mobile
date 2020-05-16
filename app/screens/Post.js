@@ -119,7 +119,7 @@ class Post extends Component {
               <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{this.state.date}</Text>
             </View>
             {this.state.featuredMedia !== "" &&
-              <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+              <Image style={{ width: this.state.width, height: 240, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             }
             {this.state.featuredMediaCaption &&
               <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
