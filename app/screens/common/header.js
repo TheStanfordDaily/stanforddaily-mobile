@@ -69,14 +69,14 @@ export default class Header extends Component {
                   {this.props.goBack !== undefined && (
                       <TouchableOpacity onPress={() => this.props.goBack()}>
                         <View style={styles.leftButton}>
-                          <Ionicons name={ICONS.BACK} size={32} color={COLORS.BLACK}/>
+                          <Ionicons name={ICONS.BACK} size={32} color={COLORS.WHITE}/>
                         </View>
                       </TouchableOpacity>
                   )}
                   {this.props.drawerHandler !== undefined && (
                     <TouchableOpacity onPress={() => this.props.drawerHandler()}>
                       <View style={styles.leftButton}>
-                        <Ionicons name={ICONS.MENU} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.MENU} size={32} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   )}
@@ -98,7 +98,7 @@ export default class Header extends Component {
                   {this.props.share !== undefined &&
                     <TouchableOpacity onPress={this.shareHandler.bind(this)}>
                       <View style={styles.rightButton}>
-                        <Ionicons name={ICONS.SHARE} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.SHARE} size={32} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   }
@@ -113,7 +113,7 @@ export default class Header extends Component {
                   {this.props.searchHandler !== undefined && (
                     <TouchableOpacity onPress={() => this.props.searchHandler()}>
                       <View style={styles.rightButton}>
-                        <Ionicons name={ICONS.SEARCH} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.SEARCH} size={32} color={COLORS.WHITE}/>
                       </View>
                     </TouchableOpacity>
                   )}

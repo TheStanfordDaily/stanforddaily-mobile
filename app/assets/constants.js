@@ -67,7 +67,9 @@ const STRINGS = {
   PUBLIC_POSTS: "publicPosts",
   NAME: "name",
   SEARCH: "Search",
-  REPLY: "Reply"
+  REPLY: "Reply",
+  TIPS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
+  TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA"
 }
 
 const PATHS = {
@@ -194,7 +196,7 @@ const MARGINS = {
 };
 
 const HEIGHTS = {
-  APP_HEADER: 48,
+  APP_HEADER: 56,
   APP_HEADER_TOP: 15,
   SIDE_MENU_HEADER_TOP: 24,
   SIDE_MENU_ITEM: 45,
@@ -222,8 +224,7 @@ const KEYS = {
 
 const ICONS = Platform.select({
   android: {
-    AUTHORS_PAGE: "md-contacts",
-    MAP_PAGE: "md-map",
+    TIPS_PAGE: "md-contacts",
     BACK: "md-arrow-back",
     MENU: "md-menu",
     SEARCH: "md-search",
@@ -231,8 +232,7 @@ const ICONS = Platform.select({
     CLOSE: "md-close"
   },
   ios: {
-    AUTHORS_PAGE: "ios-contacts",
-    MAP_PAGE: "ios-map",
+    TIPS_PAGE: "ios-contacts",
     BACK: "ios-arrow-back",
     MENU: "ios-menu",
     SEARCH: "ios-search",
