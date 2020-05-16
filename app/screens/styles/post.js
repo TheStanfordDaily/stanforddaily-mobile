@@ -25,10 +25,5 @@ export default {
   body: {
     fontFamily: FONTS.PT_SERIF,
     fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
-    //   marginTop: MARGINS.DEFAULT_MARGIN,
-    //   marginBottom: MARGINS.ARTICLE_SIDES,
-    //   opacity: 0.80,
-    //   marginLeft: MARGINS.ARTICLE_SIDES,
-    //   marginRight: MARGINS.ARTICLE_SIDES,
   }
 };

@@ -85,7 +85,7 @@ class Post extends Component {
       author: _.get(postData, "_embedded.author.name", ""),
       authorID: postData.author,
       date: new Date(postData.date).toLocaleDateString(),
-      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.medium_large.source_url"),
+      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.large.source_url"), // some articles are missing a medium_large image
       featuredMediaCaption: _.get(postData, "_embedded.wp:featuredmedia.caption.rendered"),
       id: id
     });
