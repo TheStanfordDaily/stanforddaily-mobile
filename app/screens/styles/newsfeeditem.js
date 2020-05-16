@@ -18,22 +18,25 @@ const styles = ({
       marginTop: 2,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES,
+      marginBottom: MARGINS.ARTICLE_SIDES,
     },
 
     author: {
       fontFamily: FONTS.PT_SERIF,
-      fontSize: FONT_SIZES.DEFAULT_SMALL,
-      marginLeft: -2
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+      marginLeft: -2,
+      color: COLORS.DARK_GRAY,
     },
 
     date: {
       fontFamily: FONTS.PT_SERIF,
-      fontSize: FONT_SIZES.DEFAULT_SMALL,
-      opacity: 0.60
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+      color: COLORS.DARK_GRAY,
     },
 
     titleFont: {
-      fontSize: FONT_SIZES.DEFAULT_LARGE
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_LARGE,
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_MARGIN,
@@ -42,8 +45,6 @@ const styles = ({
     },
 
     descriptionContainer: {
-      marginTop: MARGINS.DEFAULT_MARGIN,
-      marginBottom: MARGINS.ARTICLE_SIDES,
       opacity: 0.80,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES
