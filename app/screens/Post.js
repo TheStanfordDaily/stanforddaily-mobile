@@ -122,11 +122,11 @@ class Post extends Component {
               <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             }
             {this.state.featuredMediaCaption &&
-              <Text style={{ marginLeft: 10, fontFamily: FONTS.CENTURY, color: COLORS.LIGHT_GRAY, fontStyle: 'italic' }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
+              <Text style={{ marginLeft: 10, fontFamily: FONTS.CENTURY, color: COLORS.DARK_GRAY, fontStyle: 'italic' }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
             }
             <View style={{ margin: 10 }}>
               {this.state.content &&
-                <HTML baseFontStyle={{ fontFamily: FONTS.CENTURY }} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
+                <HTML baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
               }
             </View>
           </ScrollView>

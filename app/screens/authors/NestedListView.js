@@ -11,7 +11,7 @@ const styles = {
         paddingBottom: 15
     },
     headerText: {
-        fontSize: FONT_SIZES.DEFAULT_MEDIUM,
+        fontSize: FONT_SIZES.DEFAULT_LARGE,
         fontFamily: FONTS.PT_SERIF_BOLD,
         top: 8,
     },

@@ -12,6 +12,9 @@ export default {
     fontSize: FONT_SIZES.DEFAULT_LARGE,
     fontFamily: FONTS.CENTURY
   },
+  articleText: {
+    fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+  },
 
   body: {
     fontFamily: FONTS.PT_SERIF,
