@@ -38,6 +38,7 @@ const renderers = {
 export default (props) => {
   return <HTML
     textSelectable={props.textSelectable}
+    tagsStyles={props.tagsStyles}
     containerStyle={props.containerStyle || {}}
     baseFontStyle={{ fontFamily: FONTS.PT_SERIF, ...(props.baseFontStyle || {}) }}
     html={props.html}

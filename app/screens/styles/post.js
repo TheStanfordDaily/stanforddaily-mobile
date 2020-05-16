@@ -20,7 +20,7 @@ export default {
   },
   articleText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
-    lineHeight: 26,
+    lineHeight: 28,
   },
   body: {
     fontFamily: FONTS.PT_SERIF,

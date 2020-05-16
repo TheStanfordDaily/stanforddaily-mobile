@@ -126,8 +126,8 @@ class Post extends Component {
             }
             <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
               {this.state.content &&
-                <HTML baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
-              }
+                <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
+              } 
             </View>
           </ScrollView>
         </View>}
