@@ -10,7 +10,7 @@ export default {
   },
   titleText: {
     fontSize: FONT_SIZES.DEFAULT_LARGE,
-    fontFamily: FONTS.CENTURY
+    fontFamily: FONTS.PT_SERIF_BOLD,
   },
   articleContainer: {
     marginHorizontal: MARGINS.ARTICLE_SIDES
