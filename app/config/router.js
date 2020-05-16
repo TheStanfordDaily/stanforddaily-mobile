@@ -1,18 +1,13 @@
 import React from 'react';
 import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
-import {Image, View, TouchableOpacity, Dimensions} from 'react-native';
-import {STRINGS, MARGINS, HEIGHTS, KEYS, ICONS, COLORS} from '../assets/constants.js';
+import {Image, Dimensions} from 'react-native';
+import {HEIGHTS, ICONS, COLORS} from '../assets/constants.js';
 import { Ionicons } from '@expo/vector-icons';
 import Headlines from '../screens/Headlines';
 import Search from '../screens/Search';
 import Post from '../screens/Post';
-import AuthorList from "../screens/authors/AuthorList";
-import AuthorDetail from "../screens/authors/AuthorDetail";
-import Map from "../screens/map/Map";
-import * as Amplitude from 'expo-analytics-amplitude';
-import {FONTS} from "../assets/constants";
+import Tips from "../screens/Tips";
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = 3;
 const tabBarHeight = HEIGHTS.TAB_BAR_HEIGHT;
@@ -51,34 +46,16 @@ const NewsStack = createStackNavigator({
   headerMode: 'none',
 });
 
-const AuthorStack = createStackNavigator({
-AuthorList: {
-    screen: AuthorList,
+const TipStack = createStackNavigator({
+  Tips: {
+    screen: Tips,
     navigationOptions: {
-      title: 'Author List',
-    },
-  },
-  AuthorDetail: {
-    screen: AuthorDetail,
-    navigationOptions: {
-      title: 'Author Detail',
+      title: 'Tips',
     },
   },
 }, {
   headerMode: 'none',
 });
-
-const MapStack = createStackNavigator({
-  Map: {
-      screen: Map,
-      navigationOptions: {
-        title: 'Map',
-      },
-    },
-  }, {
-    headerMode: 'none',
-  });
-
 
 export const Tabs = createBottomTabNavigator({
   News: {
@@ -95,18 +72,11 @@ export const Tabs = createBottomTabNavigator({
       // },
     },
   },
-  Author: {
-    screen: AuthorStack,
+  Tips: {
+    screen: TipStack,
     navigationOptions: {
-      tabBarLabel: 'Authors',
-      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.AUTHORS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
-    },
-  },
-  Map: {
-    screen: MapStack,
-    navigationOptions: {
-      tabBarLabel: 'Map',
-      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.MAP_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
+      tabBarLabel: 'Tips',
+      tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.TIPS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   }
 },{
