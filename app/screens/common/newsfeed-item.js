@@ -48,11 +48,14 @@ export default class NewsFeedItem extends Component {
 
   chooseMediaSize = async () => {
     let featuredMediaData = await (await fetch(STRINGS.MEDIA_URL + this.props.data.postObj.featured_media)).json();
-    var imageSize = "medium_large";
-    if ("" == _.get(featuredMediaData, "media_details.sizes.medium_large.source_url", "")) { // check if medium-large image exists
-      imageSize = "large";
+    var featuredMediaURL = _.get(featuredMediaData, "media_details.sizes.medium_large.source_url", "");
+    if (featuredMediaURL == "") {
+      featuredMediaURL = _.get(featuredMediaData, "media_details.sizes.large.source_url", "");
     }
-    return { url: _.get(featuredMediaData, "media_details.sizes." + imageSize + ".source_url", ""), caption: _.get(featuredMediaData, "caption.rendered", "") };
+    if (featuredMediaURL == "") {
+      featuredMediaURL = _.get(featuredMediaData, "media_details.sizes.full.source_url", "");
+    }
+    return { url: featuredMediaURL, caption: _.get(featuredMediaData, "caption.rendered", "") };
   }
 
   //Async fetch data from the WP server
