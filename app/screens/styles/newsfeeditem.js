@@ -22,15 +22,15 @@ const styles = ({
     },
 
     author: {
-      fontFamily: FONTS.PT_SERIF,
-      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+      fontFamily: FONTS.OPEN_SANS,
+      fontSize: FONT_SIZES.DEFAULT_SMALL,
       marginLeft: -2,
       color: COLORS.DARK_GRAY,
     },
 
     date: {
-      fontFamily: FONTS.PT_SERIF,
-      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+      fontFamily: FONTS.OPEN_SANS,
+      fontSize: FONT_SIZES.DEFAULT_SMALL,
       color: COLORS.DARK_GRAY,
     },
 

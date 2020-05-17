@@ -5,7 +5,7 @@
 
 //Pre-made Components imports
 import React, { Component } from 'react';
-import { STRINGS, KEYS } from '../assets/constants.js';
+import { STRINGS, KEYS, MARGINS, FONT_SIZES } from '../assets/constants.js';
 import {
   View,
   StatusBar,
@@ -85,7 +85,7 @@ class Post extends Component {
       author: _.get(postData, "_embedded.author.name", ""),
       authorID: postData.author,
       date: new Date(postData.date).toLocaleDateString(),
-      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.medium_large.source_url"),
+      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.large.source_url"), // some articles are missing a medium_large image
       featuredMediaCaption: _.get(postData, "_embedded.wp:featuredmedia.caption.rendered"),
       id: id
     });
@@ -105,29 +105,29 @@ class Post extends Component {
         {this.state.id &&
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
-            barStyle="light-content"
+            barStyle="dark-content"
           />
 
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
             <View style={styles.title}>
               <HTML baseFontStyle={styles.titleText} html={this.state.title} />
             </View>
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
+            <View style={styles.authorAndDate}>
               <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
-                <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.author}</Text>
+                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {this.state.author}</Text>
               </TouchableOpacity>
-              <Text style={{fontFamily: FONTS.CENTURY}}>{this.state.date}</Text>
+              <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{this.state.date}</Text>
             </View>
             {this.state.featuredMedia !== "" &&
-              <Image style={{ width: this.state.width, height: 200, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+              <Image style={{ width: this.state.width, height: 240, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
             }
             {this.state.featuredMediaCaption &&
-              <Text style={{ marginLeft: 10, fontFamily: FONTS.CENTURY, color: COLORS.DARK_GRAY, fontStyle: 'italic' }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
+              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
             }
-            <View style={{ margin: 10 }}>
+            <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
               {this.state.content &&
-                <HTML baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
-              }
+                <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
+              } 
             </View>
           </ScrollView>
         </View>}

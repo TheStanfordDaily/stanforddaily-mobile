@@ -187,7 +187,7 @@ export default class Search extends Component {
         <View ref={REFS.VIEW} style={{flex: 1, backgroundColor:COLORS.GHOST_WHITE}}>
         <StatusBar
           ref={REFS.STATUS_BAR}
-          barStyle={STRINGS.LIGHT_CONTENT}
+          barStyle={STRINGS.DARK_CONTENT}
         />
         <FlatList
             ref={REFS.LIST}
