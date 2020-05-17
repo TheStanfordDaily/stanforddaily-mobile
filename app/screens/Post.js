@@ -97,14 +97,14 @@ class Post extends Component {
               </TouchableOpacity>
               <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
             </View>
-            {thumbnailURL &&
+            {thumbnailURL !== 0 &&
               <Image style={{ width: width, height: 240, marginVertical: 5 }} source={{ uri: thumbnailURL }} />
             }
-            {caption &&
+            {caption !== 0 &&
               <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(caption)}</Text>
             }
             <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
-              {postContent &&
+              {postContent !== 0 &&
                 <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(postContent)} imagesMaxWidth={width} textSelectable={true} />
               } 
             </View>
