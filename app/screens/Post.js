@@ -25,6 +25,10 @@ import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
 import striptags from 'striptags';
+import { getPostByIdAsync } from '../helper/wpapi.js';
+import { formatAuthors, getThumbnailURL, formatDate } from './common/newsfeed-item.js';
+import Placeholder from './common/placeholder.js';
+
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -34,7 +38,7 @@ class Post extends Component {
     super(props);
     this.goBack = this.goBack.bind(this);
     this.state = {
-      post: {},
+      item: null,
       width: width <= height ? width : height,
       height: Dimensions.get('window').height,
     }
@@ -50,45 +54,9 @@ class Post extends Component {
     this.props.navigation.goBack();
   }
 
-  //Once components load, load data. All data is passed down from previous screen
-  componentDidMount() {
-    if (this.props.navigation.state.params.postID) {
-      this.fetchData(this.props.navigation.state.params.postID);
-    }
-    else {
-      this.fetchDataFromParams();
-    }
-  }
-
-  async fetchDataFromParams() {
-    var postData = this.props.navigation.state.params;
-    this.setState({
-      // post: {content:this.assembleHTML(title, featuredMedia, postData.body) },
-      content: postData.body,
-      title: postData.title,
-      author: postData.author,
-      authorID: postData.authorID,
-      date: postData.date,
-      featuredMedia: postData.featuredMedia,
-      featuredMediaCaption: postData.featuredMediaCaption,
-      id: postData.id,
-    });
-    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postData.id })
-  }
-
-  //Gets data and makes it look as expected
-  async fetchData(id) {
-    let postData = await fetch(`${STRINGS.DAILY_URL}wp-json/wp/v2/posts/${id}?_embed`).then(e => e.json())
-    this.setState({
-      content: _.get(postData, "content.rendered", ""),
-      title: _.get(postData, "title.rendered", ""),
-      author: _.get(postData, "_embedded.author.name", ""),
-      authorID: postData.author,
-      date: new Date(postData.date).toLocaleDateString(),
-      featuredMedia: _.get(postData, "_embedded.wp:featuredmedia.0.media_details.sizes.large.source_url"), // some articles are missing a medium_large image
-      featuredMediaCaption: _.get(postData, "_embedded.wp:featuredmedia.caption.rendered"),
-      id: id
-    });
+  async componentDidMount() {
+    let item = await getPostByIdAsync(this.props.navigation.state.params.postID);
+    this.setState({ item });
     Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: id })
   }
 
@@ -98,11 +66,18 @@ class Post extends Component {
   }
 
   render() {
+    const { item } = this.state;
+    if (!item) {
+      return <Placeholder />;
+    }
+    const { id, postTitle, postSubtitle, thumbnailInfo, postContent } = item;
+    const {caption} = thumbnailInfo || {};
+    const thumbnailURL = getThumbnailURL(item);
     return (
       <View style={{ flex: 1}}>
-        <Header ref='postHeader' share={true} postID={this.state.id} goBack={this.goBack} />
-        {!this.state.id && <ActivityIndicator />}
-        {this.state.id &&
+        <Header ref='postHeader' share={true} postID={id} goBack={this.goBack} />
+        {!id && <ActivityIndicator />}
+        {id &&
         <View style={{ flex: 1, alignItems: 'center' }}>
           <StatusBar
             barStyle="dark-content"
@@ -110,23 +85,27 @@ class Post extends Component {
 
           <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
             <View style={styles.title}>
-              <HTML baseFontStyle={styles.titleText} html={this.state.title} />
+              <HTML baseFontStyle={styles.titleText} html={postTitle} />
             </View>
+            {/* TODO: add subtitles */}
+            {/* <View style={styles.title}>
+              <HTML baseFontStyle={styles.titleText} html={postSubtitle} />
+            </View> */}
             <View style={styles.authorAndDate}>
               <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
-                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {this.state.author}</Text>
+                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
               </TouchableOpacity>
-              <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{this.state.date}</Text>
+              <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
             </View>
-            {this.state.featuredMedia !== "" &&
-              <Image style={{ width: this.state.width, height: 240, marginVertical: 5 }} source={{ uri: this.state.featuredMedia }} />
+            {thumbnailURL &&
+              <Image style={{ width: width, height: 240, marginVertical: 5 }} source={{ uri: thumbnailURL }} />
             }
-            {this.state.featuredMediaCaption &&
-              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(this.state.featuredMediaCaption)}</Text>
+            {caption &&
+              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(caption)}</Text>
             }
             <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
-              {this.state.content &&
-                <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(this.state.content)} imagesMaxWidth={Dimensions.get('window').width} textSelectable={true} />
+              {postContent &&
+                <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(postContent)} imagesMaxWidth={width} textSelectable={true} />
               } 
             </View>
           </ScrollView>

@@ -16,7 +16,8 @@
     "expo-permissions": "~6.0.0",
     "expo-web-browser": "~6.0.0",
     "firebase": "^6.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.25.3",
+    "moment-timezone": "^0.5.29",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.2.tar.gz",
     "react-native-activity-view": "^0.2.11",
@@ -42,7 +43,8 @@
     "react-transition-group": "^4.1.1",
     "render-if": "^0.1.1",
     "striptags": "^3.1.1",
-    "toggle-switch-react-native": "^2.1.0"
+    "toggle-switch-react-native": "^2.1.0",
+    "wpapi": "^1.2.1"
   },
   "devDependencies": {
     "graceful-fs": "^4.1.15"

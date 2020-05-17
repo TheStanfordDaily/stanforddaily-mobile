@@ -69,7 +69,8 @@ const STRINGS = {
   SEARCH: "Search",
   REPLY: "Reply",
   TIPS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
-  TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA"
+  TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
+  WP_URL: "https://wp.stanforddaily.com",
 }
 
 const PATHS = {
@@ -98,22 +99,25 @@ const PATHS = {
   PROFILE: "Profile.js"
 }
 
-const CATEGORIES = {
-  "Featured Headlines": '1485',
-  "All" : '',
-  "News": '3',
-  "Sports": '23',
-  "Opinions": '24',
-  "Arts & Life": '25',
-  "The Grind": '32278',
-  "Satire": '55796',
-  "Data": '58277'
-};
+// Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home)
+const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "satire", "moreFromTheDaily"]
+
+const CATEGORIES = [
+  {name: "Front Page", slug: null},
+  {name: "News", slug: "news"},
+  {name: "Sports", slug: "sports"},
+  {name: "Opinions", slug: "opinions"},
+  {name: "Arts & Life", slug: "arts-life"},
+  {name: "The Grind", slug: "thegrind"},
+  {name: "Satire", slug: "satire"},
+  {name: "Data", slug: "@94305"},
+  {name: "Podcasts", slug: "podcasts"}
+];
 
 const CATEGORY_ICONS = Platform.select({
   android: {
-    "All" : 'md-globe',
-    "Featured Headlines": 'md-star',
+    "Front Page" : 'md-globe',
+    "Podcasts": 'md-star',
     "News": 'md-paper',
     "Sports": 'md-american-football',
     "Opinions": 'md-chatbubbles',
@@ -123,8 +127,8 @@ const CATEGORY_ICONS = Platform.select({
     "Data": 'md-podium'
   },
   ios: {
-    "All" : 'ios-globe',
-    "Featured Headlines": 'ios-star',
+    "Front Page" : 'ios-globe',
+    "Podcasts": 'ios-star',
     "News": 'ios-paper',
     "Sports": 'ios-american-football',
     "Opinions": 'ios-chatbubbles',
@@ -258,5 +262,5 @@ const PN_RECEIVER_GROUPS = {
 }
 
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
+module.exports = {STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
 // module.exports = CATEGORIES;
