@@ -87,25 +87,25 @@ class Post extends Component {
             <View style={styles.title}>
               <HTML baseFontStyle={styles.titleText} html={postTitle} />
             </View>
-            {/* TODO: add subtitles */}
-            {/* <View style={styles.title}>
-              <HTML baseFontStyle={styles.titleText} html={postSubtitle} />
-            </View> */}
-            <View style={styles.authorAndDate}>
-              <TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>
-                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
-              </TouchableOpacity>
-              <Text style={{ marginTop: 4, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
+            <View style={styles.subtitle}>
+              <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
             </View>
             {thumbnailURL !== 0 &&
               <Image style={{ width: width, height: 240, marginVertical: 5 }} source={{ uri: thumbnailURL }} />
             }
             {caption !== 0 &&
-              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>Photo Credits: {striptags(caption)}</Text>
+              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>{striptags(caption)}</Text>
             }
+            <View style={styles.authorAndDate}>
+              {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
+                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
+              {/*</TouchableOpacity>*/}
+              <Text style={{ marginTop: 2, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
+            </View>
             <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
               {postContent !== 0 &&
-                <HTML tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }}} 
+                <HTML 
+                  tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }}} 
                   baseFontStyle={styles.articleText} 
                   html={this.createMarkup(postContent)} 
                   imagesMaxWidth={width} 
