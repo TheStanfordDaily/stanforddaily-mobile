@@ -176,6 +176,7 @@ const FONTS = {
   CENTURY: "Century",
   PT_SERIF:"PT Serif",
   PT_SERIF_BOLD:"PT Serif Bold",
+  PT_SERIF_ITALIC:"PT Serif Italic",
   HNEUE: "Helvetica Neue",
   OPEN_SANS: "Open Sans",
   OPEN_SANS_BOLD: "Open Sans Bold"

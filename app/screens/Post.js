@@ -105,7 +105,12 @@ class Post extends Component {
             }
             <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
               {postContent !== 0 &&
-                <HTML tagsStyles={{ p: { marginBottom: 16 }}} baseFontStyle={styles.articleText} html={this.createMarkup(postContent)} imagesMaxWidth={width} textSelectable={true} />
+                <HTML tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }}} 
+                  baseFontStyle={styles.articleText} 
+                  html={this.createMarkup(postContent)} 
+                  imagesMaxWidth={width} 
+                  textSelectable={true} 
+                />
               } 
             </View>
           </ScrollView>
