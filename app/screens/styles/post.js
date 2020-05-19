@@ -8,7 +8,7 @@ export default {
     marginHorizontal: MARGINS.ARTICLE_SIDES,
   },
   titleText: {
-    fontSize: FONT_SIZES.DEFAULT_LARGE,
+    fontSize: FONT_SIZES.DEFAULT_EXTRA_LARGE,
     fontFamily: FONTS.PT_SERIF_BOLD,
   },
   caption: { 

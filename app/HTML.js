@@ -2,7 +2,7 @@ import React from "react";
 import HTML from 'react-native-render-html';
 import { Linking } from 'react-native';
 import { FONTS } from './assets/constants';
-import { View, Dimensions, Text, ScrollView } from 'react-native';
+import { View, Dimensions, Text } from 'react-native';
 import { WebView } from 'react-native-webview'
 
 const onLinkPress = (event, href, htmlAttributes) => {
@@ -11,7 +11,7 @@ const onLinkPress = (event, href, htmlAttributes) => {
 
 const renderers = {
   div: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-    if (htmlAttribs.class === "flourish-embed") {
+    if (htmlAttribs.class.includes("flourish-embed")) {
       let uri = `https://public.flourish.studio/${htmlAttribs["data-src"]}/embed?auto=1`;
       let height = 450;
       if (htmlAttribs["data-width"] && htmlAttribs["data-height"]) {
@@ -19,15 +19,15 @@ const renderers = {
       }
       return (<WebView
         style={{ width: "100%", height: Math.ceil(height) + 50 }}
-        // visualisation/198838
+
         source={{ uri: uri }}
-        // Open links in a new page:
-        onNavigationStateChange={(event) => {
+        // Open links in a new page: (update: this.webview)
+        /*onNavigationStateChange={(event) => {
           if (event.url !== uri) {
             this.webview.stopLoading();
             Linking.openURL(event.url);
           }
-        }}
+        }}*/
       />);
     }
     else if (htmlAttribs.class === "wp-block-embed__wrapper") {
