@@ -55,9 +55,10 @@ class Post extends Component {
   }
 
   async componentDidMount() {
-    let item = await getPostByIdAsync(this.props.navigation.state.params.postID);
+    const { postID } = this.props.navigation.state.params;
+    let item = await getPostByIdAsync();
     this.setState({ item });
-    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: id })
+    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postID })
   }
 
   createMarkup(text) {
