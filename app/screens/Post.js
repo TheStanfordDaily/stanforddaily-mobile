@@ -17,6 +17,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { WebView } from 'react-native-webview'
+
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
@@ -28,7 +30,6 @@ import striptags from 'striptags';
 import { getPostByIdAsync } from '../helper/wpapi.js';
 import { formatAuthors, getThumbnailURL, formatDate } from './common/newsfeed-item.js';
 import Placeholder from './common/placeholder.js';
-
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -71,50 +72,52 @@ class Post extends Component {
       return <Placeholder />;
     }
     const { id, postTitle, postSubtitle, thumbnailInfo, postContent } = item;
-    const {caption} = thumbnailInfo || {};
+    const { caption } = thumbnailInfo || {};
     const thumbnailURL = getThumbnailURL(item);
     return (
-      <View style={{ flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Header ref='postHeader' share={true} postID={id} goBack={this.goBack} />
         {!id && <ActivityIndicator />}
         {id &&
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <StatusBar
-            barStyle="dark-content"
-          />
+          <View style={{ flex: 1, alignItems: 'center' }}>
+            <StatusBar
+              barStyle="dark-content"
+            />
 
-          <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-            <View style={styles.title}>
-              <HTML baseFontStyle={styles.titleText} html={postTitle} />
-            </View>
-            <View style={styles.subtitle}>
-              <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
-            </View>
-            {thumbnailURL !== 0 &&
-              <Image style={{ width: width, height: 240, marginVertical: 5 }} source={{ uri: thumbnailURL }} />
-            }
-            {caption !== 0 &&
-              <Text style={{ marginHorizontal: MARGINS.ARTICLE_SIDES, fontFamily: FONTS.OPEN_SANS, fontSize: FONT_SIZES.DEFAULT_SMALL, color: COLORS.DARK_GRAY }}>{striptags(caption)}</Text>
-            }
-            <View style={styles.authorAndDate}>
-              {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
+            <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
+              <View style={styles.title}>
+                <HTML baseFontStyle={styles.titleText} html={postTitle} />
+              </View>
+              {postSubtitle !== "" &&
+                <View style={styles.title}>
+                  <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
+                </View>
+              }
+              {thumbnailURL !== 0 &&
+                <Image style={{ width: width, height: 240, marginBottom: 5, marginTop: MARGINS.ARTICLE_SIDES }} source={{ uri: thumbnailURL }} />
+              }
+              {caption !== 0 &&
+                <Text style={styles.caption}>{striptags(caption)}</Text>
+              }
+              <View style={styles.authorAndDate}>
+                {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
                 <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
-              {/*</TouchableOpacity>*/}
-              <Text style={{ marginTop: 2, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
-            </View>
-            <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
-              {postContent !== 0 &&
-                <HTML 
-                  tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }}} 
-                  baseFontStyle={styles.articleText} 
-                  html={this.createMarkup(postContent)} 
-                  imagesMaxWidth={width} 
-                  textSelectable={true} 
-                />
-              } 
-            </View>
-          </ScrollView>
-        </View>}
+                {/*</TouchableOpacity>*/}
+                <Text style={{ marginTop: 2, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
+              </View>
+              <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
+                {postContent !== 0 &&
+                  <HTML
+                    tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }, figcaption: styles.caption }}
+                    baseFontStyle={styles.articleText}
+                    html={this.createMarkup(postContent)}
+                    imagesMaxWidth={width}
+                    textSelectable={true}
+                  />
+                }
+              </View>
+            </ScrollView>
+          </View>}
       </View>
     );
   }

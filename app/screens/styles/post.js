@@ -7,12 +7,16 @@ export default {
     marginTop: MARGINS.ARTICLE_SIDES,
     marginHorizontal: MARGINS.ARTICLE_SIDES,
   },
-  subtitle: {
-    margin: MARGINS.ARTICLE_SIDES,
-  },
   titleText: {
     fontSize: FONT_SIZES.DEFAULT_LARGE,
     fontFamily: FONTS.PT_SERIF_BOLD,
+  },
+  caption: { 
+    marginHorizontal: MARGINS.ARTICLE_SIDES, 
+    fontFamily: FONTS.OPEN_SANS, 
+    fontSize: FONT_SIZES.DEFAULT_SMALL, 
+    color: COLORS.DARK_GRAY,
+    lineHeight: FONT_SIZES.DEFAULT_SMALL + 4,
   },
   subtitleText: {
     fontSize: FONT_SIZES.DEFAULT_MEDIUM,

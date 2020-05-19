@@ -2,7 +2,8 @@ import React from "react";
 import HTML from 'react-native-render-html';
 import { Linking } from 'react-native';
 import { FONTS } from './assets/constants';
-import { WebView, View, Dimensions, Text } from 'react-native';
+import { View, Dimensions, Text, ScrollView } from 'react-native';
+import { WebView } from 'react-native-webview'
 
 const onLinkPress = (event, href, htmlAttributes) => {
   Linking.openURL(href);
@@ -29,10 +30,17 @@ const renderers = {
         }}
       />);
     }
+    else if (htmlAttribs.class === "wp-block-embed__wrapper") {
+      let uri = children[0][0].props.source.uri;
+      return (
+        <WebView source={{ uri: uri }} style={{ height: 200, marginBottom: -32, marginTop: 8 }} />
+      )
+    }
     else {
       return <View />;
     }
-  }
+  },
+
 }
 
 export default (props) => {
@@ -43,6 +51,7 @@ export default (props) => {
     baseFontStyle={{ fontFamily: FONTS.PT_SERIF, ...(props.baseFontStyle || {}) }}
     html={props.html}
     renderers={renderers}
-    onLinkPress={(a, b, c) => onLinkPress(a, b, c)} />;
+    onLinkPress={(a, b, c) => onLinkPress(a, b, c)}
+  />;
 }
 
