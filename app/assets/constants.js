@@ -106,8 +106,8 @@ const CATEGORIES = [
   {name: "Front Page", slug: null},
   {name: "News", slug: "news"},
   {name: "Sports", slug: "sports"},
-  {name: "Opinions", slug: "opinions"},
   {name: "Arts & Life", slug: "arts-life"},
+  {name: "Opinions", slug: "opinions"},
   {name: "The Grind", slug: "thegrind"},
   {name: "Satire", slug: "satire"},
   {name: "Data", slug: "@94305"},
@@ -117,7 +117,7 @@ const CATEGORIES = [
 const CATEGORY_ICONS = Platform.select({
   android: {
     "Front Page" : 'md-globe',
-    "Podcasts": 'md-star',
+    "Podcasts": 'md-headset',
     "News": 'md-paper',
     "Sports": 'md-american-football',
     "Opinions": 'md-chatbubbles',
@@ -128,7 +128,7 @@ const CATEGORY_ICONS = Platform.select({
   },
   ios: {
     "Front Page" : 'ios-globe',
-    "Podcasts": 'ios-star',
+    "Podcasts": 'ios-headset',
     "News": 'ios-paper',
     "Sports": 'ios-american-football',
     "Opinions": 'ios-chatbubbles',
@@ -228,7 +228,7 @@ const KEYS = {
 
 const ICONS = Platform.select({
   android: {
-    TIPS_PAGE: "md-contacts",
+    TIPS_PAGE: "md-create",
     BACK: "md-arrow-back",
     MENU: "md-menu",
     SEARCH: "md-search",
@@ -236,7 +236,7 @@ const ICONS = Platform.select({
     CLOSE: "md-close"
   },
   ios: {
-    TIPS_PAGE: "ios-contacts",
+    TIPS_PAGE: "ios-create",
     BACK: "ios-arrow-back",
     MENU: "ios-menu",
     SEARCH: "ios-search",

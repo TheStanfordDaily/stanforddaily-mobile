@@ -78,7 +78,7 @@ export default (props) => {
           </TouchableOpacity>
         }
       />
-      <TouchableHighlight style={{ width: '100%', marginLeft: 24 }}>
+      <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
         <TouchableOpacity
           onPress={() => setModalVisible(!modalVisible)}>
             <View style={styles.sideMenuItem}>
