@@ -21,6 +21,7 @@ class App extends Component {
       'Hoefler Text': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Regular.ttf'),
       'PT Serif Bold': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Bold.ttf'),
+      'PT Serif Italic': require('./app/assets/fonts/PT_Serif/PT_Serif-Web-Italic.ttf'),
       'Open Sans': require('./app/assets/fonts/Open_Sans/OpenSans-Regular.ttf'),
       'Open Sans Bold': require('./app/assets/fonts/Open_Sans/OpenSans-Bold.ttf'),
     }).then(() => this.setState({ loaded: true }));

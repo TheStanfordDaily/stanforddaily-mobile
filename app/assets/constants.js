@@ -106,8 +106,8 @@ const CATEGORIES = [
   {name: "Front Page", slug: null},
   {name: "News", slug: "news"},
   {name: "Sports", slug: "sports"},
-  {name: "Opinions", slug: "opinions"},
   {name: "Arts & Life", slug: "arts-life"},
+  {name: "Opinions", slug: "opinions"},
   {name: "The Grind", slug: "thegrind"},
   {name: "Satire", slug: "satire"},
   {name: "Data", slug: "@94305"},
@@ -117,7 +117,7 @@ const CATEGORIES = [
 const CATEGORY_ICONS = Platform.select({
   android: {
     "Front Page" : 'md-globe',
-    "Podcasts": 'md-star',
+    "Podcasts": 'md-headset',
     "News": 'md-paper',
     "Sports": 'md-american-football',
     "Opinions": 'md-chatbubbles',
@@ -128,7 +128,7 @@ const CATEGORY_ICONS = Platform.select({
   },
   ios: {
     "Front Page" : 'ios-globe',
-    "Podcasts": 'ios-star',
+    "Podcasts": 'ios-headset',
     "News": 'ios-paper',
     "Sports": 'ios-american-football',
     "Opinions": 'ios-chatbubbles',
@@ -152,7 +152,7 @@ const REFS = {
 const COLORS = {
   WHITE: "#FFFFFF",
   SIDE_BAR_GRAY: "#F7F7F7",
-  LIGHT_GRAY: "#E0E0E0", // "#A5A5A5",
+  LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
   DARK_GRAY: "#757575",
   NEAR_WHITE: "#FCFCFC",
   PLACEHOLDER_LIGHT: "#F0F0F0",
@@ -176,6 +176,7 @@ const FONTS = {
   CENTURY: "Century",
   PT_SERIF:"PT Serif",
   PT_SERIF_BOLD:"PT Serif Bold",
+  PT_SERIF_ITALIC:"PT Serif Italic",
   HNEUE: "Helvetica Neue",
   OPEN_SANS: "Open Sans",
   OPEN_SANS_BOLD: "Open Sans Bold"
@@ -190,6 +191,7 @@ const FONT_SIZES = {
   DEFAULT_MEDIUM: 16,
   DEFAULT_SMALL_MEDIUM: 18,
   DEFAULT_LARGE: 20,
+  DEFAULT_EXTRA_LARGE: 24,
 };
 
 const MARGINS = {
@@ -228,7 +230,7 @@ const KEYS = {
 
 const ICONS = Platform.select({
   android: {
-    TIPS_PAGE: "md-contacts",
+    TIPS_PAGE: "md-create",
     BACK: "md-arrow-back",
     MENU: "md-menu",
     SEARCH: "md-search",
@@ -236,7 +238,7 @@ const ICONS = Platform.select({
     CLOSE: "md-close"
   },
   ios: {
-    TIPS_PAGE: "ios-contacts",
+    TIPS_PAGE: "ios-create",
     BACK: "ios-arrow-back",
     MENU: "ios-menu",
     SEARCH: "ios-search",

@@ -17,7 +17,7 @@ import HTML from '../../HTML';
 const { width, height } = Dimensions.get('window');
 
 export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
-export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.thumbnail || thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
+export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 
 export default class NewsFeedItem extends Component {
@@ -44,7 +44,7 @@ export default class NewsFeedItem extends Component {
             </View>)
           }
           <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} />
-          <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />
+          {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>
               <Text style={styles.author}> {formatAuthors(item)} </Text>

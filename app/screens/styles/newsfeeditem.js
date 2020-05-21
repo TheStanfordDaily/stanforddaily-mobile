@@ -15,7 +15,7 @@ const styles = ({
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
-      marginTop: 2,
+      marginTop: MARGINS.DEFAULT_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: MARGINS.ARTICLE_SIDES,
       marginBottom: MARGINS.ARTICLE_SIDES,
