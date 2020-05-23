@@ -13,6 +13,8 @@ export default {
   },
   caption: { 
     marginHorizontal: MARGINS.ARTICLE_SIDES, 
+    marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+    marginBottom: MARGINS.DEFAULT_LARGE_MARGIN,
     fontFamily: FONTS.OPEN_SANS, 
     fontSize: FONT_SIZES.DEFAULT_SMALL, 
     color: COLORS.DARK_GRAY,
@@ -24,10 +26,17 @@ export default {
     color: COLORS.DARK_GRAY,
   },
   authorAndDate: {
-    margin: MARGINS.ARTICLE_SIDES,
+    marginHorizontal: MARGINS.ARTICLE_SIDES,
+    marginBottom: MARGINS.DEFAULT_LARGE_MARGIN,
+  },
+  date: { 
+    marginTop: MARGINS.DEFAULT_SMALL_MARGIN, 
+    fontFamily: FONTS.OPEN_SANS, 
+    color: COLORS.DARK_GRAY, 
+    fontSize: FONT_SIZES.DEFAULT_SMALL 
   },
   articleText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
-    lineHeight: 28,
+    lineHeight: 26,
   },
 };

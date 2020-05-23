@@ -94,7 +94,7 @@ class Post extends Component {
                 </View>
               }
               {thumbnailURL !== 0 &&
-                <Image style={{ width: width, height: 240, marginBottom: 5, marginTop: MARGINS.ARTICLE_SIDES }} source={{ uri: thumbnailURL }} />
+                <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
               }
               {caption !== 0 &&
                 <Text style={styles.caption}>{striptags(caption)}</Text>
@@ -103,12 +103,12 @@ class Post extends Component {
                 {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
                 <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
                 {/*</TouchableOpacity>*/}
-                <Text style={{ marginTop: 2, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
+                <Text style={styles.date}>{formatDate(item)}</Text>
               </View>
               <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
                 {postContent !== 0 &&
                   <HTML
-                    tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }, figcaption: styles.caption }}
+                    tagsStyles={{ p: { marginBottom: MARGINS.ARTICLE_SIDES }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }, figcaption: styles.caption }}
                     baseFontStyle={styles.articleText}
                     html={this.createMarkup(postContent)}
                     imagesMaxWidth={width}
