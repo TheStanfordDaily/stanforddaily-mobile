@@ -41,7 +41,7 @@ const renderers = {
     }
   },
   br: () => {
-    return ""; // remove extra spacing between paragraphs 
+    return ""; // remove extra spacing between paragraphs in certain articles
   }
 }
 

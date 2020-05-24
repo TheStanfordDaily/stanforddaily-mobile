@@ -5,7 +5,6 @@
 
 //Pre-made Components imports
 import React, { Component } from 'react';
-import { STRINGS, KEYS, MARGINS, FONT_SIZES } from '../assets/constants.js';
 import {
   View,
   StatusBar,
@@ -22,7 +21,7 @@ import { WebView } from 'react-native-webview'
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
-import { FONTS, COLORS } from "../assets/constants";
+import { FONTS, COLORS, STRINGS, KEYS, MARGINS, FONT_SIZES } from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
@@ -111,6 +110,7 @@ class Post extends Component {
                   <HTML
                     tagsStyles={{ 
                       p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
+                      a: { color: COLORS.CARDINAL }, 
                       strong: { fontFamily: FONTS.PT_SERIF_BOLD }, 
                       em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
                       img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
