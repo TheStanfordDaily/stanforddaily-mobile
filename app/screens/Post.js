@@ -57,7 +57,7 @@ class Post extends Component {
 
   async componentDidMount() {
     const { postID } = this.props.navigation.state.params;
-    let item = await getPostByIdAsync();
+    let item = await getPostByIdAsync(postID);
     this.setState({ item });
     Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postID })
   }
@@ -109,7 +109,14 @@ class Post extends Component {
               <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
                 {postContent !== 0 &&
                   <HTML
-                    tagsStyles={{ p: { marginBottom: MARGINS.ARTICLE_SIDES }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }, figcaption: styles.caption }}
+                    tagsStyles={{ 
+                      p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
+                      strong: { fontFamily: FONTS.PT_SERIF_BOLD }, 
+                      em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
+                      img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
+                      figure: { marginVertical: MARGINS.ARTICLE_SIDES },
+                      figcaption: styles.caption }
+                    }
                     baseFontStyle={styles.articleText}
                     html={this.createMarkup(postContent)}
                     imagesMaxWidth={width}
