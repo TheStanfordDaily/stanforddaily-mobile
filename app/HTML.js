@@ -40,6 +40,9 @@ const renderers = {
       return <View />;
     }
   },
+  br: () => {
+    return ""; // remove extra spacing between paragraphs 
+  }
 }
 
 export default (props) => {

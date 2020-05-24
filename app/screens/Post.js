@@ -115,8 +115,8 @@ class Post extends Component {
                       em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
                       img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
                       figure: { marginVertical: MARGINS.ARTICLE_SIDES },
-                      figcaption: styles.caption }
-                    }
+                      figcaption: styles.caption,
+                    }}
                     baseFontStyle={styles.articleText}
                     html={this.createMarkup(postContent)}
                     imagesMaxWidth={width}
