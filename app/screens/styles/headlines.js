@@ -48,6 +48,8 @@ const styles= StyleSheet.create({
       flexDirection: ALIGNMENTS.ROW,
       height: HEIGHTS.SIDE_MENU_ITEM,
       alignItems:  ALIGNMENTS.CENTER,
+    },
+    separator: {
       borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1,
     },

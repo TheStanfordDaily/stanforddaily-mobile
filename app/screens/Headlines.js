@@ -70,6 +70,7 @@ export default (props) => {
       <FlatList
         data={CATEGORIES}
         style={styles.flatListStyle}
+        ItemSeparatorComponent={() => <View style={styles.separator} /> }
         renderItem={({ item }) =>
           <TouchableOpacity onPress={() => { setCategory(item); drawerRef.current.close(); listRef.current.scrollToLocation({ animated: false, sectionIndex: 0, itemIndex: 0, viewPosition: 2 }); }}>
             <View style={styles.sideMenuItem}>
