@@ -6,19 +6,15 @@ import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '
 
 const styles = ({
     content: {
-        borderTopColor: COLORS.LIGHT_GRAY,
-        borderTopWidth: 1,
-        backgroundColor: COLORS.NEAR_WHITE,
-        width: '100%',
-        // flex: 1
+      backgroundColor: COLORS.NEAR_WHITE,
+      width: '100%',
+      paddingVertical: 16,
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       marginTop: MARGINS.DEFAULT_MARGIN,
-      marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: MARGINS.ARTICLE_SIDES,
-      marginBottom: MARGINS.ARTICLE_SIDES,
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
     },
 
     author: {
@@ -39,29 +35,27 @@ const styles = ({
       fontSize: FONT_SIZES.DEFAULT_LARGE,
     },
     titleContainer: {
-      marginTop: MARGINS.DEFAULT_MARGIN,
-      marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: MARGINS.ARTICLE_SIDES
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     },
 
     descriptionContainer: {
       opacity: 0.80,
-      marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: MARGINS.ARTICLE_SIDES
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     },
     descriptionFont: {
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL
     },
 
     image: {
-      width: width,
+      width: width - (2 * MARGINS.ARTICLE_SIDES),
       height: width/2,
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
       marginBottom: MARGINS.DEFAULT_MARGIN
     },
 
     imageContainer: {
-      borderTopColor: COLORS.LIGHT_GRAY,
-      borderTopWidth: 2,
+
     },
     searchContainer: {
       borderBottomColor: COLORS.LIGHT_GRAY,
