@@ -55,6 +55,7 @@ export default (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const drawerRef = useRef();
+  const listRef = useRef();
   const setTextStyle = (cat) => {
     if (cat === category) {
       return { color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
@@ -70,7 +71,7 @@ export default (props) => {
         data={CATEGORIES}
         style={styles.flatListStyle}
         renderItem={({ item }) =>
-          <TouchableOpacity onPress={() => { setCategory(item); drawerRef.current.close() }}>
+          <TouchableOpacity onPress={() => { setCategory(item); drawerRef.current.close(); listRef.current.scrollToLocation({ animated: false, sectionIndex: 0, itemIndex: 0, viewPosition: 2 }); }}>
             <View style={styles.sideMenuItem}>
               <Ionicons name={CATEGORY_ICONS[item.name]} style={setTextStyle(item)} size={16} />
               <Text style={setTextStyle(item)}>{item.name}</Text>
@@ -142,10 +143,10 @@ export default (props) => {
       onCloseStart={() => StatusBar.setHidden(false)}
     >
       <View>
-        <SettingsPage
+        {/*<SettingsPage
           visible={modalVisible}
           setModalVisible={() => setModalVisible(!modalVisible)}
-        />
+        />*/}
       </View>
 
       <Header 
@@ -158,6 +159,7 @@ export default (props) => {
           barStyle={STRINGS.DARK_CONTENT}
         />
         <SectionList
+          ref={listRef}
           removeClippedSubviews={false}
           disableVirtualization={true}
           // refreshing={refreshing}
