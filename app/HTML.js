@@ -11,7 +11,7 @@ const onLinkPress = (event, href, htmlAttributes) => {
 
 const renderers = {
   div: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-    if (htmlAttribs.class.includes("flourish-embed")) {
+    if (typeof htmlAttribs.class !== 'undefined' && htmlAttribs.class.includes("flourish-embed")) {
       let uri = `https://public.flourish.studio/${htmlAttribs["data-src"]}/embed?auto=1`;
       let height = 450;
       if (htmlAttribs["data-width"] && htmlAttribs["data-height"]) {
@@ -21,17 +21,17 @@ const renderers = {
         style={{ width: "100%", height: Math.ceil(height) + 50 }}
 
         source={{ uri: uri }}
-        // Open links in a new page: (update: this.webview)
-        /*onNavigationStateChange={(event) => {
-          if (event.url !== uri) {
-            this.webview.stopLoading();
-            Linking.openURL(event.url);
-          }
-        }}*/
+      // Open links in a new page: (update: this.webview not defined)
+      /*onNavigationStateChange={(event) => {
+        if (event.url !== uri) {
+          this.webview.stopLoading();
+          Linking.openURL(event.url);
+        }
+      }}*/
       />);
     }
-    else if (htmlAttribs.class === "wp-block-embed__wrapper") {
-      let uri = children[0][0].props.source.uri;
+    else if (typeof htmlAttribs.class !== 'undefined' && htmlAttribs.class.includes("wp-block-embed__wrapper") && typeof passProps.rawChildren[0].attribs.title !== 'undefined' && passProps.rawChildren[0].attribs.title.includes("Spotify Embed")) { // hacky way of displaying Spotify players for podcasts
+      let uri = passProps.rawChildren[0].attribs.src;
       return (
         <WebView source={{ uri: uri }} style={{ height: 200, marginBottom: -32, marginTop: 8 }} />
       )
@@ -40,7 +40,9 @@ const renderers = {
       return <View />;
     }
   },
-
+  br: () => {
+    return ""; // remove extra spacing between paragraphs in certain articles
+  }
 }
 
 export default (props) => {
@@ -51,6 +53,8 @@ export default (props) => {
     baseFontStyle={{ fontFamily: FONTS.PT_SERIF, ...(props.baseFontStyle || {}) }}
     html={props.html}
     renderers={renderers}
+    imagesMaxWidth={Dimensions.get('window').width}
+    staticContentMaxWidth={Dimensions.get('window').width}
     onLinkPress={(a, b, c) => onLinkPress(a, b, c)}
   />;
 }

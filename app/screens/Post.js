@@ -5,7 +5,6 @@
 
 //Pre-made Components imports
 import React, { Component } from 'react';
-import { STRINGS, KEYS, MARGINS, FONT_SIZES } from '../assets/constants.js';
 import {
   View,
   StatusBar,
@@ -22,7 +21,7 @@ import { WebView } from 'react-native-webview'
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
-import { FONTS, COLORS } from "../assets/constants";
+import { FONTS, COLORS, STRINGS, KEYS, MARGINS, FONT_SIZES } from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
@@ -57,7 +56,7 @@ class Post extends Component {
 
   async componentDidMount() {
     const { postID } = this.props.navigation.state.params;
-    let item = await getPostByIdAsync();
+    let item = await getPostByIdAsync(postID);
     this.setState({ item });
     Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postID })
   }
@@ -95,7 +94,7 @@ class Post extends Component {
                 </View>
               }
               {thumbnailURL !== 0 &&
-                <Image style={{ width: width, height: 240, marginBottom: 5, marginTop: MARGINS.ARTICLE_SIDES }} source={{ uri: thumbnailURL }} />
+                <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
               }
               {caption !== 0 &&
                 <Text style={styles.caption}>{striptags(caption)}</Text>
@@ -104,12 +103,20 @@ class Post extends Component {
                 {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
                 <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
                 {/*</TouchableOpacity>*/}
-                <Text style={{ marginTop: 2, fontFamily: FONTS.OPEN_SANS, color: COLORS.DARK_GRAY, fontSize: FONT_SIZES.DEFAULT_SMALL }}>{formatDate(item)}</Text>
+                <Text style={styles.date}>{formatDate(item)}</Text>
               </View>
               <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
                 {postContent !== 0 &&
                   <HTML
-                    tagsStyles={{ p: { marginBottom: 16 }, strong: { fontFamily: FONTS.PT_SERIF_BOLD }, em: { fontFamily: FONTS.PT_SERIF_ITALIC }, figcaption: styles.caption }}
+                    tagsStyles={{ 
+                      p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
+                      a: { color: COLORS.CARDINAL }, 
+                      strong: { fontFamily: FONTS.PT_SERIF_BOLD }, 
+                      em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
+                      img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
+                      figure: { marginVertical: MARGINS.ARTICLE_SIDES },
+                      figcaption: styles.caption,
+                    }}
                     baseFontStyle={styles.articleText}
                     html={this.createMarkup(postContent)}
                     imagesMaxWidth={width}
