@@ -97,7 +97,7 @@ export default (props) => {
             color: COLORS.BLACK,
             marginLeft: MARGINS.ARTICLE_SIDES
           }}>
-            Settings
+            Notification Settings
           </Text>
           </View>
         </TouchableOpacity>
