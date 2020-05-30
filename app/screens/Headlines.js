@@ -97,7 +97,7 @@ export default (props) => {
             color: COLORS.BLACK,
             marginLeft: MARGINS.ARTICLE_SIDES
           }}>
-            Settings
+            Notification Settings
           </Text>
           </View>
         </TouchableOpacity>
@@ -144,10 +144,10 @@ export default (props) => {
       onCloseStart={() => StatusBar.setHidden(false)}
     >
       <View>
-        {/*<SettingsPage
+        <SettingsPage
           visible={modalVisible}
           setModalVisible={() => setModalVisible(!modalVisible)}
-        />*/}
+        />
       </View>
 
       <Header 

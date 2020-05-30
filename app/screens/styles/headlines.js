@@ -32,7 +32,7 @@ const styles= StyleSheet.create({
     },
     sideBarTitleText: {
       color: COLORS.BLACK,
-      fontFamily: FONTS.OPEN_SANS_BOLD,
+      fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       //textAlign: 'center',
       flex: 1,

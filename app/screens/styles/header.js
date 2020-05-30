@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     },
     wordsTitle: {
       color: COLORS.BLACK,
-      fontFamily: FONTS.OPEN_SANS_BOLD,
+      fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       textAlign: ALIGNMENTS.CENTER
     },
