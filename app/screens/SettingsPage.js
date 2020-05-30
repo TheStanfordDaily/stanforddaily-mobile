@@ -17,6 +17,7 @@ import {
     FlatList,
     TouchableOpacity,
     TouchableHighlight,
+    Switch,
     SectionList
 } from 'react-native';
 import _ from 'lodash';
@@ -86,13 +87,19 @@ export default class SettingsPage extends Component {
     }
 
     ToggleSwitch = ({receiverGroup}) => {
-      return <ToggleSwitch
+      return <Switch
+        value={this.state.isOn[receiverGroup]}
+        ios_backgroundColor={COLORS.LIGHT_GRAY}
+        onValueChange={ () => {this.toggleNotificationSetting(receiverGroup);} }
+      />
+        
+      {/*<ToggleSwitch // doesn't seem to work
       isOn={this.state.isOn[receiverGroup]}
       onColor='maroon'
       offColor='grey'
       size='small'
       onToggle={ () => {this.toggleNotificationSetting(receiverGroup); console.log(receiverGroup)} }
-      />
+      />*/}
     }
 
     render() {
