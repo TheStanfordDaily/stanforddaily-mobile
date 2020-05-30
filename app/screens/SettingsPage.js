@@ -35,7 +35,7 @@ var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected cate
 const styles = {
   listItem: { 
     flex: 1, 
-    maxHeight: 64, 
+    maxHeight: 72, 
     flexDirection: 'row', 
     alignItems: 'center',
     borderBottomWidth: 1, 
@@ -91,6 +91,7 @@ export default class SettingsPage extends Component {
         value={this.state.isOn[receiverGroup]}
         ios_backgroundColor={COLORS.LIGHT_GRAY}
         onValueChange={ () => {this.toggleNotificationSetting(receiverGroup);} }
+        style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
       />
         
       {/*<ToggleSwitch // doesn't seem to work
@@ -119,7 +120,7 @@ export default class SettingsPage extends Component {
               justifyContent: 'center',
               flex: 1,
               padding: MARGINS.ARTICLE_SIDES,
-              maxHeight: 80
+              maxHeight: 96,
             }}>
 
             <Text style= {{

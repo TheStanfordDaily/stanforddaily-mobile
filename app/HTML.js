@@ -33,7 +33,7 @@ const renderers = {
     else if (typeof htmlAttribs.class !== 'undefined' && htmlAttribs.class.includes("wp-block-embed__wrapper") && typeof passProps.rawChildren[0].attribs.title !== 'undefined' && passProps.rawChildren[0].attribs.title.includes("Spotify Embed")) { // hacky way of displaying Spotify players for podcasts
       let uri = passProps.rawChildren[0].attribs.src;
       return (
-        <WebView source={{ uri: uri }} style={{ height: 200, marginBottom: -32, marginTop: 8 }} />
+        <WebView source={{ uri: uri }} style={{ height: 200, marginBottom: -48, marginTop: 8 }} />
       )
     }
     else {
