@@ -1,10 +1,12 @@
-import {STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, FONTS, COLORS, PN_RECEIVER_GROUPS} from '../assets/constants.js';
-import React, {Component} from 'react';
-import {Image} from 'react-native';
+import { STRINGS, CATEGORIES, REFS, KEYS, ALIGNMENTS, MARGINS, FONTS, FONT_SIZES, COLORS, PN_RECEIVER_GROUPS } from '../assets/constants.js';
+import React, { Component } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 import Modal from "react-native-modal"
 import ToggleSwitch from 'toggle-switch-react-native'
 import {
     Alert,
+    Image, 
+    Platform,
     View,
     Text,
     Dimensions,
@@ -30,7 +32,22 @@ var selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected cate
 
 
 const styles = {
-  listItem: { flex: 1, maxHeight: 60, flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: 'grey'}
+  listItem: { 
+    flex: 1, 
+    maxHeight: 64, 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    borderBottomWidth: 1, 
+    borderBottomColor: COLORS.LIGHT_GRAY
+  },
+  notifHeader: {
+    fontSize: FONT_SIZES.DEFAULT_MEDIUM, 
+    fontFamily: FONTS.OPEN_SANS_BOLD
+  },
+  notifText: {
+    fontSize: 13, 
+    fontFamily: FONTS.OPEN_SANS
+  }
 }
 export default class SettingsPage extends Component {
     constructor(props) {
@@ -74,7 +91,7 @@ export default class SettingsPage extends Component {
       onColor='maroon'
       offColor='grey'
       size='small'
-      onToggle={ () => this.toggleNotificationSetting(receiverGroup) }
+      onToggle={ () => {this.toggleNotificationSetting(receiverGroup); console.log(receiverGroup)} }
       />
     }
 
@@ -89,24 +106,25 @@ export default class SettingsPage extends Component {
           {/* Header */}
           <View
             style = {{
-              marginTop: 0,
-              borderBottomWidth: 4,
-              borderColor: 'grey',
-              alignItems: 'center',
+              marginLeft: 0,
+              borderBottomWidth: 1,
+              borderColor: COLORS.LIGHT_GRAY,
               justifyContent: 'center',
               flex: 1,
+              padding: MARGINS.ARTICLE_SIDES,
               maxHeight: 80
             }}>
 
             <Text style= {{
-              fontFamily: 'PT Serif',
-              fontSize: 24
+              color: COLORS.BLACK,
+              fontFamily: FONTS.OPEN_SANS_BOLD,
+              fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
+              marginBottom: MARGINS.DEFAULT_SMALL_MARGIN,
             }}>Notifications</Text>
 
             <Text style= {{
-              fontFamily: 'PT Serif'
+              fontFamily: FONTS.OPEN_SANS
             }}>How often do you want to hear from The Daily?</Text>
-
           </View>
 
           <View
@@ -116,57 +134,48 @@ export default class SettingsPage extends Component {
             }}>
 
             <View style = {styles.listItem}>
-              <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image
-                style={{ width: 35, height: 35 }}
-                source={require('../media/breaking.png')}></Image>
+              <View style = {{flex: 1, alignItems: 'center'}}>
+                <Ionicons name={Platform.OS === 'ios' ? 'ios-globe' : 'md-globe'} size={24} />
               </View>
 
-              <View style = {{flex: 4, margin: 5}}>
-                <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Breaking News</Text>
-                <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Important stories, as they happen</Text>
+              <View style = {{flex: 4}}>
+                <Text style = {styles.notifHeader}>Breaking News</Text>
+                <Text style = {styles.notifText}>Important stories, as they happen</Text>
               </View>
 
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.BREAKING}/>
               </View>
-
             </View>
 
             <View style = {styles.listItem}>
-              <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image
-                style={{ width: 35, height: 35 }}
-                source={require('../media/sunicon.png')}></Image>
+              <View style = {{flex: 1, alignItems: 'center'}}>
+                <Ionicons name={Platform.OS === 'ios' ? 'ios-sunny' : 'md-sunny'} size={28} />
               </View>
 
-              <View style = {{flex: 4, margin: 5}}>
-                <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every day</Text>
-                <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Daily news roundup</Text>
+              <View style = {{flex: 4}}>
+                <Text style = {styles.notifHeader}>Every day</Text>
+                <Text style = {styles.notifText}>Daily news roundup</Text>
               </View>
 
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.DAILY}/>
               </View>
-
             </View>
 
             <View style = {styles.listItem}>
-              <View style = {{margin: 10, flex: 1, alignItems: 'center'}}>
-                <Image
-                style={{ width: 32, height: 32 }}
-                source={require('../media/calendaricon.png')}></Image>
+              <View style = {{flex: 1, alignItems: 'center'}}>
+                <Ionicons name={Platform.OS === 'ios' ? 'ios-calendar' : 'md-calendar'} size={22} />
               </View>
 
-              <View style = {{flex: 4, margin: 5}}>
-                <Text style = {{fontSize: 16, fontFamily: 'PT Serif'}}>Every week</Text>
-                <Text style = {{fontSize: 13, fontFamily: 'PT Serif'}}>Weekend roundup</Text>
+              <View style = {{flex: 4}}>
+                <Text style = {styles.notifHeader}>Every week</Text>
+                <Text style = {styles.notifText}>Weekend roundup</Text>
               </View>
 
               <View style = {{margin: 15, flex: 1, alignItems: 'center'}}>
               <this.ToggleSwitch receiverGroup={PN_RECEIVER_GROUPS.WEEKLY}/>
               </View>
-
             </View>
 
           </View>
@@ -175,22 +184,19 @@ export default class SettingsPage extends Component {
           <View style = {{margin: 20, alignItems: 'center'}}>
               <TouchableOpacity
                 style = {{
+                  alignItems: 'center',
+                  justifyContent: 'center', 
                   height: 40,
                   width: 200,
-                  padding: 10,
-                  borderRadius: 10,
-                  alignItems: 'center',
-                  backgroundColor:'maroon'}}
+                  borderRadius: 4,
+                  backgroundColor: COLORS.CARDINAL}}
                 onPress={() => {this.props.setModalVisible(!this.props.modalVisible);
-
                 }}>
                 <Text style={{
-                  marginTop: 2,
                   alignSelf: 'center',
                   color: 'white',
-                  fontFamily: 'Hoefler Text',
-                  fontWeight: 'bold',
-                  fontSize: 15,
+                  fontFamily: FONTS.OPEN_SANS_BOLD,
+                  fontSize: FONT_SIZES.DEFAULT_MEDIUM,
                   }}>Close</Text>
               </TouchableOpacity>
             </View>

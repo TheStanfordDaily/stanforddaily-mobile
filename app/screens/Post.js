@@ -111,7 +111,7 @@ class Post extends Component {
                     tagsStyles={{ 
                       p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
                       a: { color: COLORS.CARDINAL }, 
-                      strong: { fontFamily: FONTS.PT_SERIF_BOLD }, 
+                      strong: { fontFamily: FONTS.PT_SERIF_BOLD },
                       em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
                       img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
                       figure: { marginVertical: MARGINS.ARTICLE_SIDES },
