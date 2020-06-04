@@ -7,7 +7,7 @@ export async function registerForPushNotificationsAsync() {
     Permissions.NOTIFICATIONS
   );
   let finalStatus = existingStatus;
-
+  
   // only ask if permissions have not already been determined, because
   // iOS won't necessarily prompt the user a second time.
   if (existingStatus !== 'granted') {

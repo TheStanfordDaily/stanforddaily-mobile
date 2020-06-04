@@ -4,7 +4,7 @@
     "description": "The Stanford Daily Mobile App",
     "slug": "StanfordDaily",
     "privacy": "public",
-    "version": "1.3.2",
+    "version": "1.4.0",
     "platforms": [
       "ios",
       "android"
@@ -31,14 +31,14 @@
     ],
     "ios": {
       "bundleIdentifier": "com.Stanford.Daily.App",
-      "buildNumber": "14",
+      "buildNumber": "15",
       "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
       "supportsTablet": true
     },
     "android": {
       "package": "com.Stanford.Daily.App",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 14,
+      "versionCode": 15,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.Stanford.Daily.App",
       "permissions": [
         "ACCESS_COARSE_LOCATION",

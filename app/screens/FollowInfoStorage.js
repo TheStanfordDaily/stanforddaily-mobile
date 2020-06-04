@@ -1,8 +1,25 @@
-import {AsyncStorage} from "react-native"
+import { AsyncStorage, Linking, Alert } from "react-native"
 import { STRINGS } from '../assets/constants.js'
 import { Notifications } from "expo";
+import * as Permissions from 'expo-permissions';
 
 export async function getToken() {
+    const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS
+    );
+    // if push notifications aren't on, alert user and give them the option to turn them on
+    if (existingStatus !== 'granted') { // code adapted from https://stackoverflow.com/questions/59980039/permissions-askasync-not-working-as-expected
+        Alert.alert(
+            "Please turn on notifications for this app in settings",
+            "",
+            [
+                { text: "Cancel" },
+                { text: "Settings", onPress: () => Linking.openURL("app-settings:") },
+            ],
+            { cancelable: false }
+        );
+    }
+
     let token = await Notifications.getExpoPushTokenAsync();
     if (__DEV__) {
         console.log(token);
@@ -34,7 +51,7 @@ export async function followCategory(category_id) {
 }
 
 export async function unfollowCategory(category_id) {
-    let categories_followed = await getCategoriesFollowed(); 
+    let categories_followed = await getCategoriesFollowed();
     var index = categories_followed.indexOf(category_id);
     if (index !== -1) categories_followed.splice(index, 1);                                     // remove category_id from list
     await updateBackend();
@@ -42,14 +59,14 @@ export async function unfollowCategory(category_id) {
 }
 
 export async function followAuthor(author_id) {
-    let authors_followed = await getAuthorsFollowed();  
+    let authors_followed = await getAuthorsFollowed();
     authors_followed.push(author_id);                                                        // add author_id to authors_followed
     await updateBackend();
     return await AsyncStorage.setItem('authors_followed', JSON.stringify(authors_followed));
 }
 
 export async function unfollowAuthor(author_id) {
-    let authors_followed = await getAuthorsFollowed(); 
+    let authors_followed = await getAuthorsFollowed();
     var index = authors_followed.indexOf(author_id);
     if (index !== -1) authors_followed.splice(index, 1);                                       // remove author_id from list
     await updateBackend();
@@ -57,16 +74,16 @@ export async function unfollowAuthor(author_id) {
 }
 
 export async function followLocation(location_id) {
-    let locations_followed = await getLocationsFollowed();  
-    locations_followed.push(location_id);                                                        
+    let locations_followed = await getLocationsFollowed();
+    locations_followed.push(location_id);
     await updateBackend();
     return await AsyncStorage.setItem('locations_followed', JSON.stringify(locations_followed));
 }
 
 export async function unfollowLocation(location_id) {
-    let locations_followed = await getLocationsFollowed(); 
+    let locations_followed = await getLocationsFollowed();
     var index = locations_followed.indexOf(location_id);
-    if (index !== -1) locations_followed.splice(index, 1);                                       
+    if (index !== -1) locations_followed.splice(index, 1);
     await updateBackend();
     return await AsyncStorage.setItem('locations_followed', JSON.stringify(locations_followed));
 }
@@ -93,14 +110,14 @@ export async function isFollowingLocation(location_id) {
 }
 
 export async function addNotificationSetting(notification_id) {
-    let notification_settings = await getNotificationSettings();  
-    notification_settings.push(notification_id);                                                        
+    let notification_settings = await getNotificationSettings();
+    notification_settings.push(notification_id);
     await updateBackend();
     return await AsyncStorage.setItem('notification_settings', JSON.stringify(notification_settings));
 }
 
 export async function removeNotificationSetting(notification_id) {
-    let notification_settings = await getNotificationSettings(); 
+    let notification_settings = await getNotificationSettings();
     var index = notification_settings.indexOf(notification_id);
     if (index !== -1) notification_settings.splice(index, 1);                                     // remove notification option from list
     await updateBackend();
@@ -118,8 +135,8 @@ async function updateBackend() {
     let response = await fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
         method: 'PUT',
         headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({
             subscribing: {
