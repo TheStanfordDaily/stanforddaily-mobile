@@ -127,8 +127,9 @@ export default (props) => {
         const {posts} = await getCategoryAsync([category.slug], pageNumber);
         setArticles(posts);
       }
+      setRefreshing(false);
     })();
-  }, [pageNumber, category]);
+  }, [pageNumber, category, refreshing]);
   return (
     <Drawer
       type={STRINGS.STATIC}
@@ -163,9 +164,9 @@ export default (props) => {
           ref={listRef}
           removeClippedSubviews={false}
           disableVirtualization={true}
-          // refreshing={refreshing}
+          refreshing={refreshing}
           keyExtractor={item => `list-key-${item.id}`}
-          // onRefresh={() => setRefreshing(true)}
+          onRefresh={() => setRefreshing(true)}
           // onEndReached={() => setPageNumber(pageNumber + 1)}
           sections={[{ data: articles, key: `category-list-${pageNumber}-${category}` }]}
           renderItem={_renderRow}

@@ -12,6 +12,7 @@ const styles = ({
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
+      flexWrap: 'wrap',
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
