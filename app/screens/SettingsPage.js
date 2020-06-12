@@ -90,7 +90,7 @@ export default class SettingsPage extends Component {
       return  <Switch
         value={this.state.isOn[receiverGroup]}
         ios_backgroundColor={COLORS.LIGHT_GRAY}
-        onValueChange={ () => {this.toggleNotificationSetting(receiverGroup);} }
+        onValueChange={ () => {this.toggleNotificationSetting(receiverGroup)} }
         style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
       />
       {/*<ToggleSwitch // old switch

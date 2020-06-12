@@ -132,7 +132,7 @@ export async function isBeingNotified(notification_id) {
 }
 
 async function updateBackend() {
-    let response = await fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), {
+    let response = await fetch(STRINGS.DAILY_URL + 'wp-json/tsd/v1/push-notification/users/' + await getToken(), { // test notifications at "http://stanforddaily2.staging.wpengine.com/""
         method: 'PUT',
         headers: {
             Accept: 'application/json',

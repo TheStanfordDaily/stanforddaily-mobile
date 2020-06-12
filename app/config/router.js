@@ -85,6 +85,7 @@ export const Tabs = createBottomTabNavigator({
     inactiveTintColor: '#000000',
     inactiveBackgroundColor: 'white',
     activeBackgroundColor: 'white',
+    keyboardHidesTabBar: true,
     labelStyle: {
       fontFamily: "Open Sans", // FONTS.PT_SERIF
       marginBottom: labelBottomMargin
@@ -98,7 +99,7 @@ export const Tabs = createBottomTabNavigator({
       marginBottom: iphone_x ? -34 : 0
     }
   },
-  lazy: true
+  lazy: true,
 });
 
 const Root = createStackNavigator({
