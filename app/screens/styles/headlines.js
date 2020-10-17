@@ -65,6 +65,18 @@ const styles= StyleSheet.create({
       fontFamily:FONTS.CENTURY,
       fontSize:25,
       flex: 2,
+    },
+    header: {
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
+    },
+    titleFont: {
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+    },
+    titleContainer: {
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     }
 })
 

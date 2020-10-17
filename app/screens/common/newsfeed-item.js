@@ -40,11 +40,12 @@ export default class NewsFeedItem extends Component {
         <View style={styles.content}>
           {thumbnailURL && (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: thumbnailURL }} style={styles.image} />
+              <Image source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
             </View>)
           }
-          <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} />
-          {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
+          {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
+        <Text style={styles.titleContainer} numberOfLines={3} adjustsFontSizeToFit={true}>{postTitle}</Text>
+          {/* <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} /> */}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>
               <Text style={styles.author}> {formatAuthors(item)} </Text>

@@ -11,7 +11,7 @@ const styles = ({
       paddingVertical: 16,
     },
     dateAndAuthor: {
-      flexDirection: ALIGNMENTS.ROW,
+      flexDirection: ALIGNMENTS.COLUMN,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       marginTop: MARGINS.DEFAULT_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
@@ -19,26 +19,29 @@ const styles = ({
 
     author: {
       fontFamily: FONTS.OPEN_SANS,
-      fontSize: FONT_SIZES.DEFAULT_SMALL,
+      fontSize: 10,
       marginLeft: -2,
       color: COLORS.DARK_GRAY,
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
-      fontSize: FONT_SIZES.DEFAULT_SMALL,
+      fontSize: 10,
       color: COLORS.DARK_GRAY,
     },
 
+    header: {
+        fontFamily: FONTS.PT_SERIF_BOLD,
+        fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
+    },
+
     titleFont: {
-      fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: FONT_SIZES.DEFAULT_LARGE,
+      fontFamily: FONTS.PT_SERIF,
+      fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-      marginHorizontal: MARGINS.ARTICLE_SIDES,
-      fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: FONT_SIZES.DEFAULT_LARGE
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     },
 
     descriptionContainer: {
@@ -93,6 +96,13 @@ const styles = ({
       marginTop: 2,
       opacity: 0.80,
     },
+    more: {
+      backgroundColor: COLORS.LIGHT_GRAY,
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
+      justifyContent: 'center',
+      borderRadius: 10
+    }
 })
 
 module.exports = styles
