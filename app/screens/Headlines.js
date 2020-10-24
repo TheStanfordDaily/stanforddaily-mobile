@@ -1,23 +1,14 @@
-import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, KEYS, ALIGNMENTS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
-import React, { Component, useState, useRef, useEffect } from 'react';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
+import React, { useState, useRef, useEffect } from 'react';
 import { Image } from 'react-native';
-import { AsyncStorage } from "react-native";
-import Modal from "react-native-modal"
-import ToggleSwitch from 'toggle-switch-react-native'
-import WPAPI from "wpapi";
 import {
-  Alert,
   View,
   Text,
   Dimensions,
-  RefreshControl,
   StatusBar,
-  ActivityIndicator,
-  NetInfo,
   FlatList,
   TouchableOpacity,
   TouchableHighlight,
-  SectionList,
   ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
@@ -25,11 +16,9 @@ import Drawer from 'react-native-drawer'
 //Components for this app imports
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
-import Placeholder from './common/placeholder';
 import Separator from './common/Separator';
 import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
-import { version } from "../../app.json";
 import { Ionicons } from '@expo/vector-icons';
 import Carousel from 'react-native-snap-carousel';
 import CardRow from './common/card-row';
@@ -41,7 +30,6 @@ import HTML from '../HTML';
 import styles from './styles/headlines';
 
 import * as Amplitude from 'expo-analytics-amplitude';
-import FollowButton from './common/FollowButton.js';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 // import { Card } from 'react-native-elements';
 
@@ -60,10 +48,9 @@ const CATEGORY_HOME = CATEGORIES[0];
 export default (props) => {
 
   const [category, setCategory] = useState(CATEGORY_HOME);
-  const [articles, setArticles] = useState([]);
+  // const [articles, setArticles] = useState([]);
   const [allArticles, setAllArticles] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // TODO: show modal by default
-  const [refreshing, setRefreshing] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const drawerRef = useRef();
   const listRef = useRef();
@@ -152,14 +139,14 @@ const _renderColumn = ({item}) => {
             flattenedResults.push(...(homeResults[section] || []));
             unFlattenedResults[section] = homeResults[section]
           }
-          setArticles(flattenedResults);
+          // setArticles(flattenedResults);
           setAllArticles(unFlattenedResults);
         } else {
-          setArticles(await getHomeMoreAsync(pageNumber));
+          // setArticles(await getHomeMoreAsync(pageNumber));
         }
       } else {
         const {posts} = await getCategoryAsync([category.slug], pageNumber);
-        setArticles(posts);
+        // setArticles(posts);
       }
 
     })();

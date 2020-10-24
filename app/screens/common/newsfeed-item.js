@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Image,
-  Dimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native';
@@ -11,10 +10,6 @@ import moment from 'moment';
 import "moment-timezone";
 import styles from '../styles/newsfeeditem';
 import _ from "lodash";
-import HTML from '../../HTML';
-
-
-const { width, height } = Dimensions.get('window');
 
 export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
@@ -33,7 +28,7 @@ export default class NewsFeedItem extends Component {
 
   render() {
     const { item } = this.props;
-    let { postTitle, postExcerpt, postDate, thumbnailInfo, postSubtitle, tsdAuthors} = item;
+    let { postTitle } = item;
     const thumbnailURL = getThumbnailURL(item);
     return (
       <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>

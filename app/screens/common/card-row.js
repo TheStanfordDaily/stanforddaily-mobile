@@ -2,17 +2,13 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  Image,
   Dimensions,
-  TouchableWithoutFeedback,
   TouchableOpacity,
   FlatList
 } from 'react-native';
-import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
 import HTML from '../../HTML';
-import Carousel from 'react-native-snap-carousel';
 import styles from '../styles/card-style';
 
 const { width, height } = Dimensions.get('window');

@@ -11,9 +11,7 @@ import {
   ScrollView,
   Dimensions,
   Text,
-  Image,
   ImageBackground,
-  TouchableOpacity,
   ActivityIndicator
 } from 'react-native';
 
@@ -22,7 +20,7 @@ import { WebView } from 'react-native-webview'
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
-import { FONTS, COLORS, STRINGS, KEYS, MARGINS, FONT_SIZES } from "../assets/constants";
+import { FONTS, COLORS, STRINGS, KEYS, MARGINS } from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
