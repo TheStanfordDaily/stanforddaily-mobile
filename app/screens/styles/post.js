@@ -10,6 +10,10 @@ export default {
   titleText: {
     fontSize: FONT_SIZES.DEFAULT_EXTRA_LARGE,
     fontFamily: FONTS.PT_SERIF_BOLD,
+    color: COLORS.WHITE,
+    textShadowColor: 'rgba(0, 0, 0, 1)',
+  textShadowOffset: {width: -1, height: 1},
+  textShadowRadius: 10
   },
   caption: { 
     marginHorizontal: MARGINS.ARTICLE_SIDES, 

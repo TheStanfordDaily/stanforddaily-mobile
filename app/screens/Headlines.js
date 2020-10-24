@@ -1,40 +1,37 @@
-import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, KEYS, ALIGNMENTS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
-import React, { Component, useState, useRef, useEffect } from 'react';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
+import React, { useState, useRef, useEffect } from 'react';
 import { Image } from 'react-native';
-import { AsyncStorage } from "react-native";
-import Modal from "react-native-modal"
-import ToggleSwitch from 'toggle-switch-react-native'
 import {
-  Alert,
   View,
   Text,
   Dimensions,
-  RefreshControl,
   StatusBar,
-  ActivityIndicator,
-  NetInfo,
   FlatList,
   TouchableOpacity,
   TouchableHighlight,
-  SectionList
+  ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
 
 //Components for this app imports
 import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
-import Placeholder from './common/placeholder';
+import Separator from './common/Separator';
 import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
-import { version } from "../../app.json";
 import { Ionicons } from '@expo/vector-icons';
+import Carousel from 'react-native-snap-carousel';
+import CardRow from './common/card-row';
+import Card from './common/Card'
+import Column from './common/column';
+import HTML from '../HTML';
 
 //Styles for the page
 import styles from './styles/headlines';
 
 import * as Amplitude from 'expo-analytics-amplitude';
-import FollowButton from './common/FollowButton.js';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
+// import { Card } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
@@ -49,10 +46,11 @@ const drawerStyles = {
 const CATEGORY_HOME = CATEGORIES[0];
 
 export default (props) => {
+
   const [category, setCategory] = useState(CATEGORY_HOME);
-  const [articles, setArticles] = useState([]);
+  // const [articles, setArticles] = useState([]);
+  const [allArticles, setAllArticles] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // TODO: show modal by default
-  const [refreshing, setRefreshing] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
   const drawerRef = useRef();
   const listRef = useRef();
@@ -83,7 +81,7 @@ export default (props) => {
       <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
         <TouchableOpacity
           onPress={() => setModalVisible(!modalVisible)}>
-            <View style={styles.sideMenuItem}>
+          <View style={styles.sideMenuItem}>
           <Image
             style={{
               width: 16,
@@ -110,23 +108,47 @@ export default (props) => {
               item={item}
               onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} />);
   };
+
+const _renderCardRow = ({item}) => {
+  return (
+    <Card
+      item={item}
+      onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} 
+    />    
+  );
+};
+
+const _renderColumn = ({item}) => {
+
+  return (
+    <Column
+      item={item}
+      onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item[0].id })} // This is broken right now. It only navigates to the article at the top of the column.
+    />
+  )
+}
+
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
         if (pageNumber === 1) {
           const homeResults = await getHomeAsync();
           const flattenedResults = [];
+          const unFlattenedResults = {};
           for (let section of HOME_SECTIONS) {
             flattenedResults.push(...(homeResults[section] || []));
+            unFlattenedResults[section] = homeResults[section]
           }
-          setArticles(flattenedResults);
+          // setArticles(flattenedResults);
+          setAllArticles(unFlattenedResults);
         } else {
-          setArticles(await getHomeMoreAsync(pageNumber));
+          // setArticles(await getHomeMoreAsync(pageNumber));
         }
       } else {
         const {posts} = await getCategoryAsync([category.slug], pageNumber);
-        setArticles(posts);
+        // setArticles(posts);
       }
+
     })();
   }, [pageNumber, category]);
   return (
@@ -155,11 +177,43 @@ export default (props) => {
         // TODO: enable search.
         // searchHandler={() => props.navigation.navigate(STRINGS.SEARCH, {})} 
         title={category.slug === CATEGORY_HOME.slug ? undefined : category.name} />
-      <View style={{ flex: 1, backgroundColor: COLORS.GHOST_WHITE, alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: COLORS.NEAR_WHITE, alignItems: 'center' }}>
         <StatusBar
           barStyle={STRINGS.DARK_CONTENT}
         />
-        <SectionList
+        <ScrollView>
+        <Carousel
+            layout={"default"}
+            data={allArticles['featured']}
+            renderItem={_renderRow}
+            sliderWidth={width}
+            itemWidth={width}
+          />
+          <Separator />
+          <CardRow
+            data={allArticles['news']}
+            renderItem={_renderCardRow}
+            title={"News"}
+          />
+          <Separator />
+          <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Opinions"} />
+          <FlatList
+            data={_.chunk(allArticles['opinions'], 3)}
+            renderItem={_renderColumn}
+            horizontal={true}
+            snapToAlignment={"start"}
+            snapToInterval={width}
+            decelerationRate={"fast"}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+          />
+          <Separator />
+          <CardRow
+            data={allArticles['theGrind']}
+            renderItem={_renderCardRow}
+            title={"The Grind"}
+          />
+                    {/* <SectionList
           ref={listRef}
           removeClippedSubviews={false}
           disableVirtualization={true}
@@ -172,7 +226,10 @@ export default (props) => {
           //renderSectionHeader={() => this.renderSectionHeader()}
           ListFooterComponent={() => <ActivityIndicator style={styles.loadingIndicator} />}
           contentContainerStyle={{ width: width }}
-        />
+        /> */}
+        </ScrollView>
+            
+
       </View>
     </Drawer>
 

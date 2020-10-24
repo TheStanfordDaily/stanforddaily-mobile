@@ -3,14 +3,10 @@
  */
 import React, {Component} from 'react';
 import {
-    Animated,
     View,
     Text,
-    TextInput,
-    StyleSheet,
     Image,
     TouchableOpacity,
-    Dimensions,
     Share
 } from 'react-native';
 import { AndroidBackHandler } from 'react-navigation-backhandler';

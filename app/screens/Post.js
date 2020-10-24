@@ -11,8 +11,7 @@ import {
   ScrollView,
   Dimensions,
   Text,
-  Image,
-  TouchableOpacity,
+  ImageBackground,
   ActivityIndicator
 } from 'react-native';
 
@@ -21,7 +20,7 @@ import { WebView } from 'react-native-webview'
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
-import { FONTS, COLORS, STRINGS, KEYS, MARGINS, FONT_SIZES } from "../assets/constants";
+import { FONTS, COLORS, STRINGS, KEYS, MARGINS } from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
@@ -85,16 +84,18 @@ class Post extends Component {
             />
 
             <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-              <View style={styles.title}>
-                <HTML baseFontStyle={styles.titleText} html={postTitle} />
-              </View>
               {postSubtitle !== "" &&
                 <View style={styles.title}>
                   <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
                 </View>
               }
               {thumbnailURL !== 0 &&
-                <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
+                // <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
+                <ImageBackground source={{uri: thumbnailURL}} style={{width: width, height: 240}}>
+                  <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}}>
+     <Text style={styles.titleText}>{postTitle}</Text>
+   </View>
+                </ImageBackground>
               }
               {caption !== 0 &&
                 <Text style={styles.caption}>{striptags(caption)}</Text>

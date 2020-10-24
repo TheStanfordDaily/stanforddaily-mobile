@@ -1,27 +1,18 @@
-import {STRINGS, CATEGORIES, REFS, FONTS, KEYS, ALIGNMENTS, Images, COLORS, ICONS} from '../assets/constants.js';
+import {STRINGS, REFS, COLORS, ICONS} from '../assets/constants.js';
 import React, {Component} from 'react';
 import {
     View,
-    Text,
-    Dimensions,
-    RefreshControl,
     StatusBar,
     ActivityIndicator,
-    NetInfo,
     FlatList,
     TouchableOpacity,
-    SectionList,
     TextInput,
-    Image
 } from 'react-native';
-import Drawer from 'react-native-drawer'
 
 import {NavigationActions} from 'react-navigation';
 
 //Components for this app imports
-import Header from './common/header';
 import NewsFeedItem from './common/newsfeed-item';
-import Placeholder from './common/placeholder';
 import { Ionicons } from '@expo/vector-icons';
 import _ from 'lodash';
 
@@ -30,8 +21,8 @@ import styles from './styles/search';
 
 import * as Amplitude from 'expo-analytics-amplitude';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
-const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Search extends Component {
     constructor(props) {
