@@ -77,6 +77,13 @@ const styles= StyleSheet.create({
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES
+    },
+    more: {
+      backgroundColor: COLORS.LIGHT_GRAY,
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
+      justifyContent: 'center',
+      borderRadius: 10
     }
 })
 

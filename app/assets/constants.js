@@ -14,6 +14,7 @@ const STRINGS = {
   PLACEHOLDER: "placeholder",
   POST: "Post",
   POSTS: "posts",
+  CATEGORY: "Category",
   HASHED: "hashed",
   REQUEST_SMALL_PAGE: "https://www.stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=3&page=",
   REQUEST_LARGE_PAGE: "https://www.stanforddaily.com/wp-json/wp/v2/posts/?_embed&per_page=10&page=",

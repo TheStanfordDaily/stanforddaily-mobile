@@ -123,7 +123,7 @@ const _renderColumn = ({item}) => {
   return (
     <Column
       item={item}
-      onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item[0].id })} // This is broken right now. It only navigates to the article at the top of the column.
+      navigation={props.navigation}
     />
   )
 }
@@ -194,9 +194,15 @@ const _renderColumn = ({item}) => {
             data={allArticles['news']}
             renderItem={_renderCardRow}
             title={"News"}
+            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
           />
           <Separator />
-          <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Opinions"} />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Opinions"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['opinions'], title: 'Opinions', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <FlatList
             data={_.chunk(allArticles['opinions'], 3)}
             renderItem={_renderColumn}
@@ -212,6 +218,7 @@ const _renderColumn = ({item}) => {
             data={allArticles['theGrind']}
             renderItem={_renderCardRow}
             title={"The Grind"}
+            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
                     {/* <SectionList
           ref={listRef}

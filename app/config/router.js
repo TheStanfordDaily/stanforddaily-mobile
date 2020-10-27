@@ -7,6 +7,7 @@ import Headlines from '../screens/Headlines';
 import Search from '../screens/Search';
 import Post from '../screens/Post';
 import Tips from "../screens/Tips";
+import Category from '../screens/Category.js';
 
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = 3;
@@ -42,6 +43,12 @@ const NewsStack = createStackNavigator({
       title: 'Post',
     },
   },
+  Category: {
+    screen: Category,
+    navigationOptions: {
+      title: 'Category'
+    }
+  }
 }, {
   headerMode: 'none',
 });

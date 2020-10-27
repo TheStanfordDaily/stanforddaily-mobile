@@ -12,6 +12,7 @@ import "moment-timezone";
 import _ from "lodash";
 import styles from '../styles/column-style';
 import Separator from './Separator';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../../assets/constants';
 
 const { width, height } = Dimensions.get('window');
 export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
@@ -29,13 +30,13 @@ export default class Column extends Component {
       }
 
     render() {
-        const { item } = this.props;
+        const { item, navigation } = this.props;
         return (
                 <FlatList
                     style={styles.videos_flatList}
                     data={item}
                     renderItem={({ item, index }) => (
-                        <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate(STRINGS.POST, { postID: item.id })}>
                             <View style={{flexDirection: 'column'}}>
                                 <View style={{flexDirection: 'row', width: width}}>
                                     {getThumbnailURL(item) && (

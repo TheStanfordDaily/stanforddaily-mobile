@@ -13,15 +13,16 @@ import styles from '../styles/card-style';
 
 const { width, height } = Dimensions.get('window');
 
-export default class CardRow extends Component {
+export default class CardRow extends Component {  
+
     render() {
-        const { data, renderItem, title } = this.props;
+        const { data, renderItem, title, onPress } = this.props;
         
         return (
             <View style={styles.content}>
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={title} />
-                    <TouchableOpacity style={styles.more}>
+                    <TouchableOpacity style={styles.more} onPress={onPress}>
                         <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
                     </TouchableOpacity>
                 </View>
