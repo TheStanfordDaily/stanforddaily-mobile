@@ -215,6 +215,11 @@ const _renderColumn = ({item}) => {
           />
           <Separator />
           <CardRow
+            data={allArticles['sports']}
+            renderItem={_renderCardRow}
+            title={"Sports"}
+          />
+          <CardRow
             data={allArticles['theGrind']}
             renderItem={_renderCardRow}
             title={"The Grind"}
