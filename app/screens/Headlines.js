@@ -220,6 +220,12 @@ const _renderColumn = ({item}) => {
             title={"Sports"}
           />
           <CardRow
+            data={allArticles['artsAndLife']}
+            renderItem={_renderCardRow}
+            title={"Arts and Life"}
+            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
+          />
+          <CardRow
             data={allArticles['theGrind']}
             renderItem={_renderCardRow}
             title={"The Grind"}
