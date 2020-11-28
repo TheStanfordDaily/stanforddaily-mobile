@@ -8,7 +8,7 @@ const styles = ({
     content: {
       backgroundColor: COLORS.NEAR_WHITE,
       width: '100%',
-      paddingVertical: 16,
+      paddingVertical: 2,
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.COLUMN,

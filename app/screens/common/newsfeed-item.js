@@ -11,7 +11,7 @@ import "moment-timezone";
 import styles from '../styles/newsfeeditem';
 import _ from "lodash";
 
-export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
+export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY');
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 
@@ -39,7 +39,7 @@ export default class NewsFeedItem extends Component {
             </View>)
           }
           {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-        <Text style={styles.titleContainer} numberOfLines={3} adjustsFontSizeToFit={true}>{postTitle}</Text>
+        <Text style={styles.titleContainer} numberOfLines={2} adjustsFontSizeToFit={true}>{postTitle}</Text>
           {/* <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} /> */}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>

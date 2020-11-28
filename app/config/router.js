@@ -41,7 +41,19 @@ const NewsStack = createStackNavigator({
     screen: Post,
     navigationOptions: {
       title: 'Post',
+      headerStyle: {
+        position: 'absolute',
+        backgroundColor: 'transparent',
+        zIndex: 10,
+        top: 0,
+        left: 0,
+        right: 0,
+        elevation: 0,
+        shadowOpacity: 0,
+        borderBottomWidth: 0
+      }
     },
+    headerMode: 'screen'
   },
   Category: {
     screen: Category,
