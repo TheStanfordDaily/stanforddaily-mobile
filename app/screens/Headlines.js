@@ -12,7 +12,6 @@ import {
   ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
-import { WebView } from 'react-native-webview';
 
 //Components for this app imports
 import Header from './common/header';
