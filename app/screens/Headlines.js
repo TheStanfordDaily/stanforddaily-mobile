@@ -12,6 +12,7 @@ import {
   ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
+import { WebView } from 'react-native-webview';
 
 //Components for this app imports
 import Header from './common/header';
@@ -152,6 +153,7 @@ const _renderImage = ({item}) => {
       if (category.slug === CATEGORY_HOME.slug) {
         if (pageNumber === 1) {
           const homeResults = await getHomeAsync();
+          console.log(homeResults);
           const flattenedResults = [];
           const unFlattenedResults = {};
           for (let section of HOME_SECTIONS) {
@@ -263,7 +265,6 @@ const _renderImage = ({item}) => {
             title={"The Grind"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
-
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
@@ -282,7 +283,6 @@ const _renderImage = ({item}) => {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
           />
-
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />

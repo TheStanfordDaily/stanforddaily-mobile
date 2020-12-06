@@ -100,7 +100,7 @@ const PATHS = {
   PROFILE: "Profile.js"
 }
 
-// Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home)
+// Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home-mobile)
 const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "satire", "moreFromTheDaily"]
 
 const CATEGORIES = [
