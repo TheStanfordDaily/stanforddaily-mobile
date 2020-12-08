@@ -1,14 +1,25 @@
 import React from 'react-native';
-const {StyleSheet, Dimensions} = React;
+const {StyleSheet, Dimensions, Platform, PixelRatio} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+
+const scale = width/320
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 const styles = ({
     content: {
       backgroundColor: COLORS.NEAR_WHITE,
       width: '100%',
-      paddingVertical: 16,
+      paddingTop: 12,
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
@@ -22,12 +33,14 @@ const styles = ({
       fontSize: FONT_SIZES.DEFAULT_SMALL,
       marginLeft: -2,
       color: COLORS.DARK_GRAY,
+      textTransform: 'uppercase'
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: FONT_SIZES.DEFAULT_SMALL,
       color: COLORS.DARK_GRAY,
+      textTransform: 'uppercase'
     },
 
     titleFont: {
@@ -38,7 +51,7 @@ const styles = ({
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: FONT_SIZES.DEFAULT_LARGE
+      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE + 6)
     },
 
     descriptionContainer: {
@@ -51,7 +64,7 @@ const styles = ({
 
     image: {
       width: width - (2 * MARGINS.ARTICLE_SIDES),
-      height: width/2,
+      height: width/2.125,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       marginBottom: MARGINS.DEFAULT_MARGIN
     },

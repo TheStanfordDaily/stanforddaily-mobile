@@ -15,7 +15,8 @@ import Separator from './Separator';
 import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../../assets/constants';
 
 const { width, height } = Dimensions.get('window');
-export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
+// export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
+export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY').toUpperCase();
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 
@@ -45,11 +46,15 @@ export default class Column extends Component {
                                         </View>)
                                     }
                                     <View style={{flexShrink: 1}}>
-                                        <Text style={styles.titleContainer}>{item.postTitle}</Text>
-                                        <Text style={styles.author}> {formatAuthors(item).toUpperCase()} • {formatDate(item)} </Text>
-                                        {index != 2 && (
-                                            <Separator />
-                                        )}
+                                        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                            <View>
+                                                <Text style={styles.titleContainer}>{item.postTitle}</Text>
+                                                <Text style={styles.author}> {formatAuthors(item).toUpperCase()} • {formatDate(item)} </Text>
+                                            </View>
+                                            {index != 2 && (
+                                                <Separator />
+                                            )}
+                                        </View>
                                     </View>
                                 </View>
                             </View>

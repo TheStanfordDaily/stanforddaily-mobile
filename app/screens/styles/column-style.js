@@ -52,7 +52,7 @@ const styles = ({
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
         marginHorizontal: MARGINS.ARTICLE_SIDES,
         fontFamily: FONTS.PT_SERIF,
-        fontSize: FONT_SIZES.DEFAULT_MEDIUM,
+        fontSize: FONT_SIZES.DEFAULT_LARGE,
         flexWrap: 1,
         flexShrink: 1,
         marginLeft: 0,

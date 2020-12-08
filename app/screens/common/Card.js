@@ -16,7 +16,7 @@ import HTML from '../../HTML';
 
 const { width, height } = Dimensions.get('window');
 
-export const formatDate = post => moment.utc(post.postDateGmt).format('MMM d, yyyy');
+export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY');
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 

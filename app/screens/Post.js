@@ -84,11 +84,6 @@ class Post extends Component {
             />
 
             <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-              {postSubtitle !== "" &&
-                <View style={styles.title}>
-                  <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
-                </View>
-              }
               {thumbnailURL !== 0 &&
                 // <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
                 <ImageBackground source={{uri: thumbnailURL}} style={{width: width, height: 240}}>
@@ -96,6 +91,11 @@ class Post extends Component {
      <Text style={styles.titleText}>{postTitle}</Text>
    </View>
                 </ImageBackground>
+              }
+                            {postSubtitle !== "" &&
+                <View style={styles.title}>
+                  <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
+                </View>
               }
               {caption !== 0 &&
                 <Text style={styles.caption}>{striptags(caption)}</Text>

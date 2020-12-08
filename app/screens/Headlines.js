@@ -31,6 +31,7 @@ import styles from './styles/headlines';
 
 import * as Amplitude from 'expo-analytics-amplitude';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 // import { Card } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
@@ -44,6 +45,7 @@ const drawerStyles = {
 //
 
 const CATEGORY_HOME = CATEGORIES[0];
+export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 
 export default (props) => {
 
@@ -128,11 +130,20 @@ const _renderColumn = ({item}) => {
   )
 }
 
+const _renderImage = ({item}) => {
+  return (
+    <TouchableWithoutFeedback onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
+      <Image style={{width: width, height: width, resizeMode: 'contain'}} source={{ uri: getThumbnailURL(item) }}/>
+    </TouchableWithoutFeedback>
+  )
+}
+
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
         if (pageNumber === 1) {
           const homeResults = await getHomeAsync();
+          console.log(homeResults);
           const flattenedResults = [];
           const unFlattenedResults = {};
           for (let section of HOME_SECTIONS) {
@@ -189,7 +200,6 @@ const _renderColumn = ({item}) => {
             sliderWidth={width}
             itemWidth={width}
           />
-          <Separator />
           <CardRow
             data={allArticles['news']}
             renderItem={_renderCardRow}
@@ -218,7 +228,27 @@ const _renderColumn = ({item}) => {
             data={allArticles['sports']}
             renderItem={_renderCardRow}
             title={"Sports"}
+            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
           />
+          <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Arts & Life"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts & Life', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={_.chunk(allArticles['artsAndLife'], 3)}
+            renderItem={_renderColumn}
+            horizontal={true}
+            snapToAlignment={"start"}
+            snapToInterval={width}
+            decelerationRate={"fast"}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+          />
+          <Separator />
           <CardRow
             data={allArticles['artsAndLife']}
             renderItem={_renderCardRow}
@@ -231,6 +261,39 @@ const _renderColumn = ({item}) => {
             title={"The Grind"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
+          <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Satire"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['satire'], title: 'Satire', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={_.chunk(allArticles['satire'], 3)}
+            renderItem={_renderColumn}
+            horizontal={true}
+            snapToAlignment={"start"}
+            snapToInterval={width}
+            decelerationRate={"fast"}
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+          />
+          <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['cartoons'], title: 'Cartoons', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <Carousel
+            layout={'default'}
+            data={allArticles['cartoons']}
+            renderItem={_renderImage}
+            sliderWidth={width}
+            itemWidth={width}
+          />
+
                     {/* <SectionList
           ref={listRef}
           removeClippedSubviews={false}
@@ -246,8 +309,6 @@ const _renderColumn = ({item}) => {
           contentContainerStyle={{ width: width }}
         /> */}
         </ScrollView>
-            
-
       </View>
     </Drawer>
 
