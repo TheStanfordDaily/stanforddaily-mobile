@@ -120,15 +120,6 @@ const _renderCardRow = ({item}) => {
   );
 };
 
-const _renderPodcastRow = ({item}) => {
-  return (
-    <Card
-      item={item}
-      onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} // Need to replace this with the ability to open web browser with podcast URL.
-    />    
-  );
-};
-
 const _renderColumn = ({item}) => {
 
   return (
