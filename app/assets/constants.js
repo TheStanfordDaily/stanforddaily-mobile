@@ -159,7 +159,8 @@ const COLORS = {
   PLACEHOLDER_LIGHT: "#F0F0F0",
   PLACEHOLDER_DARK: "#E5E5E5",
   CARDINAL: "#94171C",
-  GHOST_WHITE: "ghostwhite"
+  GHOST_WHITE: "ghostwhite",
+  SALMON: "#FEF2F1"
 };
 
 const ALIGNMENTS = {

@@ -2,6 +2,8 @@
  * Styles used in the individual post view (Post.js).
  */
 import { COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS } from '../../assets/constants.js';
+import { Dimensions } from 'react-native'
+const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
 export default {
   title: {
     marginTop: MARGINS.ARTICLE_SIDES,
@@ -15,10 +17,16 @@ export default {
   textShadowOffset: {width: -1, height: 1},
   textShadowRadius: 10
   },
+  imageBackground: {
+    width: width,
+    height: 240,
+    flex: 1,
+    resizeMode: 'cover'
+  },
   caption: { 
     marginHorizontal: MARGINS.ARTICLE_SIDES, 
     marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-    marginBottom: MARGINS.DEFAULT_LARGE_MARGIN,
+    marginBottom: 0,
     fontFamily: FONTS.OPEN_SANS, 
     fontSize: FONT_SIZES.DEFAULT_SMALL, 
     color: COLORS.DARK_GRAY,

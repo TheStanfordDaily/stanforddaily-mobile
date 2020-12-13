@@ -4,7 +4,7 @@
 'use strict';
 
 //Pre-made Components imports
-import React, { Component } from 'react';
+import React, { Component, SafeAreaView } from 'react';
 import {
   View,
   StatusBar,
@@ -82,23 +82,26 @@ class Post extends Component {
             <StatusBar
               barStyle="dark-content"
             />
-
+              
             <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
               {thumbnailURL !== 0 &&
                 // <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
-                <ImageBackground source={{uri: thumbnailURL}} style={{width: width, height: 240}}>
-                  <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}}>
+                <ImageBackground source={{uri: thumbnailURL}} style={styles.imageBackground}>
+                 
+        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}}>
+            
      <Text style={styles.titleText}>{postTitle}</Text>
    </View>
+ 
                 </ImageBackground>
+              }
+              {caption !== 0 &&
+                <Text style={styles.caption}>{striptags(caption)}</Text>
               }
                             {postSubtitle !== "" &&
                 <View style={styles.title}>
                   <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
                 </View>
-              }
-              {caption !== 0 &&
-                <Text style={styles.caption}>{striptags(caption)}</Text>
               }
               <View style={styles.authorAndDate}>
                 {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}

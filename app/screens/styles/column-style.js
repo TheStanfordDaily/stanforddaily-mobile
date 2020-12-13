@@ -1,8 +1,20 @@
 import React from 'react-native';
-const {StyleSheet, Dimensions} = React;
+const {StyleSheet, Dimensions, PixelRatio} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
+
+const scale = width/320
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
 
 const styles = ({
     list: {
@@ -32,7 +44,12 @@ const styles = ({
         marginLeft: -2,
         color: COLORS.DARK_GRAY,
       },
-  
+      satireAuthor: {
+        fontFamily: FONTS.OPEN_SANS,
+        fontSize: 10,
+        marginLeft: -2,
+        color: COLORS.NEAR_WHITE,
+      },
       date: {
         fontFamily: FONTS.OPEN_SANS,
         fontSize: FONT_SIZES.DEFAULT_SMALL,
@@ -52,12 +69,21 @@ const styles = ({
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
         marginHorizontal: MARGINS.ARTICLE_SIDES,
         fontFamily: FONTS.PT_SERIF,
-        fontSize: FONT_SIZES.DEFAULT_LARGE,
+        fontSize: normalize(16),
         flexWrap: 1,
         flexShrink: 1,
         marginLeft: 0,
       },
-  
+      satireContainer: {
+        marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+        marginHorizontal: MARGINS.ARTICLE_SIDES,
+        fontFamily: FONTS.PT_SERIF,
+        fontSize: FONT_SIZES.DEFAULT_LARGE,
+        flexWrap: 1,
+        flexShrink: 1,
+        marginLeft: 0,
+        color: COLORS.NEAR_WHITE
+      },
       descriptionContainer: {
         opacity: 0.80,
         marginHorizontal: MARGINS.ARTICLE_SIDES

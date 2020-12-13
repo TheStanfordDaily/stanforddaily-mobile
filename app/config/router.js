@@ -8,6 +8,7 @@ import Search from '../screens/Search';
 import Post from '../screens/Post';
 import Tips from "../screens/Tips";
 import Category from '../screens/Category.js';
+import Community from '../screens/Community.js'
 
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = 3;
@@ -42,16 +43,13 @@ const NewsStack = createStackNavigator({
     navigationOptions: {
       title: 'Post',
       headerStyle: {
-        position: 'absolute',
         backgroundColor: 'transparent',
-        zIndex: 10,
+        position: 'absolute',
+        height: 50,
         top: 0,
         left: 0,
         right: 0,
-        elevation: 0,
-        shadowOpacity: 0,
-        borderBottomWidth: 0
-      }
+      },
     },
     headerMode: 'screen'
   },
@@ -67,9 +65,9 @@ const NewsStack = createStackNavigator({
 
 const TipStack = createStackNavigator({
   Tips: {
-    screen: Tips,
+    screen: Community,
     navigationOptions: {
-      title: 'Tips',
+      title: 'Community',
     },
   },
 }, {
@@ -94,7 +92,7 @@ export const Tabs = createBottomTabNavigator({
   Tips: {
     screen: TipStack,
     navigationOptions: {
-      tabBarLabel: 'Tips',
+      tabBarLabel: 'Community',
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.TIPS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
   }
