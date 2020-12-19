@@ -47,9 +47,9 @@ export default class Card extends Component {
             {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
               <TouchableOpacity>
-                <Text style={styles.author}> {formatAuthors(item).toUpperCase()} </Text>
+                <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
               </TouchableOpacity>
-              <Text style={styles.date}> {formatDate(item).toUpperCase()} </Text>
+                <Text style={styles.date}>{formatDate(item).toUpperCase()}</Text>
             </View>
           </View>
             

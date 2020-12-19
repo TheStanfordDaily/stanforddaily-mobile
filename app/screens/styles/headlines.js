@@ -70,6 +70,11 @@ const styles= StyleSheet.create({
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
     },
+    satire: {
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
+      color: COLORS.NEAR_WHITE
+    },
     titleFont: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
@@ -84,6 +89,10 @@ const styles= StyleSheet.create({
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
       borderRadius: 10
+    },
+    seeAll: {
+      paddingHorizontal: 15,
+      fontFamily: FONTS.PT_SERIF_BOLD
     }
 })
 

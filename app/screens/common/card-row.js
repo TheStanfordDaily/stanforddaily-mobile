@@ -23,7 +23,7 @@ export default class CardRow extends Component {
                 <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={title} />
                     <TouchableOpacity style={styles.more} onPress={onPress}>
-                        <Text style={styles.titleContainer, styles.titleFont, {paddingHorizontal: 20}}>See All</Text>
+                        <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
                     </TouchableOpacity>
                 </View>
                 <FlatList

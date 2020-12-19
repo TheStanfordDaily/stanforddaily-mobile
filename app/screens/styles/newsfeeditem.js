@@ -51,7 +51,7 @@ const styles = ({
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE + 6)
+      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE)
     },
 
     descriptionContainer: {

@@ -102,6 +102,10 @@ const styles = ({
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
       borderRadius: 10
+    },
+    seeAll: {
+      paddingHorizontal: 15,
+      fontFamily: FONTS.PT_SERIF_BOLD
     }
 })
 
