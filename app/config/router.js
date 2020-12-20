@@ -63,13 +63,16 @@ const NewsStack = createStackNavigator({
   headerMode: 'none',
 });
 
-const TipStack = createStackNavigator({
-  Tips: {
+const CommunityStack = createStackNavigator({
+  Community: {
     screen: Community,
     navigationOptions: {
-      title: 'Community',
-    },
+      title: 'Community'
+    }
   },
+  Tips: {
+    screen: Tips,
+  }
 }, {
   headerMode: 'none',
 });
@@ -89,8 +92,8 @@ export const Tabs = createBottomTabNavigator({
       // },
     },
   },
-  Tips: {
-    screen: TipStack,
+  Community: {
+    screen: CommunityStack,
     navigationOptions: {
       tabBarLabel: 'Community',
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.TIPS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />

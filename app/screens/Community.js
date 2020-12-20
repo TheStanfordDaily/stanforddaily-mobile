@@ -15,10 +15,12 @@ import Header from './common/header';
 import { Icon } from 'react-native-elements';
 import { FONTS, COLORS, STRINGS, KEYS, MARGINS } from "../assets/constants";
 import Tips from '../screens/Tips'
+import { withNavigation } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 
 const { width, height } = Dimensions.get('window');
 
-export default class Community extends React.Component {
+class Community extends React.Component {
 
     constructor(props) {
         super(props);
@@ -28,7 +30,7 @@ export default class Community extends React.Component {
     }
 
     componentDidMount() {
-
+        console.log(STRINGS.TIPS_FORM_URL)
     }
 
     render() {
@@ -40,11 +42,11 @@ export default class Community extends React.Component {
                         <Icon name="info-circle" size={64} type="font-awesome" color={COLORS.NEAR_WHITE} />
                         <Text style={styles.titleText}>About Us</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {Linking.openURL(STRINGS.TIPS_FORM_URL)}} style={styles.box}>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: STRINGS.TIPS_FORM_URL })}} style={styles.box}>
                         <Icon name="edit" size={64} type="font-awesome" color={COLORS.NEAR_WHITE} />
                         <Text style={styles.titleText}>Send Tips</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/donate/')}} style={styles.box}>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: 'https://stanforddaily.com/donate/' })}} style={styles.box}>
                         <Icon name="dollar" size={64} type="font-awesome" color={COLORS.NEAR_WHITE} />
                         <Text style={styles.titleText}>Donate</Text>
                     </TouchableOpacity>
@@ -65,3 +67,5 @@ export default class Community extends React.Component {
         )
     }
 }
+
+export default withNavigation(Community)
