@@ -1,3 +1,4 @@
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../../assets/constants.js';
 import React, { Component } from 'react';
 import {
   View,
@@ -32,8 +33,8 @@ export default class Card extends Component {
   }
 
   render() {
-    const { item } = this.props;
-    let { postTitle, postExcerpt, postDate, thumbnailInfo, postSubtitle, tsdAuthors} = item;
+    const { item, navigation } = this.props;
+    let { postTitle, postAuthor, postExcerpt, postDate, thumbnailInfo, postSubtitle, tsdAuthors} = item;
     const thumbnailURL = getThumbnailURL(item);
     return (
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
@@ -46,10 +47,11 @@ export default class Card extends Component {
                   <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} />
             {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
-              <TouchableOpacity>
+              {/* <TouchableOpacity onPress={() => {navigation.navigate(STRINGS.AUTHOR, { authorID: postAuthor })}}>
                 <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
-              </TouchableOpacity>
-                <Text style={styles.date}>{formatDate(item).toUpperCase()}</Text>
+              </TouchableOpacity> */}
+              <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View>
+              <Text style={styles.date}>{formatDate(item).toUpperCase()}</Text>
             </View>
           </View>
             
