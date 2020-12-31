@@ -38,6 +38,9 @@ const NewsStack = createStackNavigator({
       title: 'Headlines',
     },
   },
+  Search: {
+    screen: Search
+  },
   Post: {
     screen: Post,
     navigationOptions: {
