@@ -47,6 +47,14 @@ export default {
     color: COLORS.DARK_GRAY, 
     fontSize: FONT_SIZES.DEFAULT_SMALL 
   },
+  category: {
+    marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+    fontFamily: FONTS.PT_SERIF,
+    color: 'black',
+    fontSize: FONT_SIZES.DEFAULT_SMALL_MARGIN,
+    backgroundColor: COLORS.LIGHT_GRAY,
+    padding: 5,
+  },
   articleText: {
     fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
     lineHeight: 26,

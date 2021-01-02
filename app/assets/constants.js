@@ -49,6 +49,7 @@ const STRINGS = {
   UNDEFINED: "undefined",
   NEWEST_TO_OLDEST: "sortDate",
   POSTS_BODIES: "postsBodies",
+  AUTHOR: "Author",
   AUTHORS: "Authors",
   CHATTER: "Chatter",
   SIGNED_IN: "signedIn",
