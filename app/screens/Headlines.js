@@ -116,6 +116,7 @@ const _renderCardRow = ({item}) => {
   return (
     <Card
       item={item}
+      navigation={props.navigation}
       onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} 
     />    
   );

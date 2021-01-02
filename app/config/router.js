@@ -9,6 +9,7 @@ import Post from '../screens/Post';
 import Tips from "../screens/Tips";
 import Category from '../screens/Category.js';
 import Community from '../screens/Community.js'
+import Author from '../screens/Author.js'
 
 const iphone_x = Dimensions.get('window').height == 812;
 const labelBottomMargin = 3;
@@ -58,6 +59,9 @@ const NewsStack = createStackNavigator({
     navigationOptions: {
       title: 'Category'
     }
+  },
+  Author: {
+    screen: Author
   }
 }, {
   headerMode: 'none',
