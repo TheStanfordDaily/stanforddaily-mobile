@@ -212,7 +212,7 @@ const _renderImage = ({item}) => {
             activeDotIndex={activeSlide}
             inactiveDotOpacity={0.4}
             inactiveDotScale={0.6} // set to 1 to make same size
-            containerStyle={{ paddingVertical: 0 }}
+            containerStyle={{ paddingVertical: 7.5 }}
             tappableDots
             carouselRef={carousel}
         />
