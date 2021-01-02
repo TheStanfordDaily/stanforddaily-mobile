@@ -39,7 +39,7 @@ export default class NewsFeedItem extends Component {
             </View>)
           }
           {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-        <Text style={styles.titleContainer} numberOfLines={2} adjustsFontSizeToFit={true}>{postTitle}</Text>
+        <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text>
           {/* <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} /> */}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>

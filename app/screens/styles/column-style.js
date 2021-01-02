@@ -3,7 +3,6 @@ const {StyleSheet, Dimensions, PixelRatio} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
 import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
-import { RFPercentage, RFValue } from "react-native-responsive-fontsize";
 
 const scale = width/320
 
