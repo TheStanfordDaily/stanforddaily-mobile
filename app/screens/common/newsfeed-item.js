@@ -22,8 +22,8 @@ export default class NewsFeedItem extends Component {
     this.props.onPress();
   }
 
-  toAuthor() {
-    this.props.onAuthorPress(authorID);
+  toAuthor(authorID) {
+    this.props.onAuthor(authorID);
   }
 
   render() {
@@ -43,7 +43,7 @@ export default class NewsFeedItem extends Component {
           {/* <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} /> */}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>
-              <Text style={styles.author}> {formatAuthors(item)} </Text>
+            <View style={[{ flexDirection: 'row' }, styles.author]}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {() => this.toAuthor(item.tsdAuthors[i].id)}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View>
             </TouchableOpacity>
             <Text style={styles.date}> {formatDate(item)} </Text>
           </View>
