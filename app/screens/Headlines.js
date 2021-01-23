@@ -55,6 +55,8 @@ export default (props) => {
   const [allArticles, setAllArticles] = useState([]);
   const [modalVisible, setModalVisible] = useState(false); // TODO: show modal by default
   const [pageNumber, setPageNumber] = useState(1);
+  const [opinionsScrollPosition, setOpinionsScrollPosition] = useState(0);
+  const [satireScrollPosition, setSatireScrollPosition] = useState(0);
   const drawerRef = useRef();
   const listRef = useRef();
   const setTextStyle = (cat) => {
@@ -109,7 +111,8 @@ export default (props) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
               item={item}
-              onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} />);
+              onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}
+              onAuthor={ (authorID) => props.navigation.navigate(STRINGS.AUTHOR, { authorID: authorID }) } />);
   };
 
 const _renderCardRow = ({item}) => {
@@ -238,7 +241,9 @@ const _renderImage = ({item}) => {
             decelerationRate={"fast"}
             showsHorizontalScrollIndicator={false}
             pagingEnabled
+            onScroll={e => setOpinionsScrollPosition(e.nativeEvent.contentOffset.x)}
           />
+          <Pagination activeDotIndex={Math.round(opinionsScrollPosition/width)} dotsLength={_.chunk(allArticles['opinions'], 3).length} containerStyle={{ paddingVertical: 1 }} />
           <Separator />
           <CardRow
             data={allArticles['sports']}
@@ -278,7 +283,9 @@ const _renderImage = ({item}) => {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             style={{backgroundColor: COLORS.SALMON}}
-          />
+            onScroll={e => setSatireScrollPosition(e.nativeEvent.contentOffset.x)}
+            />
+            <Pagination activeDotIndex={Math.round(satireScrollPosition/width)} dotsLength={_.chunk(allArticles['satire'], 3).length} containerStyle={{ paddingVertical: 1 }} />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />

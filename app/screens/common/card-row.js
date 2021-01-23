@@ -1,19 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component, useRef } from 'react';
 import {
   View,
   Text,
   Dimensions,
   TouchableOpacity,
-  FlatList
+  FlatList,
 } from 'react-native';
 import "moment-timezone";
 import _ from "lodash";
 import HTML from '../../HTML';
 import styles from '../styles/card-style';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const { width, height } = Dimensions.get('window');
 
 export default class CardRow extends Component {  
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            scrollPosition: 0
+          }
+    }
 
     render() {
         const { data, renderItem, title, onPress } = this.props;
@@ -36,7 +44,11 @@ export default class CardRow extends Component {
                     showsHorizontalScrollIndicator={false}
                     pagingEnabled
                     renderItem={renderItem}
+                    onScroll={e => {this.setState({scrollPosition: e.nativeEvent.contentOffset.x})}}
                 />
+                {data &&
+                    <Pagination activeDotIndex={Math.round(this.state.scrollPosition/width)} dotsLength={Object.keys(data).length/2} containerStyle={{ paddingVertical: 5 }}/>
+                }
             </View>
         );
       }
