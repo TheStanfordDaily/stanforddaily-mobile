@@ -195,7 +195,9 @@ const _renderImage = ({item}) => {
         drawerHandler={() => drawerRef.current.open()} 
         // TODO: enable search.
         // searchHandler={() => props.navigation.navigate(STRINGS.SEARCH, {})} 
-        title={category.slug === CATEGORY_HOME.slug ? undefined : category.name} />
+        title={category.slug === CATEGORY_HOME.slug ? undefined : category.name}
+        searchNavigator={() => props.navigation.navigate(STRINGS.SEARCH)}
+        />
       <View style={{ flex: 1, backgroundColor: COLORS.NEAR_WHITE, alignItems: 'center' }}>
         <StatusBar
           barStyle={STRINGS.DARK_CONTENT}
