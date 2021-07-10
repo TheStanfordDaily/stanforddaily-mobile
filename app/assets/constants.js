@@ -8,7 +8,7 @@ const STRINGS = {
   OPINIONS: "Opinions",
   ARTS: "Arts & Life",
   GRIND: "The Grind",
-  SATIRE: "Satire",
+  HUMOR: "Humor",
   DATA: "Data",
   HEADLINES: "headlines",
   PLACEHOLDER: "placeholder",
@@ -102,7 +102,7 @@ const PATHS = {
 }
 
 // Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home-mobile)
-const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "satire", "moreFromTheDaily"]
+const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "humor", "moreFromTheDaily"]
 
 const CATEGORIES = [
   {name: "Front Page", slug: null},
@@ -111,7 +111,7 @@ const CATEGORIES = [
   {name: "Arts & Life", slug: "arts-life"},
   {name: "Opinions", slug: "opinions"},
   {name: "The Grind", slug: "thegrind"},
-  {name: "Satire", slug: "satire"},
+  {name: "Humor", slug: "humor"},
   {name: "Data", slug: "@94305"},
   {name: "Podcasts", slug: "podcasts"}
 ];
@@ -125,7 +125,7 @@ const CATEGORY_ICONS = Platform.select({
     "Opinions": 'md-chatbubbles',
     "Arts & Life": 'md-color-palette',
     "The Grind": 'md-quote',
-    "Satire": 'md-happy',
+    "Humor": 'md-happy',
     "Data": 'md-podium'
   },
   ios: {
@@ -136,7 +136,7 @@ const CATEGORY_ICONS = Platform.select({
     "Opinions": 'ios-chatbubbles',
     "Arts & Life": 'ios-color-palette',
     "The Grind": 'ios-quote',
-    "Satire": 'ios-happy',
+    "Humor": 'ios-happy',
     "Data": 'ios-podium'
   },
 });

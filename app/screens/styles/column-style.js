@@ -43,7 +43,7 @@ const styles = ({
         marginLeft: -2,
         color: COLORS.DARK_GRAY,
       },
-      satireAuthor: {
+      humorAuthor: {
         fontFamily: FONTS.OPEN_SANS,
         fontSize: 10,
         marginLeft: -2,
@@ -73,7 +73,7 @@ const styles = ({
         flexShrink: 1,
         marginLeft: 0,
       },
-      satireContainer: {
+      humorContainer: {
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
         marginHorizontal: MARGINS.ARTICLE_SIDES,
         fontFamily: FONTS.PT_SERIF,

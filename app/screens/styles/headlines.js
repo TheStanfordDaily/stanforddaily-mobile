@@ -70,7 +70,7 @@ const styles= StyleSheet.create({
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
     },
-    satire: {
+    humor: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
       color: COLORS.NEAR_WHITE

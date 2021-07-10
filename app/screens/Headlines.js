@@ -56,7 +56,7 @@ export default (props) => {
   const [modalVisible, setModalVisible] = useState(false); // TODO: show modal by default
   const [pageNumber, setPageNumber] = useState(1);
   const [opinionsScrollPosition, setOpinionsScrollPosition] = useState(0);
-  const [satireScrollPosition, setSatireScrollPosition] = useState(0);
+  const [humorScrollPosition, setHumorScrollPosition] = useState(0);
   const drawerRef = useRef();
   const listRef = useRef();
   const setTextStyle = (cat) => {
@@ -270,13 +270,13 @@ const _renderImage = ({item}) => {
           <Separator />
           <View style={{flexDirection: 'row', backgroundColor: COLORS.SALMON, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
-            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Satire"} />
-            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['satire'], title: 'Satire', navigation: props.navigation })}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Humor"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['humor'], title: 'Humor', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
           <FlatList
-            data={_.chunk(allArticles['satire'], 3)}
+            data={_.chunk(allArticles['humor'], 3)}
             renderItem={_renderColumn}
             horizontal={true}
             snapToAlignment={"start"}
@@ -285,9 +285,9 @@ const _renderImage = ({item}) => {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             style={{backgroundColor: COLORS.SALMON}}
-            onScroll={e => setSatireScrollPosition(e.nativeEvent.contentOffset.x)}
+            onScroll={e => setHumorScrollPosition(e.nativeEvent.contentOffset.x)}
             />
-            <Pagination activeDotIndex={Math.round(satireScrollPosition/width)} dotsLength={_.chunk(allArticles['satire'], 3).length} containerStyle={{ paddingVertical: 1 }} />
+            <Pagination activeDotIndex={Math.round(humorScrollPosition/width)} dotsLength={_.chunk(allArticles['humor'], 3).length} containerStyle={{ paddingVertical: 1 }} />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
