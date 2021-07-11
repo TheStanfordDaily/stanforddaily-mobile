@@ -1,10 +1,12 @@
 import React from 'react-native';
+import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions, Platform, PixelRatio} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
 
 const scale = width/320
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 export function normalize(size) {
   const newSize = size * scale 
@@ -17,7 +19,7 @@ export function normalize(size) {
 
 const styles = ({
     content: {
-      backgroundColor: COLORS.NEAR_WHITE,
+      backgroundColor: THEME.BACKGROUND,
       width: '100%',
       paddingTop: 12,
     },
@@ -46,12 +48,14 @@ const styles = ({
     titleFont: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE,
+      color: THEME.LABEL
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE)
+      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE),
+      color: THEME.LABEL
     },
 
     descriptionContainer: {

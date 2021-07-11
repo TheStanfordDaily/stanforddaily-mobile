@@ -1,6 +1,6 @@
-import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, LIGHT_COLORS, DARK_COLORS, MARGINS } from '../assets/constants.js';
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Linking } from 'react-native';
+import { Image, Linking, Appearance, useColorScheme } from 'react-native';
 import {
   View,
   Text,
@@ -33,6 +33,7 @@ import styles from './styles/headlines';
 import * as Amplitude from 'expo-analytics-amplitude';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+// import { useTheme } from './styles/themes.js';
 // import { Card } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
@@ -97,7 +98,7 @@ export default (props) => {
           <Text style={{
             fontSize: 13,
             fontFamily: FONTS.OPEN_SANS,
-            color: COLORS.BLACK,
+            color: THEME.LABEL,
             marginLeft: MARGINS.ARTICLE_SIDES
           }}>
             Notification Settings
@@ -170,6 +171,10 @@ const _renderImage = ({item}) => {
 
   const [activeSlide, setActiveSlide] = useState(0);
   const carousel = useRef(null);
+  const colorScheme = useColorScheme();
+  console.log(colorScheme);
+  const THEME = colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS
+
   return (
     <Drawer
       type={STRINGS.STATIC}
@@ -198,9 +203,9 @@ const _renderImage = ({item}) => {
         title={category.slug === CATEGORY_HOME.slug ? undefined : category.name}
         searchNavigator={() => props.navigation.navigate(STRINGS.SEARCH)}
         />
-      <View style={{ flex: 1, backgroundColor: COLORS.NEAR_WHITE, alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: THEME.BACKGROUND, alignItems: 'center' }}>
         <StatusBar
-          barStyle={STRINGS.DARK_CONTENT}
+          barStyle={colorScheme}
         />
         <ScrollView>
         <Carousel
@@ -268,7 +273,7 @@ const _renderImage = ({item}) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
           <Separator />
-          <View style={{flexDirection: 'row', backgroundColor: COLORS.SALMON, justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Humor"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['humor'], title: 'Humor', navigation: props.navigation })}>
@@ -284,7 +289,7 @@ const _renderImage = ({item}) => {
             decelerationRate={"fast"}
             showsHorizontalScrollIndicator={false}
             pagingEnabled
-            style={{backgroundColor: COLORS.SALMON}}
+            style={{backgroundColor: THEME.SECONDARY_ACCENT}}
             onScroll={e => setHumorScrollPosition(e.nativeEvent.contentOffset.x)}
             />
             <Pagination activeDotIndex={Math.round(humorScrollPosition/width)} dotsLength={_.chunk(allArticles['humor'], 3).length} containerStyle={{ paddingVertical: 1 }} />
@@ -303,8 +308,8 @@ const _renderImage = ({item}) => {
             itemWidth={width}
           />
           <View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
-            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={COLORS.CARDINAL} /></TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={COLORS.CARDINAL} /></TouchableOpacity>
+            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
           </View>
 
                     {/* <SectionList

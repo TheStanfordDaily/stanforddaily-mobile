@@ -34,7 +34,7 @@ export default class App extends React.Component {
     );
     */
     return (
-      <Index notificationData={this.state.notification.data} />
+          <Index notificationData={this.state.notification.data} />
     );
   }
 }

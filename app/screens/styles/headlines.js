@@ -1,11 +1,12 @@
 import React from 'react-native';
+import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
-
+import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 const top_padding = 0;
 
-const styles= StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         width,
@@ -28,10 +29,10 @@ const styles= StyleSheet.create({
       alignSelf: 'stretch',
       flexDirection: 'column',
       paddingTop: MARGINS.NORMAL_HEADER_MARGINS,
-      borderBottomColor: COLORS.LIGHT_GRAY,
+      borderBottomColor: THEME.SECONDARY_LABEL,
     },
     sideBarTitleText: {
-      color: COLORS.BLACK,
+      color: THEME.LABEL,
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       //textAlign: 'center',
@@ -50,12 +51,12 @@ const styles= StyleSheet.create({
       alignItems:  ALIGNMENTS.CENTER,
     },
     separator: {
-      borderBottomColor: COLORS.LIGHT_GRAY,
+      borderBottomColor: THEME.SECONDARY_LABEL,
       borderBottomWidth: 1,
     },
     categoriesHeaderContainer: {
       height: 60,
-      backgroundColor: COLORS.WHITE,
+      backgroundColor: THEME.BACKGROUND,
       alignItems: ALIGNMENTS.LEFT,
       justifyContent: ALIGNMENTS.LEFT,
     },
@@ -69,11 +70,12 @@ const styles= StyleSheet.create({
     header: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
+      color: THEME.LABEL
     },
     humor: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
-      color: COLORS.NEAR_WHITE
+      color: THEME.BACKGROUND
     },
     titleFont: {
       fontFamily: FONTS.PT_SERIF_BOLD,
@@ -81,10 +83,11 @@ const styles= StyleSheet.create({
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-      marginHorizontal: MARGINS.ARTICLE_SIDES
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
+      backgroundColor: THEME.BACKGROUND
     },
     more: {
-      backgroundColor: COLORS.LIGHT_GRAY,
+      backgroundColor: THEME.SECONDARY_LABEL,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',

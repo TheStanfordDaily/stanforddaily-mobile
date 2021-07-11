@@ -1,12 +1,14 @@
 import React from 'react-native';
+import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 const styles = ({
     content: {
-      backgroundColor: COLORS.NEAR_WHITE,
+      backgroundColor: THEME.BACKGROUND,
       width: '100%',
       paddingVertical: 2,
     },
@@ -21,23 +23,25 @@ const styles = ({
       fontFamily: FONTS.OPEN_SANS,
       fontSize: 10,
       marginLeft: -2,
-      color: COLORS.DARK_GRAY,
+      color: THEME.SECONDARY_LABEL,
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: 10,
-      color: COLORS.DARK_GRAY,
+      color: THEME.SECONDARY_LABEL,
     },
 
     header: {
         fontFamily: FONTS.PT_SERIF_BOLD,
         fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
+        color: THEME.LABEL
     },
 
     titleFont: {
       fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
+      color: THEME.LABEL
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
@@ -63,9 +67,9 @@ const styles = ({
 
     },
     searchContainer: {
-      borderBottomColor: COLORS.LIGHT_GRAY,
+      borderBottomColor: COLORS.SECONDARY_LABEL,
       borderBottomWidth: 1,
-      backgroundColor: COLORS.NEAR_WHITE,
+      backgroundColor: THEME.BACKGROUND,
       width: '100%',
       flexDirection: ALIGNMENTS.ROW,
       maxHeight: 122
@@ -97,7 +101,7 @@ const styles = ({
       opacity: 0.80,
     },
     more: {
-      backgroundColor: COLORS.LIGHT_GRAY,
+      backgroundColor: THEME.SECONDARY_LABEL,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
@@ -105,7 +109,8 @@ const styles = ({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: FONTS.PT_SERIF_BOLD
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      color: THEME.LABEL
     }
 })
 

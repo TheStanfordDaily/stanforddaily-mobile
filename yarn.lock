@@ -2403,7 +2403,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react-native-vector-icons@^6.4.4":
+"@types/react-native-vector-icons@^6.4.6":
   "integrity" "sha512-lAyxNfMd5L1xZvXWsGcJmNegDf61TAp40uL6ashNNWj9W3IrDJO59L9+9inh0Y2MsEZpLTdxzVU8Unb4/0FQng=="
   "resolved" "https://registry.npmjs.org/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.6.tgz"
   "version" "6.4.6"
@@ -3335,7 +3335,7 @@
   "resolved" "https://registry.npmjs.org/color-support/-/color-support-1.1.3.tgz"
   "version" "1.1.3"
 
-"color@^3.1.0", "color@^3.1.3":
+"color@^3.1.2", "color@^3.1.3":
   "integrity" "sha512-xgXAcTHa2HeFCGLE9Xs/R82hujGtu9Jd9x4NW3T34+OMs7VoPsjwzRczKHvTAHeJwWFwX5j15+MgAppE8ztObQ=="
   "resolved" "https://registry.npmjs.org/color/-/color-3.1.3.tgz"
   "version" "3.1.3"
@@ -3659,10 +3659,15 @@
   "resolved" "https://registry.npmjs.org/deep-extend/-/deep-extend-0.6.0.tgz"
   "version" "0.6.0"
 
-"deepmerge@^3.1.0", "deepmerge@^3.2.0":
+"deepmerge@^3.2.0":
   "integrity" "sha512-GRQOafGHwMHpjPx9iCvTgpu9NojZ49q794EEL94JVEw6VaeA8XTUyBKvAkOOjBX9oJNiV6G3P+T+tihFjo2TqA=="
   "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-3.3.0.tgz"
   "version" "3.3.0"
+
+"deepmerge@^4.2.2":
+  "integrity" "sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg=="
+  "resolved" "https://registry.npmjs.org/deepmerge/-/deepmerge-4.2.2.tgz"
+  "version" "4.2.2"
 
 "defaults@^1.0.3":
   "integrity" "sha1-xlYFHpgX2f8I7YgUd/P+QBnz730="
@@ -4907,7 +4912,7 @@
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz"
   "version" "2.5.5"
 
-"hoist-non-react-statics@^3.1.0", "hoist-non-react-statics@^3.3.2":
+"hoist-non-react-statics@^3.3.2":
   "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
   "version" "3.3.2"
@@ -7217,7 +7222,7 @@
   dependencies:
     "is-wsl" "^1.1.0"
 
-"opencollective-postinstall@^2.0.0":
+"opencollective-postinstall@^2.0.3":
   "integrity" "sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q=="
   "resolved" "https://registry.npmjs.org/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz"
   "version" "2.0.3"
@@ -7864,6 +7869,15 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-appearance@^0.3.4":
+  "integrity" "sha512-Vz3zdJbAEiMDwuw6wH98TT1WVfBvWjvANutYtkIbl16KGRCigtSgt6IIiLsF3/TSS3y3FtHhWDelFeGw/rtuig=="
+  "resolved" "https://registry.npmjs.org/react-native-appearance/-/react-native-appearance-0.3.4.tgz"
+  "version" "0.3.4"
+  dependencies:
+    "fbemitter" "^2.1.1"
+    "invariant" "^2.2.4"
+    "use-subscription" "^1.0.0"
+
 "react-native-autoheight-webview@^1.2.2":
   "integrity" "sha512-0tAJ7rtz2w0esq+YLqGYLiDuEjpwqJws9aQTPsSPrB0oNsLwhOFfXMrdFRp2JfVJ0V/hKPr2sgeBgpLPfKaqGw=="
   "resolved" "https://registry.npmjs.org/react-native-autoheight-webview/-/react-native-autoheight-webview-1.5.7.tgz"
@@ -7898,19 +7912,19 @@
     "prop-types" "^15.5.8"
     "tween-functions" "^1.0.1"
 
-"react-native-elements@^1.1.0":
-  "integrity" "sha512-0S+0R1cbItl15i64qrkWnyMztwpw60d0SUsZGVDKRAMf0Jvq9Clgyh/MzxJx2sr42mbedQP1sg5Et4fZM7Fp1w=="
-  "resolved" "https://registry.npmjs.org/react-native-elements/-/react-native-elements-1.2.7.tgz"
-  "version" "1.2.7"
+"react-native-elements@^3.4.2":
+  "integrity" "sha512-m0eAWOn7JuR1wNTNY0WHuaqst4LI/gFE4N5Bbyfsc4DiryWsMST7aAg5w/Gos4IexWIzhLKCIkPxthND1m/8Xg=="
+  "resolved" "https://registry.npmjs.org/react-native-elements/-/react-native-elements-3.4.2.tgz"
+  "version" "3.4.2"
   dependencies:
-    "@types/react-native-vector-icons" "^6.4.4"
-    "color" "^3.1.0"
-    "deepmerge" "^3.1.0"
-    "hoist-non-react-statics" "^3.1.0"
-    "opencollective-postinstall" "^2.0.0"
-    "prop-types" "^15.7.2"
-    "react-native-ratings" "^6.3.0"
-    "react-native-status-bar-height" "^2.2.0"
+    "@types/react-native-vector-icons" "^6.4.6"
+    "color" "^3.1.2"
+    "deepmerge" "^4.2.2"
+    "hoist-non-react-statics" "^3.3.2"
+    "lodash.isequal" "^4.5.0"
+    "opencollective-postinstall" "^2.0.3"
+    "react-native-ratings" "8.0.4"
+    "react-native-size-matters" "^0.3.1"
 
 "react-native-fetch-blob@^0.10.8":
   "integrity" "sha1-T8JWq64MtfEOfEHyjBGz/zMNcqk="
@@ -7975,13 +7989,12 @@
     "lodash.isequal" "^4.5.0"
     "shortid" "^2.2.8"
 
-"react-native-ratings@^6.3.0":
-  "integrity" "sha512-YMcfQ7UQCmXGEc/WPlukHSHs5yvckTwjq5fTRk1FG8gaO7fZCNygEUGPuw4Dbvvp3IlsCUn0bOQd63RYsb7NDQ=="
-  "resolved" "https://registry.npmjs.org/react-native-ratings/-/react-native-ratings-6.5.0.tgz"
-  "version" "6.5.0"
+"react-native-ratings@8.0.4":
+  "integrity" "sha512-Xczu5lskIIRD6BEdz9A0jDRpEck/SFxRqiglkXi0u67yAtI1/pcJC76P4MukCbT8K4BPVl+42w83YqXBoBRl7A=="
+  "resolved" "https://registry.npmjs.org/react-native-ratings/-/react-native-ratings-8.0.4.tgz"
+  "version" "8.0.4"
   dependencies:
-    "lodash" "^4.17.4"
-    "prop-types" "^15.5.10"
+    "lodash" "^4.17.15"
 
 "react-native-reanimated@~1.13.0":
   "integrity" "sha512-i714H24dv6ncpFO7/SZ0PfAMbvjgVbF8Ow2NPtowoZAz8osS54DmTMrkgJ9Za+uEku/s0AEaxqiXG2Xgntvv2g=="
@@ -8024,6 +8037,11 @@
   "resolved" "https://registry.npmjs.org/react-native-screens/-/react-native-screens-2.10.1.tgz"
   "version" "2.10.1"
 
+"react-native-size-matters@^0.3.1":
+  "integrity" "sha512-mKOfBLIBFBcs9br1rlZDvxD5+mAl8Gfr5CounwJtxI6Z82rGrMO+Kgl9EIg3RMVf3G855a85YVqHJL2f5EDRlw=="
+  "resolved" "https://registry.npmjs.org/react-native-size-matters/-/react-native-size-matters-0.3.1.tgz"
+  "version" "0.3.1"
+
 "react-native-snap-carousel@^4.0.0-beta.6":
   "integrity" "sha512-jr6Kesrn+/047FwL32JRwAL6/l4Soz2uw73rFM5LfoGTgZhPatUsw60eTE3bznqFewPhoFIKezYe2m3LypTnIA=="
   "resolved" "https://registry.npmjs.org/react-native-snap-carousel/-/react-native-snap-carousel-4.0.0-beta.6.tgz"
@@ -8031,11 +8049,6 @@
   dependencies:
     "@types/react-addons-shallow-compare" "^0.14.22"
     "react-addons-shallow-compare" "15.6.2"
-
-"react-native-status-bar-height@^2.2.0":
-  "integrity" "sha512-sYBCPYA/NapBSHkdm/IVL4ID3LLlIuLqINi2FBDyMkc2BU9pfSGOtkz9yfxoK39mYJuTrlTOQ7mManARUsYDSA=="
-  "resolved" "https://registry.npmjs.org/react-native-status-bar-height/-/react-native-status-bar-height-2.5.0.tgz"
-  "version" "2.5.0"
 
 "react-native-styled-text@^1.0.1":
   "integrity" "sha512-DmWT6nBK8Fxxylav6pdkRZ+lRYoDQy8zGItUfapTBy0jh6jZVfA2UYfDTU0I5zHHhu+PYuQk2aR5dRtfNmSi4A=="

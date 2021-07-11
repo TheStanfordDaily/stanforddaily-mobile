@@ -73,7 +73,7 @@ const STRINGS = {
   TIPS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
   WP_URL: "https://wp.stanforddaily.com",
-}
+};
 
 const PATHS = {
   COMMON_TO_APP: "../../",
@@ -99,7 +99,7 @@ const PATHS = {
   HEADLINES: "Headlines.js",
   POST: "Post.js",
   PROFILE: "Profile.js"
-}
+};
 
 // Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home-mobile)
 const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "humor", "moreFromTheDaily"]
@@ -162,6 +162,28 @@ const COLORS = {
   CARDINAL: "#94171C",
   GHOST_WHITE: "ghostwhite",
   SALMON: "#FEF2F1"
+};
+
+const LIGHT_COLORS = {
+  BACKGROUND: "#FFFFFF",
+  LABEL: "black",
+  SECONDARY_LABEL: "#424242",
+  SIDE_BAR_GRAY: "#F7F7F7",
+  LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
+  DARK_GRAY: "#757575",
+  NEAR_WHITE: "#FCFCFC",
+  PLACEHOLDER: "#F0F0F0",
+  PRIMAY_ACCENT: "#94171C",
+  GHOST_WHITE: "ghostwhite",
+  SECONDARY_ACCENT: "#FEF2F1"
+};
+
+const DARK_COLORS = {
+  BACKGROUND: "#121212",
+  LABEL: "white",
+  SECONDARY_LABEL: "#616161",
+  PRIMARY_ACCENT: "#94171C",
+  SECONDARY_ACCENT: "#FEF2F1"
 };
 
 const ALIGNMENTS = {
@@ -269,5 +291,5 @@ const PN_RECEIVER_GROUPS = {
 }
 
 import Images from './modules.js';
-module.exports = {STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
+module.exports = { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, COLORS, LIGHT_COLORS, DARK_COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS };
 // module.exports = CATEGORIES;
