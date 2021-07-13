@@ -34,14 +34,14 @@ const styles = ({
       fontFamily: FONTS.OPEN_SANS,
       fontSize: FONT_SIZES.DEFAULT_SMALL,
       marginLeft: -2,
-      color: COLORS.DARK_GRAY,
+      color: THEME.SECONDARY_LABEL,
       textTransform: 'uppercase'
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: FONT_SIZES.DEFAULT_SMALL,
-      color: COLORS.DARK_GRAY,
+      color: THEME.SECONDARY_LABEL,
       textTransform: 'uppercase'
     },
 

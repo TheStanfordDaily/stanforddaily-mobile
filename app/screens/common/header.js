@@ -1,21 +1,23 @@
 /**
  * Created by ggoma on 12/17/16.
  */
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
     View,
     Text,
     Image,
     TouchableOpacity,
     Share,
-    TextInput
+    TextInput,
+    Appearance
 } from 'react-native';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 import { Ionicons } from '@expo/vector-icons';
-import {REFS, ICONS, Images, COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
+import {REFS, ICONS, Images, COLORS, LIGHT_COLORS, DARK_COLORS, ALIGNMENTS, STRINGS} from '../../assets/constants.js';
 import styles from '../styles/header.js';
 import { SearchBar } from 'react-native-elements';
 // import ActivityView from 'react-native-activity-view';
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 export default class Header extends Component {
     constructor() {
@@ -67,18 +69,18 @@ export default class Header extends Component {
                   {this.props.goBack !== undefined && (
                       <TouchableOpacity onPress={() => this.props.goBack()}>
                         <View style={styles.leftButton}>
-                          <Ionicons name={ICONS.BACK} size={32} color={COLORS.BLACK}/>
+                          <Ionicons name={ICONS.BACK} size={32} color={THEME.LABEL}/>
                         </View>
                       </TouchableOpacity>
                   )}
                   {this.props.drawerHandler !== undefined && (
                     <TouchableOpacity onPress={() => this.props.drawerHandler()}>
                       <View style={styles.leftButton}>
-                        <Ionicons name={ICONS.MENU} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.MENU} size={32} color={THEME.LABEL}/>
                       </View>
                     </TouchableOpacity>
                   )}
-                  {this.props.title === undefined && this.props.searchHandler === undefined && <Image source={Images.DAILY_FULL} resizeMode='contain' style={styles.title}/>}
+                  {this.props.title === undefined && this.props.searchHandler === undefined && <Image source={Appearance.getColorScheme() === 'light' ? Images.DAILY_FULL : Images.DAILY_FULL_DARK} resizeMode='contain' style={styles.title}/>}
                   {this.props.title !== undefined && this.props.searchHandler === undefined && (
                     <View style={styles.title}>
                       <Text numberOfLines={1} ellipsizeMode={ALIGNMENTS.MIDDLE} style={styles.wordsTitle}>
@@ -106,7 +108,7 @@ export default class Header extends Component {
                   {this.props.share !== undefined &&
                     <TouchableOpacity onPress={this.shareHandler.bind(this)}>
                       <View style={styles.rightButton}>
-                        <Ionicons name={ICONS.SHARE} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.SHARE} size={32} color={THEME.LABEL}/>
                       </View>
                     </TouchableOpacity>
                   }
@@ -121,7 +123,7 @@ export default class Header extends Component {
                   {this.props.searchNavigator !== undefined && (
                     <TouchableOpacity onPress={() => this.props.searchNavigator()}>
                       <View style={styles.rightButton}>
-                        <Ionicons name={ICONS.SEARCH} size={32} color={COLORS.BLACK}/>
+                        <Ionicons name={ICONS.SEARCH} size={32} color={THEME.LABEL}/>
                       </View>
                     </TouchableOpacity>
                   )}

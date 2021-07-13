@@ -43,8 +43,8 @@ class App extends Component {
     return (
       <React.Fragment>
         {/* https://stackoverflow.com/a/52458846/2603230 */}
-        <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.WHITE }} />
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
+        <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.BACKGROUND }} />
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.BACKGROUND }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior='padding'>

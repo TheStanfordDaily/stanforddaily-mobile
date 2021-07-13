@@ -1,12 +1,13 @@
 const React = require('react-native')
-const {StyleSheet, Dimensions} = React
-import {HEIGHTS, Images, COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
+const {StyleSheet, Dimensions, Appearance} = React
+import {HEIGHTS, Images, COLORS, LIGHT_COLORS, DARK_COLORS, ALIGNMENTS, FONTS} from '../../assets/constants.js';
 const {height, width} = Dimensions.get('window');
 //width = width <= height ? width : height;
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 var styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.NEAR_WHITE,
+    backgroundColor: THEME.BACKGROUND,
     flex: 1,
   },
   authorImage: {
@@ -43,7 +44,8 @@ var styles = StyleSheet.create({
   },
   post: {
     flexDirection: ALIGNMENTS.ROW,
-    justifyContent: ALIGNMENTS.SPACE_BETWEEN
+    justifyContent: ALIGNMENTS.SPACE_BETWEEN,
+    backgroundColor: THEME.BACKGROUND
   },
   content: {
     flexDirection: ALIGNMENTS.COLUMN,

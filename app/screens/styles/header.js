@@ -1,10 +1,11 @@
 const React = require('react-native')
 const {StyleSheet, Dimensions} = React
 
-import {COLORS, FONTS, FONT_SIZES, ALIGNMENTS, MARGINS, HEIGHTS} from '../../assets/constants.js';
-
+import { COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, FONT_SIZES, ALIGNMENTS, MARGINS, HEIGHTS } from '../../assets/constants.js';
+import { Appearance } from 'react-native'
 const top_margin = MARGINS.NORMAL_HEADER_MARGINS
 const {height, width} = Dimensions.get('window');
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 const styles = StyleSheet.create({
     container: {
@@ -12,7 +13,7 @@ const styles = StyleSheet.create({
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
       alignItems: ALIGNMENTS.CENTER,
       height: HEIGHTS.APP_HEADER,
-      backgroundColor: COLORS.WHITE,
+      backgroundColor: THEME.BACKGROUND,
       borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1
     },

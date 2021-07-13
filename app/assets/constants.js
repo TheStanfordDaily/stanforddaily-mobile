@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Appearance } from 'react-native';
 
 const STRINGS = {
   ALL: "All",
@@ -151,19 +151,6 @@ const REFS = {
   TITLE: "title"
 };
 
-const COLORS = {
-  WHITE: "#FFFFFF",
-  SIDE_BAR_GRAY: "#F7F7F7",
-  LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
-  DARK_GRAY: "#757575",
-  NEAR_WHITE: "#FCFCFC",
-  PLACEHOLDER_LIGHT: "#F0F0F0",
-  PLACEHOLDER_DARK: "#E5E5E5",
-  CARDINAL: "#94171C",
-  GHOST_WHITE: "ghostwhite",
-  SALMON: "#FEF2F1"
-};
-
 const LIGHT_COLORS = {
   BACKGROUND: "#FFFFFF",
   LABEL: "black",
@@ -181,10 +168,24 @@ const LIGHT_COLORS = {
 const DARK_COLORS = {
   BACKGROUND: "#121212",
   LABEL: "white",
-  SECONDARY_LABEL: "#616161",
+  SECONDARY_LABEL: "#8E8E93",
   PRIMARY_ACCENT: "#94171C",
   SECONDARY_ACCENT: "#FEF2F1"
 };
+
+// const COLORS = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
+const COLORS  = Appearance.getColorScheme() === 'light' ? {
+  WHITE: "#FFFFFF",
+  SIDE_BAR_GRAY: "#F7F7F7",
+  LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
+  DARK_GRAY: "#757575",
+  NEAR_WHITE: "#FCFCFC",
+  PLACEHOLDER_LIGHT: "#F0F0F0",
+  PLACEHOLDER_DARK: "#E5E5E5",
+  CARDINAL: "#94171C",
+  GHOST_WHITE: "ghostwhite",
+  SALMON: "#FEF2F1"
+} : DARK_COLORS;
 
 const ALIGNMENTS = {
   ROW: "row",
@@ -222,7 +223,7 @@ const FONT_SIZES = {
 const MARGINS = {
   DEFAULT_SMALL_MARGIN: 4,
   DEFAULT_MARGIN: 8,
-  ARTICLE_SIDES: 12,
+  ARTICLE_SIDES: 16,
   DEFAULT_LARGE_MARGIN: 22,
   NORMAL_HEADER_MARGINS: 13,
   IPHONEX_HEADER_ADDITION: 24

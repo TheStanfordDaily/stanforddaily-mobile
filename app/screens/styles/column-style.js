@@ -43,7 +43,7 @@ const styles = ({
         fontFamily: FONTS.OPEN_SANS,
         fontSize: 10,
         marginLeft: -2,
-        color: COLORS.DARK_GRAY,
+        color: THEME.SECONDARY_LABEL,
       },
       humorAuthor: {
         fontFamily: FONTS.OPEN_SANS,

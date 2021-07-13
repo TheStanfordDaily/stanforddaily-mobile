@@ -11,6 +11,12 @@ const styles = ({
       backgroundColor: THEME.BACKGROUND,
       width: '100%',
       paddingVertical: 2,
+      // marginHorizontal: MARGINS.ARTICLE_SIDES
+    },
+    categoryLabel: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      // width: width - (2 * MARGINS.DEFAULT_MARGIN)
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.COLUMN,
