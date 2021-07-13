@@ -23,6 +23,13 @@ const styles = ({
       width: '100%',
       paddingTop: 12,
     },
+    homeContent: {
+      backgroundColor: "rgb(0,0,0,0)",
+      width: width,
+      paddingTop: 12,
+      marginLeft: 0,
+      marginRight: 0
+    },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
       justifyContent: ALIGNMENTS.SPACE_BETWEEN,
@@ -58,6 +65,22 @@ const styles = ({
       color: THEME.LABEL
     },
 
+    homeTitleContainer: {
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      width: width - (2 * MARGINS.ARTICLE_SIDES) - 2*MARGINS.DEFAULT_LARGE_MARGIN,
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE),
+      color: THEME.LABEL,
+    },
+    elongatedHomeTitleContainter: {
+      marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      width: width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN,
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      fontSize: normalize(FONT_SIZES.DEFAULT_LARGE),
+      color: THEME.LABEL,
+    },
     descriptionContainer: {
       opacity: 0.80,
       marginHorizontal: MARGINS.ARTICLE_SIDES
@@ -70,6 +93,22 @@ const styles = ({
       width: width - (2 * MARGINS.ARTICLE_SIDES),
       height: width/2.125,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
+      marginBottom: MARGINS.DEFAULT_MARGIN
+    },
+
+    homeImage: {
+      width: width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN,
+      height: width/2.125,
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      marginRight: 0,
+      marginBottom: MARGINS.DEFAULT_MARGIN
+    },
+
+    elongatedHomeImage: {
+      width: width - (2 * MARGINS.ARTICLE_SIDES),
+      height: width/2.125,
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      marginRight: 0,
       marginBottom: MARGINS.DEFAULT_MARGIN
     },
 

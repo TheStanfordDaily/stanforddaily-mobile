@@ -27,19 +27,20 @@ export default class NewsFeedItem extends Component {
   }
 
   render() {
-    const { item } = this.props;
+    const { item, index, slideIndex, isFeatured } = this.props;
     let { postTitle } = item;
     const thumbnailURL = getThumbnailURL(item);
+    console.log(index, slideIndex)
     return (
       <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
-        <View style={styles.content}>
+        <View style={isFeatured ? styles.homeContent : styles.content}>
           {thumbnailURL && (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
-            </View>)
+              <Image source={{ uri: thumbnailURL }} style={isFeatured ? styles.homeImage : styles.image} borderRadius={8} />
+            </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
           }
           {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-        <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text>
+        <Text style={isFeatured ? styles.homeTitleContainer : styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text>
           {/* <HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} /> */}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>

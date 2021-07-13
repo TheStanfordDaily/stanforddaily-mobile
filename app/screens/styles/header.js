@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
       height: 26,
     },
     wordsTitle: {
-      color: COLORS.BLACK,
+      color: THEME.LABEL,
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       textAlign: ALIGNMENTS.CENTER

@@ -21,7 +21,7 @@ import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel, { Pagination, getInputRangeFromIndexes } from 'react-native-snap-carousel';
 import CardRow from './common/card-row';
 import Card from './common/Card'
 import Column from './common/column';
@@ -42,6 +42,10 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window');
 const drawerStyles = {
   drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3 },
+}
+const carouselProps = {
+  vertical: 50,
+  horizontal: 50
 }
 
 //
@@ -108,10 +112,13 @@ export default (props) => {
       </TouchableHighlight>
     </View>
   );
-  const _renderRow = ({item}) => {
+  const _renderRow = ({item, index}) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
               item={item}
+              index={index}
+              slideIndex={activeSlide}
+              isFeatured={true}
               onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}
               onAuthor={ (authorID) => props.navigation.navigate(STRINGS.AUTHOR, { authorID: authorID }) } />);
   };
@@ -170,9 +177,7 @@ const _renderImage = ({item}) => {
   }, [pageNumber, category]);
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const carousel = useRef(null);
   const colorScheme = useColorScheme();
-  console.log(colorScheme);
   const THEME = colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS
 
   return (
@@ -213,19 +218,12 @@ const _renderImage = ({item}) => {
             data={allArticles['featured']}
             renderItem={_renderRow}
             sliderWidth={width}
-            itemWidth={width}
+            itemWidth={width - 2*MARGINS.DEFAULT_LARGE_MARGIN}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
             onSnapToItem={index => setActiveSlide(index)}
-            ref={carousel}
+            onLayout={index => setActiveSlide(index)}
           />
-          <Pagination
-            dotsLength={3} // based on number of sildes you want
-            activeDotIndex={activeSlide}
-            inactiveDotOpacity={0.4}
-            inactiveDotScale={0.6} // set to 1 to make same size
-            containerStyle={{ paddingVertical: 7.5 }}
-            tappableDots
-            carouselRef={carousel}
-        />
           <CardRow
             data={allArticles['news']}
             renderItem={_renderCardRow}
