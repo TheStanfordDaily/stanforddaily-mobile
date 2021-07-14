@@ -30,7 +30,6 @@ export default class NewsFeedItem extends Component {
     const { item, index, slideIndex, isFeatured } = this.props;
     let { postTitle } = item;
     const thumbnailURL = getThumbnailURL(item);
-    console.log(index, slideIndex)
     return (
       <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
         <View style={isFeatured ? styles.homeContent : styles.content}>

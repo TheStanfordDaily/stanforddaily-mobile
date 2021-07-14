@@ -105,11 +105,15 @@ const styles = ({
     },
 
     elongatedHomeImage: {
-      width: width - (2 * MARGINS.ARTICLE_SIDES),
+      width: width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN,
       height: width/2.125,
       marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: 0,
+      marginRight: MARGINS.ARTICLE_SIDES,
       marginBottom: MARGINS.DEFAULT_MARGIN
+    },
+
+    endHomeImage: {
+
     },
 
     imageContainer: {
