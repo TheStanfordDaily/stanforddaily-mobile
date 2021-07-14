@@ -107,7 +107,7 @@ const styles = ({
       opacity: 0.80,
     },
     more: {
-      backgroundColor: THEME.SECONDARY_LABEL,
+      backgroundColor: THEME.BUTTON,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
