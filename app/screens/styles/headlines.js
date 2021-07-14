@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
       backgroundColor: THEME.BACKGROUND
     },
     more: {
-      backgroundColor: THEME.SECONDARY_LABEL,
+      backgroundColor: THEME.BUTTON,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
@@ -95,7 +95,8 @@ const styles = StyleSheet.create({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: FONTS.PT_SERIF_BOLD
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      color: THEME.LABEL,
     }
 })
 

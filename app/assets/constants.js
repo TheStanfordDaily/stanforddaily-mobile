@@ -162,7 +162,9 @@ const LIGHT_COLORS = {
   PLACEHOLDER: "#F0F0F0",
   PRIMAY_ACCENT: "#94171C",
   GHOST_WHITE: "ghostwhite",
-  SECONDARY_ACCENT: "#FEF2F1"
+  SECONDARY_ACCENT: "#FEF2F1",
+  BUTTON: "#D8D8D8",
+  SEPARATOR: "#EEEEEE"
 };
 
 const DARK_COLORS = {
@@ -170,7 +172,9 @@ const DARK_COLORS = {
   LABEL: "white",
   SECONDARY_LABEL: "#8E8E93",
   PRIMARY_ACCENT: "#94171C",
-  SECONDARY_ACCENT: "#FEF2F1"
+  SECONDARY_ACCENT: "#FEF2F1",
+  BUTTON: "#121212",
+  SEPARATOR: "#757575"
 };
 
 // const COLORS = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
@@ -184,7 +188,8 @@ const COLORS  = Appearance.getColorScheme() === 'light' ? {
   PLACEHOLDER_DARK: "#E5E5E5",
   CARDINAL: "#94171C",
   GHOST_WHITE: "ghostwhite",
-  SALMON: "#FEF2F1"
+  SALMON: "#FEF2F1",
+  SEPARATOR: "#EEEEEE"
 } : DARK_COLORS;
 
 const ALIGNMENTS = {

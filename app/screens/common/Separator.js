@@ -8,7 +8,7 @@ export default class Separator extends Component {
     render() {
         return (<View
         style={{
-            borderBottomColor: COLORS.SECONDARY_LABEL,
+            borderBottomColor: COLORS.SEPARATOR,
             borderBottomWidth: 1,
             margin: 10,
         }}

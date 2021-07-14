@@ -12,6 +12,7 @@ import {
   ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
+import 'lodash';
 
 //Components for this app imports
 import Header from './common/header';
@@ -64,6 +65,7 @@ export default (props) => {
   const [humorScrollPosition, setHumorScrollPosition] = useState(0);
   const drawerRef = useRef();
   const listRef = useRef();
+  let timeout = useRef(null).current;
   const setTextStyle = (cat) => {
     if (cat === category) {
       return { color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
@@ -151,6 +153,12 @@ const _renderImage = ({item}) => {
   )
 }
 
+const onThemeChange = ({ colorScheme }) => {
+ // https://dev.to/franciscocobas/implement-dark-mode-in-android-and-ios-apps-with-react-native-and-redux-52n9
+  console.log("Dispatch changes in this block.")
+}
+
+
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
@@ -172,7 +180,6 @@ const _renderImage = ({item}) => {
         const {posts} = await getCategoryAsync([category.slug], pageNumber);
         // setArticles(posts);
       }
-
     })();
   }, [pageNumber, category]);
 
@@ -223,6 +230,7 @@ const _renderImage = ({item}) => {
             inactiveSlideScale={1}
             onSnapToItem={index => setActiveSlide(index)}
             onLayout={index => setActiveSlide(index)}
+            // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
           <CardRow
             data={allArticles['news']}
@@ -273,7 +281,7 @@ const _renderImage = ({item}) => {
           <Separator />
           <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
-            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Humor"} />
+            <HTML containerStyle={{...styles.titleContainer, ...{ backgroundColor: COLORS.SECONDARY_ACCENT }}} baseFontStyle={{...styles.header, ...{ color: 'black' }}} html={"Humor"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['humor'], title: 'Humor', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
