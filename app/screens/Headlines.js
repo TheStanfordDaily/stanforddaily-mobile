@@ -230,7 +230,6 @@ const onThemeChange = ({ colorScheme }) => {
   console.log("Dispatch changes in this block.")
 }
 
-
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
@@ -297,13 +296,23 @@ const onThemeChange = ({ colorScheme }) => {
             data={allArticles['featured']}
             renderItem={_renderRow}
             sliderWidth={width}
-            itemWidth={width - 2*MARGINS.DEFAULT_LARGE_MARGIN}
+            itemWidth={0.92*width}
             activeSlideAlignment={'start'}
             inactiveSlideScale={1}
-            onSnapToItem={index => setActiveSlide(index)}
-            onLayout={index => setActiveSlide(index)}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })
+          }}}
+            // inactiveSlideOpacity={0}
             // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
+          {/* <Separator /> can't decide whether to keep this */}
           {/* <Carousel
           data={["https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2019/09/a04b8e90a541a74b02f3a2a87d56aae6.jpg",
         "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2020/09/d41d350481733e8c9182a6ab5fa7fe7c.jpg",
@@ -333,6 +342,7 @@ const onThemeChange = ({ colorScheme }) => {
             sliderWidth={width}
             itemWidth={(width - 2*MARGINS.DEFAULT_LARGE_MARGIN)/2}
             inactiveSlideScale={1}
+            inactiveSlideOpacity={1}
             activeSlideAlignment={'start'}
           />
           <Separator />

@@ -24,11 +24,11 @@ const styles = ({
       paddingTop: 12,
     },
     homeContent: {
-      backgroundColor: "rgb(0,0,0,0)",
-      width: width,
-      paddingTop: 12,
+      backgroundColor: THEME.BACKGROUND,
+      width: 0.92*width,
+      paddingVertical: 12,
       marginLeft: 0,
-      marginRight: 0
+      marginRight: 0,
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.ROW,
@@ -40,16 +40,14 @@ const styles = ({
     author: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: FONT_SIZES.DEFAULT_SMALL,
-      marginLeft: -2,
+      marginLeft: 0,
       color: THEME.SECONDARY_LABEL,
-      textTransform: 'uppercase'
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: FONT_SIZES.DEFAULT_SMALL,
       color: THEME.SECONDARY_LABEL,
-      textTransform: 'uppercase'
     },
 
     titleFont: {
@@ -90,10 +88,10 @@ const styles = ({
     },
 
     image: {
-      width: width - (2 * MARGINS.ARTICLE_SIDES),
+      width: 0.95*width - (2 * MARGINS.ARTICLE_SIDES),
       height: width/2.125,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
-      marginBottom: MARGINS.DEFAULT_MARGIN
+      marginBottom: MARGINS.DEFAULT_MARGIN,
     },
 
     homeImage: {
