@@ -64,20 +64,92 @@ export default (props) => {
   const [opinionsScrollPosition, setOpinionsScrollPosition] = useState(0);
   const [humorScrollPosition, setHumorScrollPosition] = useState(0);
   const drawerRef = useRef();
-  const listRef = useRef();
-  let timeout = useRef(null).current;
   const setTextStyle = (cat) => {
     if (cat === category) {
       return { color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
     }
     return { color: COLORS.BLACK, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
   }
+
+  const communityItems = [
+    {
+      label: "About Us",
+      isExternal: true
+    },
+    {
+      label: "Send Tips",
+      isExternal: false
+    },
+    {
+      label: "Donate",
+      isExternal: false
+    },
+    {
+      label: "Submit Work",
+      isExternal: true
+    },
+    /*giveFeedback: {
+      label: "Give Feedback",
+      isExternal: false
+    },*/
+    {
+      label: "Alumni",
+      isExternal: true
+    }
+  ]
+
+  // later will have sections here and stuff
   const SideMenu = () => (
     <View style={styles.sideMenuContainer}>
       <View style={styles.sideBarTitle}>
-        <Text style={styles.sideBarTitleText}> Sections </Text>
+        <Text style={styles.sideBarTitleText}> Community </Text>
       </View>
-      <FlatList
+        <FlatList
+        data={communityItems}
+        style={styles.flatListStyle}
+        ItemSeparatorComponent={() => <Separator />}
+        renderItem={({ item }) =>
+          <TouchableOpacity>
+            <View style={styles.sideMenuItem}>
+              <Ionicons name={CATEGORY_ICONS[item.label]} color={THEME.LABEL} style={setTextStyle(item)} size={32} />
+              <Text style={setTextStyle(item)}>{item.label}</Text>
+            </View>
+          </TouchableOpacity>
+        }
+      />
+      <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
+          <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+          </View>
+      </TouchableHighlight>
+      {/* <View style={styles.communityContainer}>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/about/')}} style={styles.box}>
+                        <Icon name="info-circle" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>About Us</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: STRINGS.TIPS_FORM_URL })}} style={styles.box}>
+                        <Icon name="edit" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Send Tips</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: 'https://stanforddaily.com/donate/' })}} style={styles.box}>
+                        <Icon name="dollar" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Donate</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/submitting-to-the-daily/')}} style={styles.box}>
+                        <Icon name="file" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Submit Work</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.box}>
+                        <Icon name="comment" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Give Feedback</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://alumni.stanforddaily.com/')}} style={styles.box}>
+                        <Icon name="users" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Alumni</Text>
+                    </TouchableOpacity>
+                </View> */}
+      {/* <FlatList
         data={CATEGORIES}
         style={styles.flatListStyle}
         ItemSeparatorComponent={() => <View style={styles.separator} /> }
@@ -89,7 +161,7 @@ export default (props) => {
             </View>
           </TouchableOpacity>
         }
-      />
+      /> 
       <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
         <TouchableOpacity
           onPress={() => setModalVisible(!modalVisible)}>
@@ -111,7 +183,7 @@ export default (props) => {
           </Text>
           </View>
         </TouchableOpacity>
-      </TouchableHighlight>
+      </TouchableHighlight> */}
     </View>
   );
   const _renderRow = ({item, index}) => {
@@ -232,11 +304,36 @@ const onThemeChange = ({ colorScheme }) => {
             onLayout={index => setActiveSlide(index)}
             // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
-          <CardRow
+          {/* <Carousel
+          data={["https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2019/09/a04b8e90a541a74b02f3a2a87d56aae6.jpg",
+        "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2020/09/d41d350481733e8c9182a6ab5fa7fe7c.jpg",
+        "https://www.rawsterphoto.com/wp-content/uploads/2018/06/best-cityscape-photography-locations-new-york-1200x720.jpg"
+        ]}
+        renderItem={({item}) => <Image source={{ uri: item }} style={{ height: 100, width: width/1.2, flex: 1 }}></Image>}
+        sliderWidth={width}
+        itemWidth={width/1.2}
+        activeSlideAlignment={'start'}
+          /> */}
+          {/* <CardRow
             data={allArticles['news']}
             renderItem={_renderCardRow}
             title={"News"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
+          /> */}
+<View style={styles.categoryLabel}>
+                    <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
+                    <TouchableOpacity style={styles.more} onPress={() => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
+                        <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+                    </TouchableOpacity>
+                </View>
+          <Carousel
+          layout={'default'}
+            data={allArticles['news']}
+            renderItem={_renderCardRow}
+            sliderWidth={width}
+            itemWidth={(width - 2*MARGINS.DEFAULT_LARGE_MARGIN)/2}
+            inactiveSlideScale={1}
+            activeSlideAlignment={'start'}
           />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -313,10 +410,6 @@ const onThemeChange = ({ colorScheme }) => {
             sliderWidth={width}
             itemWidth={width}
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
-            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
-          </View>
 
                     {/* <SectionList
           ref={listRef}

@@ -126,7 +126,14 @@ const CATEGORY_ICONS = Platform.select({
     "Arts & Life": 'md-color-palette',
     "The Grind": 'md-quote',
     "Humor": 'md-happy',
-    "Data": 'md-podium'
+    "Data": 'md-podium',
+    "About Us": 'md-information-circle',
+    "Send Tips": 'md-pencil',
+    "Donate": 'md-wallet', // dollar bill?
+    "Submit Work": 'md-folder',
+    "Give Feedback": 'md-chatbubble-ellipses',
+    "Alumni": 'md-people'
+
   },
   ios: {
     "Front Page" : 'ios-globe',
@@ -137,7 +144,14 @@ const CATEGORY_ICONS = Platform.select({
     "Arts & Life": 'ios-color-palette',
     "The Grind": 'ios-quote',
     "Humor": 'ios-happy',
-    "Data": 'ios-podium'
+    "Data": 'ios-podium',
+    "About Us": 'ios-information-circle',
+    "Send Tips": 'ios-pencil',
+    "Donate": 'ios-wallet',
+    "Submit Work": 'ios-folder',
+    "Give Feedback": 'ios-chatbubble-ellipses',
+    "Alumni": 'ios-people'
+    
   },
 });
 
@@ -160,7 +174,7 @@ const LIGHT_COLORS = {
   DARK_GRAY: "#757575",
   NEAR_WHITE: "#FCFCFC",
   PLACEHOLDER: "#F0F0F0",
-  PRIMAY_ACCENT: "#94171C",
+  PRIMARY_ACCENT: "#94171C",
   GHOST_WHITE: "ghostwhite",
   SECONDARY_ACCENT: "#FEF2F1",
   BUTTON: "#D8D8D8",

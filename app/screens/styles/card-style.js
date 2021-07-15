@@ -8,10 +8,11 @@ const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLO
 
 const styles = ({
     content: {
-      backgroundColor: THEME.BACKGROUND,
-      width: '100%',
+      width: width/2,
       paddingVertical: 2,
-      // marginHorizontal: MARGINS.ARTICLE_SIDES
+      backgroundColor: "rgb(0,0,0,0)",
+      marginLeft: 0,
+      marginRight: 0
     },
     categoryLabel: {
       flexDirection: 'row',
@@ -51,7 +52,8 @@ const styles = ({
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-      marginHorizontal: MARGINS.ARTICLE_SIDES
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      width: width/2 - MARGINS.ARTICLE_SIDES - MARGINS.DEFAULT_LARGE_MARGIN
     },
 
     descriptionContainer: {
@@ -63,10 +65,11 @@ const styles = ({
     },
 
     image: {
-      width: width - (2 * MARGINS.ARTICLE_SIDES),
-      height: width/2,
-      marginHorizontal: MARGINS.ARTICLE_SIDES,
-      marginBottom: MARGINS.DEFAULT_MARGIN
+      marginBottom: MARGINS.DEFAULT_MARGIN,
+      width: (width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN)/2,
+      marginLeft: MARGINS.ARTICLE_SIDES,
+      marginRight: 0,
+      height: 3/4 * width/2.2
     },
 
     imageContainer: {

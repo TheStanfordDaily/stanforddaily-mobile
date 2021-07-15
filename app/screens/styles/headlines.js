@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     flatListStyle: {
       flex: 1,
       width: '100%',
+      marginTop: 10
     },
     sideMenuItem: {
       width: '100%',
@@ -66,6 +67,11 @@ const styles = StyleSheet.create({
       fontFamily:FONTS.CENTURY,
       fontSize:25,
       flex: 2,
+    },
+    categoryLabel: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      // width: width - (2 * MARGINS.DEFAULT_MARGIN)
     },
     header: {
       fontFamily: FONTS.PT_SERIF_BOLD,
@@ -97,6 +103,31 @@ const styles = StyleSheet.create({
       paddingHorizontal: 15,
       fontFamily: FONTS.PT_SERIF_BOLD,
       color: THEME.LABEL,
+    },
+    communityContainer: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingTop: 0,
+      width: '100%',
+    },
+    box: {
+      width: '95%',
+      height: height/8,
+      backgroundColor: COLORS.CARDINAL,
+      margin: MARGINS.DEFAULT_SMALL_MARGIN,
+      justifyContent: 'center',
+      flexDirection: 'row',
+      alignContent: 'center'
+    },
+    communityTitleText: {
+      fontSize: FONT_SIZES.DEFAULT_EXTRA_LARGE,
+      fontFamily: FONTS.PT_SERIF_BOLD,
+      color: COLORS.WHITE,
+      textAlign: 'center',
     }
 })
 
