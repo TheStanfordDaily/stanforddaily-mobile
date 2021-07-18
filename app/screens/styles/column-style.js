@@ -1,12 +1,10 @@
 import React from 'react-native';
-import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions, PixelRatio} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
-import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
+import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
 
 const scale = width/320
-const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 
 export function normalize(size) {
   const newSize = size * scale 
@@ -43,9 +41,9 @@ const styles = ({
         fontFamily: FONTS.OPEN_SANS,
         fontSize: 10,
         marginLeft: -2,
-        color: THEME.SECONDARY_LABEL,
+        color: COLORS.DARK_GRAY,
       },
-      humorAuthor: {
+      satireAuthor: {
         fontFamily: FONTS.OPEN_SANS,
         fontSize: 10,
         marginLeft: -2,
@@ -65,7 +63,6 @@ const styles = ({
       titleFont: {
         fontFamily: FONTS.PT_SERIF_BOLD,
         fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
-        color: THEME.LABEL
       },
       titleContainer: {
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
@@ -75,9 +72,8 @@ const styles = ({
         flexWrap: 1,
         flexShrink: 1,
         marginLeft: 0,
-        color: THEME.LABEL
       },
-      humorContainer: {
+      satireContainer: {
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
         marginHorizontal: MARGINS.ARTICLE_SIDES,
         fontFamily: FONTS.PT_SERIF,

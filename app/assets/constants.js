@@ -1,4 +1,4 @@
-import { Platform, Appearance } from 'react-native';
+import { Platform } from 'react-native';
 
 const STRINGS = {
   ALL: "All",
@@ -8,7 +8,7 @@ const STRINGS = {
   OPINIONS: "Opinions",
   ARTS: "Arts & Life",
   GRIND: "The Grind",
-  HUMOR: "Humor",
+  SATIRE: "Satire",
   DATA: "Data",
   HEADLINES: "headlines",
   PLACEHOLDER: "placeholder",
@@ -73,7 +73,7 @@ const STRINGS = {
   TIPS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
   WP_URL: "https://wp.stanforddaily.com",
-};
+}
 
 const PATHS = {
   COMMON_TO_APP: "../../",
@@ -99,10 +99,10 @@ const PATHS = {
   HEADLINES: "Headlines.js",
   POST: "Post.js",
   PROFILE: "Profile.js"
-};
+}
 
 // Order in which sections show up on the home page (keys in https://wp.stanforddaily.com/wp-json/tsd/json/v1/home-mobile)
-const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "humor", "moreFromTheDaily"]
+const HOME_SECTIONS = ["featured", "news", "sports", "opinions", "theGrind", "artsAndLife", "cartoons", "satire", "moreFromTheDaily"]
 
 const CATEGORIES = [
   {name: "Front Page", slug: null},
@@ -111,7 +111,7 @@ const CATEGORIES = [
   {name: "Arts & Life", slug: "arts-life"},
   {name: "Opinions", slug: "opinions"},
   {name: "The Grind", slug: "thegrind"},
-  {name: "Humor", slug: "humor"},
+  {name: "Satire", slug: "satire"},
   {name: "Data", slug: "@94305"},
   {name: "Podcasts", slug: "podcasts"}
 ];
@@ -125,15 +125,8 @@ const CATEGORY_ICONS = Platform.select({
     "Opinions": 'md-chatbubbles',
     "Arts & Life": 'md-color-palette',
     "The Grind": 'md-quote',
-    "Humor": 'md-happy',
-    "Data": 'md-podium',
-    "About Us": 'md-information-circle',
-    "Send Tips": 'md-pencil',
-    "Donate": 'md-wallet', // dollar bill?
-    "Submit Work": 'md-folder',
-    "Give Feedback": 'md-chatbubble-ellipses',
-    "Alumni": 'md-people'
-
+    "Satire": 'md-happy',
+    "Data": 'md-podium'
   },
   ios: {
     "Front Page" : 'ios-globe',
@@ -143,15 +136,8 @@ const CATEGORY_ICONS = Platform.select({
     "Opinions": 'ios-chatbubbles',
     "Arts & Life": 'ios-color-palette',
     "The Grind": 'ios-quote',
-    "Humor": 'ios-happy',
-    "Data": 'ios-podium',
-    "About Us": 'ios-information-circle',
-    "Send Tips": 'ios-pencil',
-    "Donate": 'ios-wallet',
-    "Submit Work": 'ios-folder',
-    "Give Feedback": 'ios-chatbubble-ellipses',
-    "Alumni": 'ios-people'
-    
+    "Satire": 'ios-happy',
+    "Data": 'ios-podium'
   },
 });
 
@@ -165,34 +151,7 @@ const REFS = {
   TITLE: "title"
 };
 
-const LIGHT_COLORS = {
-  BACKGROUND: "#FFFFFF",
-  LABEL: "black",
-  SECONDARY_LABEL: "#424242",
-  SIDE_BAR_GRAY: "#F7F7F7",
-  LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
-  DARK_GRAY: "#757575",
-  NEAR_WHITE: "#FCFCFC",
-  PLACEHOLDER: "#F0F0F0",
-  PRIMARY_ACCENT: "#94171C",
-  GHOST_WHITE: "ghostwhite",
-  SECONDARY_ACCENT: "#FEF2F1",
-  BUTTON: "#D8D8D8",
-  SEPARATOR: "#EEEEEE"
-};
-
-const DARK_COLORS = {
-  BACKGROUND: "#121212",
-  LABEL: "white",
-  SECONDARY_LABEL: "#8E8E93",
-  PRIMARY_ACCENT: "#94171C",
-  SECONDARY_ACCENT: "#FEF2F1",
-  BUTTON: "#121212",
-  SEPARATOR: "#757575"
-};
-
-// const COLORS = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
-const COLORS  = Appearance.getColorScheme() === 'light' ? {
+const COLORS = {
   WHITE: "#FFFFFF",
   SIDE_BAR_GRAY: "#F7F7F7",
   LIGHT_GRAY: "#EEEEEE", // "#A5A5A5",
@@ -202,9 +161,8 @@ const COLORS  = Appearance.getColorScheme() === 'light' ? {
   PLACEHOLDER_DARK: "#E5E5E5",
   CARDINAL: "#94171C",
   GHOST_WHITE: "ghostwhite",
-  SALMON: "#FEF2F1",
-  SEPARATOR: "#EEEEEE"
-} : DARK_COLORS;
+  SALMON: "#FEF2F1"
+};
 
 const ALIGNMENTS = {
   ROW: "row",
@@ -242,7 +200,7 @@ const FONT_SIZES = {
 const MARGINS = {
   DEFAULT_SMALL_MARGIN: 4,
   DEFAULT_MARGIN: 8,
-  ARTICLE_SIDES: 16,
+  ARTICLE_SIDES: 12,
   DEFAULT_LARGE_MARGIN: 22,
   NORMAL_HEADER_MARGINS: 13,
   IPHONEX_HEADER_ADDITION: 24
@@ -311,5 +269,5 @@ const PN_RECEIVER_GROUPS = {
 }
 
 import Images from './modules.js';
-module.exports = { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, COLORS, LIGHT_COLORS, DARK_COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS };
+module.exports = {STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, REFS, COLORS, ALIGNMENTS, FONTS, FONT_SIZES, MARGINS, HEIGHTS, CONSTANT_NUMS, PATHS, Images, KEYS, ICONS, Images, FIREBASE_CONFIG, DEFAULT_IMAGE, PN_RECEIVER_GROUPS};
 // module.exports = CATEGORIES;

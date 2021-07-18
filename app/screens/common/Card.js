@@ -38,10 +38,10 @@ export default class Card extends Component {
     const thumbnailURL = getThumbnailURL(item);
     return (
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
-          <View style={styles.content}>
+          <View style={{width: width/2}}>
                   {thumbnailURL && (
-                  <View style={{paddingVertical: 10}}>
-                      <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
+                  <View style={{padding: 10}}>
+                      <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={{width: width/2.2, height: 3/4 * width/2.2}} borderRadius={8} />
                   </View>)
                   }
                   <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} />

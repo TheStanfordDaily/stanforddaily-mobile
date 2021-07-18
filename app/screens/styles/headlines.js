@@ -1,12 +1,11 @@
 import React from 'react-native';
-import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
-import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
-const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
+import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
+
 const top_padding = 0;
 
-const styles = StyleSheet.create({
+const styles= StyleSheet.create({
     container: {
         flex: 1,
         width,
@@ -29,10 +28,10 @@ const styles = StyleSheet.create({
       alignSelf: 'stretch',
       flexDirection: 'column',
       paddingTop: MARGINS.NORMAL_HEADER_MARGINS,
-      borderBottomColor: THEME.SECONDARY_LABEL,
+      borderBottomColor: COLORS.LIGHT_GRAY,
     },
     sideBarTitleText: {
-      color: THEME.LABEL,
+      color: COLORS.BLACK,
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_SMALL_MEDIUM,
       //textAlign: 'center',
@@ -43,7 +42,6 @@ const styles = StyleSheet.create({
     flatListStyle: {
       flex: 1,
       width: '100%',
-      marginTop: 10
     },
     sideMenuItem: {
       width: '100%',
@@ -52,12 +50,12 @@ const styles = StyleSheet.create({
       alignItems:  ALIGNMENTS.CENTER,
     },
     separator: {
-      borderBottomColor: THEME.SECONDARY_LABEL,
+      borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1,
     },
     categoriesHeaderContainer: {
       height: 60,
-      backgroundColor: THEME.BACKGROUND,
+      backgroundColor: COLORS.WHITE,
       alignItems: ALIGNMENTS.LEFT,
       justifyContent: ALIGNMENTS.LEFT,
     },
@@ -68,20 +66,14 @@ const styles = StyleSheet.create({
       fontSize:25,
       flex: 2,
     },
-    categoryLabel: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      // width: width - (2 * MARGINS.DEFAULT_MARGIN)
-    },
     header: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
-      color: THEME.LABEL
     },
-    humor: {
+    satire: {
       fontFamily: FONTS.PT_SERIF_BOLD,
       fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
-      color: THEME.BACKGROUND
+      color: COLORS.NEAR_WHITE
     },
     titleFont: {
       fontFamily: FONTS.PT_SERIF_BOLD,
@@ -89,11 +81,10 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-      marginHorizontal: MARGINS.ARTICLE_SIDES,
-      backgroundColor: THEME.BACKGROUND
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     },
     more: {
-      backgroundColor: THEME.BUTTON,
+      backgroundColor: COLORS.LIGHT_GRAY,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
@@ -101,33 +92,7 @@ const styles = StyleSheet.create({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: FONTS.PT_SERIF_BOLD,
-      color: THEME.LABEL,
-    },
-    communityContainer: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'flex-start',
-      justifyContent: 'flex-start',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      paddingTop: 0,
-      width: '100%',
-    },
-    box: {
-      width: '95%',
-      height: height/8,
-      backgroundColor: COLORS.CARDINAL,
-      margin: MARGINS.DEFAULT_SMALL_MARGIN,
-      justifyContent: 'center',
-      flexDirection: 'row',
-      alignContent: 'center'
-    },
-    communityTitleText: {
-      fontSize: FONT_SIZES.DEFAULT_EXTRA_LARGE,
-      fontFamily: FONTS.PT_SERIF_BOLD,
-      color: COLORS.WHITE,
-      textAlign: 'center',
+      fontFamily: FONTS.PT_SERIF_BOLD
     }
 })
 
