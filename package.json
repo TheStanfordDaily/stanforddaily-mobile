@@ -33,6 +33,7 @@
     "react-native-gesture-handler": "~1.7.0",
     "react-native-image-crop-picker": "^0.24.1",
     "react-native-image-slider": "^2.0.3",
+    "react-native-lightbox-v2": "^0.8.8",
     "react-native-linear-gradient": "^2.5.4",
     "react-native-maps": "0.27.1",
     "react-native-modal": "^11.0.1",

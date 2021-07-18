@@ -27,10 +27,14 @@ import CardRow from './common/card-row';
 import Card from './common/Card'
 import Column from './common/column';
 import HTML from '../HTML';
+import moment from 'moment';
+import 'moment-timezone';
+import Lightbox from 'react-native-lightbox-v2'
+import LightboxGallery from './common/LightboxGallery';
 
 //Styles for the page
 import styles from './styles/headlines';
-
+import stylesSlider from './styles/Cartoon.style'
 import * as Amplitude from 'expo-analytics-amplitude';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
@@ -53,7 +57,7 @@ const carouselProps = {
 
 const CATEGORY_HOME = CATEGORIES[0];
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
-
+export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY');
 export default (props) => {
 
   const [category, setCategory] = useState(CATEGORY_HOME);
@@ -123,32 +127,6 @@ export default (props) => {
             <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
           </View>
       </TouchableHighlight>
-      {/* <View style={styles.communityContainer}>
-                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/about/')}} style={styles.box}>
-                        <Icon name="info-circle" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>About Us</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: STRINGS.TIPS_FORM_URL })}} style={styles.box}>
-                        <Icon name="edit" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>Send Tips</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: 'https://stanforddaily.com/donate/' })}} style={styles.box}>
-                        <Icon name="dollar" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>Donate</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/submitting-to-the-daily/')}} style={styles.box}>
-                        <Icon name="file" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>Submit Work</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.box}>
-                        <Icon name="comment" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>Give Feedback</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={ () => {Linking.openURL('https://alumni.stanforddaily.com/')}} style={styles.box}>
-                        <Icon name="users" size={64} type="font-awesome" color={COLORS.LABEL} />
-                        <Text style={styles.communityTitleText}>Alumni</Text>
-                    </TouchableOpacity>
-                </View> */}
       {/* <FlatList
         data={CATEGORIES}
         style={styles.flatListStyle}
@@ -186,6 +164,8 @@ export default (props) => {
       </TouchableHighlight> */}
     </View>
   );
+
+
   const _renderRow = ({item, index}) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
@@ -207,21 +187,21 @@ const _renderCardRow = ({item}) => {
   );
 };
 
-const _renderColumn = ({item}) => {
+const _renderColumn = ({item, index}) => {
 
   return (
     <Column
       item={item}
       navigation={props.navigation}
+      slideIndex={index}
     />
   )
 }
 
 const _renderImage = ({item}) => {
+  // ImageBackground?
   return (
-    <TouchableWithoutFeedback onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
-      <Image style={{width: width, height: width, resizeMode: 'contain'}} source={{ uri: getThumbnailURL(item) }}/>
-    </TouchableWithoutFeedback>
+    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
   )
 }
 
@@ -229,7 +209,6 @@ const onThemeChange = ({ colorScheme }) => {
  // https://dev.to/franciscocobas/implement-dark-mode-in-android-and-ios-apps-with-react-native-and-redux-52n9
   console.log("Dispatch changes in this block.")
 }
-
 
   useEffect(() => {
     (async () => {
@@ -297,13 +276,23 @@ const onThemeChange = ({ colorScheme }) => {
             data={allArticles['featured']}
             renderItem={_renderRow}
             sliderWidth={width}
-            itemWidth={width - 2*MARGINS.DEFAULT_LARGE_MARGIN}
+            itemWidth={0.92*width}
             activeSlideAlignment={'start'}
             inactiveSlideScale={1}
-            onSnapToItem={index => setActiveSlide(index)}
-            onLayout={index => setActiveSlide(index)}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })
+          }}}
+            // inactiveSlideOpacity={0}
             // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
+          {/* <Separator /> can't decide whether to keep this */}
           {/* <Carousel
           data={["https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2019/09/a04b8e90a541a74b02f3a2a87d56aae6.jpg",
         "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2020/09/d41d350481733e8c9182a6ab5fa7fe7c.jpg",
@@ -320,20 +309,24 @@ const onThemeChange = ({ colorScheme }) => {
             title={"News"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
           /> */}
-<View style={styles.categoryLabel}>
+{/* <View style={styles.categoryLabel}>
                     <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
                     <TouchableOpacity style={styles.more} onPress={() => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
                         <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
                     </TouchableOpacity>
-                </View>
-          <Carousel
-          layout={'default'}
+                </View> this can be turned into its own component*/}
+              <Separator />
+                          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          <CardRow
             data={allArticles['news']}
             renderItem={_renderCardRow}
-            sliderWidth={width}
-            itemWidth={(width - 2*MARGINS.DEFAULT_LARGE_MARGIN)/2}
-            inactiveSlideScale={1}
-            activeSlideAlignment={'start'}
+            title={"News"}
+            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
           />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -342,7 +335,24 @@ const onThemeChange = ({ colorScheme }) => {
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
+          <Carousel
+            data={_.chunk(allArticles['opinions'], 3)}
+            renderItem={_renderColumn}
+            sliderWidth={width}
+            itemWidth={0.92*width}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })}}}
+          />
+          {/* <FlatList // one day probably will switch these to carousels
             data={_.chunk(allArticles['opinions'], 3)}
             renderItem={_renderColumn}
             horizontal={true}
@@ -352,9 +362,14 @@ const onThemeChange = ({ colorScheme }) => {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             onScroll={e => setOpinionsScrollPosition(e.nativeEvent.contentOffset.x)}
-          />
-          <Pagination activeDotIndex={Math.round(opinionsScrollPosition/width)} dotsLength={_.chunk(allArticles['opinions'], 3).length} containerStyle={{ paddingVertical: 1 }} />
+          /> */}
           <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Sports"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <CardRow
             data={allArticles['sports']}
             renderItem={_renderCardRow}
@@ -362,6 +377,12 @@ const onThemeChange = ({ colorScheme }) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
           />
           <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Arts & Life"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <CardRow
             data={allArticles['artsAndLife']}
             renderItem={_renderCardRow}
@@ -369,13 +390,19 @@ const onThemeChange = ({ colorScheme }) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
           />
           <Separator />
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"The Grind"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })}>
+                <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+            </TouchableOpacity>
+          </View>
           <CardRow
             data={allArticles['theGrind']}
             renderItem={_renderCardRow}
             title={"The Grind"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
-          <Separator />
+          
           <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
             <HTML containerStyle={{...styles.titleContainer, ...{ backgroundColor: COLORS.SECONDARY_ACCENT }}} baseFontStyle={{...styles.header, ...{ color: 'black' }}} html={"Humor"} />
@@ -383,33 +410,42 @@ const onThemeChange = ({ colorScheme }) => {
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
+          <Carousel
             data={_.chunk(allArticles['humor'], 3)}
             renderItem={_renderColumn}
-            horizontal={true}
-            snapToAlignment={"start"}
-            snapToInterval={width}
-            decelerationRate={"fast"}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            style={{backgroundColor: THEME.SECONDARY_ACCENT}}
-            onScroll={e => setHumorScrollPosition(e.nativeEvent.contentOffset.x)}
-            />
-            <Pagination activeDotIndex={Math.round(humorScrollPosition/width)} dotsLength={_.chunk(allArticles['humor'], 3).length} containerStyle={{ paddingVertical: 1 }} />
-          <Separator />
+            sliderWidth={width}
+            itemWidth={0.92*width}
+            containerCustomStyle={{backgroundColor: THEME.SECONDARY_ACCENT}}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })}}}
+          />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
-            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['cartoons'], title: 'Cartoons', navigation: props.navigation })}>
-                <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
-            </TouchableOpacity>
           </View>
+
+
           <Carousel
-            layout={'default'}
+            layout={'tinder'}
+            activeSlideAlignment={'start'}
             data={allArticles['cartoons']}
             renderItem={_renderImage}
+            enableMomentum={true}
             sliderWidth={width}
-            itemWidth={width}
+            itemWidth={0.85*width}
+            containerCustomStyle={styles.slider}
+            contentContainerCustomStyle={styles.sliderContentContainer}
           />
+          
+
 
                     {/* <SectionList
           ref={listRef}

@@ -29,27 +29,18 @@ export default class CardRow extends Component {
         
         return (
             <View style={styles.content}>
-                <View style={styles.categoryLabel}>
-                    <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={title} />
-                    <TouchableOpacity style={styles.more} onPress={onPress}>
-                        <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
-                    </TouchableOpacity>
-                </View>
                 <FlatList
                     style={styles.videos_flatList}
                     horizontal={true}
                     data={data}
-                    snapToAlignment={"start"}
-                    snapToInterval={width/2}
-                    decelerationRate={"fast"}
+                    // snapToAlignment={"start"}
+                    // snapToInterval={0.95*width/2}
+                    // decelerationRate={"fast"}
                     showsHorizontalScrollIndicator={false}
-                    pagingEnabled
+                    // pagingEnabled
                     renderItem={renderItem}
                     onScroll={e => {this.setState({scrollPosition: e.nativeEvent.contentOffset.x})}}
                 />
-                {data &&
-                    <Pagination activeDotIndex={Math.round(this.state.scrollPosition/width)} dotsLength={Object.keys(data).length/2} containerStyle={{ paddingVertical: 5 }}/>
-                }
             </View>
         );
       }

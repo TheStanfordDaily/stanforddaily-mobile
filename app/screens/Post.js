@@ -122,7 +122,7 @@ class Post extends Component {
                   <HTML
                     tagsStyles={{ 
                       p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
-                      a: { color: COLORS.CARDINAL }, 
+                      a: { color: COLORS.PRIMARY_ACCENT }, 
                       strong: { fontFamily: FONTS.PT_SERIF_BOLD },
                       em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
                       img: { marginHorizontal: -MARGINS.ARTICLE_SIDES }, 
