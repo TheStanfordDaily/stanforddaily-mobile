@@ -6,16 +6,18 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   FlatList,
-  PixelRatio
+  PixelRatio,
+  Appearance
 } from 'react-native';
 import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
 import styles from '../styles/column-style';
 import Separator from './Separator';
-import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../../assets/constants';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, LIGHT_COLORS, DARK_COLORS, MARGINS } from '../../assets/constants';
 
 const { width, height } = Dimensions.get('window');
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
 // export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
 export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY').toUpperCase();
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
@@ -32,14 +34,15 @@ export default class Column extends Component {
       }
 
     render() {
-        const { item, navigation } = this.props;
+        const { item, navigation, slideIndex } = this.props;
+        console.log(slideIndex)
         return (
                 <FlatList
-                    style={styles.videos_flatList}
+                    style={{overflow: 'visible'}}
                     data={item}
                     renderItem={({ item, index }) => (
                         <TouchableWithoutFeedback onPress={() => navigation.navigate(STRINGS.POST, { postID: item.id })}>
-                            <View style={{flexDirection: 'column'}}>
+                            <View style={slideIndex < 0 ? {...styles.homeContent, ...{width: width, backgroundColor: item.postCategory.includes(55796) ? THEME.SECONDARY_ACCENT : THEME.BACKGROUND}} : {...styles.homeContent, ...{backgroundColor: item.postCategory.includes(55796) ? THEME.SECONDARY_ACCENT : THEME.BACKGROUND}}}>
                                 <View style={{flexDirection: 'row', width: width}}>
                                     {getThumbnailURL(item) && (
                                         <View style={{paddingHorizontal: MARGINS.ARTICLE_SIDES, marginBottom: MARGINS.DEFAULT_MARGIN, paddingRight: MARGINS.DEFAULT_MARGIN, justifyContent: 'center'}}>
@@ -47,9 +50,9 @@ export default class Column extends Component {
                                         </View>)
                                     }
                                     <View style={{flexShrink: 1}}>
-                                        <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'space-between'}}>
                                             <View>
-                                                <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : styles.titleContainer}>{item.postTitle}</Text>
+                                                <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text>
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
                                                 <Text style={styles.author}> {formatAuthors(item).toUpperCase()} • {formatDate(item)} </Text>
                                             </View>

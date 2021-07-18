@@ -27,10 +27,19 @@ const styles = ({
         margin: 3,
         width: 100
     },
-    content: {
-        backgroundColor: COLORS.NEAR_WHITE,
+      content: {
+        backgroundColor: THEME.BACKGROUND,
         width: '100%',
-        paddingVertical: 16,
+        paddingTop: 16,
+        flexDirection: 'column'
+      },
+      homeContent: {
+        backgroundColor: THEME.BACKGROUND,
+        width: 0.92*width,
+        // paddingVertical: 12,
+        marginLeft: 0,
+        marginRight: 0,
+        flexDirection: 'column'
       },
       dateAndAuthor: {
         flexDirection: ALIGNMENTS.ROW,
@@ -69,7 +78,10 @@ const styles = ({
       },
       titleContainer: {
         marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-        marginHorizontal: MARGINS.ARTICLE_SIDES,
+        // marginHorizontal: MARGINS.ARTICLE_SIDES,
+        width: 0.5*width,
+        marginLeft: 0,
+        marginRight: 0,
         fontFamily: FONTS.PT_SERIF,
         fontSize: normalize(16),
         flexWrap: 1,

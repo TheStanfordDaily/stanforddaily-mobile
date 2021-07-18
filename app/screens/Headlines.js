@@ -187,17 +187,19 @@ const _renderCardRow = ({item}) => {
   );
 };
 
-const _renderColumn = ({item}) => {
+const _renderColumn = ({item, index}) => {
 
   return (
     <Column
       item={item}
       navigation={props.navigation}
+      slideIndex={index}
     />
   )
 }
 
 const _renderImage = ({item}) => {
+  // ImageBackground?
   return (
     <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
   )
@@ -337,9 +339,18 @@ const onThemeChange = ({ colorScheme }) => {
             data={_.chunk(allArticles['opinions'], 3)}
             renderItem={_renderColumn}
             sliderWidth={width}
-            itemWidth={width}
+            itemWidth={0.92*width}
             activeSlideAlignment={'start'}
             inactiveSlideScale={1}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })}}}
           />
           {/* <FlatList // one day probably will switch these to carousels
             data={_.chunk(allArticles['opinions'], 3)}
@@ -403,10 +414,19 @@ const onThemeChange = ({ colorScheme }) => {
             data={_.chunk(allArticles['humor'], 3)}
             renderItem={_renderColumn}
             sliderWidth={width}
-            itemWidth={width}
+            itemWidth={0.92*width}
             containerCustomStyle={{backgroundColor: THEME.SECONDARY_ACCENT}}
             activeSlideAlignment={'start'}
             inactiveSlideScale={1}
+            scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+              const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+              const outputRange = range; return { inputRange, outputRange }}}
+            slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+              opacity: animatedValue.interpolate({
+                  inputRange: [-1, 0, 1],
+                  outputRange: [0, 1, 0.7],
+                  extrapolate: 'clamp'
+              })}}}
           />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
