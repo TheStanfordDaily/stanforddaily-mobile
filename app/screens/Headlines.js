@@ -1,6 +1,6 @@
-import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, MARGINS } from '../assets/constants.js';
+import { STRINGS, CATEGORIES, HOME_SECTIONS, CATEGORY_ICONS, KEYS, FONTS, COLORS, LIGHT_COLORS, DARK_COLORS, MARGINS } from '../assets/constants.js';
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Linking } from 'react-native';
+import { Image, Linking, Appearance, useColorScheme } from 'react-native';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
   ScrollView
 } from 'react-native';
 import Drawer from 'react-native-drawer'
+import 'lodash';
 
 //Components for this app imports
 import Header from './common/header';
@@ -21,7 +22,7 @@ import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
 import { Ionicons } from '@expo/vector-icons';
 import { Icon } from 'react-native-elements';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Carousel, { Pagination, getInputRangeFromIndexes } from 'react-native-snap-carousel';
 import CardRow from './common/card-row';
 import Card from './common/Card'
 import Column from './common/column';
@@ -33,6 +34,7 @@ import styles from './styles/headlines';
 import * as Amplitude from 'expo-analytics-amplitude';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+// import { useTheme } from './styles/themes.js';
 // import { Card } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
@@ -41,6 +43,10 @@ const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window');
 const drawerStyles = {
   drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3 },
+}
+const carouselProps = {
+  vertical: 50,
+  horizontal: 50
 }
 
 //
@@ -56,21 +62,94 @@ export default (props) => {
   const [modalVisible, setModalVisible] = useState(false); // TODO: show modal by default
   const [pageNumber, setPageNumber] = useState(1);
   const [opinionsScrollPosition, setOpinionsScrollPosition] = useState(0);
-  const [satireScrollPosition, setSatireScrollPosition] = useState(0);
+  const [humorScrollPosition, setHumorScrollPosition] = useState(0);
   const drawerRef = useRef();
-  const listRef = useRef();
   const setTextStyle = (cat) => {
     if (cat === category) {
       return { color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
     }
     return { color: COLORS.BLACK, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
   }
+
+  const communityItems = [
+    {
+      label: "About Us",
+      isExternal: true
+    },
+    {
+      label: "Send Tips",
+      isExternal: false
+    },
+    {
+      label: "Donate",
+      isExternal: false
+    },
+    {
+      label: "Submit Work",
+      isExternal: true
+    },
+    /*giveFeedback: {
+      label: "Give Feedback",
+      isExternal: false
+    },*/
+    {
+      label: "Alumni",
+      isExternal: true
+    }
+  ]
+
+  // later will have sections here and stuff
   const SideMenu = () => (
     <View style={styles.sideMenuContainer}>
       <View style={styles.sideBarTitle}>
-        <Text style={styles.sideBarTitleText}> Sections </Text>
+        <Text style={styles.sideBarTitleText}> Community </Text>
       </View>
-      <FlatList
+        <FlatList
+        data={communityItems}
+        style={styles.flatListStyle}
+        ItemSeparatorComponent={() => <Separator />}
+        renderItem={({ item }) =>
+          <TouchableOpacity>
+            <View style={styles.sideMenuItem}>
+              <Ionicons name={CATEGORY_ICONS[item.label]} color={THEME.LABEL} style={setTextStyle(item)} size={32} />
+              <Text style={setTextStyle(item)}>{item.label}</Text>
+            </View>
+          </TouchableOpacity>
+        }
+      />
+      <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
+          <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+          </View>
+      </TouchableHighlight>
+      {/* <View style={styles.communityContainer}>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/about/')}} style={styles.box}>
+                        <Icon name="info-circle" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>About Us</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: STRINGS.TIPS_FORM_URL })}} style={styles.box}>
+                        <Icon name="edit" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Send Tips</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {this.props.navigation.navigate('Tips', { link: 'https://stanforddaily.com/donate/' })}} style={styles.box}>
+                        <Icon name="dollar" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Donate</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://stanforddaily.com/submitting-to-the-daily/')}} style={styles.box}>
+                        <Icon name="file" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Submit Work</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.box}>
+                        <Icon name="comment" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Give Feedback</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => {Linking.openURL('https://alumni.stanforddaily.com/')}} style={styles.box}>
+                        <Icon name="users" size={64} type="font-awesome" color={COLORS.LABEL} />
+                        <Text style={styles.communityTitleText}>Alumni</Text>
+                    </TouchableOpacity>
+                </View> */}
+      {/* <FlatList
         data={CATEGORIES}
         style={styles.flatListStyle}
         ItemSeparatorComponent={() => <View style={styles.separator} /> }
@@ -82,7 +161,7 @@ export default (props) => {
             </View>
           </TouchableOpacity>
         }
-      />
+      /> 
       <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
         <TouchableOpacity
           onPress={() => setModalVisible(!modalVisible)}>
@@ -97,20 +176,23 @@ export default (props) => {
           <Text style={{
             fontSize: 13,
             fontFamily: FONTS.OPEN_SANS,
-            color: COLORS.BLACK,
+            color: THEME.LABEL,
             marginLeft: MARGINS.ARTICLE_SIDES
           }}>
             Notification Settings
           </Text>
           </View>
         </TouchableOpacity>
-      </TouchableHighlight>
+      </TouchableHighlight> */}
     </View>
   );
-  const _renderRow = ({item}) => {
+  const _renderRow = ({item, index}) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
               item={item}
+              index={index}
+              slideIndex={activeSlide}
+              isFeatured={true}
               onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}
               onAuthor={ (authorID) => props.navigation.navigate(STRINGS.AUTHOR, { authorID: authorID }) } />);
   };
@@ -143,6 +225,12 @@ const _renderImage = ({item}) => {
   )
 }
 
+const onThemeChange = ({ colorScheme }) => {
+ // https://dev.to/franciscocobas/implement-dark-mode-in-android-and-ios-apps-with-react-native-and-redux-52n9
+  console.log("Dispatch changes in this block.")
+}
+
+
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
@@ -164,12 +252,13 @@ const _renderImage = ({item}) => {
         const {posts} = await getCategoryAsync([category.slug], pageNumber);
         // setArticles(posts);
       }
-
     })();
   }, [pageNumber, category]);
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const carousel = useRef(null);
+  const colorScheme = useColorScheme();
+  const THEME = colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS
+
   return (
     <Drawer
       type={STRINGS.STATIC}
@@ -198,9 +287,9 @@ const _renderImage = ({item}) => {
         title={category.slug === CATEGORY_HOME.slug ? undefined : category.name}
         searchNavigator={() => props.navigation.navigate(STRINGS.SEARCH)}
         />
-      <View style={{ flex: 1, backgroundColor: COLORS.NEAR_WHITE, alignItems: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: THEME.BACKGROUND, alignItems: 'center' }}>
         <StatusBar
-          barStyle={STRINGS.DARK_CONTENT}
+          barStyle={colorScheme}
         />
         <ScrollView>
         <Carousel
@@ -208,24 +297,43 @@ const _renderImage = ({item}) => {
             data={allArticles['featured']}
             renderItem={_renderRow}
             sliderWidth={width}
-            itemWidth={width}
+            itemWidth={width - 2*MARGINS.DEFAULT_LARGE_MARGIN}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
             onSnapToItem={index => setActiveSlide(index)}
-            ref={carousel}
+            onLayout={index => setActiveSlide(index)}
+            // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
-          <Pagination
-            dotsLength={3} // based on number of sildes you want
-            activeDotIndex={activeSlide}
-            inactiveDotOpacity={0.4}
-            inactiveDotScale={0.6} // set to 1 to make same size
-            containerStyle={{ paddingVertical: 7.5 }}
-            tappableDots
-            carouselRef={carousel}
-        />
-          <CardRow
+          {/* <Carousel
+          data={["https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2019/09/a04b8e90a541a74b02f3a2a87d56aae6.jpg",
+        "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2020/09/d41d350481733e8c9182a6ab5fa7fe7c.jpg",
+        "https://www.rawsterphoto.com/wp-content/uploads/2018/06/best-cityscape-photography-locations-new-york-1200x720.jpg"
+        ]}
+        renderItem={({item}) => <Image source={{ uri: item }} style={{ height: 100, width: width/1.2, flex: 1 }}></Image>}
+        sliderWidth={width}
+        itemWidth={width/1.2}
+        activeSlideAlignment={'start'}
+          /> */}
+          {/* <CardRow
             data={allArticles['news']}
             renderItem={_renderCardRow}
             title={"News"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
+          /> */}
+<View style={styles.categoryLabel}>
+                    <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
+                    <TouchableOpacity style={styles.more} onPress={() => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
+                        <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+                    </TouchableOpacity>
+                </View>
+          <Carousel
+          layout={'default'}
+            data={allArticles['news']}
+            renderItem={_renderCardRow}
+            sliderWidth={width}
+            itemWidth={(width - 2*MARGINS.DEFAULT_LARGE_MARGIN)/2}
+            inactiveSlideScale={1}
+            activeSlideAlignment={'start'}
           />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -268,15 +376,15 @@ const _renderImage = ({item}) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
           <Separator />
-          <View style={{flexDirection: 'row', backgroundColor: COLORS.SALMON, justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
-            <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Satire"} />
-            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['satire'], title: 'Satire', navigation: props.navigation })}>
+            <HTML containerStyle={{...styles.titleContainer, ...{ backgroundColor: COLORS.SECONDARY_ACCENT }}} baseFontStyle={{...styles.header, ...{ color: 'black' }}} html={"Humor"} />
+            <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['humor'], title: 'Humor', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
           <FlatList
-            data={_.chunk(allArticles['satire'], 3)}
+            data={_.chunk(allArticles['humor'], 3)}
             renderItem={_renderColumn}
             horizontal={true}
             snapToAlignment={"start"}
@@ -284,10 +392,10 @@ const _renderImage = ({item}) => {
             decelerationRate={"fast"}
             showsHorizontalScrollIndicator={false}
             pagingEnabled
-            style={{backgroundColor: COLORS.SALMON}}
-            onScroll={e => setSatireScrollPosition(e.nativeEvent.contentOffset.x)}
+            style={{backgroundColor: THEME.SECONDARY_ACCENT}}
+            onScroll={e => setHumorScrollPosition(e.nativeEvent.contentOffset.x)}
             />
-            <Pagination activeDotIndex={Math.round(satireScrollPosition/width)} dotsLength={_.chunk(allArticles['satire'], 3).length} containerStyle={{ paddingVertical: 1 }} />
+            <Pagination activeDotIndex={Math.round(humorScrollPosition/width)} dotsLength={_.chunk(allArticles['humor'], 3).length} containerStyle={{ paddingVertical: 1 }} />
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
@@ -302,10 +410,6 @@ const _renderImage = ({item}) => {
             sliderWidth={width}
             itemWidth={width}
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
-            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={COLORS.CARDINAL} /></TouchableOpacity>
-            <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={COLORS.CARDINAL} /></TouchableOpacity>
-          </View>
 
                     {/* <SectionList
           ref={listRef}

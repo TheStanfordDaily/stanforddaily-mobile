@@ -33,6 +33,7 @@ export default class Column extends Component {
 
     render() {
         const { item, navigation } = this.props;
+        console.log()
         return (
                 <FlatList
                     style={styles.videos_flatList}
@@ -49,7 +50,7 @@ export default class Column extends Component {
                                     <View style={{flexShrink: 1}}>
                                         <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
                                             <View>
-                                                <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={styles.titleContainer}>{item.postTitle}</Text>
+                                                <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : styles.titleContainer}>{item.postTitle}</Text>
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
                                                 <Text style={styles.author}> {formatAuthors(item).toUpperCase()} • {formatDate(item)} </Text>
                                             </View>

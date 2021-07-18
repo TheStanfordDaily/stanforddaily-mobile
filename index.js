@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView } from 'react-native';
+import { KeyboardAvoidingView, View, ActivityIndicator, SafeAreaView, Dimensions, ImageBackground } from 'react-native';
 import { RootContainer, Tabs } from './app/config/router';
 import { STRINGS, COLORS } from './app/assets/constants';
 import * as WebBrowser from 'expo-web-browser';
@@ -43,8 +43,9 @@ class App extends Component {
     return (
       <React.Fragment>
         {/* https://stackoverflow.com/a/52458846/2603230 */}
-        <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.WHITE }} />
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.WHITE }}>
+        <SafeAreaView style={{ flex: 0, backgroundColor: 'rgb(0,0,0,0)' }} />
+        <ImageBackground style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width, overflow:'hidden'}}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: 'rgb(0,0,0,0)' }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior='padding'>
@@ -54,6 +55,7 @@ class App extends Component {
             }} />
           </KeyboardAvoidingView>
         </SafeAreaView>
+       </ImageBackground>
       </React.Fragment>
     );
   }

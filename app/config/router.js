@@ -1,5 +1,7 @@
 import React from 'react';
-import { createBottomTabNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
 import {Image, Dimensions} from 'react-native';
 import {HEIGHTS, ICONS, COLORS} from '../assets/constants.js';
 import { Ionicons } from '@expo/vector-icons';
@@ -84,30 +86,19 @@ const CommunityStack = createStackNavigator({
   headerMode: 'none',
 });
 
-export const Tabs = createBottomTabNavigator({
+export const Tabs = createStackNavigator({
   News: {
     screen: NewsStack,
-    navigationOptions: {
-      tabBarLabel: 'Daily News',
-      tabBarIcon: ({ tintColor }) => <Image
-        source={require('../media/Daily.png')}
-        style={{tintColor: tintColor, width: 25, height: 25, marginTop: 6}}
-      />,
-      // tabBarOnPress: (scene, jumpToIndex) => {
-      //     Amplitude.logEvent(STRINGS.SWITCHED_SCREEN, {NewScreen: STRINGS.NEWS});
-      //     jumpToIndex(scene.index);
-      // },
-    },
   },
-  Community: {
+  /*Community: {
     screen: CommunityStack,
     navigationOptions: {
       tabBarLabel: 'Community',
       tabBarIcon: ({ tintColor }) => <Ionicons name={ICONS.TIPS_PAGE} size={27} color={tintColor} style={{ marginTop: 5 }} />
     },
-  }
+  }*/
 },{
-  tabBarOptions: {
+  /*tabBarOptions: {
     activeTintColor: COLORS.CARDINAL,
     inactiveTintColor: '#000000',
     inactiveBackgroundColor: 'white',
@@ -124,13 +115,13 @@ export const Tabs = createBottomTabNavigator({
       // So we have to hard-code the marginBottom to avoid extra gap.
       marginBottom: iphone_x ? -34 : 0
     }
-  },
+  },*/
   lazy: true
 });
 
 const Root = createStackNavigator({
   Tabs: {
-    screen: Tabs,
+    screen: NewsStack,
   },
   Search: {
     screen: SearchStack,

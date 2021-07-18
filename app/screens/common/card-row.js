@@ -11,6 +11,7 @@ import _ from "lodash";
 import HTML from '../../HTML';
 import styles from '../styles/card-style';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import Category from '../Category';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,7 +29,7 @@ export default class CardRow extends Component {
         
         return (
             <View style={styles.content}>
-                <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <View style={styles.categoryLabel}>
                     <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={title} />
                     <TouchableOpacity style={styles.more} onPress={onPress}>
                         <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
