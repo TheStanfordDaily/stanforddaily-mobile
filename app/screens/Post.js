@@ -31,7 +31,6 @@ import Placeholder from './common/placeholder.js';
 import ReactNativeDisqus from 'react-native-disqus';
 import post from './styles/post.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Appearance } from 'react-native';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -84,10 +83,10 @@ class Post extends Component {
         {id &&
           <View style={{ flex: 1, alignItems: 'center' }}>
             <StatusBar
-              barStyle={Appearance.getColorScheme() === "light" ? "dark" : "light" + "-content"}
+              barStyle="dark-content"
             />
               
-            <ScrollView style={styles.scrollContainer}>
+            <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
               {thumbnailURL !== 0 &&
                 // <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
                 <ImageBackground source={{uri: thumbnailURL}} style={styles.imageBackground}>
@@ -110,10 +109,10 @@ class Post extends Component {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View style={styles.authorAndDate}>
                     {/* <Text style={{ fontFamily: FONTS.PT_SERIF_BOLD }}>By {formatAuthors(item)}</Text> */}
-                    <View style={{ flexDirection: 'row' }}><Text style={styles.author}>By </Text>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName}{i != item.tsdAuthors.length - 1 && <Text>, </Text>}</Text></TouchableWithoutFeedback>)}</View>
+                    <View style={{ flexDirection: 'row' }}><Text style={{ fontFamily: FONTS.PT_SERIF_BOLD }}>By </Text>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={{ fontFamily: FONTS.PT_SERIF_BOLD }}>{info.displayName}{i != item.tsdAuthors.length - 1 && <Text>, </Text>}</Text></TouchableWithoutFeedback>)}</View>
                   <Text style={styles.date}>{formatDate(item)}</Text>
                 </View>
-                <View style={styles.authorAndDate}>
+                <View style={[styles.authorAndDate, { borderRadius: 15, overflow: 'hidden' }]}>
                   <Text style={styles.category}>{item.tsdCategories[0].name}</Text>
                 </View>
               </View>

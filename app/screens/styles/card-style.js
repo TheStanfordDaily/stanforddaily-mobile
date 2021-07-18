@@ -1,23 +1,14 @@
 import React from 'react-native';
-import { Appearance } from 'react-native';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
-import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
-const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
+import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES, STRINGS} from '../../assets/constants.js';
 
 const styles = ({
     content: {
-      width: width/2,
+      backgroundColor: COLORS.NEAR_WHITE,
+      width: '100%',
       paddingVertical: 2,
-      backgroundColor: "rgb(0,0,0,0)",
-      marginLeft: 0,
-      marginRight: 0
-    },
-    categoryLabel: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      // width: width - (2 * MARGINS.DEFAULT_MARGIN)
     },
     dateAndAuthor: {
       flexDirection: ALIGNMENTS.COLUMN,
@@ -30,30 +21,27 @@ const styles = ({
       fontFamily: FONTS.OPEN_SANS,
       fontSize: 10,
       marginLeft: -2,
-      color: THEME.SECONDARY_LABEL,
+      color: COLORS.DARK_GRAY,
     },
 
     date: {
       fontFamily: FONTS.OPEN_SANS,
       fontSize: 10,
-      color: THEME.SECONDARY_LABEL,
+      color: COLORS.DARK_GRAY,
     },
 
     header: {
         fontFamily: FONTS.PT_SERIF_BOLD,
         fontSize: FONT_SIZES.DEFAULT_LARGE + 10,
-        color: THEME.LABEL
     },
 
     titleFont: {
       fontFamily: FONTS.PT_SERIF,
       fontSize: FONT_SIZES.DEFAULT_MEDIUM_SMALL,
-      color: THEME.LABEL
     },
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
-      marginLeft: MARGINS.ARTICLE_SIDES,
-      width: width/2 - MARGINS.ARTICLE_SIDES - MARGINS.DEFAULT_LARGE_MARGIN
+      marginHorizontal: MARGINS.ARTICLE_SIDES
     },
 
     descriptionContainer: {
@@ -65,20 +53,19 @@ const styles = ({
     },
 
     image: {
-      marginBottom: MARGINS.DEFAULT_MARGIN,
-      width: (width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN)/2,
-      marginLeft: MARGINS.ARTICLE_SIDES,
-      marginRight: 0,
-      height: 3/4 * width/2.2
+      width: width - (2 * MARGINS.ARTICLE_SIDES),
+      height: width/2,
+      marginHorizontal: MARGINS.ARTICLE_SIDES,
+      marginBottom: MARGINS.DEFAULT_MARGIN
     },
 
     imageContainer: {
 
     },
     searchContainer: {
-      borderBottomColor: COLORS.SECONDARY_LABEL,
+      borderBottomColor: COLORS.LIGHT_GRAY,
       borderBottomWidth: 1,
-      backgroundColor: THEME.BACKGROUND,
+      backgroundColor: COLORS.NEAR_WHITE,
       width: '100%',
       flexDirection: ALIGNMENTS.ROW,
       maxHeight: 122
@@ -110,7 +97,7 @@ const styles = ({
       opacity: 0.80,
     },
     more: {
-      backgroundColor: THEME.BUTTON,
+      backgroundColor: COLORS.LIGHT_GRAY,
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       justifyContent: 'center',
@@ -118,8 +105,7 @@ const styles = ({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: FONTS.PT_SERIF_BOLD,
-      color: THEME.LABEL
+      fontFamily: FONTS.PT_SERIF_BOLD
     }
 })
 
