@@ -43,7 +43,7 @@ export default class Column extends Component {
                             <View style={{flexDirection: 'column'}}>
                                 <View style={{flexDirection: 'row', width: width}}>
                                     {getThumbnailURL(item) && (
-                                        <View style={{padding: 10}}>
+                                        <View style={{paddingHorizontal: MARGINS.ARTICLE_SIDES, marginBottom: MARGINS.DEFAULT_MARGIN, paddingRight: MARGINS.DEFAULT_MARGIN, justifyContent: 'center'}}>
                                             <Image resizeMode={'cover'} source={{ uri: getThumbnailURL(item) }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
                                         </View>)
                                     }

@@ -104,6 +104,14 @@ const styles = StyleSheet.create({
       fontFamily: FONTS.PT_SERIF_BOLD,
       color: THEME.LABEL,
     },
+    cartoonContainer: {
+      paddingVertical: 30,
+      width: 0.75*width,
+      height: 0.75*width
+    },
+    sliderContentContainer: {
+      paddingVertical: 10 // for custom animation
+    },
     communityContainer: {
       flex: 1,
       backgroundColor: '#fff',

@@ -47,7 +47,7 @@ export default class NewsFeedItem extends Component {
           }>
             {thumbnailURL && (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: index === 2 ? {...styles.image, ...{marginLeft:20}} : styles.image} borderRadius={8} />
+              <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: isFeatured && index === 2 ? {...styles.image, ...{marginLeft:20}} : {...styles.image, ...{}}} borderRadius={8} />
             </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
           }
           {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}

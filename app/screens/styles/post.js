@@ -48,7 +48,6 @@ export default {
     marginHorizontal: MARGINS.ARTICLE_SIDES,
     marginBottom: MARGINS.DEFAULT_LARGE_MARGIN,
     color: THEME.LABEL,
-    borderRadius: 15,
     overflow: 'hidden'
   },
   date: { 
@@ -62,7 +61,9 @@ export default {
     fontFamily: FONTS.PT_SERIF,
     color: 'black',
     fontSize: FONT_SIZES.DEFAULT_SMALL_MARGIN,
-    backgroundColor: COLORS.LIGHT_GRAY,
+    backgroundColor: COLORS.SECONDARY_LABEL,
+    borderRadius: 5,
+    overflow: 'hidden',
     padding: 5,
   },
   articleText: {

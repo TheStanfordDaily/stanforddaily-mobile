@@ -8,7 +8,7 @@ const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLO
 
 const styles = ({
     content: {
-      width: width/2,
+      width: '100%',
       paddingVertical: 2,
       backgroundColor: "rgb(0,0,0,0)",
       marginLeft: 0,
@@ -53,7 +53,7 @@ const styles = ({
     titleContainer: {
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
-      width: width/2 - MARGINS.ARTICLE_SIDES - MARGINS.DEFAULT_LARGE_MARGIN
+      width: width/2.25 - MARGINS.ARTICLE_SIDES - MARGINS.DEFAULT_LARGE_MARGIN
     },
 
     descriptionContainer: {
@@ -66,7 +66,7 @@ const styles = ({
 
     image: {
       marginBottom: MARGINS.DEFAULT_MARGIN,
-      width: (width - (2 * MARGINS.ARTICLE_SIDES) - MARGINS.DEFAULT_LARGE_MARGIN)/2,
+      width: width/2.25 - MARGINS.ARTICLE_SIDES - MARGINS.DEFAULT_LARGE_MARGIN,
       marginLeft: MARGINS.ARTICLE_SIDES,
       marginRight: 0,
       height: 3/4 * width/2.2
