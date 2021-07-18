@@ -29,6 +29,8 @@ import Column from './common/column';
 import HTML from '../HTML';
 import moment from 'moment';
 import 'moment-timezone';
+import Lightbox from 'react-native-lightbox-v2'
+import LightboxGallery from './common/LightboxGallery';
 
 //Styles for the page
 import styles from './styles/headlines';
@@ -162,6 +164,8 @@ export default (props) => {
       </TouchableHighlight> */}
     </View>
   );
+
+
   const _renderRow = ({item, index}) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
@@ -195,22 +199,7 @@ const _renderColumn = ({item}) => {
 
 const _renderImage = ({item}) => {
   return (
-    <TouchableOpacity onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}
-    activeOpacity={1}
-    style={stylesSlider.slideInnerContainer}
-    >
-      <View style={stylesSlider.shadow} />
-      <View style={stylesSlider.imageContainer}>
-          <Image style={stylesSlider.image} source={{ uri: getThumbnailURL(item) }}/>
-          <View style={stylesSlider.radiusMask} />
-      </View>
-      <View style={stylesSlider.textContainer}>
-          <Text>{item.postTitle}</Text>
-          <Text style={stylesSlider.subtitle}>
-              {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(item)}
-          </Text>
-      </View>
-  </TouchableOpacity>
+    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
   )
 }
 
@@ -344,7 +333,15 @@ const onThemeChange = ({ colorScheme }) => {
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
+          <Carousel
+            data={_.chunk(allArticles['opinions'], 3)}
+            renderItem={_renderColumn}
+            sliderWidth={width}
+            itemWidth={width}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
+          />
+          {/* <FlatList // one day probably will switch these to carousels
             data={_.chunk(allArticles['opinions'], 3)}
             renderItem={_renderColumn}
             horizontal={true}
@@ -354,8 +351,7 @@ const onThemeChange = ({ colorScheme }) => {
             showsHorizontalScrollIndicator={false}
             pagingEnabled
             onScroll={e => setOpinionsScrollPosition(e.nativeEvent.contentOffset.x)}
-          />
-          <Pagination activeDotIndex={Math.round(opinionsScrollPosition/width)} dotsLength={_.chunk(allArticles['opinions'], 3).length} containerStyle={{ paddingVertical: 1 }} />
+          /> */}
           <Separator />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Sports"} />
@@ -403,22 +399,19 @@ const onThemeChange = ({ colorScheme }) => {
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
             </TouchableOpacity>
           </View>
-          <FlatList
+          <Carousel
             data={_.chunk(allArticles['humor'], 3)}
             renderItem={_renderColumn}
-            horizontal={true}
-            snapToAlignment={"start"}
-            snapToInterval={width}
-            decelerationRate={"fast"}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            style={{backgroundColor: THEME.SECONDARY_ACCENT}}
-            onScroll={e => setHumorScrollPosition(e.nativeEvent.contentOffset.x)}
-            />
-            <Pagination activeDotIndex={Math.round(humorScrollPosition/width)} dotsLength={_.chunk(allArticles['humor'], 3).length} containerStyle={{ paddingVertical: 1 }} />
+            sliderWidth={width}
+            itemWidth={width}
+            containerCustomStyle={{backgroundColor: THEME.SECONDARY_ACCENT}}
+            activeSlideAlignment={'start'}
+            inactiveSlideScale={1}
+          />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
           </View>
+
 
           <Carousel
             layout={'tinder'}

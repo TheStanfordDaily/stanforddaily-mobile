@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
-import { COLORS, MARGINS } from '../../assets/constants';
+import { COLORS, MARGINS, FONTS } from '../../assets/constants';
 
 const IS_IOS = Platform.OS === 'ios';
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -70,6 +70,7 @@ export default StyleSheet.create({
     textContainer: {
         justifyContent: 'center',
         paddingTop: 20 - entryBorderRadius,
+        width: 100,
         paddingBottom: 20,
         paddingHorizontal: 16,
         backgroundColor: 'white',
@@ -83,16 +84,14 @@ export default StyleSheet.create({
         color: 'black',
         fontSize: 13,
         fontWeight: 'bold',
-        letterSpacing: 0.5
-    },
-    titleEven: {
-        color: 'white'
+        letterSpacing: 0.5,
+        fontFamily: FONTS.PT_SERIF
     },
     subtitle: {
         marginTop: 6,
         color: COLORS.SECONDARY_LABEL,
         fontSize: 12,
-        fontStyle: 'italic'
+        fontFamily: FONTS.PT_SERIF
     },
     subtitleEven: {
         color: 'rgba(255, 255, 255, 0.7)'

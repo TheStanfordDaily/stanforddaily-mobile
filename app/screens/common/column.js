@@ -33,7 +33,6 @@ export default class Column extends Component {
 
     render() {
         const { item, navigation } = this.props;
-        console.log()
         return (
                 <FlatList
                     style={styles.videos_flatList}
