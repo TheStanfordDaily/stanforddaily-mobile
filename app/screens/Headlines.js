@@ -200,8 +200,13 @@ const _renderColumn = ({item, index}) => {
 
 const _renderImage = ({item}) => {
   // ImageBackground?
+  const packageTest = allArticles['cartoons'].map(x => getThumbnailURL(x).toString())
+  console.log('package', packageTest)
   return (
-    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
+
+    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} uriGroup={packageTest} />
+
+
   )
 }
 
@@ -402,6 +407,13 @@ const onThemeChange = ({ colorScheme }) => {
             title={"The Grind"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
+
+<View
+        style={{
+            backgroundColor: COLORS.SECONDARY_ACCENT,
+            height: 10,
+        }}
+        />
           
           <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
@@ -428,6 +440,12 @@ const onThemeChange = ({ colorScheme }) => {
                   extrapolate: 'clamp'
               })}}}
           />
+          <View
+        style={{
+            backgroundColor: COLORS.BACKGROUND,
+            height: 10,
+        }}
+        />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
           </View>
@@ -435,7 +453,7 @@ const onThemeChange = ({ colorScheme }) => {
 
           <Carousel
             layout={'tinder'}
-            activeSlideAlignment={'start'}
+            activeSlideAlignment={'center'}
             data={allArticles['cartoons']}
             renderItem={_renderImage}
             enableMomentum={true}
