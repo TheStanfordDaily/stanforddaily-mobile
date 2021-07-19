@@ -407,6 +407,13 @@ const onThemeChange = ({ colorScheme }) => {
             title={"The Grind"}
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
           />
+
+<View
+        style={{
+            backgroundColor: COLORS.SECONDARY_ACCENT,
+            height: 10,
+        }}
+        />
           
           <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
@@ -433,6 +440,12 @@ const onThemeChange = ({ colorScheme }) => {
                   extrapolate: 'clamp'
               })}}}
           />
+          <View
+        style={{
+            backgroundColor: COLORS.BACKGROUND,
+            height: 10,
+        }}
+        />
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Cartoons"} />
           </View>
