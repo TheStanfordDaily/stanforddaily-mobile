@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
-import { COLORS, MARGINS, FONTS } from '../../assets/constants';
+import { COLORS, MARGINS, FONTS, FONT_SIZES } from '../../assets/constants';
 
 const IS_IOS = Platform.OS === 'ios';
 const { width: viewportWidth, height: viewportHeight } = Dimensions.get('window');
@@ -70,12 +70,12 @@ export default StyleSheet.create({
     textContainer: {
         justifyContent: 'center',
         paddingTop: 20 - entryBorderRadius,
-        width: 100,
+        // width: sliderWidth,
         paddingBottom: 20,
         paddingHorizontal: 16,
         backgroundColor: 'white',
         borderBottomLeftRadius: entryBorderRadius,
-        borderBottomRightRadius: entryBorderRadius
+        borderBottomRightRadius: entryBorderRadius,
     },
     textContainerEven: {
         backgroundColor: 'black'
@@ -90,8 +90,8 @@ export default StyleSheet.create({
     subtitle: {
         marginTop: 6,
         color: COLORS.SECONDARY_LABEL,
-        fontSize: 12,
-        fontFamily: FONTS.PT_SERIF
+        fontFamily: FONTS.OPEN_SANS,
+        fontSize: FONT_SIZES.DEFAULT_SMALL,
     },
     subtitleEven: {
         color: 'rgba(255, 255, 255, 0.7)'

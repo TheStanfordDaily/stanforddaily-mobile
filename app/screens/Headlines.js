@@ -200,8 +200,13 @@ const _renderColumn = ({item, index}) => {
 
 const _renderImage = ({item}) => {
   // ImageBackground?
+  const packageTest = allArticles['cartoons'].map(x => getThumbnailURL(x).toString())
+  console.log('package', packageTest)
   return (
-    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
+
+    <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} uriGroup={packageTest} />
+
+
   )
 }
 
@@ -435,7 +440,7 @@ const onThemeChange = ({ colorScheme }) => {
 
           <Carousel
             layout={'tinder'}
-            activeSlideAlignment={'start'}
+            activeSlideAlignment={'center'}
             data={allArticles['cartoons']}
             renderItem={_renderImage}
             enableMomentum={true}

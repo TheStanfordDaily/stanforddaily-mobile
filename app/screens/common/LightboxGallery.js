@@ -8,10 +8,12 @@ import {
   FlatList,
   PixelRatio,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  ImageBackground
 } from 'react-native';
 import stylesSlider from '../styles/Cartoon.style'
 import Lightbox from 'react-native-lightbox-v2';
+import Carousel from 'react-native-snap-carousel';
 const { width, height } = Dimensions.get('window');
 
 function wp (percentage) {
@@ -22,6 +24,7 @@ function wp (percentage) {
 const slideHeight = height * 0.36;
 const slideWidth = wp(75);
 const itemHorizontalMargin = wp(2);
+const entryBorderRadius = 8;
 
 export const sliderWidth = width;
 export const itemWidth = slideWidth + itemHorizontalMargin * 2;
@@ -53,6 +56,7 @@ const styles = StyleSheet.create({
     },
     col: {
       flex: 1
+      // justifyContent: 'flex-start'
     },
     square: {
       width: width / 2,
@@ -77,7 +81,9 @@ const styles = StyleSheet.create({
     },
     contain: {
       flex: 1,
-      height: 150,
+      height: 2*sliderWidth/3,
+      borderTopLeftRadius: entryBorderRadius,
+      borderTopRightRadius: entryBorderRadius
     },
     text: {
       marginVertical: 10 * 2,
@@ -85,32 +91,58 @@ const styles = StyleSheet.create({
   });
 
 
-export default class LightboxGallery extends React.Component {
 
-    toAuthor() {
+const LightboxGallery = (props) => {
+
+  const [aspectRatio, setAspectRatio] = useState(4/3)
+
+    const toAuthor = () => {
         this.props.onAuthorPress(authorID);
       }
-      
-    
-    render() {
-        const { title, authors, imageResource, date, navigation } = this.props
+
+      const renderCarousel = (item, index) => (
+
+        //         <Image
+        //       style={{ flex: 1, width: width, height: width }}
+        //       resizeMode="contain"
+        //       source={{ uri: item }}
+        
+        
+        // />
+        <Image style={{width: width, aspectRatio: aspectRatio}} source={{ uri: imageResource }} /> //uriGroup[0]
+        
+      //  <Text>{uriGroup}</Text> 
+        
+          )
+
+      const { title, authors, imageResource, date, navigation, uriGroup } = props
+
         return (
-            <View>
-                    <Lightbox style={styles.col}>
-                    {/* <View style={[styles.square, styles.squareFirst]}><Text style={styles.squareText}>I'm a square</Text></View> */}
+            <View style={{justifyContent: 'flex-end', // this needs to work so that all the cartoons have the same bottom y-coordinate...
+            alignItems: 'center', shadowColor: 'black', shadowOpacity: 0.75, shadowRadius: 5, shadowOffset: {
+              width: 0,
+              height: 10
+            }}}>
+                    <Lightbox style={styles.col} renderContent={renderCarousel} >
+
                           <Image
-        style={styles.contain}
+        style={{...styles.contain, ...{aspectRatio: aspectRatio}}}
         resizeMode="contain"
         source={{ uri: imageResource }}
+        onLayout={(e) => {Image.getSize(imageResource, (width, height) => {setAspectRatio(width/height)})}}
       />
+                          <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
+    <Text style={stylesSlider.title}>{title}</Text>
+    <Text style={stylesSlider.subtitle}>
+      {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
+    </Text>
+    </View>
                     </Lightbox>
-    <View style={{...stylesSlider.textContainer, ...{width: itemWidth}}}>
-          <Text>{title}</Text>
-          <Text style={stylesSlider.subtitle}>
-            {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
-          </Text>
-      </View>
+
+
       </View>
         )
-    }
+    
 }
+
+export default LightboxGallery
