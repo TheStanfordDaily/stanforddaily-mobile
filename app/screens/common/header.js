@@ -64,7 +64,7 @@ export default class Header extends Component {
         return (
           <AndroidBackHandler onBackPress={() => this.onBackButtonPressAndroid()}>
             <View ref={REFS.CONTAINER}>
-                <View style={styles.container}>
+                <View style={this.props.transparent ? {...styles.container, ...{backgroundColor: 'rgb(0,0,0,0)', borderBottomWidth: 0}} : styles.container }>
                   {this.props.goBack === undefined && this.props.drawerHandler === undefined && <View style={styles.leftButton}/>}
                   {this.props.goBack !== undefined && (
                       <TouchableOpacity onPress={() => this.props.goBack()}>

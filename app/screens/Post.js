@@ -20,7 +20,7 @@ import { WebView } from 'react-native-webview'
 //Components for this app imports
 import Header from './common/header';
 import * as Amplitude from 'expo-analytics-amplitude';
-import { FONTS, COLORS, STRINGS, KEYS, CATEGORIES, MARGINS } from "../assets/constants";
+import { FONTS, COLORS, LIGHT_COLORS, DARK_COLORS, STRINGS, KEYS, CATEGORIES, HEIGHTS, MARGINS } from "../assets/constants";
 import styles from './styles/post.js';
 import _ from "lodash";
 import HTML from '../HTML.js';
@@ -32,6 +32,7 @@ import ReactNativeDisqus from 'react-native-disqus';
 import post from './styles/post.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Appearance } from 'react-native';
+import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
@@ -79,26 +80,27 @@ class Post extends Component {
     const thumbnailURL = getThumbnailURL(item);
     return (
       <View style={{ flex: 1 }}>
-        <Header ref='postHeader' share={true} postID={id} goBack={this.goBack} />
+        <StatusBar
+              barStyle={Appearance.getColorScheme() === "light" ? "dark" : "light" + "-content"}
+            />
         {!id && <ActivityIndicator />}
         {id &&
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <StatusBar
-              barStyle={Appearance.getColorScheme() === "light" ? "dark" : "light" + "-content"}
-            />
+
               
-            <ScrollView style={styles.scrollContainer}>
-              {thumbnailURL !== 0 &&
-                // <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
-                <ImageBackground source={{uri: thumbnailURL}} style={styles.imageBackground}>
-                 
-        <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'}}>
+            <ImageHeaderScrollView maxOverlayOpacity={0.75}
+          minOverlayOpacity={0.5}
+          fadeOutForeground maxHeight={240} minHeight={0} scrollViewBackgroundColor={Appearance.getColorScheme() === "light" ? LIGHT_COLORS.BACKGROUND : DARK_COLORS.BACKGROUND} headerImage={{ uri: thumbnailURL !== 0 ? thumbnailURL : 'https://colourlex.com/wp-content/uploads/2021/02/Chrome-red-painted-swatch-N-300x300.jpg' } // style={styles.scrollContainer} HEIGHTS.APP_HEADER
+  }           renderTouchableFixedForeground={() => (
+    <Header transparent title={''} share={true} postID={id} goBack={this.goBack} />
+  )} renderForeground={() => (
+    
+    <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0)', justifyContent: 'center', alignItems: 'center'}}>
             
-     <Text style={styles.titleText}>{postTitle}</Text>
-   </View>
- 
-                </ImageBackground>
-              }
+    <Text style={styles.titleText}>{postTitle}</Text>
+  </View>
+  )}>
+
               {caption !== 0 &&
                 <Text style={styles.caption}>{striptags(caption)}</Text>
               }
@@ -137,7 +139,7 @@ class Post extends Component {
                 }
                 {/* <HTML html={"<iframe id=\"dsq-app3929\" name=\"dsq-app3929\" allowtransparency=\"true\" frameborder=\"0\" scrolling=\"no\" tabindex=\"0\" title=\"Disqus\" width=\"100%\" src=\"https://disqus.com/embed/comments/?base=default&amp;f=stanforddaily&amp;t_i=1176209%20https%3A%2F%2Fwww.stanforddaily.com%2F%3Fp%3D1176209&amp;t_u=https%3A%2F%2Fwww.stanforddaily.com%2F%3Fp%3D1176209&amp;t_d=Stanford%20Medicine%20passes%20over%20front-line%20residents%2C%20fellows%20in%20initial%20vaccine%20allocation&amp;t_t=Stanford%20Medicine%20passes%20over%20front-line%20residents%2C%20fellows%20in%20initial%20vaccine%20allocation&amp;s_o=default#version=46aa6ce1907927200257678d09dec282\" horizontalscrolling=\"no\" verticalscrolling=\"no\"></iframe>"} /> */}
               </View>
-            </ScrollView>
+            </ImageHeaderScrollView>
           </View>}
       </View>
     );
