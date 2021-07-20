@@ -44,7 +44,8 @@ class App extends Component {
       <React.Fragment>
         {/* https://stackoverflow.com/a/52458846/2603230 */}
         <SafeAreaView style={{ flex: 0, backgroundColor: COLORS.BACKGROUND }} />
-        <ImageBackground style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width, overflow:'hidden'}}>
+        <ImageBackground style={{height: Dimensions.get('window').height, width: Dimensions.get('window').width}}>
+        
           <SafeAreaView style={{ flex: 1, backgroundColor: 'rgb(0,0,0,0)' }}>
           <KeyboardAvoidingView
             style={{ flex: 1 }}

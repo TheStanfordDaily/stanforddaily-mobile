@@ -49,15 +49,15 @@ const NewsStack = createStackNavigator({
     navigationOptions: {
       title: 'Post',
       headerStyle: {
-        backgroundColor: 'transparent',
-        position: 'absolute',
+        // backgroundColor: 'transparent',
+        // position: 'absolute',
         height: 50,
         top: 0,
         left: 0,
         right: 0,
       },
     },
-    headerMode: 'screen'
+    headerMode: 'float'
   },
   Category: {
     screen: Category,
