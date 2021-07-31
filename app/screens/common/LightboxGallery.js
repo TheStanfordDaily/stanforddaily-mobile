@@ -96,52 +96,38 @@ const LightboxGallery = (props) => {
 
   const [aspectRatio, setAspectRatio] = useState(4/3)
 
-    const toAuthor = () => {
-        this.props.onAuthorPress(authorID);
-      }
+  const toAuthor = () => {
+      this.props.onAuthorPress(authorID);
+  }
 
-      const renderCarousel = (item, index) => (
+  const renderCarousel = (item, index) => (<Image style={{width: width, aspectRatio: aspectRatio}} source={{ uri: imageResource }} />)
 
-        //         <Image
-        //       style={{ flex: 1, width: width, height: width }}
-        //       resizeMode="contain"
-        //       source={{ uri: item }}
-        
-        
-        // />
-        <Image style={{width: width, aspectRatio: aspectRatio}} source={{ uri: imageResource }} /> //uriGroup[0]
-        
-      //  <Text>{uriGroup}</Text> 
-        
-          )
+  const { title, authors, imageResource, date, navigation, uriGroup } = props
 
-      const { title, authors, imageResource, date, navigation, uriGroup } = props
-
-        return (
-            <View style={{justifyContent: 'flex-end', // this needs to work so that all the cartoons have the same bottom y-coordinate...
-            alignItems: 'center', shadowColor: 'black', shadowOpacity: 0.75, shadowRadius: 5, shadowOffset: {
-              width: 0,
-              height: 10
-            }}}>
-                    <Lightbox style={styles.col} renderContent={renderCarousel} >
-
-                          <Image
+  return (
+    <View style={{justifyContent: 'flex-end', // this needs to work so that all the cartoons have the same bottom y-coordinate...
+    alignItems: 'center', shadowColor: 'black', shadowOpacity: 0.75, shadowRadius: 5, shadowOffset: {
+      width: 0,
+      height: 10
+    }}}>
+      <Lightbox style={styles.col} renderContent={renderCarousel} >
+        <Image
         style={{...styles.contain, ...{aspectRatio: aspectRatio}}}
         resizeMode="contain"
         source={{ uri: imageResource }}
         onLayout={(e) => {Image.getSize(imageResource, (width, height) => {setAspectRatio(width/height)})}}
-      />
-                          <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
-    <Text style={stylesSlider.title}>{title}</Text>
-    <Text style={stylesSlider.subtitle}>
-      {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
-    </Text>
+        />
+        <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
+          <Text style={stylesSlider.title}>{title}</Text>
+          <Text style={stylesSlider.subtitle}>
+          {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
+          </Text>
+        </View>
+      </Lightbox>
+
+
     </View>
-                    </Lightbox>
-
-
-      </View>
-        )
+  )
     
 }
 

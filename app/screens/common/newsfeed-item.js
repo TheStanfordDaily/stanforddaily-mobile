@@ -27,7 +27,6 @@ export default class NewsFeedItem extends Component {
     this.props.onAuthor(authorID);
   }  
   itemize(elements) {
-    console.log(elements[-1])
     return [elements.slice(0, -1).join(", "), elements.length > 2 ? elements.last() : elements].join(" and ")
   }
 
@@ -47,7 +46,7 @@ export default class NewsFeedItem extends Component {
           }>
             {thumbnailURL && (
             <View style={styles.imageContainer}>
-              <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: isFeatured && index === 2 ? {...styles.image, ...{marginLeft:20}} : {...styles.image, ...{}}} borderRadius={8} />
+              <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: isFeatured && index === 2 ? {...styles.image, ...{marginLeft:20}} : !isFeatured ? {...styles.image, ...{width: full}} : {...styles.image, ...{}}} borderRadius={8} />
             </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
           }
           {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}

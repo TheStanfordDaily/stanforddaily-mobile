@@ -11,7 +11,8 @@ import {
     Dimensions
 } from 'react-native';
 import WPAPI from "wpapi";
-import SearchBar from 'react-native-elements'
+// import SearchBar from 'react-native-elements'
+import Fuse from 'fuse.js'
 
 import {NavigationActions} from 'react-navigation';
 import { formatAuthors, getThumbnailURL, formatDate } from './common/newsfeed-item.js';
@@ -31,6 +32,19 @@ import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture
 // const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 // const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
+
+function removeDuplicates(arr) {
+  const result = [];
+  const map = new Map();
+  for (const item of arr) {
+      if(!map.has(item.id)){
+          map.set(item.id, true);
+          console.log(item.id, item)
+          result.push(item);
+      }
+  }
+  return result
+}
 export default class Search extends Component {
     constructor(props) {
         super(props);
@@ -47,6 +61,7 @@ export default class Search extends Component {
             searchText: "",
             selectedId: -1,
             data: [],
+            responseData: [],
             filteredData: []
         };
         // this.data = []; //A list of all current data
@@ -56,8 +71,7 @@ export default class Search extends Component {
         // this.fetchData = _.debounce(this.fetchData, 200); //Sets a gap of at least 200ms between each call to loading more articles
         // this.loadMore = _.debounce(this.loadMore, 200); //Sets a gap of at least 200ms between each call to loading more articles
         this.goToPost = this.goToPost.bind(this); //The function that goes to the post screen
-        this._renderRow = this._renderRow.bind(this); //A function used by the listView to render each row
-    }
+      }
 
     // Given data, it passes it to Post view
     goToPost(data) {
@@ -68,164 +82,68 @@ export default class Search extends Component {
       this.props.navigation.goBack();
     }
 
-    async componentDidMount() {
-      // this.refs.textInput.focus();
-      // console.log('hihi');
-      // tracker.setUser('12345678');
-     // log an event
-     // Amplitude.logEvent(STRINGS.APP_OPENED);
-    //  console.log("Logged");
-
-  //   let data = await fetch('https://jsonplaceholder.typicode.com/posts')
-  //   .then(response => response.json());
-
-  // this.setState({data: data});
-  var WPAPI = require('wpapi');
-  var wp = new WPAPI({ endpoint: 'http://wp.stanforddaily.com/wp-json' });
-      wp.posts().embed().get()
-      .then( posts => {
-        this.setState({data: posts})
-      })
-
-    }
-
     search = (searchText) => {
 
       this.setState({searchText: searchText});
-      // let filteredData = this.state.data.filter(function (item) {
-      //   return item.id == searchText || item.title.toUpperCase().includes(searchText.toUpperCase());
-      // });
-  
-      // this.setState({filteredData: filteredData});
-      var WPAPI = require('wpapi');
-      var wp = new WPAPI({ endpoint: 'http://wp.stanforddaily.com/wp-json' });
-      wp.posts().search(searchText).embed().get()
-      .then( posts => { 
-        this.setState({filteredData: posts})
-      } );
+      var object = this.state.responseData,
+    flattened = Object.keys(object).reduce(function (r, k) {
+        return r.concat(object[k]);
+    }, []);
+    
+    const fuse = new Fuse(flattened, {
+      keys: ['postTitle', 'postExcerpt', 'postName', 'tagsInput', 'tsdAuthors.displayName', 'thumbnailInfo.caption'],
+    });
+    const result = fuse.search(searchText)
+    this.setState({filteredData: result})
+
     };
 
-
-    //Sends the fetch request, populates data with the new articles and alerts listView about potential change
-    //Specific to category articles
-    async fetchNewHeadlines(searchURL, loadMore, currText) {
-      let response = await fetch(searchURL);
-      let responseData = await response.json();
-      var counter = 0;
-      var view = this;
-      var newArr = view.state.posts.slice();
-      if(this.state.input !== currText) return;
-      if(responseData.length === 0) this.setState({allIsHere : true});
-      responseData.forEach(function(post) {
-        if(view.state.hashed[post.id] === undefined) {
-          view.state.hashed[post.id] = 1;
-          var postObject = {postObj: post, searchTerm: currText, key: post.id};
-          if(loadMore === true) {
-            newArr.push(postObject);
-          } else {
-            newArr.splice(counter,0,postObject);
-            counter += 1;
-          }
-        }
-      });
-      if(this.state.input !== currText) return;
-      this.setState({posts: newArr});
-      return counter;
-    }
-
-    //Determines the page and code for the category fetching, and calls the above function
-    async handleFetching(counter, loadMore) {
-      let searchURL = STRINGS.REQUEST_LARGE_PAGE +counter+STRINGS.SEARCH_URL+encodeURI(this.state.input);
-      return await this.fetchNewHeadlines(searchURL, loadMore, this.state.input);
-    }
-
-    //Handles all requests to fetch more data, and figures out whether it should get category only or also featured headlines too
-    async fetchData(loadMore) {
-      if (this.state.input.length === 0 || this.state.allIsHere) return;
-      // this.props.navigation.dispatch(NavigationActions.back());
-      if (loadMore || this.state.page === 1) {
-        await this.handleFetching(this.state.page,loadMore);
-      } else {
-        var counter = 1;
-        while (true) {
-          var refreshed = await this.handleFetching(counter,loadMore);
-          if (refreshed !== 3) break;
-          counter += 1;
-        }
-      }
-      this.fetchDataIsBusy = false;
-    }
-
-    //Handles loading more articles
-    async loadMore(event) {
-      if(!this.state.loading && this.state.input.length !== 0) {
-        this.state.loading = true;
-        if(!this.fetchDataIsBusy) {
-          this.fetchDataIsBusy = true;
-          await this.fetchData(true);
-          this.state.page += 1;
-        }
-        this.state.loading = false;
-      }
-    }
-
-   //Handles rendering rows by calling the NewsFeedItem and passing data to it
-  _renderRow(data) {
-    // console.log("This is my id", data.item.key);
-    if(data.item.searchTerm !== this.state.input) return null;
-    if(data.item.postObj !== STRINGS.PLACEHOLDER) {
-      return <NewsFeedItem key={data.item.key} postID={data.item.key} data={data.item} onPress={this.goToPost} context={STRINGS.HEADLINES}
-      onAuthorPress = {authorID=>this.props.navigation.navigate("AuthorDetail", { id: authorID})} />
-    }
-    return null;
+  async componentDidMount() {
+    this.setState({responseData: this.props.navigation.state.params.articles})
   }
-  
-  //Required ReactNative function
-  //For this screen we render
-  /* <View for the page>
-     <Set Status Bar props>
-     <Show the header>
-     <MenuContext states that we will use the Menu component>
-     <ListView for the articles>
-  */
  
-  render() {
+  render() {  
+    const renderItem = ({item}) => { return (
+        <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
+        <View style={{flexDirection: 'column', backgroundColor: COLORS.BACKGROUND}}>
+                        <View style={{flexDirection: 'row', width: width}}>
+                            {getThumbnailURL(item) && (
+                                <View style={{padding: 10}}>
+                                    <Image resizeMode={'cover'} source={{ uri: getThumbnailURL(item) }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
+                                </View>)
+                            }
+                            <View style={{flexShrink: 1}}>
+                                <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                    <View>
+                                        <Text style={styles.titleContainer}>{item.postTitle}</Text>
+                                        {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
+                                        
+                                        {/* <Text style={styles.author}>{JSON.stringify(item.tsdAuthors)}</Text> */}
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+    </TouchableWithoutFeedback>
+  )}
 
-    const renderItem = ({item}) => (
-      <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
-          <View style={{flexDirection: 'column'}}>
-                          <View style={{flexDirection: 'row', width: width}}>
-                              {item._embedded['wp:featuredmedia'][0].source_url && ( // This line is super glitchy.
-                                  <View style={{padding: 10}}>
-                                      <Image resizeMode={'cover'} source={{ uri: item._embedded['wp:featuredmedia'][0].source_url }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
-                                  </View>)
-                              }
-                              <View style={{flexShrink: 1}}>
-                                  <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
-                                      <View>
-                                          <Text style={styles.titleContainer}>{item.title.rendered}</Text>
-                                          {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
-                                          
-                                          <Text style={styles.author}> {this.state.author}</Text>
-                                      </View>
-                                  </View>
-                              </View>
-                          </View>
-                      </View>
-      </TouchableWithoutFeedback>
-  )
+  var object = this.state.responseData,
+    flattened = Object.keys(object).reduce(function (r, k) {
+        return r.concat(object[k]);
+    }, []);
 
     return (
       <View>
         <Header searchHandler={() => console.log("Search")} value={this.state.searchText} onChangeText={this.search} goBack={ () => this.goBack()} />
         {/* <Text>{JSON.stringify(this.state.filteredData[0])}</Text> */}
           <FlatList
-              data={this.state.filteredData && this.state.filteredData.length > 0 ? this.state.filteredData : this.state.data}
+              data={this.state.filteredData && this.state.filteredData.length > 0 ? this.state.filteredData.map(function(t) {
+                return t.item
+              }) : flattened.slice(0, -1)}
               renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              backgroundColor={COLORS.BACKGROUND}
           />
-          
-          
-          
       </View>
     )
   }

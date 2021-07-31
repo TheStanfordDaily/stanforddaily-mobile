@@ -92,7 +92,7 @@ class Post extends Component {
           minOverlayOpacity={0.5}
           fadeOutForeground maxHeight={240} minHeight={0} scrollViewBackgroundColor={Appearance.getColorScheme() === "light" ? LIGHT_COLORS.BACKGROUND : DARK_COLORS.BACKGROUND} headerImage={{ uri: thumbnailURL !== 0 ? thumbnailURL : 'https://colourlex.com/wp-content/uploads/2021/02/Chrome-red-painted-swatch-N-300x300.jpg' } // style={styles.scrollContainer} HEIGHTS.APP_HEADER
   }           renderTouchableFixedForeground={() => (
-    <Header transparent title={''} share={true} postID={id} goBack={this.goBack} />
+    <Header transparent title={''} share={true} postID={id} goBack={this.goBack} isPost={true} />
   )} renderForeground={() => (
     
     <View style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, padding: 15, backgroundColor: 'rgba(0,0,0,0)', justifyContent: 'center', alignItems: 'center'}}>
@@ -112,7 +112,7 @@ class Post extends Component {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View style={styles.authorAndDate}>
                     {/* <Text style={{ fontFamily: FONTS.PT_SERIF_BOLD }}>By {formatAuthors(item)}</Text> */}
-                    <View style={{ flexDirection: 'row' }}><Text style={styles.author}>By </Text>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName}{i != item.tsdAuthors.length - 1 && <Text>, </Text>}</Text></TouchableWithoutFeedback>)}</View>
+                    <View style={{ flexDirection: 'row', maxWidth: 2*width/3, flexWrap: 'wrap' }}><Text style={styles.author}>By </Text>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName}{i < item.tsdAuthors.length - 2 ? ', ' : i == item.tsdAuthors.length - 1 ? '' : ' and '}</Text></TouchableWithoutFeedback>)}</View>
                   <Text style={styles.date}>{formatDate(item)}</Text>
                 </View>
                 <View style={styles.authorAndDate}>
@@ -124,7 +124,7 @@ class Post extends Component {
                   <HTML
                     tagsStyles={{ 
                       p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
-                      a: { color: COLORS.PRIMARY_ACCENT }, 
+                      a: { color: COLORS.CARDINAL }, 
                       strong: { fontFamily: FONTS.PT_SERIF_BOLD },
                       em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
                       img: { marginHorizontal: -MARGINS.ARTICLE_SIDES }, 

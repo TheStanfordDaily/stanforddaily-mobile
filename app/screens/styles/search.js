@@ -1,10 +1,12 @@
-import React from 'react-native';
+import React, {Appearance} from 'react-native';
+import darkColors from 'react-native-elements/dist/config/colorsDark';
 const {StyleSheet, Dimensions} = React;
 const {width, height} = Dimensions.get('window');
 //width = width <= height ? width : height;
-import {COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
+import {COLORS, LIGHT_COLORS, DARK_COLORS, FONTS, ALIGNMENTS, MARGINS, HEIGHTS, FONT_SIZES} from '../../assets/constants.js';
 
-const styles= StyleSheet.create({
+const THEME = Appearance.getColorScheme() === 'light' ? LIGHT_COLORS : DARK_COLORS
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         width,
@@ -39,7 +41,8 @@ const styles= StyleSheet.create({
       marginTop: MARGINS.DEFAULT_SMALL_MARGIN,
       marginHorizontal: MARGINS.ARTICLE_SIDES,
       fontFamily: FONTS.PT_SERIF_BOLD,
-      fontSize: FONT_SIZES.DEFAULT_LARGE
+      fontSize: FONT_SIZES.DEFAULT_LARGE,
+      color: THEME.LABEL
     },
 })
 

@@ -15,13 +15,15 @@ const styles = StyleSheet.create({
       height: HEIGHTS.APP_HEADER,
       backgroundColor: THEME.BACKGROUND,
       borderBottomColor: COLORS.LIGHT_GRAY,
-      borderBottomWidth: 1
+      borderBottomWidth: 1,
+      color: THEME.LABEL
     },
     leftButton: {
       width: 56,
       paddingLeft: 16,
       paddingRight: 16,
       //marginTop: MARGINS.DEFAULT_MARGIN,
+      color: THEME.LABEL
     },
     title: {
       width: width >= 375 ? 243 : 200,
@@ -38,6 +40,7 @@ const styles = StyleSheet.create({
       paddingRight: 16,
       paddingLeft: 16,
       //marginTop: MARGINS.DEFAULT_MARGIN,
+      color: THEME.LABEL
     },
     profileImage: {
       tintColor: COLORS.WHITE,
@@ -55,7 +58,8 @@ const styles = StyleSheet.create({
       paddingRight: MARGINS.DEFAULT_MARGIN,
     },
     searchContainer: {
-      width: width*4/5
+      width: width*4/5,
+      backgroundColor: THEME.BACKGROUND
     },
     textInputWrapper: {
       flexDirection: ALIGNMENTS.ROW,

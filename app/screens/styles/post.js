@@ -61,7 +61,7 @@ export default {
     fontFamily: FONTS.PT_SERIF,
     color: 'black',
     fontSize: FONT_SIZES.DEFAULT_SMALL_MARGIN,
-    backgroundColor: COLORS.SECONDARY_LABEL,
+    backgroundColor: COLORS.LIGHT_GRAY,
     borderRadius: 5,
     overflow: 'hidden',
     padding: 5,
