@@ -70,7 +70,7 @@ export default class Author extends Component {
 
       render() {
         const renderItem = ({item}) => (
-            <TouchableWithoutFeedback onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
+            <TouchableWithoutFeedback style={{backgroundColor: COLORS.BACKGROUND}} onPress={() => this.props.navigation.navigate(STRINGS.POST, { postID: item.id })}>
                 <View style={{flexDirection: 'column'}}>
                                 <View style={{flexDirection: 'row', width: width}}>
                                     {item._embedded['wp:featuredmedia'][0].source_url && ( // This line is super glitchy.
@@ -93,7 +93,7 @@ export default class Author extends Component {
         )
         
           return(
-                <View>
+                <View backgroundColor={COLORS.BACKGROUND}>
                     <Header title={this.state.author} goBack={this.goBack} />
                     <FlatList
                     style={{ marginHorizontal: MARGINS.ARTICLE_SIDES/2, height: height }}

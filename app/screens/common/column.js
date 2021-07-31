@@ -54,7 +54,7 @@ export default class Column extends Component {
                                             <View>
                                                 <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text>
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
-                                                <Text style={styles.author}> {formatAuthors(item).toUpperCase()} • {formatDate(item)} </Text>
+                                                <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(STRINGS.AUTHOR, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text>
                                             </View>
                                             {index != 2 && (
                                                 <Separator />

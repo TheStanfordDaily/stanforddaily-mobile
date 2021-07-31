@@ -9,7 +9,8 @@ import {
   FlatList,
   TouchableOpacity,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  Switch
 } from 'react-native';
 import Drawer from 'react-native-drawer'
 import 'lodash';
@@ -38,28 +39,24 @@ import stylesSlider from './styles/Cartoon.style'
 import * as Amplitude from 'expo-analytics-amplitude';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-// import { useTheme } from './styles/themes.js';
-// import { Card } from 'react-native-elements';
 
 const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
-
 //A map between categories names and their codes
 const { width, height } = Dimensions.get('window');
 const drawerStyles = {
-  drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3 },
+  drawer: { shadowColor: 'black', color: COLORS.LABEL, backgroundColor: COLORS.BACKGROUND, shadowOpacity: 0.8, shadowRadius: 3 },
 }
 const carouselProps = {
   vertical: 50,
   horizontal: 50
 }
 
-//
-
 const CATEGORY_HOME = CATEGORIES[0];
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
 export const formatDate = post => moment.utc(post.postDateGmt).format('MMM D, YYYY');
 export default (props) => {
-
+  const colorScheme = useColorScheme()
+  const THEME = colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS
   const [category, setCategory] = useState(CATEGORY_HOME);
   // const [articles, setArticles] = useState([]);
   const [allArticles, setAllArticles] = useState([]);
@@ -70,9 +67,9 @@ export default (props) => {
   const drawerRef = useRef();
   const setTextStyle = (cat) => {
     if (cat === category) {
-      return { color: COLORS.CARDINAL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
+      return { color: THEME.PRIMARY_ACCENT, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
     }
-    return { color: COLORS.BLACK, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
+    return { color: THEME.LABEL, fontFamily: FONTS.OPEN_SANS, marginLeft: MARGINS.ARTICLE_SIDES };
   }
 
   const communityItems = [
@@ -122,46 +119,17 @@ export default (props) => {
         }
       />
       <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
+        <View style={{flexDirection: 'column'}}>
+        <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+        <Switch />
+        <Text>Push Notifications</Text>
+        </View>
           <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
             <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
           </View>
+        </View>
       </TouchableHighlight>
-      {/* <FlatList
-        data={CATEGORIES}
-        style={styles.flatListStyle}
-        ItemSeparatorComponent={() => <View style={styles.separator} /> }
-        renderItem={({ item }) =>
-          <TouchableOpacity onPress={() => { setCategory(item); drawerRef.current.close(); listRef.current.scrollToLocation({ animated: false, sectionIndex: 0, itemIndex: 0, viewPosition: 2 }); }}>
-            <View style={styles.sideMenuItem}>
-              <Ionicons name={CATEGORY_ICONS[item.name]} style={setTextStyle(item)} size={16} />
-              <Text style={setTextStyle(item)}>{item.name}</Text>
-            </View>
-          </TouchableOpacity>
-        }
-      /> 
-      <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
-        <TouchableOpacity
-          onPress={() => setModalVisible(!modalVisible)}>
-          <View style={styles.sideMenuItem}>
-          <Image
-            style={{
-              width: 16,
-              height: 16
-            }}
-            source={require('../media/gears.png')}
-          />
-          <Text style={{
-            fontSize: 13,
-            fontFamily: FONTS.OPEN_SANS,
-            color: THEME.LABEL,
-            marginLeft: MARGINS.ARTICLE_SIDES
-          }}>
-            Notification Settings
-          </Text>
-          </View>
-        </TouchableOpacity>
-      </TouchableHighlight> */}
     </View>
   );
 
@@ -171,7 +139,6 @@ export default (props) => {
               key={"article-" + item.id}
               item={item}
               index={index}
-              slideIndex={activeSlide}
               isFeatured={true}
               onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })}
               onAuthor={ (authorID) => props.navigation.navigate(STRINGS.AUTHOR, { authorID: authorID }) } />);
@@ -199,14 +166,9 @@ const _renderColumn = ({item, index}) => {
 }
 
 const _renderImage = ({item}) => {
-  // ImageBackground?
   const packageTest = allArticles['cartoons'].map(x => getThumbnailURL(x).toString())
-  console.log('package', packageTest)
   return (
-
     <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} uriGroup={packageTest} />
-
-
   )
 }
 
@@ -239,10 +201,6 @@ const onThemeChange = ({ colorScheme }) => {
     })();
   }, [pageNumber, category]);
 
-  const [activeSlide, setActiveSlide] = useState(0);
-  const colorScheme = useColorScheme();
-  const THEME = colorScheme === 'light' ? LIGHT_COLORS : DARK_COLORS
-
   return (
     <Drawer
       type={STRINGS.STATIC}
@@ -269,12 +227,12 @@ const onThemeChange = ({ colorScheme }) => {
         // TODO: enable search.
         // searchHandler={() => props.navigation.navigate(STRINGS.SEARCH, {})} 
         title={category.slug === CATEGORY_HOME.slug ? undefined : category.name}
-        searchNavigator={() => props.navigation.navigate(STRINGS.SEARCH)}
+        searchNavigator={() => props.navigation.navigate(STRINGS.SEARCH, {articles: allArticles})}
         />
       <View style={{ flex: 1, backgroundColor: THEME.BACKGROUND, alignItems: 'center' }}>
-        <StatusBar
-          barStyle={colorScheme}
-        />
+      <StatusBar
+              barStyle={colorScheme === "light" ? "dark" : "light" + "-content"}
+            />
         <ScrollView>
         <Carousel
             layout={"default"}
@@ -297,23 +255,7 @@ const onThemeChange = ({ colorScheme }) => {
             // inactiveSlideOpacity={0}
             // slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return { zIndex: carouselProps.data.length + index }}} must find a way to update zIndex for active slide so tapping works as it should
           />
-          {/* <Separator /> can't decide whether to keep this */}
-          {/* <Carousel
-          data={["https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2019/09/a04b8e90a541a74b02f3a2a87d56aae6.jpg",
-        "https://cdn.fstoppers.com/styles/large-16-9/s3/lead/2020/09/d41d350481733e8c9182a6ab5fa7fe7c.jpg",
-        "https://www.rawsterphoto.com/wp-content/uploads/2018/06/best-cityscape-photography-locations-new-york-1200x720.jpg"
-        ]}
-        renderItem={({item}) => <Image source={{ uri: item }} style={{ height: 100, width: width/1.2, flex: 1 }}></Image>}
-        sliderWidth={width}
-        itemWidth={width/1.2}
-        activeSlideAlignment={'start'}
-          /> */}
-          {/* <CardRow
-            data={allArticles['news']}
-            renderItem={_renderCardRow}
-            title={"News"}
-            onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
-          /> */}
+
 {/* <View style={styles.categoryLabel}>
                     <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
                     <TouchableOpacity style={styles.more} onPress={() => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
@@ -321,7 +263,7 @@ const onThemeChange = ({ colorScheme }) => {
                     </TouchableOpacity>
                 </View> this can be turned into its own component*/}
               <Separator />
-                          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 5}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"News"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
@@ -334,7 +276,7 @@ const onThemeChange = ({ colorScheme }) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
           />
           <Separator />
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 5}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Opinions"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['opinions'], title: 'Opinions', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
@@ -357,19 +299,8 @@ const onThemeChange = ({ colorScheme }) => {
                   extrapolate: 'clamp'
               })}}}
           />
-          {/* <FlatList // one day probably will switch these to carousels
-            data={_.chunk(allArticles['opinions'], 3)}
-            renderItem={_renderColumn}
-            horizontal={true}
-            snapToAlignment={"start"}
-            snapToInterval={width}
-            decelerationRate={"fast"}
-            showsHorizontalScrollIndicator={false}
-            pagingEnabled
-            onScroll={e => setOpinionsScrollPosition(e.nativeEvent.contentOffset.x)}
-          /> */}
           <Separator />
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 5}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Sports"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
@@ -382,7 +313,7 @@ const onThemeChange = ({ colorScheme }) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
           />
           <Separator />
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 5}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"Arts & Life"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
@@ -395,7 +326,7 @@ const onThemeChange = ({ colorScheme }) => {
             onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
           />
           <Separator />
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingBottom: 5}}>
             <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={"The Grind"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })}>
                 <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
@@ -415,7 +346,7 @@ const onThemeChange = ({ colorScheme }) => {
         }}
         />
           
-          <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between'}}>
+          <View style={{flexDirection: 'row', backgroundColor: THEME.SECONDARY_ACCENT, justifyContent: 'space-between', paddingBottom: 5}}>
             {/* <Image containerStyle={styles.titleContainer} style={styles.titleImage} source={require('../media/artsAndLife.png')} /> */}
             <HTML containerStyle={{...styles.titleContainer, ...{ backgroundColor: COLORS.SECONDARY_ACCENT }}} baseFontStyle={{...styles.header, ...{ color: 'black' }}} html={"Humor"} />
             <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['humor'], title: 'Humor', navigation: props.navigation })}>
@@ -463,31 +394,9 @@ const onThemeChange = ({ colorScheme }) => {
             contentContainerCustomStyle={styles.sliderContentContainer}
           />
           
-
-
-                    {/* <SectionList
-          ref={listRef}
-          removeClippedSubviews={false}
-          disableVirtualization={true}
-          // refreshing={refreshing}
-          keyExtractor={item => `list-key-${item.id}`}
-          // onRefresh={() => setRefreshing(true)}
-          // onEndReached={() => setPageNumber(pageNumber + 1)}
-          sections={[{ data: articles, key: `category-list-${pageNumber}-${category}` }]}
-          renderItem={_renderRow}
-          //renderSectionHeader={() => this.renderSectionHeader()}
-          ListFooterComponent={() => <ActivityIndicator style={styles.loadingIndicator} />}
-          contentContainerStyle={{ width: width }}
-        /> */}
         </ScrollView>
       </View>
     </Drawer>
 
   )
 }
-
-// export default class extends React.Component() {
-//   render() {
-//     return <HeadlinesComponent {...this.props} />;
-//   }
-// }

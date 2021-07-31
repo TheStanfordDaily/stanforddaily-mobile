@@ -19,6 +19,7 @@
     "expo-updates": "~0.3.3",
     "expo-web-browser": "~8.5.0",
     "firebase": "7.9.0",
+    "fuse.js": "^6.4.6",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.29",
     "react": "^17.0.2",

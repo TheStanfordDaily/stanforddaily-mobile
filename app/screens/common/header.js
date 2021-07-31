@@ -9,7 +9,8 @@ import {
     TouchableOpacity,
     Share,
     TextInput,
-    Appearance
+    Appearance,
+    useColorScheme
 } from 'react-native';
 import { AndroidBackHandler } from 'react-navigation-backhandler';
 import { Ionicons } from '@expo/vector-icons';
@@ -60,7 +61,6 @@ export default class Header extends Component {
     };
 
     render() {
-
         return (
           <AndroidBackHandler onBackPress={() => this.onBackButtonPressAndroid()}>
             <View ref={REFS.CONTAINER}>
@@ -69,7 +69,7 @@ export default class Header extends Component {
                   {this.props.goBack !== undefined && (
                       <TouchableOpacity onPress={() => this.props.goBack()}>
                         <View style={styles.leftButton}>
-                          <Ionicons name={ICONS.BACK} size={32} color={THEME.LABEL}/>
+                          <Ionicons name={ICONS.BACK} size={32} color={this.props.isPost ? 'white': THEME.LABEL}/>
                         </View>
                       </TouchableOpacity>
                   )}
@@ -89,14 +89,17 @@ export default class Header extends Component {
                     </View>)
                   }
                   {this.props.searchHandler !== undefined && (
-                        <SearchBar
+                      <SearchBar
                         placeholder={"Search"}
                         containerStyle={styles.searchContainer}
+                        inputContainerStyle={{height: 30}}
                         lightTheme
                         onChangeText={this.props.onChangeText}
                         value={this.props.value}
                         autoCorrect={false}
-                         />
+                        searchIcon={< Ionicons name={ICONS.SEARCH} />}
+                        clearIcon={false}
+                      />
                   )}
 
                   {this.props.toProfile ===  undefined &&
@@ -108,7 +111,7 @@ export default class Header extends Component {
                   {this.props.share !== undefined &&
                     <TouchableOpacity onPress={this.shareHandler.bind(this)}>
                       <View style={styles.rightButton}>
-                        <Ionicons name={ICONS.SHARE} size={32} color={THEME.LABEL}/>
+                        <Ionicons name={ICONS.SHARE} size={32} color={this.props.title !== undefined && this.props.searchHandler === undefined ? 'white': THEME.LABEL}/>
                       </View>
                     </TouchableOpacity>
                   }
