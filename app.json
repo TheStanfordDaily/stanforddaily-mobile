@@ -47,6 +47,7 @@
     },
     "notification": {
       "icon": "./assets/icon.png"
-    }
+    },
+    "sdkVersion": "42.0.0"
   }
 }
