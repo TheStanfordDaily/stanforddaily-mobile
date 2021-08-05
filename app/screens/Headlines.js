@@ -21,8 +21,8 @@ import NewsFeedItem from './common/newsfeed-item';
 import Separator from './common/Separator';
 import SettingsPage from './SettingsPage.js';
 import _ from 'lodash';
-import { Ionicons } from '@expo/vector-icons';
-import { Icon } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Ionicons } from '@expo/vector-icons'
 import Carousel, { Pagination, getInputRangeFromIndexes } from 'react-native-snap-carousel';
 import CardRow from './common/card-row';
 import Card from './common/Card'
@@ -120,12 +120,12 @@ export default (props) => {
       />
       <TouchableHighlight style={{ width: '100%', marginLeft: 28 }}>
         <View style={{flexDirection: 'column'}}>
-        <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+        {/* <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
         <Switch />
         <Text>Push Notifications</Text>
-        </View>
-          <View style={styles.sideMenuItem, { flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
-            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Icon name="spotify" size={32} type="font-awesome" color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
+        </View> */}
+          <View style={styles.sideMenuItem, { marginBottom: 40, flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+            <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Image style={{width: 32, height: 32}} source={require('../media/spotify.png')} /></TouchableOpacity>
             <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} color={THEME.PRIMARY_ACCENT} /></TouchableOpacity>
           </View>
         </View>
