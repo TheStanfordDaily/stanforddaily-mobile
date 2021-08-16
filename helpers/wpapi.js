@@ -10,7 +10,7 @@ const wpTsdJson = wp.namespace("tsd/json/v1");
 
 export async function getHomeAsync() {
   return wpTsdJson
-    .home();
+    ['home-mobile']();
 }
 
 export async function getHomeMoreAsync(

@@ -11,7 +11,7 @@ export default function ContentStack() {
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       {/* <Stack.Screen name="Search" component={Search} /> */}
-      {/* <Stack.Screen name="Post" component={Post} /> */}
+      <Stack.Screen name="Post" component={Post} />
       {/* <Stack.Screen name="Category" component={Settings} /> */}
       {/* <Stack.Screen name="Author" component={Author} /> */}
     </Stack.Navigator>

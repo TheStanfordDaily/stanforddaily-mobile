@@ -34,19 +34,20 @@ export default class Card extends Component {
     const thumbnailURL = getThumbnailURL(item);
     return (
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
-          <View style={styles.content, {width: width/2.25 - Margins.defaultLarge}}>
+          <View style={styles.content}>
                   {thumbnailURL && (
                   
                       <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
                   )
                   }
+                  <Text style={styles.titleFont}>{postTitle}</Text>
                   {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
             {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
               {/* <TouchableOpacity onPress={() => {navigation.navigate(STRINGS.AUTHOR, { authorID: postAuthor })}}>
                 <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
               </TouchableOpacity> */}
-              <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(STRINGS.AUTHOR, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View>
+              <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(Strings.author, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View>
               <Text style={styles.date}>{formatDate(item).toUpperCase()}</Text>
             </View>
           </View>
@@ -64,7 +65,8 @@ const styles = ({
     paddingVertical: 2,
     backgroundColor: "rgb(0,0,0,0)",
     marginLeft: 0,
-    marginRight: 0
+    marginRight: 0,
+    width: width/2.25 - Margins.defaultLarge
   },
   categoryLabel: {
     flexDirection: 'row',
@@ -100,6 +102,7 @@ const styles = ({
   titleFont: {
     fontFamily: Fonts.PT_SERIF,
     fontSize: FontSizes.mediumSmall,
+    marginHorizontal: Margins.articleSides
   //   color: THEME.LABEL
   },
   titleContainer: {

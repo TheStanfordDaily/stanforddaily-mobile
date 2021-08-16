@@ -13,58 +13,60 @@ import { Fonts, Margins, Alignments, FontSizes } from '../constants';
 
 const {width, height} = Dimensions.get('window');
 
-export default function NewsFeedItem(props) {
+export default class NewsFeedItem extends Component {
 
   // Handles clicking on items
-  const toPost = () => {
-    props.onPress();
+  toPost = () => {
+    this.props.onPress();
   }
 
-  const toAuthor = (authorID) => {
-    props.onAuthor(authorID);
+  toAuthor = (authorID) => {
+    this.props.onAuthor(authorID);
   }  
 
+    render() {
+      const { item, index, isFeatured } = this.props;
+      let groupLength = item.tsdAuthors.length
+      let { postTitle } = item;
+      const thumbnailURL = getThumbnailURL(item);
+      const full = 0.92*width;
+      return (
+        <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
+          <View style={isFeatured && index === 0 ? styles.homeContent
+          : isFeatured && index === 1 ? {...styles.homeContent, ...{width: width}}
+          : isFeatured && index === 2 ? {...styles.homeContent, ...{}}
+          : styles.content            
+            }>
+              {thumbnailURL && (
+              <View style={styles.imageContainer}>
+                <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: isFeatured && index === 2 ? {...styles.image, ...{marginLeft:20}} : !isFeatured ? {...styles.image, ...{width: full}} : {...styles.image, ...{}}} borderRadius={8} />
+              </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
+            }
+            {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
+          <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text>
+            <View>
 
-    // const { item, index, slideIndex, isFeatured } = this.props;
-    let groupLength = props.item.tsdAuthors.length
-    let { postTitle } = props.item;
-    const thumbnailURL = getThumbnailURL(props.item);
-    const full = 0.92*width;
-    return (
-      <TouchableWithoutFeedback onPress={toPost.bind(this)}>
-        <View style={props.isFeatured && props.index === 0 ? styles.homeContent
-        : props.isFeatured && props.index === 1 ? {...styles.homeContent, ...{width: width}}
-        : props.isFeatured && props.index === 2 ? {...styles.homeContent, ...{}}
-        : styles.content            
-          }>
-            {thumbnailURL && (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: thumbnailURL }} style={props.isFeatured && props.index > 0 ? {...styles.image, ...{width: full}}: props.isFeatured && props.index === 2 ? {...styles.image, ...{marginLeft:20}} : !props.isFeatured ? {...styles.image, ...{width: full}} : {...styles.image, ...{}}} borderRadius={8} />
-            </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
-          }
-          {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-        <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text> 
-          <View>
-
-              <Text style={{flexDirection: 'row'}, styles.author}>
-              {props.item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(props.item)}
-              </Text>
-            
+                <Text style={{flexDirection: 'row'}, styles.author}>
+                {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(item)}
+                </Text>
+              
+            </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
-    );
+        </TouchableWithoutFeedback>
+      );
+    }
+    
   
 }
 
 const styles = ({
     content: {
-        // backgroundColor: THEME.BACKGROUND,
+        backgroundColor: '#FFFFFF',
         width: '100%',
         paddingTop: 12,
       },
       homeContent: {
-        // backgroundColor: THEME.BACKGROUND,
+        backgroundColor: '#FFFFFF',
         width: 0.92*width,
         paddingVertical: 12,
         marginLeft: 0,
@@ -80,7 +82,7 @@ const styles = ({
       author: {
         fontFamily: Fonts.openSans,
         fontSize: FontSizes.small,
-        marginLeft: 0,
+        marginHorizontal: Margins.articleSides,
         // color: THEME.SECONDARY_LABEL,
       },
   

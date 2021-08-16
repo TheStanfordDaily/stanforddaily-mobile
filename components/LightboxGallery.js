@@ -31,26 +31,23 @@ const LightboxGallery = (props) => {
   
     return (
       <View style={{justifyContent: 'flex-end', // this needs to work so that all the cartoons have the same bottom y-coordinate...
-      alignItems: 'center', shadowColor: 'black', shadowOpacity: 0.75, shadowRadius: 5, shadowOffset: {
-        width: 0,
-        height: 10
-      }}}>
-        {/* <Lightbox style={styles.col} renderContent={_renderCarousel} >
-          <Image
-          style={{...styles.contain, ...{aspectRatio: aspectRatio}}}
-          resizeMode="contain"
-          source={{ uri: imageResource }}
-          onLayout={(e) => {Image.getSize(imageResource, (width, height) => {setAspectRatio(width/height)})}}
-          />
-          <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
-            <Text style={stylesSlider.title}>{title}</Text>
-            <Text style={stylesSlider.subtitle}>
-            {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
-            </Text>
+      alignItems: 'center', shadowColor: 'black', shadowOpacity: 0.75, shadowRadius: 5, shadowOffset: {width: 0,height: 10}}}>
+        <Lightbox style={styles.col} renderContent={_renderCarousel}>
+          <View>
+            <Image
+            style={{...styles.contain, ...{aspectRatio: aspectRatio}}}
+            resizeMode="contain"
+            source={{ uri: imageResource }}
+            onLayout={(e) => {Image.getSize(imageResource, (width, height) => {setAspectRatio(width/height)})}}
+            />
+            <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
+              <Text style={stylesSlider.title}>{title}</Text>
+              <Text style={stylesSlider.subtitle}>
+              {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
+              </Text>
+            </View>
           </View>
-        </Lightbox> */}
-  
-  
+        </Lightbox>
       </View>
     )
       

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
-import { Strings, CategorySlugs, HomeSections, Heights, Margins, Fonts, Alignments, FontSizes } from '../constants';
+import { Strings, CategorySlugs, HomeSections, Heights, Margins, Fonts, Alignments, FontSizes, PlatformPalette } from '../constants';
 import Separator from '../components/Separator';
 import Carousel, { getInputRangeFromIndexes } from 'react-native-snap-carousel';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helpers/wpapi';
@@ -169,17 +169,17 @@ export default function Home(props) {
                   sliderWidth={width}
                   itemWidth={0.92*width}
                   // containerCustomStyle={{backgroundColor: THEME.SECONDARY_ACCENT}}
-                  // activeSlideAlignment={'start'}
-                  // inactiveSlideScale={1}
-                  // scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
-                  //   const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
-                  //   const outputRange = range; return { inputRange, outputRange }}}
-                  // slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
-                  //   opacity: animatedValue.interpolate({
-                  //       inputRange: [-1, 0, 1],
-                  //       outputRange: [0, 1, 0.7],
-                  //       extrapolate: 'clamp'
-                  //   })}}}
+                  activeSlideAlignment={'start'}
+                  inactiveSlideScale={1}
+                  scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
+                    const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
+                    const outputRange = range; return { inputRange, outputRange }}}
+                  slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
+                    opacity: animatedValue.interpolate({
+                        inputRange: [-1, 0, 1],
+                        outputRange: [0, 1, 0.7],
+                        extrapolate: 'clamp'
+                    })}}}
                 />
                 <CategoryHeader title={'Cartoons'} />
                 <Carousel
@@ -203,6 +203,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width,
     height,
+    backgroundColor: '#FFFFFF'
+    // backgroundColor: PlatformPalette.background
   },
   loadingIndicator: {
     marginTop: Margins.default,
