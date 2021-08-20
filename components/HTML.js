@@ -1,8 +1,8 @@
 import React from "react";
-import HTML from 'react-native-render-html';
 import { View, Dimensions, Linking } from 'react-native';
 import { Fonts } from "../constants";
 import { WebView } from 'react-native-webview'
+import RenderHTML from 'react-native-render-html';
 
 const onLinkPress = (event, href, htmlAttributes) => {
   Linking.openURL(href);
@@ -45,12 +45,12 @@ const renderers = {
 }
 
 export default (props) => {
-  return <HTML
+  return <RenderHTML
     textSelectable={props.textSelectable}
     tagsStyles={props.tagsStyles}
     containerStyle={props.containerStyle || {}}
     baseFontStyle={{ fontFamily: Fonts.PTSerif, ...(props.baseFontStyle || {}) }}
-    html={props.html}
+    source={{html: props.html}}
     renderers={renderers}
     imagesMaxWidth={Dimensions.get('window').width}
     staticContentMaxWidth={Dimensions.get('window').width}

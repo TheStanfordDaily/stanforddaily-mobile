@@ -15,14 +15,14 @@ const {width, height} = Dimensions.get('window');
 
 export default class NewsFeedItem extends Component {
 
-  // Handles clicking on items
-  toPost = () => {
-    this.props.onPress();
-  }
+    // Handles clicking on items
+    toPost() {
+      this.props.onPress();
+    }
 
-  toAuthor = (authorID) => {
-    this.props.onAuthor(authorID);
-  }  
+    toAuthor(authorID) {
+      this.props.onAuthor(authorID);
+    }  
 
     render() {
       const { item, index, isFeatured } = this.props;
