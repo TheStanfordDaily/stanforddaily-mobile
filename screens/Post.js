@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, Dimensions, Text, Image } from 'react-native';
-import { getThumbnailURL } from '../helpers/format';
+import { View, Dimensions, Text, TouchableWithoutFeedback, Image } from 'react-native';
+import { getThumbnailURL, formatDate } from '../helpers/format';
 import { getPostByIdAsync } from '../helpers/wpapi';
 import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
 import HTML from '../components/HTML';
-import { Margins } from '../constants';
+import { Margins, Strings } from '../constants';
 import RenderHTML from 'react-native-render-html';
 
 const { width, height } = Dimensions.get('window');
@@ -52,10 +52,36 @@ export default class Post extends Component {
         const thumbnailURL = getThumbnailURL(item);
         return (
         <View style={{ flex: 1 }}>
-            <ImageHeaderScrollView maxOverlayOpacity={0.75} minOverlayOpacity={0.5} fadeOutForeground maxHeight={240} minHeight={0}>
-              <View>
+            <ImageHeaderScrollView
+              headerImage={{uri: getThumbnailURL(item)}}
+              maxOverlayOpacity={0.75}
+              minOverlayOpacity={0.5}
+              fadeOutForeground
+              maxHeight={240}
+              minHeight={0}
+              renderForeground={() => (
+                <View style={{ height: 150, justifyContent: "center", alignItems: "center" }} >
+                    <Text style={{ color: "white" }}>{postTitle}</Text>
+                </View>
+              )}
+            >
+              <View style={{ marginHorizontal: Margins.articleSides }}>
+                { caption !== 0 &&
+                  <Text>{caption}</Text>
+                }
+                { postSubtitle !== 0 &&
+                  <Text>{postSubtitle}</Text>
+                }
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <View style={{ flexDirection: 'column' }}>
+                    <View style={{ flexDirection: 'row', maxWidth: 2*width/3, flexWrap: 'wrap' }}><Text>By </Text>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(Strings.author, { authorID: item.tsdAuthors[i].id })}}><Text>{info.displayName}{i < item.tsdAuthors.length - 2 ? ', ' : i == item.tsdAuthors.length - 1 ? '' : ' and '}</Text></TouchableWithoutFeedback>)}</View>
+                    <Text>{formatDate(item)}</Text>
+                  </View>
+                  <Text>{item.tsdCategories[0].name}</Text>
+                    
+                </View>
                 {postContent !== 0 &&
-                    <RenderHTML source={{html: postContent}} contentWidth={width} />
+                  <RenderHTML source={{html: postContent}} contentWidth={width} />
                 }
               </View>
             </ImageHeaderScrollView>

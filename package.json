@@ -19,6 +19,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-web": "~0.13.12",
     "react-native-webview": "^11.13.0",
+    "superagent": "^6.1.0",
     "wpapi": "^1.2.2"
   },
   "devDependencies": {
