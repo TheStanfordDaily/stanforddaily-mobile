@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "@expo-google-fonts/open-sans": "^0.2.0",
+    "@expo-google-fonts/pt-serif": "^0.2.0",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.0.4",
     "@react-navigation/stack": "^6.0.4",
@@ -15,11 +17,12 @@
     "react-native-lightbox": "^0.8.1",
     "react-native-render-html": "^6.0.5",
     "react-native-safe-area-context": "3.2.0",
-    "react-native-screens": "^3.5.0",
+    "react-native-screens": "~3.4.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-web": "~0.13.12",
-    "react-native-webview": "^11.13.0",
+    "react-native-webview": "11.6.2",
     "superagent": "^6.1.0",
+    "unimodules": "^1.0.0",
     "wpapi": "^1.2.2"
   },
   "devDependencies": {

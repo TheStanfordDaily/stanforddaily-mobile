@@ -2,17 +2,18 @@ import * as React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Strings, Margins, Fonts, FontSizes } from '../constants';
 import HTML from '../components/HTML';
+import { useFonts, PTSerif_400Regular } from '@expo-google-fonts/pt-serif';
 
 export default function CategoryHeader(props) {
-    return (
+
+  return (
     <View style={styles.titleContainer}>
-        {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.header} html={props.title} /> */}
         <Text style={styles.header}>{props.title}</Text>
-        <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: allArticles['news'], title: 'News', navigation: props.navigation })}>
+        <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
             <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
         </TouchableOpacity>
     </View>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
       },
       seeAll: {
         paddingHorizontal: 15,
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: "PTSerif_400Regular",
         // color: THEME.LABEL,
       },
       titleFont: {

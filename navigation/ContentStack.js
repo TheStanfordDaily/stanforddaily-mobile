@@ -4,6 +4,7 @@ import Home from '../screens/Home';
 import Search from '../screens/Search';
 import Post from '../screens/Post';
 import Author from '../screens/Author';
+import Category from '../screens/Category';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function ContentStack() {
       {/* <Stack.Screen name="Search" component={Search} /> */}
       <Stack.Screen name="Post" component={Post} />
       {/* <Stack.Screen name="Category" component={Settings} /> */}
+      <Stack.Screen name="Category" component={Category} />
       <Stack.Screen name="Author" component={Author} />
     </Stack.Navigator>
   );

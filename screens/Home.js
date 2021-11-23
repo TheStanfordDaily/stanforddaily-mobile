@@ -111,7 +111,7 @@ export default function Home(props) {
                     }}}
                 />
                 <Separator />
-                <CategoryHeader title={'News'} />
+                <CategoryHeader title={'News'} navigation={props.navigation} articles={allArticles['news']} />
                 <CardRow
                   data={allArticles['news']}
                   renderItem={_renderCardRow}
@@ -119,7 +119,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
                 />
                 <Separator />
-                <CategoryHeader title={'Opinions'} />
+                <CategoryHeader title={'Opinions'} navigation={props.navigation} articles={allArticles["opinions"]} />
                 <Carousel
                   data={_.chunk(allArticles['opinions'], 3)}
                   renderItem={_renderColumn}
@@ -138,7 +138,7 @@ export default function Home(props) {
                     })}}}
                 />
                 <Separator />
-                <CategoryHeader title={'Sports'} />
+                <CategoryHeader title={'Sports'} navigation={props.navigation} articles={allArticles['sports']} />
                 <CardRow
                   data={allArticles['sports']}
                   renderItem={_renderCardRow}
@@ -146,7 +146,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
                 />
                 <Separator />
-                <CategoryHeader title={'Arts & Life'} />
+                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artAndLife']} />
                 <CardRow
                   data={allArticles['artsAndLife']}
                   renderItem={_renderCardRow}
@@ -154,7 +154,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
                 />
                 <Separator />
-                <CategoryHeader title={'The Grind'} />
+                <CategoryHeader title={'The Grind'} navigation={props.navigation} articles={allArticles['theGrind']} />
                 <CardRow
                   data={allArticles['theGrind']}
                   renderItem={_renderCardRow}
@@ -162,7 +162,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
                 />
                 <Separator />
-                <CategoryHeader title={'Humor'} />
+                <CategoryHeader title={'Humor'} navigation={props.navigation} articles={allArticles['humor']} />
                 <Carousel
                   data={_.chunk(allArticles['humor'], 3)}
                   renderItem={_renderColumn}
