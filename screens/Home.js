@@ -74,9 +74,6 @@ export default function Home(props) {
                 flattenedResults.push(...(homeResults[section] || []));
                 unFlattenedResults[section] = homeResults[section]
               }
-              // setArticles(flattenedResults);
-              // console.log(unFlattenedResults['featured'])
-              // console.log(unFlattenedResults)
               setAllArticles(unFlattenedResults);
             } else {
               // setArticles(await getHomeMoreAsync(pageNumber));
@@ -103,11 +100,12 @@ export default function Home(props) {
                     const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
                     const outputRange = range; return { inputRange, outputRange }}}
                     slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return {
-                    opacity: animatedValue.interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: [0, 1, 0.7],
-                        extrapolate: 'clamp'
-                      })
+                      zIndex: carouselProps.data.length - index,
+                      opacity: animatedValue.interpolate({
+                          inputRange: [-1, 0, 1],
+                          outputRange: index == 1 ? [0, 1, 0.7] : [0, 1, 0],
+                          extrapolate: 'clamp'
+                        })
                     }}}
                 />
                 <Separator />

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Image } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
@@ -11,7 +12,7 @@ const Stack = createNativeStackNavigator();
 export default function ContentStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Home" component={Home} options={{headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("../assets/media/DailyLogoCardinal.png")} />)}} />
       {/* <Stack.Screen name="Search" component={Search} /> */}
       <Stack.Screen name="Post" component={Post} />
       {/* <Stack.Screen name="Category" component={Settings} /> */}

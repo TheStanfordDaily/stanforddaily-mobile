@@ -6,17 +6,13 @@ import { useFonts, PTSerif_400Regular } from '@expo-google-fonts/pt-serif';
 
 export default function CategoryHeader(props) {
 
-  return (
-    <View style={styles.titleContainer}>
-        <Text style={styles.header}>{props.title}</Text>
-        <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
-            <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
-        </TouchableOpacity>
-    </View>
-  )
-}
+  let [fontsLoaded] = useFonts({
+    PTSerif_400Regular,
+  });
 
-const styles = StyleSheet.create({
+  let PTSerif = fontsLoaded ? "PTSerif_400Regular" : "System"
+
+  const styles = StyleSheet.create({
     titleContainer: {
         marginTop: Margins.small,
         marginHorizontal: Margins.articleSides,
@@ -27,16 +23,26 @@ const styles = StyleSheet.create({
       },
       seeAll: {
         paddingHorizontal: 15,
-        fontFamily: "PTSerif_400Regular",
+        fontFamily: PTSerif,
         // color: THEME.LABEL,
       },
       titleFont: {
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: PTSerif,
         fontSize: FontSizes.mediumSmall,
       },
       header: {
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: PTSerif,
         fontSize: FontSizes.large + 10,
         // color: THEME.LABEL
       },
-})
+  })
+
+  return (
+    <View style={styles.titleContainer}>
+        <Text style={styles.titleFont}>{props.title}</Text>
+        <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
+            <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
+        </TouchableOpacity>
+    </View>
+  )
+}
