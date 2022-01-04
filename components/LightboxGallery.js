@@ -43,7 +43,7 @@ const LightboxGallery = (props) => {
             <View style={{...stylesSlider.textContainer, ...{width: 2*sliderWidth*aspectRatio/3}}}>
               <Text style={stylesSlider.title}>{title}</Text>
               <Text style={stylesSlider.subtitle}>
-              {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date}
+              {/* {authors.map(t => <TouchableWithoutFeedback onPress = {()=>{navigation.navigate('Author', { authorID: t.id})}}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {date} */}
               </Text>
             </View>
           </View>

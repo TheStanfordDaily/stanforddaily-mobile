@@ -32,6 +32,7 @@ export default class Column extends Component {
     render() {
         const { item, navigation, slideIndex } = this.props;
         console.log(slideIndex)
+        console.log(item)
         return (
                 <FlatList
                     style={{overflow: 'visible'}}
@@ -40,17 +41,18 @@ export default class Column extends Component {
                         <TouchableWithoutFeedback onPress={() => navigation.navigate(Strings.post, { postID: item.id })}>
                             <View style={slideIndex < 0 ? {...styles.homeContent, ...{width: width}} : {...styles.homeContent, ...{}}}>
                                 <View style={{flexDirection: 'row', width: width}}>
-                                    {getThumbnailURL(item) && (
+                                    {/* {item._embedded["wp:featuredmedia"][0] && (
                                         <View style={{paddingHorizontal: Margins.articleSides, marginBottom: Margins.default, paddingRight: Margins.default, justifyContent: 'center'}}>
-                                            <Image resizeMode={'cover'} source={{ uri: getThumbnailURL(item) }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
+                                            <Image resizeMode={'cover'} source={{ uri: item._embedded["wp:featuredmedia"][0]["media_details"]["sizes"]["thumbnail"]["source_url"] }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
                                         </View>)
-                                    }
+                                    } */}
                                     <View style={{flexShrink: 1}}>
                                         <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'space-between'}}>
                                             <View>
-                                                <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text>
+                                              <Text>{item.title.rendered}</Text>
+                                                {/* <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text> */}
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
-                                                <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(Strings.author, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text>
+                                                {/* <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(Strings.author, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text> */}
                                             </View>
                                             {index != 2 && (
                                                 <Separator />

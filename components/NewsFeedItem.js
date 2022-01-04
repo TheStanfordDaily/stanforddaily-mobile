@@ -26,7 +26,7 @@ export default class NewsFeedItem extends Component {
 
     render() {
       const { item, index, isFeatured } = this.props;
-      let groupLength = item.tsdAuthors.length
+      // let groupLength = item.tsdAuthors.length
       let { postTitle } = item;
       const thumbnailURL = getThumbnailURL(item);
       const full = 0.92*width;
@@ -47,7 +47,7 @@ export default class NewsFeedItem extends Component {
             <View>
 
                 <Text style={{flexDirection: 'row'}, styles.author}>
-                {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(item)}
+                {/* {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(item)} */}
                 </Text>
               
             </View>

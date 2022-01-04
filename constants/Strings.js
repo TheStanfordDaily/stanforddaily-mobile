@@ -70,5 +70,5 @@ export default {
     reply: "Reply",
     tipsFormURL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
     tipsFormURLPrefix: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
-    wordPressURL: "https://wp.stanforddaily.com",
+    wordPressURL: "https://stanforddaily.com",
 }

@@ -16,6 +16,15 @@ import Column from '../components/Column';
 const categoryHome = CategorySlugs[0];
 const { width, height } = Dimensions.get('window');
 
+// then(function(data) {
+//   // do something with the returned posts
+//   console.log(data)
+//   return data
+// }).catch(function(err) {
+//   // handle error
+//   console.log(err)
+// });
+
 export default function Home(props) {
 
     const [category, setCategory] = useState(categoryHome);
@@ -64,7 +73,15 @@ export default function Home(props) {
 
     useEffect(() => {
         (async () => {
-          if (category.slug === categoryHome.slug) {
+          // let newsResults = await getHomeAsync(3);
+          // setNewsArticles(newsResults);
+          const categories = {"featured": 1485, "news": 3, "theGrind": 32278, "artsAndLife": 25, "sports": 23, "opinions": 24, "humor": 55796, "cartoons": 41527};
+          for (const [slug, id] of Object.entries(categories)) {
+            let articles = await getHomeAsync(id);
+            setAllArticles(allArticles => ({...allArticles, [slug]: articles}));
+          }
+
+          /*if (category.slug === categoryHome.slug) {
             if (pageNumber === 1) {
               const homeResults = await getHomeAsync();
               // console.log(homeResults);
@@ -81,7 +98,7 @@ export default function Home(props) {
           } else {
             const {posts} = await getCategoryAsync([category.slug], pageNumber);
             // setArticles(posts);
-          }
+          }*/
         })();
       }, [pageNumber, category]);
 

@@ -12,7 +12,7 @@ export default function Author(props) {
         return <Text style={{ paddingHorizontal: Margins.articleSides, paddingVertical: Margins.default }}>{item.title.rendered}</Text>
     }
     var WPAPI = require('wpapi');
-    var wp = new WPAPI({ endpoint:  'http://wp.stanforddaily.com/wp-json' });
+    var wp = new WPAPI({ endpoint:  'http://stanforddaily.com/wp-json' });
 
     useEffect(() => {
         wp.posts().perPage(25).author(authorID).embed().get()

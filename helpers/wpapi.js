@@ -4,13 +4,11 @@ import { Strings }  from '../constants';
 
 const wp = new WPAPI({
   endpoint: `${Strings.wordPressURL}/wp-json`,
-  routes: tsdJson.routes,
 });
-const wpTsdJson = wp.namespace("tsd/json/v1");
+// const wpTsdJson = wp.namespace("tsd/json/v1");
 
-export async function getHomeAsync() {
-  return wpTsdJson
-    ['home-mobile']();
+export async function getHomeAsync(id) {
+  return wp.posts().categories(id).embed()
 }
 
 export async function getHomeMoreAsync(
