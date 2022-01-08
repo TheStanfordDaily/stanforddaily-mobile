@@ -36,15 +36,13 @@ import * as Amplitude from 'expo-analytics-amplitude';
 import FollowButton from './common/FollowButton.js';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helper/wpapi.js';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
 //A map between categories names and their codes
 const { width, height } = Dimensions.get('window');
 const drawerStyles = {
   drawer: { shadowColor: COLORS.BLACK, shadowOpacity: 0.8, shadowRadius: 3 },
 }
-
-//
 
 const CATEGORY_HOME = CATEGORIES[0];
 
@@ -108,24 +106,16 @@ export default (props) => {
       return (<NewsFeedItem
               key={"article-" + item.id}
               item={item}
-              onPress={ () => props.navigation.navigate(STRINGS.POST, { postID: item.id })} />);
+              onPress={ () => props.navigation.navigate(STRINGS.POST, { post: item })} />);
   };
   useEffect(() => {
     (async () => {
       if (category.slug === CATEGORY_HOME.slug) {
-        if (pageNumber === 1) {
-          const homeResults = await getHomeAsync();
-          const flattenedResults = [];
-          for (let section of HOME_SECTIONS) {
-            flattenedResults.push(...(homeResults[section] || []));
-          }
-          setArticles(flattenedResults);
-        } else {
-          setArticles(await getHomeMoreAsync(pageNumber));
+        const categories = {"featured": 1485, "news": 3, "theGrind": 32278, "artsAndLife": 25, "sports": 23, "opinions": 24, "humor": 55796, "cartoons": 41527};
+        for (const [slug, id] of Object.entries(categories)) {
+          let moreArticles = await getHomeAsync(id);
+          setArticles(articles => articles.concat(moreArticles));
         }
-      } else {
-        const {posts} = await getCategoryAsync([category.slug], pageNumber);
-        setArticles(posts);
       }
     })();
   }, [pageNumber, category]);

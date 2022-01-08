@@ -70,7 +70,7 @@ const STRINGS = {
   REPLY: "Reply",
   TIPS_FORM_URL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   TIPS_FORM_URL_PREFIX: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
-  WP_URL: "https://wp.stanforddaily.com",
+  WP_URL: "https://stanforddaily.com",
 }
 
 const PATHS = {

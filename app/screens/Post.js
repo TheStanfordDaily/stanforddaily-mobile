@@ -30,7 +30,7 @@ import { getPostByIdAsync } from '../helper/wpapi.js';
 import { formatAuthors, getThumbnailURL, formatDate } from './common/newsfeed-item.js';
 import Placeholder from './common/placeholder.js';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const { width, height } = Dimensions.get('window'); //Dimensions of the current device screen
 
 class Post extends Component {
@@ -54,11 +54,10 @@ class Post extends Component {
     this.props.navigation.goBack();
   }
 
-  async componentDidMount() {
-    const { postID } = this.props.navigation.state.params;
-    let item = await getPostByIdAsync(postID);
-    this.setState({ item });
-    Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postID })
+  componentDidMount() {
+    const { post } = this.props.navigation.state.params;
+    console.log("here is post", post.content)
+    // Amplitude.logEvent(STRINGS.ARTICLE_FULL_LOADED, { ArticleId: postID })
   }
 
   createMarkup(text) {
@@ -74,59 +73,9 @@ class Post extends Component {
     const { id, postTitle, postSubtitle, thumbnailInfo, postContent } = item;
     const { caption } = thumbnailInfo || {};
     const thumbnailURL = getThumbnailURL(item);
+    console.log("render here", this.props.navigation.state.params.post)
     return (
-      <View style={{ flex: 1 }}>
-        <Header ref='postHeader' share={true} postID={id} goBack={this.goBack} />
-        {!id && <ActivityIndicator />}
-        {id &&
-          <View style={{ flex: 1, alignItems: 'center' }}>
-            <StatusBar
-              barStyle="dark-content"
-            />
-
-            <ScrollView style={{ flex: 1, backgroundColor: "white" }}>
-              <View style={styles.title}>
-                <HTML baseFontStyle={styles.titleText} html={postTitle} />
-              </View>
-              {postSubtitle !== "" &&
-                <View style={styles.title}>
-                  <HTML baseFontStyle={styles.subtitleText} html={postSubtitle} />
-                </View>
-              }
-              {thumbnailURL !== 0 &&
-                <Image style={{ width: width, height: 240, marginTop: MARGINS.DEFAULT_LARGE_MARGIN }} source={{ uri: thumbnailURL }} />
-              }
-              {caption !== 0 &&
-                <Text style={styles.caption}>{striptags(caption)}</Text>
-              }
-              <View style={styles.authorAndDate}>
-                {/*<TouchableOpacity onPress = {()=>this.props.navigation.navigate("AuthorDetail", { id: this.state.authorID})}>*/}
-                <Text style={{ fontFamily: FONTS.OPEN_SANS }}>By {formatAuthors(item)}</Text>
-                {/*</TouchableOpacity>*/}
-                <Text style={styles.date}>{formatDate(item)}</Text>
-              </View>
-              <View style={{ marginHorizontal: MARGINS.ARTICLE_SIDES }}>
-                {postContent !== 0 &&
-                  <HTML
-                    tagsStyles={{ 
-                      p: { marginBottom: MARGINS.ARTICLE_SIDES }, 
-                      a: { color: COLORS.CARDINAL }, 
-                      strong: { fontFamily: FONTS.PT_SERIF_BOLD },
-                      em: { fontFamily: FONTS.PT_SERIF_ITALIC }, 
-                      img: { marginHorizontal: -1 * MARGINS.ARTICLE_SIDES }, 
-                      figure: { marginVertical: MARGINS.ARTICLE_SIDES },
-                      figcaption: styles.caption,
-                    }}
-                    baseFontStyle={styles.articleText}
-                    html={this.createMarkup(postContent)}
-                    imagesMaxWidth={width}
-                    textSelectable={true}
-                  />
-                }
-              </View>
-            </ScrollView>
-          </View>}
-      </View>
+      <Text>will this even work</Text>
     );
   }
 };

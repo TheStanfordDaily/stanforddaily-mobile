@@ -33,8 +33,11 @@ export default class NewsFeedItem extends Component {
 
   render() {
     const { item } = this.props;
-    let { postTitle, postExcerpt, postDate, thumbnailInfo, postSubtitle, tsdAuthors} = item;
-    const thumbnailURL = getThumbnailURL(item);
+    let { title, author, excerpt, _embedded, postDate, thumbnailInfo, postSubtitle } = item;
+    const thumbnailURL = _embedded["wp:featuredmedia"][0]["media_details"]["sizes"]["full"]["source_url"];
+    let upperBound = _embedded.author.length
+    console.log(_embedded[2])
+    let authorNames = _embedded.author.map(t => t.name)
     return (
       <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
         <View style={styles.content}>
@@ -43,11 +46,11 @@ export default class NewsFeedItem extends Component {
               <Image source={{ uri: thumbnailURL }} style={styles.image} />
             </View>)
           }
-          <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} />
+          <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={title.rendered} />
           {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
           <View style={styles.dateAndAuthor}>
             <TouchableOpacity>
-              <Text style={styles.author}> {formatAuthors(item)} </Text>
+              <Text style={styles.author}> {_embedded.author[0].name} </Text>
             </TouchableOpacity>
             <Text style={styles.date}> {formatDate(item)} </Text>
           </View>

@@ -20,7 +20,7 @@ import {STRINGS, KEYS, COLORS, Images} from '../../assets/constants.js'; //Const
 
 import * as Amplitude from 'expo-analytics-amplitude';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
 moment().format();
 export default class PostItem extends Component {
@@ -190,7 +190,7 @@ export default class PostItem extends Component {
       var view = this;
       if(this.state.userVote === newVote) {
         this.setState({userVote : 0});
-        Amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: 0});
+        // Amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: 0});
         refToVotes.transaction(function(currentVotes) {
           return (currentVotes || 0) - newVote;
         });
@@ -200,7 +200,7 @@ export default class PostItem extends Component {
           return (currentVotes || 0) + (newVote-view.state.userVote);
         });
         this.props.firebase.database().ref(STRINGS.POSTS).child(this.state.key).child(STRINGS.VOTERS).child(this.props.currUser).set(newVote);
-        Amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: newVote});
+        // Amplitude.logEvent(STRINGS.VOTE_CHANGED, {post: view.state.key, newVote: newVote});
         this.setState({userVote : newVote});
       }
     }

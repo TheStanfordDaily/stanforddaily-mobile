@@ -30,7 +30,7 @@ import styles from './styles/search';
 
 import * as Amplitude from 'expo-analytics-amplitude';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 const selectedCategory = STRINGS.FEATURED_HEADLINES; //The currently selected category
 
 export default class Search extends Component {

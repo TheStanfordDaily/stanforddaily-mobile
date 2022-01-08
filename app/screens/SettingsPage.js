@@ -25,7 +25,7 @@ import _ from 'lodash';
 import * as Amplitude from 'expo-analytics-amplitude';
 import { isBeingNotified, addNotificationSetting, removeNotificationSetting } from './FollowInfoStorage.js';
 
-const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
+// const amplitude = Amplitude.initialize(KEYS.AMPLITUDE_API);
 
 //A map between categories names and their codes
 const {width, height} = Dimensions.get('window');

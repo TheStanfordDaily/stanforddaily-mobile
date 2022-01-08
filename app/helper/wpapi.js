@@ -4,22 +4,10 @@ import { STRINGS}  from '../assets/constants.js';
 
 const wp = new WPAPI({
   endpoint: `${STRINGS.WP_URL}/wp-json`,
-  routes: tsdJson.routes,
 });
-const wpTsdJson = wp.namespace("tsd/json/v1");
 
-export async function getHomeAsync() {
-  return wpTsdJson
-    .home();
-}
-
-export async function getHomeMoreAsync(
-  extraPageNumber
-) {
-  return wpTsdJson
-    .home()
-    .more()
-    .extraPageNumber(extraPageNumber);
+export async function getHomeAsync(id) {
+  return wp.posts().categories(id).embed()
 }
 
 export async function getCategoryAsync(
