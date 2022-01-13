@@ -181,12 +181,12 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: 'bold',
         letterSpacing: 0.5,
-        fontFamily: Fonts.PTSerif
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif"
     },
     subtitle: {
         marginTop: 6,
         // color: COLORS.SECONDARY_LABEL,
-        fontFamily: Fonts.openSans,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: FontSizes.small,
     },
     subtitleEven: {

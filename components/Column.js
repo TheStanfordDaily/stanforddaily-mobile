@@ -8,6 +8,7 @@ import {
   FlatList,
   PixelRatio,
   StyleSheet,
+  Platform,
   Appearance
 } from 'react-native';
 import moment from 'moment';
@@ -15,7 +16,7 @@ import "moment-timezone";
 import _ from "lodash";
 import Separator from './Separator';
 import { Strings, Fonts, Margins, Alignments, FontSizes } from '../constants';
-import { getThumbnailURL, formatDate, formatAuthors, normalize } from '../helpers/format';
+import { getThumbnailURL, formatDate, formatAuthors, relativeDate, normalize } from '../helpers/format';
 
 const { width, height } = Dimensions.get('window');
 
@@ -31,8 +32,8 @@ export default class Column extends Component {
 
     render() {
         const { item, navigation, slideIndex } = this.props;
-        console.log(slideIndex)
-        console.log(item)
+        // console.log(slideIndex)
+        // console.log(item)
         return (
                 <FlatList
                     style={{overflow: 'visible'}}
@@ -41,15 +42,16 @@ export default class Column extends Component {
                         <TouchableWithoutFeedback onPress={() => navigation.navigate(Strings.post, { postID: item.id })}>
                             <View style={slideIndex < 0 ? {...styles.homeContent, ...{width: width}} : {...styles.homeContent, ...{}}}>
                                 <View style={{flexDirection: 'row', width: width}}>
-                                    {/* {item._embedded["wp:featuredmedia"][0] && (
+                                    {!item._embedded["wp:featuredmedia"][0].code && (
                                         <View style={{paddingHorizontal: Margins.articleSides, marginBottom: Margins.default, paddingRight: Margins.default, justifyContent: 'center'}}>
-                                            <Image resizeMode={'cover'} source={{ uri: item._embedded["wp:featuredmedia"][0]["media_details"]["sizes"]["thumbnail"]["source_url"] }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
+                                            <Image resizeMode={'cover'} source={{ uri: item._embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url }} style={{width: width/3, height: 3/4 * width/3}} borderRadius={8} />
                                         </View>)
-                                    } */}
+                                    }
                                     <View style={{flexShrink: 1}}>
-                                        <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'space-between'}}>
+                                        <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'center'}}>
                                             <View>
-                                              <Text>{item.title.rendered}</Text>
+                                              <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={4}>{item.title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&").replaceAll("&#038;", "&")}</Text>
+                                              <Text style={styles.author}>{item._embedded.author[0].name + "\n" + relativeDate(Date.parse(item.date)).toUpperCase()}</Text>
                                                 {/* <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text> */}
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
                                                 {/* <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(Strings.author, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text> */}
@@ -102,31 +104,30 @@ const styles = StyleSheet.create({
       },
   
       author: {
-        fontFamily: Fonts.openSans,
         fontSize: 10,
-        marginLeft: -2,
+        color: "#4D4F53"
         // color: THEME.SECONDARY_LABEL,
       },
       humorAuthor: {
-        fontFamily: Fonts.openSans,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: 10,
         marginLeft: -2,
         // color: COLORS.NEAR_WHITE,
       },
       date: {
-        fontFamily: Fonts.openSans,
+        fontFamily: "system",
         fontSize: FontSizes.small,
         // color: COLORS.DARK_GRAY,
       },
   
       header: {
-          fontFamily: Fonts.PTSerifBold,
+          fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
           fontSize: FontSizes.large + 10,
       },
   
       titleFont: {
-        fontFamily: Fonts.PTSerifBold,
-        fontSize: FontSizes.mediumSmall,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontSize: normalize(FontSizes.mediumSmall),
         // color: THEME.LABEL
       },
       titleContainer: {
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
         width: 0.5*width,
         marginLeft: 0,
         marginRight: 0,
-        fontFamily: Fonts.PTSerif,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: normalize(16),
         // flexWrap: 1,
         flexShrink: 1,
@@ -145,7 +146,7 @@ const styles = StyleSheet.create({
       humorContainer: {
         marginTop: Margins.defaultSmall,
         marginHorizontal: Margins.articleSides,
-        fontFamily: Fonts.PTSerif,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: FontSizes.large,
         // flexWrap: 1,
         flexShrink: 1,
@@ -194,12 +195,12 @@ const styles = StyleSheet.create({
         marginTop: 2,
       },
       searchTitle: {
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: 14,
         marginTop: 2,
       },
       searchDescription: {
-        fontFamily: Fonts.PTSerif,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: 12,
         marginTop: 2,
         opacity: 0.80,

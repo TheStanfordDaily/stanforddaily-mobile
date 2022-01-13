@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Dimensions, Linking } from 'react-native';
+import { View, Dimensions, Linking, Platform } from 'react-native';
 import { Fonts } from "../constants";
 import { WebView } from 'react-native-webview'
 import RenderHTML from 'react-native-render-html';
@@ -49,7 +49,7 @@ export default (props) => {
     textSelectable={props.textSelectable}
     tagsStyles={props.tagsStyles}
     containerStyle={props.containerStyle || {}}
-    baseFontStyle={{ fontFamily: Fonts.PTSerif, ...(props.baseFontStyle || {}) }}
+    baseFontStyle={{ fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", ...(props.baseFontStyle || {}) }}
     source={{html: props.html}}
     renderers={renderers}
     imagesMaxWidth={Dimensions.get('window').width}

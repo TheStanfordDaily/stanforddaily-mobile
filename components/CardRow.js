@@ -58,26 +58,26 @@ const styles = ({
     },
 
     author: {
-      fontFamily: Fonts.openSans,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: 10,
       marginLeft: -2,
     //   color: THEME.SECONDARY_LABEL,
     },
 
     date: {
-      fontFamily: Fonts.openSans,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: 10,
     //   color: THEME.SECONDARY_LABEL,
     },
 
     header: {
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: FontSizes.large + 10,
         // color: THEME.LABEL
     },
 
     titleFont: {
-      fontFamily: Fonts.PT_SERIF,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: FontSizes.mediumSmall,
     //   color: THEME.LABEL
     },
@@ -130,12 +130,12 @@ const styles = ({
       marginTop: 2,
     },
     searchTitle: {
-      fontFamily: Fonts.PTSerifBold,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: 14,
       marginTop: 2,
     },
     searchDescription: {
-      fontFamily: Fonts.PTSerif,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: 12,
       marginTop: 2,
       opacity: 0.80,
@@ -149,7 +149,7 @@ const styles = ({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: Fonts.PTSerifBold,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     //   color: THEME.LABEL
     }
 })

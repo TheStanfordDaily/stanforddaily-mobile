@@ -7,12 +7,14 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Platform
 } from 'react-native';
 import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
 import HTML from './HTML';
-import { getThumbnailURL, formatDate } from '../helpers/format';
+import { getThumbnailURL, formatDate, relativeDate, normalize } from '../helpers/format';
+import RenderHtml from 'react-native-render-html'
 
 
 const { width, height } = Dimensions.get('window');
@@ -29,19 +31,28 @@ export default class Card extends Component {
   }
 
   render() {
+    let thumbnailURL
     const { item, navigation } = this.props;
-    let { title, author, excerpt, _embedded, postDate, thumbnailInfo, postSubtitle, tsdAuthors} = item;
-    const thumbnailURL = _embedded["wp:featuredmedia"][0]["media_details"]["sizes"]["thumbnail"]["source_url"];
-    console.log(thumbnailURL);
+    let { title, author, excerpt, _embedded, date, thumbnailInfo, postSubtitle, tsdAuthors} = item;
+    if (_embedded["wp:featuredmedia"][0].code) {
+      console.log(_embedded["wp:featuredmedia"][0].data.status);
+    } else {
+      thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url
+    }
+    // console.log("Media Details: ",  _embedded["wp:featuredmedia"]);
     return (
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
           <View style={styles.content}>
 
+            { thumbnailURL && (
+              <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
+            )}
+
+            
                   
-                      <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
+                      {/* <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} /> */}
                   
-                  
-                  <Text style={styles.titleFont}>{title.rendered}</Text>
+                  <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
                   {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
             {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
@@ -49,7 +60,7 @@ export default class Card extends Component {
                 <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
               </TouchableOpacity> */}
               {/* <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(Strings.author, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View> */}
-              <Text style={styles.date}>{formatDate(item).toUpperCase()}</Text>
+              <Text style={styles.date}>{_embedded.author[0].name + "\n" + relativeDate(Date.parse(date)).toUpperCase()}</Text>
             </View>
           </View>
             
@@ -82,27 +93,28 @@ const styles = ({
   },
 
   author: {
-    fontFamily: Fonts.openSans,
+    fontFamily: "system",
     fontSize: 10,
     marginLeft: -2,
   //   color: THEME.SECONDARY_LABEL,
   },
 
   date: {
-    fontFamily: Fonts.openSans,
+    fontFamily: "system",
     fontSize: 10,
+    color: "#4D4F53"
   //   color: THEME.SECONDARY_LABEL,
   },
 
   header: {
-      fontFamily: Fonts.PTSerifBold,
+      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
       fontSize: FontSizes.large + 10,
       // color: THEME.LABEL
   },
 
   titleFont: {
-    fontFamily: Fonts.PT_SERIF,
-    fontSize: FontSizes.mediumSmall,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontSize: normalize(FontSizes.mediumSmall),
     marginHorizontal: Margins.articleSides
   //   color: THEME.LABEL
   },
@@ -155,12 +167,12 @@ const styles = ({
     marginTop: 2,
   },
   searchTitle: {
-    fontFamily: Fonts.PTSerifBold,
+    fontFamily: "system",
     fontSize: 14,
     marginTop: 2,
   },
   searchDescription: {
-    fontFamily: Fonts.PTSerif,
+    fontFamily: "system",
     fontSize: 12,
     marginTop: 2,
     opacity: 0.80,
@@ -174,7 +186,7 @@ const styles = ({
   },
   seeAll: {
     paddingHorizontal: 15,
-    fontFamily: Fonts.PTSerifBold,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
   //   color: THEME.LABEL
   }
 })

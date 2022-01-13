@@ -38,15 +38,21 @@ export default function Home(props) {
         item={item}
         index={index}
         isFeatured={true}
-        onPress={ () => props.navigation.navigate(Strings.post, { postID: item.id })}
+        onPress={ () => props.navigation.navigate(Strings.post, { item: item })}
         onAuthor={ (authorID) => props.navigation.navigate(Strings.author, { authorID: authorID }) }
         />
         );
     };
 
     const _renderImage = ({item}) => {
+      let thumbnailURL
+      if (item._embedded["wp:featuredmedia"][0].code) {
+        console.log(item._embedded["wp:featuredmedia"][0].data.status);
+      } else {
+        thumbnailURL = item._embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
+      }
       return (
-        <LightboxGallery title={item.postTitle} authors={item.tsdAuthors} imageResource={getThumbnailURL(item)} date={formatDate(item)} navigation={props.navigation} />
+        <LightboxGallery title={item.title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")} authors={item._embedded.author[0].name} imageResource={thumbnailURL} date={formatDate(item)} navigation={props.navigation} />
       )
     };
     
@@ -78,7 +84,7 @@ export default function Home(props) {
           const categories = {"featured": 1485, "news": 3, "theGrind": 32278, "artsAndLife": 25, "sports": 23, "opinions": 24, "humor": 55796, "cartoons": 41527};
           for (const [slug, id] of Object.entries(categories)) {
             let articles = await getHomeAsync(id);
-            setAllArticles(allArticles => ({...allArticles, [slug]: articles}));
+            setAllArticles(allArticles => ({...allArticles, [slug]: slug !== "featured" ? articles.filter(article => !article.categories.includes(1485)) : articles}));
           }
 
           /*if (category.slug === categoryHome.slug) {
@@ -128,10 +134,10 @@ export default function Home(props) {
                 <Separator />
                 <CategoryHeader title={'News'} navigation={props.navigation} articles={allArticles['news']} />
                 <CardRow
-                  data={allArticles['news']}
+                  data={allArticles["news"]}
                   renderItem={_renderCardRow}
                   title={"News"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['news'], title: 'News', navigation: props.navigation })} 
+                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles["news"], title: 'News', navigation: props.navigation })} 
                 />
                 <Separator />
                 <CategoryHeader title={'Opinions'} navigation={props.navigation} articles={allArticles["opinions"]} />
@@ -273,7 +279,7 @@ const styles = StyleSheet.create({
   categoriesText: {
     marginTop: Margins.default,
     marginLeft: Margins.articleSides, //match category side with article edge
-    fontFamily:Fonts.century,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     fontSize:25,
     flex: 2,
   },
@@ -283,12 +289,12 @@ const styles = StyleSheet.create({
     // width: width - (2 * Margins.default)
   },
   header: {
-    fontFamily: Fonts.PTSerifBold,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     fontSize: Fonts.large + 10,
     // color: THEME.LABEL
   },
   humor: {
-    fontFamily: Fonts.PTSerifBold,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     fontSize: FontSizes.large + 10,
     // color: THEME.BACKGROUND
   },
@@ -328,7 +334,7 @@ const styles = StyleSheet.create({
   },
   communityTitleText: {
     fontSize: FontSizes.extraLarge,
-    fontFamily: Fonts.PTSerifBold,
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     // color: COLORS.WHITE,
     textAlign: 'center',
   }

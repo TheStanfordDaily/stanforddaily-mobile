@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Platform } from 'react-native';
 import { Strings, Margins, Fonts, FontSizes } from '../constants';
 import HTML from '../components/HTML';
 import { useFonts, PTSerif_400Regular } from '@expo-google-fonts/pt-serif';
@@ -22,16 +22,23 @@ export default function CategoryHeader(props) {
         // backgroundColor: THEME.BACKGROUND
       },
       seeAll: {
-        paddingHorizontal: 15,
-        fontFamily: PTSerif,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        backgroundColor: "#FFF",
+        borderColor: "#8C1515",
+        borderWidth: 1,
+        borderRadius: 5,
+        color: "#8C1515"
         // color: THEME.LABEL,
       },
       titleFont: {
-        fontFamily: PTSerif,
-        fontSize: FontSizes.mediumSmall,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontSize: FontSizes.extraLarge,
+        fontWeight: "800"
       },
       header: {
-        fontFamily: PTSerif,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: FontSizes.large + 10,
         // color: THEME.LABEL
       },

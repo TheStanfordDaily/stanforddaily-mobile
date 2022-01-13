@@ -5,10 +5,11 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  Dimensions
+  Dimensions,
+  Platform
 } from 'react-native';
 import _ from "lodash";
-import { formatAuthor, formatDate, getThumbnailURL, itemize, normalize } from '../helpers/format';
+import { formatAuthor, formatDate, relativeDate, getThumbnailURL, itemize, normalize } from '../helpers/format';
 import { Fonts, Margins, Alignments, FontSizes } from '../constants';
 
 const {width, height} = Dimensions.get('window');
@@ -25,11 +26,18 @@ export default class NewsFeedItem extends Component {
     }  
 
     render() {
+      let thumbnailURL
       const { item, index, isFeatured } = this.props;
       // let groupLength = item.tsdAuthors.length
-      let { postTitle } = item;
-      const thumbnailURL = getThumbnailURL(item);
+      let { title, author, excerpt, _embedded, date, thumbnailInfo, postSubtitle, tsdAuthors } = item;
+      if (_embedded["wp:featuredmedia"][0].code) {
+        console.log(_embedded["wp:featuredmedia"][0].data.status);
+      } else {
+        thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
+      }
       const full = 0.92*width;
+
+
       return (
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
           <View style={isFeatured && index === 0 ? styles.homeContent
@@ -43,14 +51,8 @@ export default class NewsFeedItem extends Component {
               </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
             }
             {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-          <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{postTitle}</Text>
-            <View>
-
-                <Text style={{flexDirection: 'row'}, styles.author}>
-                {/* {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => this.toAuthor(t.id)}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === groupLength - 1 ? ' and ' : ', ', curr])} on {formatDate(item)} */}
-                </Text>
-              
-            </View>
+          <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
+            <Text style={styles.date}>{relativeDate(Date.parse(date))}</Text>
           </View>
         </TouchableWithoutFeedback>
       );
@@ -80,27 +82,30 @@ const styles = ({
       },
   
       author: {
-        fontFamily: Fonts.openSans,
+        fontFamily: "system",
         fontSize: FontSizes.small,
         marginHorizontal: Margins.articleSides,
         // color: THEME.SECONDARY_LABEL,
       },
   
       date: {
-        fontFamily: Fonts.openSans,
-        fontSize: FontSizes.small,
+        marginTop: Margins.defaultSmall,
+        marginHorizontal: Margins.articleSides,
+        fontSize: normalize(FontSizes.small),
+        color: "#8C1515",
+        textTransform: "uppercase",
         // color: THEME.SECONDARY_LABEL,
       },
   
       titleFont: {
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: FontSizes.large,
         // color: THEME.LABEL
       },
       titleContainer: {
         marginTop: Margins.defaultSmall,
         marginHorizontal: Margins.articleSides,
-        fontFamily: Fonts.PTSerifBold,
+        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
         fontSize: normalize(FontSizes.large),
         // color: THEME.LABEL
       },
