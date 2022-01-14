@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { View, Dimensions, Text, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, Dimensions, Text, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
 import { getThumbnailURL, formatDate, relativeDate, normalize } from '../helpers/format';
 import { getPostByIdAsync } from '../helpers/wpapi';
 import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
-import HTML from '../components/HTML';
 import { Margins, Strings } from '../constants';
-import RenderHtml from 'react-native-render-html';
+import HTML from 'react-native-render-html';
 import { FontSizes } from '../constants';
+import { WebView } from 'react-native-webview';
+import iframe from '@native-html/iframe-plugin';
 
+const renderers = { iframe }
 const { width, height } = Dimensions.get('window');
 
 export default function Post(props) {
@@ -22,39 +24,46 @@ export default function Post(props) {
         // todo: HTML purify this if needed.
     }
 
-        console.log(props.route.params)
+        // console.log(props.route.params)
+        // put the margin top for title becauase on phones with the notch it looks off center. Gotta find the right numbers on that an a dynamic implementation
         
         const inferred = new Intl.DateTimeFormat(undefined, { year: 'numeric', day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric' })
         const { item } = props.route.params
         const { id, title, subtitle, date, _embedded, thumbnailInfo, content } = item;
-        const { caption } = thumbnailInfo || {};
         let thumbnailURL
+        let caption
         if (_embedded["wp:featuredmedia"][0].code) {
           console.log(_embedded["wp:featuredmedia"][0].data.status);
         } else {
           thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
+          caption = _embedded["wp:featuredmedia"][0].caption
         }
         return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View style={{ flex: 1 }}>
+          <StatusBar barStyle="light-content" />
             <ImageHeaderScrollView
               headerImage={{uri: thumbnailURL}}
               maxOverlayOpacity={0.75}
               minOverlayOpacity={0.6}
               fadeOutForeground
-              maxHeight={thumbnailURL ? 240 : 0}
-              minHeight={0}
+              maxHeight={thumbnailURL ? 270 : 0}
+              minHeight={Platform.OS === 'ios' ? 90 : 55}
               renderForeground={() => (
                 <View style={{ height: "100%", alignItems: 'center', justifyContent: "center", }} >
-                    <Text style={{ color: "white", fontWeight: "600", fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", paddingHorizontal: Margins.articleSides, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
+                    <Text style={{ color: "white", fontWeight: "600", fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
                 </View>
               )}
             >
+              
               <View style={{ marginHorizontal: Margins.articleSides, paddingTop: 10 }}>
                 
                 
                 {/* <View style={{flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: Margins.defaultSmall}}> */}
-                  <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <View style={{flexDirection: 'column'}}>
+                <Text style={styles.caption}>{caption.rendered.replaceAll("<p>", "").replaceAll("</p>", "")}</Text>
+                  <TriggeringView style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    
+                    <View style={{flex: 1, flexDirection: 'column'}}>
+                    
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.byline}>By </Text>
                       <Text style={styles.author}>{_embedded.author[0].name}</Text>
@@ -62,15 +71,17 @@ export default function Post(props) {
                     <Text style={styles.copy}>{inferred.format(Date.parse(date))}</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>Health</Text></TouchableOpacity>
-                  </View>
+                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name.replaceAll("&amp;", "&")}</Text></TouchableOpacity>
+                  
+                  </TriggeringView>
                 {/* </View> */}
                 
                 
                 {/* ({subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>}) */}
-                <RenderHtml source={{html: content.rendered + "<br>"}} tagsStyles={tagsStyles} />
+                <HTML renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} source={{html: content.rendered + "<br>"}} tagsStyles={tagsStyles} />
                 {/* <Text style={styles.copy}>{content.rendered}</Text> */}
-              </View>
+                </View>
+           
             </ImageHeaderScrollView>
         </View>
         )
@@ -82,6 +93,13 @@ const styles = StyleSheet.create({
     // marginHorizontal: Margins.articleSides,
     fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     fontSize: FontSizes.default,
+    // color: THEME.LABEL
+  },
+  caption: {
+    // marginHorizontal: Margins.articleSides,
+    fontFamily: Platform.OS === "ios" ? "Georgia-Italic" : "serif",
+    fontSize: FontSizes.small,
+    fontStyle: 'italic'
     // color: THEME.LABEL
   },
   byline: {
@@ -106,7 +124,7 @@ const styles = StyleSheet.create({
     fontSize: FontSizes.default,
     fontWeight: "600",
     color: "black",
-    backgroundColor: "#B6B1A9",
+    backgroundColor: "#D8D8D8",
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 5,

@@ -61,13 +61,12 @@ export default function Home(props) {
         <Card
           item={item}
           navigation={props.navigation}
-          onPress={ () => props.navigation.navigate(Strings.post, { postID: item.id })} 
+          onPress={ () => props.navigation.navigate(Strings.post, { item: item })} 
         />    
       );
     };
     
     const _renderColumn = ({item, index}) => {
-    
       return (
         <Column
           item={item}
@@ -86,25 +85,6 @@ export default function Home(props) {
             let articles = await getHomeAsync(id);
             setAllArticles(allArticles => ({...allArticles, [slug]: slug !== "featured" ? articles.filter(article => !article.categories.includes(1485)) : articles}));
           }
-
-          /*if (category.slug === categoryHome.slug) {
-            if (pageNumber === 1) {
-              const homeResults = await getHomeAsync();
-              // console.log(homeResults);
-              const flattenedResults = [];
-              const unFlattenedResults = {};
-              for (let section of HomeSections) {
-                flattenedResults.push(...(homeResults[section] || []));
-                unFlattenedResults[section] = homeResults[section]
-              }
-              setAllArticles(unFlattenedResults);
-            } else {
-              // setArticles(await getHomeMoreAsync(pageNumber));
-            }
-          } else {
-            const {posts} = await getCategoryAsync([category.slug], pageNumber);
-            // setArticles(posts);
-          }*/
         })();
       }, [pageNumber, category]);
 
@@ -142,7 +122,7 @@ export default function Home(props) {
                 <Separator />
                 <CategoryHeader title={'Opinions'} navigation={props.navigation} articles={allArticles["opinions"]} />
                 <Carousel
-                  data={_.chunk(allArticles['opinions'], 3)}
+                  data={_.chunk(allArticles['opinions'], 3).filter(item => item.length === 3)}
                   renderItem={_renderColumn}
                   sliderWidth={width}
                   itemWidth={0.92*width}
@@ -185,7 +165,7 @@ export default function Home(props) {
                 <Separator />
                 <CategoryHeader title={'Humor'} navigation={props.navigation} articles={allArticles['humor']} />
                 <Carousel
-                  data={_.chunk(allArticles['humor'], 3)}
+                  data={_.chunk(allArticles['humor'], 3).filter(item => item.length === 3)}
                   renderItem={_renderColumn}
                   sliderWidth={width}
                   itemWidth={0.92*width}

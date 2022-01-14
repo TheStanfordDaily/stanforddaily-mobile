@@ -94,6 +94,7 @@ const styles = ({
         fontSize: normalize(FontSizes.small),
         color: "#8C1515",
         textTransform: "uppercase",
+        fontWeight: "500",
         // color: THEME.SECONDARY_LABEL,
       },
   

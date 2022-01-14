@@ -102,6 +102,7 @@ const styles = ({
   date: {
     fontFamily: "system",
     fontSize: 10,
+    fontWeight: "500",
     color: "#4D4F53"
   //   color: THEME.SECONDARY_LABEL,
   },

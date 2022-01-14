@@ -39,7 +39,7 @@ export default class Column extends Component {
                     style={{overflow: 'visible'}}
                     data={item}
                     renderItem={({ item, index }) => (
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate(Strings.post, { postID: item.id })}>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate(Strings.post, { item: item })}>
                             <View style={slideIndex < 0 ? {...styles.homeContent, ...{width: width}} : {...styles.homeContent, ...{}}}>
                                 <View style={{flexDirection: 'row', width: width}}>
                                     {!item._embedded["wp:featuredmedia"][0].code && (
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   
       author: {
         fontSize: 10,
+        fontWeight: "500",
         color: "#4D4F53"
         // color: THEME.SECONDARY_LABEL,
       },
@@ -115,8 +116,8 @@ const styles = StyleSheet.create({
         // color: COLORS.NEAR_WHITE,
       },
       date: {
-        fontFamily: "system",
         fontSize: FontSizes.small,
+        fontWeight: "500"
         // color: COLORS.DARK_GRAY,
       },
   
