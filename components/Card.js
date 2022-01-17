@@ -13,7 +13,7 @@ import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
 import HTML from './HTML';
-import { getThumbnailURL, formatDate, relativeDate, normalize } from '../helpers/format';
+import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
 import RenderHtml from 'react-native-render-html'
 
 
@@ -52,7 +52,7 @@ export default class Card extends Component {
                   
                       {/* <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} /> */}
                   
-                  <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
+                  <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{title.rendered}</Text>
                   {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
             {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
@@ -60,7 +60,7 @@ export default class Card extends Component {
                 <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
               </TouchableOpacity> */}
               {/* <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(Strings.author, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View> */}
-              <Text style={styles.date}>{_embedded.author[0].name + "\n" + relativeDate(Date.parse(date)).toUpperCase()}</Text>
+              <Text style={styles.date}>{_embedded.author[0].name + "\n" + date.toUpperCase()}</Text>
             </View>
           </View>
             

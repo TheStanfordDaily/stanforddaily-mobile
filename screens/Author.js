@@ -9,7 +9,7 @@ export default function Author(props) {
     const [authorPosts, setAuthorPosts] = useState([]);
     const { authorID } = props.route.params;
     const renderItem = ({ item }) => {
-        return <Text style={{ paddingHorizontal: Margins.articleSides, paddingVertical: Margins.default }}>{item.title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
+        return <Text style={{ paddingHorizontal: Margins.articleSides, paddingVertical: Margins.default }}>{item.title.rendered}</Text>
     }
     var WPAPI = require('wpapi');
     var wp = new WPAPI({ endpoint:  'http://stanforddaily.com/wp-json' });

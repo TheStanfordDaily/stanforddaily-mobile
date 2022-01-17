@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Dimensions, Text, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
-import { getThumbnailURL, formatDate, relativeDate, normalize } from '../helpers/format';
+import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
 import { getPostByIdAsync } from '../helpers/wpapi';
 import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
 import { Margins, Strings } from '../constants';
@@ -27,7 +27,7 @@ export default function Post(props) {
         // console.log(props.route.params)
         // put the margin top for title becauase on phones with the notch it looks off center. Gotta find the right numbers on that an a dynamic implementation
         
-        const inferred = new Intl.DateTimeFormat(undefined, { year: 'numeric', day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric' })
+        // const inferred = new Intl.DateTimeFormat(undefined, { year: 'numeric', day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric' })
         const { item } = props.route.params
         const { id, title, subtitle, date, _embedded, thumbnailInfo, content } = item;
         let thumbnailURL
@@ -40,26 +40,28 @@ export default function Post(props) {
         }
         return (
         <View style={{ flex: 1 }}>
-          <StatusBar barStyle="light-content" />
+          <StatusBar barStyle={Platform.OS === "ios" ? "light-content": "dark-content"} />
             <ImageHeaderScrollView
               headerImage={{uri: thumbnailURL}}
               maxOverlayOpacity={0.75}
               minOverlayOpacity={0.6}
               fadeOutForeground
               maxHeight={thumbnailURL ? 270 : 0}
-              minHeight={Platform.OS === 'ios' ? 90 : 55}
+              minHeight={Platform.OS === 'ios' ? 91 : 0}
               renderForeground={() => (
                 <View style={{ height: "100%", alignItems: 'center', justifyContent: "center", }} >
-                    <Text style={{ color: "white", fontWeight: "600", fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}>{title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")}</Text>
+                    <HTML source={{html: title.rendered}} tagsStyles={{body: { color: "white", fontWeight: "600", fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}} />
                 </View>
               )}
             >
               
-              <View style={{ marginHorizontal: Margins.articleSides, paddingTop: 10 }}>
+              <View style={{ marginHorizontal: Margins.articleSides, paddingTop: 0 }}>
                 
                 
                 {/* <View style={{flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: Margins.defaultSmall}}> */}
-                <Text style={styles.caption}>{caption.rendered.replaceAll("<p>", "").replaceAll("</p>", "")}</Text>
+                           <HTML source={{html: caption.rendered}} tagsStyles={{body: styles.caption}}/>
+
+  
                   <TriggeringView style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                     
                     <View style={{flex: 1, flexDirection: 'column'}}>
@@ -68,17 +70,17 @@ export default function Post(props) {
                       <Text style={styles.byline}>By </Text>
                       <Text style={styles.author}>{_embedded.author[0].name}</Text>
                     </View>
-                    <Text style={styles.copy}>{inferred.format(Date.parse(date))}</Text>
+                    <Text style={styles.copy}>{date}</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name.replaceAll("&amp;", "&")}</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name}</Text></TouchableOpacity>
                   
                   </TriggeringView>
                 {/* </View> */}
                 
                 
                 {/* ({subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>}) */}
-                <HTML renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} source={{html: content.rendered + "<br>"}} tagsStyles={tagsStyles} />
+                <HTML renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} source={{html: content.rendered + "<br>"}} tagsStyles={tagStyles} />
                 {/* <Text style={styles.copy}>{content.rendered}</Text> */}
                 </View>
            
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
   },
   caption: {
     // marginHorizontal: Margins.articleSides,
-    fontFamily: Platform.OS === "ios" ? "Georgia-Italic" : "serif",
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
     fontSize: FontSizes.small,
     fontStyle: 'italic'
     // color: THEME.LABEL
@@ -132,11 +134,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const tagsStyles = {
+const tagStyles = {
   body: {
     whiteSpace: 'normal',
     fontSize: FontSizes.medium,
-    fontFamily: 'Georgia'
+    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif"
   },
   a: {
     color: '#8c1515',

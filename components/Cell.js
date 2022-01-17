@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Margins, FontSizes } from '../constants';
-import { relativeDate, normalize } from '../helpers/format';
+import { normalize } from '../helpers/format';
 
 const Cell = ({item, onPress}) => {
     let thumbnailURL
@@ -22,7 +22,7 @@ const Cell = ({item, onPress}) => {
      
         <View style={styles.cardInfo}>
           <Text style={styles.cardTitle}>{item.title.rendered}</Text>
-          <Text style={styles.date}>{item._embedded.author[0].name + "\n" + relativeDate(Date.parse(item.date)).toUpperCase()}</Text>
+          <Text style={styles.date}>{item._embedded.author[0].name + "\n" + item.date.toUpperCase()}</Text>
           {/* <Text numberOfLines={2} style={styles.cardDetails}>{data.description}</Text> */}
         </View>
       </View>

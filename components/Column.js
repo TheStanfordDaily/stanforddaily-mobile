@@ -16,7 +16,7 @@ import "moment-timezone";
 import _ from "lodash";
 import Separator from './Separator';
 import { Strings, Fonts, Margins, Alignments, FontSizes } from '../constants';
-import { getThumbnailURL, formatDate, formatAuthors, relativeDate, normalize } from '../helpers/format';
+import { getThumbnailURL, formatDate, formatAuthors, normalize } from '../helpers/format';
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,8 +50,8 @@ export default class Column extends Component {
                                     <View style={{flexShrink: 1}}>
                                         <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'center'}}>
                                             <View>
-                                              <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={4}>{item.title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&").replaceAll("&#038;", "&")}</Text>
-                                              <Text style={styles.author}>{item._embedded.author[0].name + "\n" + relativeDate(Date.parse(item.date)).toUpperCase()}</Text>
+                                              <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={4}>{item.title.rendered}</Text>
+                                              <Text style={styles.author}>{item._embedded.author[0].name + "\n" + item.date.toUpperCase()}</Text>
                                                 {/* <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text> */}
                                                 {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
                                                 {/* <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(Strings.author, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text> */}

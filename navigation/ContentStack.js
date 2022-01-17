@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Image, Text } from 'react-native';
+import { Image, Text, Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/Home';
 import Search from '../screens/Search';
@@ -16,11 +16,11 @@ export default function ContentStack() {
       {/* <Stack.Screen name="Search" component={Search} /> */}
       <Stack.Screen name="Post" component={Post} options={({ route }) => ({
         headerBackTitle: "",
-        headerTitle: false,
+        headerTitle: Platform.OS === 'ios' ? '' : () => (<Image style={{ width: 260, height: 30 }} source={require("../assets/media/DailyLogoCardinal.png")} />),
         // headerShown: false,
-        headerTransparent: true,
-        headerTintColor: '#fff',
-        headerTitle: ''
+        headerTransparent: Platform.OS === "ios",
+        headerTintColor: Platform.OS === "ios" ? "#fff" : "#000",
+        // headerTitle: false
         // headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("../assets/media/DailyLogoWhite.png")} />),
       })}/>
       {/* <Stack.Screen name="Category" component={Settings} /> */}

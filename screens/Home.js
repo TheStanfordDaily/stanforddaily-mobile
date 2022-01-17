@@ -52,7 +52,7 @@ export default function Home(props) {
         thumbnailURL = item._embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
       }
       return (
-        <LightboxGallery title={item.title.rendered.replaceAll("&#8216;", "\u2018").replaceAll("&#8217;", "\u2019").replaceAll("&#038;", "&")} authors={item._embedded.author[0].name} imageResource={thumbnailURL} date={formatDate(item)} navigation={props.navigation} />
+        <LightboxGallery title={item.title.rendered} authors={item._embedded.author[0].name} imageResource={thumbnailURL} date={formatDate(item)} navigation={props.navigation} />
       )
     };
     
