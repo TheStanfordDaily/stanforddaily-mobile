@@ -21,8 +21,8 @@ const Cell = ({item, onPress}) => {
           />
      
         <View style={styles.cardInfo}>
-          <Text style={styles.cardTitle}>{item.title.rendered}</Text>
-          <Text style={styles.date}>{item._embedded.author[0].name + "\n" + item.date.toUpperCase()}</Text>
+          <Text style={styles.cardTitle}>{item.title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
+          <Text style={styles.date}>{item._embedded.author[0].name + "\n" + new Date(item.date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</Text>
           {/* <Text numberOfLines={2} style={styles.cardDetails}>{data.description}</Text> */}
         </View>
       </View>

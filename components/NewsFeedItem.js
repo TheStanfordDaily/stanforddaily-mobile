@@ -12,6 +12,7 @@ import _ from "lodash";
 import { formatAuthor, formatDate, getThumbnailURL, itemize, normalize } from '../helpers/format';
 import { Fonts, Margins, Alignments, FontSizes } from '../constants';
 import HTML from 'react-native-render-html';
+import moment from 'moment'
 
 const {width, height} = Dimensions.get('window');
 
@@ -51,8 +52,8 @@ export default class NewsFeedItem extends Component {
                 <Image source={{ uri: thumbnailURL }} style={isFeatured && index > 0 ? {...styles.image, ...{width: full}}: isFeatured && index === 2 ? {...styles.image, ...{marginLeft:20}} : !isFeatured ? {...styles.image, ...{width: full}} : {...styles.image, ...{}}} borderRadius={8} />
               </View>) // need to find a way to switch to normal styling for lists when it's not homes screen
             }
-            <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019")}</Text>
-            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.titleContainer} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={3}>{title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
+            <Text style={styles.date}>{moment(new Date(date)).fromNow()}</Text>
           </View>
         </TouchableWithoutFeedback>
       );

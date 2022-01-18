@@ -14,12 +14,12 @@ export default function CategoryHeader(props) {
 
   const styles = StyleSheet.create({
     titleContainer: {
-        marginTop: Margins.small,
-        marginHorizontal: Margins.articleSides,
+        paddingTop: (props.title === "Humor" || props.title === "Cartoons") * Margins.defaultSmallMedium,
+        paddingHorizontal: Margins.articleSides,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        paddingBottom: 5
-        // backgroundColor: THEME.BACKGROUND
+        paddingBottom: 5,
+        backgroundColor: props.title === "Humor" ? "#fef2f2" : "#FFF",
       },
       seeAll: {
         paddingHorizontal: 10,
@@ -47,9 +47,9 @@ export default function CategoryHeader(props) {
   return (
     <View style={styles.titleContainer}>
         <Text style={styles.titleFont}>{props.title}</Text>
-        <TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
+        {props.title !== "Cartoons" && (<TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
             <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>)}
     </View>
   )
 }

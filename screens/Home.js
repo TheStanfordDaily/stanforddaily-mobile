@@ -169,7 +169,7 @@ export default function Home(props) {
                   renderItem={_renderColumn}
                   sliderWidth={width}
                   itemWidth={0.92*width}
-                  // containerCustomStyle={{backgroundColor: THEME.SECONDARY_ACCENT}}
+                  containerCustomStyle={{backgroundColor: "#fef2f2"}}
                   activeSlideAlignment={'start'}
                   inactiveSlideScale={1}
                   scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
@@ -182,7 +182,7 @@ export default function Home(props) {
                         extrapolate: 'clamp'
                     })}}}
                 />
-                <CategoryHeader title={'Cartoons'} />
+                <CategoryHeader title={'Cartoons'} paddingTop={4} />
                 <Carousel
                   layout={'tinder'}
                   activeSlideAlignment={'center'}

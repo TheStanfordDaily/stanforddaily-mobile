@@ -70,10 +70,10 @@ export default function Post(props) {
                       <Text style={styles.byline}>By </Text>
                       <Text style={styles.author}>{_embedded.author[0].name}</Text>
                     </View>
-                    <Text style={styles.copy}>{date}</Text>
+                    <Text style={styles.copy}>{new Date(date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name}</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name.replace("&amp;", "&").replace("&#038;", "&")}</Text></TouchableOpacity>
                   
                   </TriggeringView>
                 {/* </View> */}
