@@ -31,35 +31,19 @@ export default class Card extends Component {
   }
 
   render() {
-    let thumbnailURL
     const { item, navigation } = this.props;
     let { title, author, excerpt, _embedded, date, thumbnailInfo, postSubtitle, tsdAuthors} = item;
-    if (_embedded["wp:featuredmedia"][0].code) {
-      console.log(_embedded["wp:featuredmedia"][0].data.status);
-    } else {
-      thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url
-    }
-    // console.log("Media Details: ",  _embedded["wp:featuredmedia"]);
-    return (
+
+    return ( _embedded && 
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
           <View style={styles.content}>
 
-            { thumbnailURL && (
-              <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} />
-            )}
+         {_embedded["wp:featuredmedia"][0].media_details.sizes && _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail && (
+          <Image resizeMode={'cover'} source={{ uri: _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url }} style={styles.image} borderRadius={8} />
+         )}
 
-            
-                  
-                      {/* <Image resizeMode={'cover'} source={{ uri: thumbnailURL }} style={styles.image} borderRadius={8} /> */}
-                  
                   <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
-                  {/* <HTML containerStyle={styles.titleContainer} baseFontStyle={styles.titleFont} html={postTitle} /> */}
-            {/*<HTML containerStyle={styles.descriptionContainer} baseFontStyle={styles.descriptionFont} html={postExcerpt} />*/}
             <View style={styles.dateAndAuthor}>
-              {/* <TouchableOpacity onPress={() => {navigation.navigate(STRINGS.AUTHOR, { authorID: postAuthor })}}>
-                <Text style={styles.author}>{formatAuthors(item).toUpperCase()}</Text>
-              </TouchableOpacity> */}
-              {/* <View style={{ flexDirection: 'row' }}>{item.tsdAuthors.map((info, i) => <TouchableWithoutFeedback onPress = {()=>{this.props.navigation.navigate(Strings.author, { authorID: item.tsdAuthors[i].id})}}><Text style={styles.author}>{info.displayName.toUpperCase()}{i != item.tsdAuthors.length - 1 && ', '}</Text></TouchableWithoutFeedback>)}</View> */}
               <Text style={styles.date}>{_embedded.author[0].name + "\n" + moment(new Date(date)).fromNow().toUpperCase()}</Text>
             </View>
           </View>

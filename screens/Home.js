@@ -45,14 +45,8 @@ export default function Home(props) {
     };
 
     const _renderImage = ({item}) => {
-      let thumbnailURL
-      if (item._embedded["wp:featuredmedia"][0].code) {
-        console.log(item._embedded["wp:featuredmedia"][0].data.status);
-      } else {
-        thumbnailURL = item._embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
-      }
-      return (
-        <LightboxGallery title={item.title.rendered} authors={item._embedded.author[0].name} imageResource={thumbnailURL} date={formatDate(item)} navigation={props.navigation} />
+      return (item._embedded["wp:featuredmedia"][0].media_details &&
+        <LightboxGallery title={item.title.rendered} authors={item._embedded.author[0].name} imageResource={item._embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url} date={formatDate(item)} navigation={props.navigation} />   
       )
     };
     
