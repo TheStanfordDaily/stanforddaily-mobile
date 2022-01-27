@@ -15,7 +15,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "stanforddaily",
     "androidStatusBar": {
-      "barStyle": "light-content",
+      "barStyle": "dark-content",
       "backgroundColor": "#94171C"
     },
     "splash": {
@@ -46,7 +46,7 @@
       ]
     },
     "notification": {
-      "icon": "./assets/icon.png"
+      "icon": "./assets/images/icon.png"
     }
   }
 }
