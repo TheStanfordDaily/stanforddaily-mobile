@@ -38,7 +38,7 @@ export default class Card extends Component {
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
           <View style={styles.content}>
 
-         {_embedded["wp:featuredmedia"][0].media_details.sizes && _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail && (
+         {_embedded["wp:featuredmedia"][0].media_details && _embedded["wp:featuredmedia"][0].media_details.sizes && _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail && (
           <Image resizeMode={'cover'} source={{ uri: _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url }} style={styles.image} borderRadius={8} />
          )}
 
