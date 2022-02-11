@@ -27,14 +27,14 @@
     ],
     "ios": {
       "bundleIdentifier": "com.Stanford.Daily.App",
-      "buildNumber": "16",
+      "buildNumber": "17",
       "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
       "supportsTablet": true
     },
     "android": {
       "package": "com.Stanford.Daily.App",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 16,
+      "versionCode": 17,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=com.Stanford.Daily.App",
       "permissions": [
         "ACCESS_COARSE_LOCATION",
