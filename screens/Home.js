@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   categoriesText: {
     marginTop: Margins.default,
     marginLeft: Margins.articleSides, //match category side with article edge
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
     fontSize:25,
     flex: 2,
   },
@@ -263,12 +263,12 @@ const styles = StyleSheet.create({
     // width: width - (2 * Margins.default)
   },
   header: {
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
     fontSize: Fonts.large + 10,
     // color: THEME.LABEL
   },
   humor: {
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
     fontSize: FontSizes.large + 10,
     // color: THEME.BACKGROUND
   },
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
   },
   communityTitleText: {
     fontSize: FontSizes.extraLarge,
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
     // color: COLORS.WHITE,
     textAlign: 'center',
   }

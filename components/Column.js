@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         // color: THEME.SECONDARY_LABEL,
       },
       humorAuthor: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: 10,
         marginLeft: -2,
         // color: COLORS.NEAR_WHITE,
@@ -122,12 +122,12 @@ const styles = StyleSheet.create({
       },
   
       header: {
-          fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+          fontFamily: "MinionProDisp",
           fontSize: FontSizes.large + 10,
       },
   
       titleFont: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: normalize(FontSizes.mediumSmall),
         // color: THEME.LABEL
       },
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
         width: 0.5*width,
         marginLeft: 0,
         marginRight: 0,
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: normalize(16),
         // flexWrap: 1,
         flexShrink: 1,
@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
       humorContainer: {
         marginTop: Margins.defaultSmall,
         marginHorizontal: Margins.articleSides,
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: FontSizes.large,
         // flexWrap: 1,
         flexShrink: 1,
@@ -196,12 +196,12 @@ const styles = StyleSheet.create({
         marginTop: 2,
       },
       searchTitle: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: 14,
         marginTop: 2,
       },
       searchDescription: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: 12,
         marginTop: 2,
         opacity: 0.80,

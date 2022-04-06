@@ -92,13 +92,13 @@ const styles = ({
   },
 
   header: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: FontSizes.large + 10,
       // color: THEME.LABEL
   },
 
   titleFont: {
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
     fontSize: normalize(FontSizes.mediumSmall),
     marginHorizontal: Margins.articleSides
   //   color: THEME.LABEL
@@ -171,7 +171,7 @@ const styles = ({
   },
   seeAll: {
     paddingHorizontal: 15,
-    fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+    fontFamily: "MinionProDisp",
   //   color: THEME.LABEL
   }
 })
