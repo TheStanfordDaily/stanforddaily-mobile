@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
 import Cell from '../components/Cell';
+import { getCategoryPageAsync } from '../helpers/wpapi';
 
 export default function Category(props) {
 
@@ -14,6 +15,9 @@ export default function Category(props) {
         );
     };
 
+    getCategoryPageAsync(32278, 2).then(result => {
+      console.log(result)
+    })
     
 
     const { title, data } = props.route.params;
