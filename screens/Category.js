@@ -1,11 +1,13 @@
-import React from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import Cell from '../components/Cell';
+import { Margins } from '../constants';
 import { getCategoryPageAsync } from '../helpers/wpapi';
 
 export default function Category(props) {
 
-
+    const [isLoading, setIsLoading] = useState(false)
+    const [page, setPage] = useState(1)
     const renderItem = ({item}) => {
         return (
             <Cell 
@@ -15,21 +17,32 @@ export default function Category(props) {
         );
     };
 
-    getCategoryPageAsync(32278, 2).then(result => {
-      console.log(result)
-    })
-    
-
-    const { title, data } = props.route.params;
+    const { title, data, id } = props.route.params;
+    const [articles, setArticles] = useState(data)
     props.navigation.setOptions({title: title})
+
+    const fetchNextPage = () => {
+      setIsLoading(true)
+      getCategoryPageAsync(id, page + 1).then(result => {
+        setArticles(articles => [...articles, ...result])
+        setPage(page + 1)
+      })
+      setIsLoading(false)
+    }
+
     return (
         
         <View style={styles.container}>
         <FlatList 
-            data={data}
+            data={articles}
             renderItem={renderItem}
+            onEndReachedThreshold={0.2}
+            onEndReached={fetchNextPage}
+            ListFooterComponent={<ActivityIndicator hidesWhenStopped isLoading={isLoading} />}
+            ListFooterComponentStyle={{ marginBottom: Margins.defaultLarge }}
             // keyExtractor={item => item.id}
         />
+        
       </View>
         
     )

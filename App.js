@@ -33,6 +33,7 @@ export default class App extends React.Component {
         LibreFranklinRegular: require('./assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf'),
         LibreFranklinBold: require('./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf'),
         LibreFranklinItalic: require('./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf'),
+        LibreFranklinSemiBold: require('./assets/fonts/Libre_Franklin/LibreFranklin-SemiBold.ttf')
       });
       this.setState({ fontsLoaded: true });
     }
