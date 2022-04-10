@@ -47,7 +47,7 @@ export default function CategoryHeader(props) {
   return (
     <View style={styles.titleContainer}>
         <Text style={styles.titleFont}>{props.title}</Text>
-        {props.title !== "Cartoons" && (<TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
+        {props.title !== "Cartoons" && (<TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, id: props.id, navigation: props.navigation })}>
             <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
         </TouchableOpacity>)}
     </View>

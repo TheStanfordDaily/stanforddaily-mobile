@@ -11,7 +11,7 @@ import iframe from '@native-html/iframe-plugin';
 
 const renderers = { iframe }
 const { width, height } = Dimensions.get('window');
-const systemFonts = [...defaultSystemFonts, 'MinionProDisp', 'MinionProRegular'];
+const systemFonts = [...defaultSystemFonts, 'MinionProDisp', 'MinionProBoldDisp', 'MinionProRegular', 'MinionProItDisp'];
 
 export default function Post(props) {
 
@@ -60,7 +60,7 @@ export default function Post(props) {
                 
                 
                 {/* <View style={{flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: Margins.defaultSmall}}> */}
-                           <Content source={{html: caption.rendered}} systemFonts={systemFonts} tagsStyles={{body: styles.caption}}/>
+                           <Content source={{html: caption.rendered}} systemFonts={systemFonts} tagsStyles={{body: styles.caption, fontFamily: "MinionProItDisp"}}/>
 
   
                   <TriggeringView style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -74,7 +74,7 @@ export default function Post(props) {
                     <Text style={styles.copy}>{new Date(date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</Text>
                     </View>
                     
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: Platform.OS === "ios" ? "Georgia": "serif", fontWeight: "600"}}>{_embedded["wp:term"][0][0].name.replace("&amp;", "&").replace("&#038;", "&")}</Text></TouchableOpacity>
+                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: "LibreFranklinSemiBold"}}>{_embedded["wp:term"][0][0].name.replace("&amp;", "&").replace("&#038;", "&")}</Text></TouchableOpacity>
                   
                   </TriggeringView>
                 {/* </View> */}
@@ -94,8 +94,8 @@ export default function Post(props) {
 const styles = StyleSheet.create({
   copy: {
     // marginHorizontal: Margins.articleSides,
-    fontFamily: "MinionProDisp",
-    fontSize: FontSizes.default,
+    fontFamily: "LibreFranklinRegular",
+    fontSize: FontSizes.small,
     // color: THEME.LABEL
   },
   caption: {
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   byline: {
     marginTop: Margins.defaultSmall,
     // marginLeft: Margins.articleSides,
-    fontFamily: "LibreFranklinRegular",
+    fontFamily: "LibreFranklinSemiBold",
     fontSize: FontSizes.default,
   },
   author: {
