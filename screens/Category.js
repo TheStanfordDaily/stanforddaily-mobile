@@ -33,7 +33,7 @@ export default function Category(props) {
     return (
         
         <View style={styles.container}>
-        <FlatList 
+        <FlatList
             data={articles}
             renderItem={renderItem}
             onEndReachedThreshold={0.2}

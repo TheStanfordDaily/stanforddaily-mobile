@@ -142,7 +142,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
                 />
                 <Separator />
-                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artAndLife']} id={"artsAndLife"} />
+                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artsAndLife']} id={categories["artsAndLife"]} />
                 <CardRow
                   data={allArticles['artsAndLife']}
                   renderItem={_renderCardRow}
@@ -150,7 +150,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
                 />
                 <Separator />
-                <CategoryHeader title={'The Grind'} navigation={props.navigation} articles={allArticles['theGrind']} id={"theGrind"} />
+                <CategoryHeader title={'The Grind'} navigation={props.navigation} articles={allArticles['theGrind']} id={categories["theGrind"]}/>
                 <CardRow
                   data={allArticles['theGrind']}
                   renderItem={_renderCardRow}
@@ -158,7 +158,7 @@ export default function Home(props) {
                   onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
                 />
                 <Separator />
-                <CategoryHeader title={'Humor'} navigation={props.navigation} articles={allArticles['humor']} id={"humor"} />
+                <CategoryHeader title={'Humor'} navigation={props.navigation} articles={allArticles['humor']} id={categories["humor"]} />
                 <Carousel
                   data={_.chunk(allArticles['humor'], 3).filter(item => item.length === 3)}
                   renderItem={_renderColumn}
