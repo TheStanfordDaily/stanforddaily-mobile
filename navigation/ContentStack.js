@@ -9,6 +9,7 @@ import Category from '../screens/Category';
 import Icon from '@expo/vector-icons/Ionicons';
 import { TouchableWithoutFeedback, TouchableNativeFeedback, TouchableOpacity } from 'react-native-gesture-handler';
 import { Strings } from '../constants'
+import { SearchBar } from 'react-native-elements'
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +20,9 @@ export default function ContentStack() {
         headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("../assets/media/DailyLogoCardinal.png")} />),
         headerRight: () => (<TouchableOpacity onPress={() => navigation.navigate(Strings.search)}><Icon name={(Platform.OS === 'ios' ? 'ios' : 'md') + "-search"} size={25} color="#000" /></TouchableOpacity>)
       })}/>
-      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Search" component={Search} options={({ route, navigation }) => ({
+        headerBackTitle: "",
+      })}/>
       <Stack.Screen name="Post" component={Post} options={({ route }) => ({
         headerBackTitle: "",
         headerTitle: Platform.OS === 'ios' ? '' : () => (<Image style={{ width: 260, height: 30 }} source={require("../assets/media/DailyLogoCardinal.png")} />),
