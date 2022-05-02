@@ -107,7 +107,7 @@ const styles = ({
       titleContainer: {
         marginTop: Margins.defaultSmall,
         marginHorizontal: Margins.articleSides,
-        fontFamily: "MinionProDisp",
+        fontFamily: "MinionProSemiboldDisp",
         fontSize: normalize(FontSizes.large),
         // color: THEME.LABEL
       },

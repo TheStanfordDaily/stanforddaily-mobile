@@ -98,7 +98,7 @@ const styles = ({
   },
 
   titleFont: {
-    fontFamily: "MinionProDisp",
+    fontFamily: "MinionProRegular",
     fontSize: normalize(FontSizes.mediumSmall),
     marginHorizontal: Margins.articleSides
   //   color: THEME.LABEL

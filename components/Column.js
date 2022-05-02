@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
       },
   
       titleFont: {
-        fontFamily: "MinionProDisp",
+        fontFamily: "MinionProRegular",
         fontSize: normalize(FontSizes.mediumSmall),
         // color: THEME.LABEL
       },

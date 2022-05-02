@@ -24,7 +24,7 @@ export default function CategoryHeader(props) {
       seeAll: {
         paddingHorizontal: 10,
         paddingVertical: 4,
-        fontFamily: "MinionProDisp",
+        fontFamily: "MinionProBoldDisp",
         backgroundColor: "#FFF",
         borderColor: "#8C1515",
         borderWidth: 1,
@@ -33,7 +33,7 @@ export default function CategoryHeader(props) {
         // color: THEME.LABEL,
       },
       titleFont: {
-        fontFamily: "MinionProDisp",
+        fontFamily: "MinionProBoldDisp",
         fontSize: FontSizes.extraLarge,
         fontWeight: "800"
       },

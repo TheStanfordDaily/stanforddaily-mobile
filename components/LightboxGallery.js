@@ -181,12 +181,12 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: 'bold',
         letterSpacing: 0.5,
-        fontFamily: "MinionProDisp"
+        fontFamily: "MinionProRegular"
     },
     subtitle: {
         marginTop: 6,
         // color: COLORS.SECONDARY_LABEL,
-        fontFamily: "MinionProDisp",
+        fontFamily: "MinionProRegular",
         fontSize: FontSizes.small,
     },
     subtitleEven: {
