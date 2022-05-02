@@ -51,7 +51,7 @@ export default function Post(props) {
               minHeight={Platform.OS === 'ios' ? 91 : 0}
               renderForeground={() => (
                 <View style={{ height: "100%", alignItems: 'center', justifyContent: "center", }} >
-                    <Content source={{html: title.rendered}} systemFonts={systemFonts} tagsStyles={{body: { color: "white", fontWeight: "600", fontFamily: "MinionProRegular", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}} />
+                    <Content source={{html: title.rendered}} systemFonts={systemFonts} tagsStyles={{body: { color: "white", fontWeight: "600", fontFamily: "MinionProBoldDisp", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}} />
                 </View>
               )}
             >
@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
 const tagStyles = {
   body: {
     whiteSpace: 'normal',
-    fontSize: FontSizes.medium,
-    fontFamily: "MinionProDisp"
+    fontSize: FontSizes.smallMedium,
+    fontFamily: "MinionProRegular"
   },
   a: {
     color: '#8c1515',
