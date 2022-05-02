@@ -7,6 +7,8 @@ import Navigation from "./navigation";
 import * as Font from 'expo-font';
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
+import { initializeApp } from 'firebase/app'
+import { getDatabase, ref, push, set } from 'firebase/database'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -16,13 +18,15 @@ Notifications.setNotificationHandler({
   }),
 });
 
+const firebaseConfig = {
+  // This needs to be updated/redacted for security reasons.
+  // Planning to use an environment variable.
+};
+
+
 export default function App() {
   // const isLoadingComplete = useLoadedAssets();
   // const colorScheme = useColorScheme();
-
-  // if (!isLoadingComplete) {
-  //   return null;
-  // } else {
 
   const [fontsLoaded, setFontsLoaded] = useState(false)
   const [expoPushToken, setExpoPushToken] = useState('');
@@ -32,7 +36,7 @@ export default function App() {
 
   useEffect(() => {
     Font.loadAsync({
-      // Load a font `MinionPro` from a static resource
+      // Loads fonts from static resource.
       MinionProDisp: require('./assets/fonts/Minion_Pro/MinionPro-Disp.ttf'),
       MinionProRegular: require('./assets/fonts/Minion_Pro/MinionPro-Regular.ttf'),
       MinionProItDisp: require('./assets/fonts/Minion_Pro/MinionPro-ItDisp.ttf'),
@@ -48,12 +52,23 @@ export default function App() {
     }).then(setFontsLoaded(true));
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
-    // This listener is fired whenever a notification is received while the app is foregrounded
+    if (Object.keys(firebaseConfig).length > 0) {
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      var matches = expoPushToken.match(/\[(.*?)\]/);
+      if (matches) {
+        var submatch = matches[1]
+        const tokenRef = ref(db, "ExpoPushTokens/" + submatch)
+        set(tokenRef, Date())
+      }
+    }
+
+    // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
       setNotification(notification);
     });
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log(response);
     });
@@ -64,18 +79,15 @@ export default function App() {
     };
   }, []);
 
-
-
-  
       return (<SafeAreaProvider>
         <Navigation />
         <StatusBar />
       </SafeAreaProvider>)
 
-  // }
 }
 
 async function registerForPushNotificationsAsync() {
+
   let token;
   if (Device.isDevice) {
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -89,7 +101,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log("Token: ", token);
   } else {
     alert('Must use physical device for Push Notifications');
   }
@@ -104,4 +115,5 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token;
+
 }

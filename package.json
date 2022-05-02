@@ -20,6 +20,7 @@
     "expo-modules-core": "^0.6.5",
     "expo-notifications": "^0.14.1",
     "expo-status-bar": "^1.0.4",
+    "firebase": "^9.7.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "react": "16.13.1",

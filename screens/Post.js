@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
 const tagStyles = {
   body: {
     whiteSpace: 'normal',
-    fontSize: FontSizes.medium,
-    fontFamily: "MinionProDisp"
+    fontSize: FontSizes.smallMedium,
+    fontFamily: "MinionProRegular"
   },
   a: {
     color: '#8c1515',
