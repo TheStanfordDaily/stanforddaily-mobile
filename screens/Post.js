@@ -82,7 +82,7 @@ export default function Post(props) {
                 {/* </View> */}
                 
                 
-                {/* ({subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>}) */}
+                {/* {subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>} */}
                 <Content renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} systemFonts={systemFonts} source={{html: content.rendered + "<br>"}} tagsStyles={tagStyles} />
                 {/* <Text style={styles.copy}>{content.rendered}</Text> */}
                 </View>
