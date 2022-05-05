@@ -12,9 +12,9 @@ import {
 import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
-import HTML from './HTML';
 import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
-import RenderHtml from 'react-native-render-html'
+import { decode } from 'html-entities'
+import Byline from './Byline';
 
 
 const { width, height } = Dimensions.get('window');
@@ -32,7 +32,7 @@ export default class Card extends Component {
 
   render() {
     const { item, navigation } = this.props;
-    let { title, author, excerpt, _embedded, date, thumbnailInfo, postSubtitle, tsdAuthors} = item;
+    let { title, author, excerpt, coauthors, parsely, _embedded, date, thumbnailInfo, postSubtitle } = item;
 
     return ( _embedded && 
         <TouchableWithoutFeedback onPress={this.toPost.bind(this)}>
@@ -42,9 +42,10 @@ export default class Card extends Component {
           <Image resizeMode={'cover'} source={{ uri: _embedded["wp:featuredmedia"][0].media_details.sizes.thumbnail.source_url }} style={styles.image} borderRadius={8} />
          )}
 
-                  <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
+                  <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={5}>{decode(title.rendered)}</Text>
             <View style={styles.dateAndAuthor}>
-              <Text style={styles.date}>{_embedded.author[0].name + "\n" + moment(new Date(date)).fromNow().toUpperCase()}</Text>
+              <Byline style={styles.date} names={item.parsely.meta.creator} identifiers={item.coauthors} />
+              <Text style={styles.date}>{moment(new Date(date)).fromNow().toUpperCase()}</Text>
             </View>
           </View>
             
@@ -57,12 +58,11 @@ export default class Card extends Component {
 
 const styles = ({
   content: {
-    width: '100%',
     paddingVertical: 2,
     backgroundColor: "rgb(0,0,0,0)",
     marginLeft: 0,
     marginRight: 0,
-    width: width/2.25 - Margins.defaultLarge
+    width: width/1.95 - Margins.defaultLarge
   },
   categoryLabel: {
     flexDirection: 'row',
@@ -106,7 +106,7 @@ const styles = ({
   titleContainer: {
     marginTop: Margins.defaultSmall,
     marginLeft: Margins.articleSides,
-    width: width/2.25 - Margins.articleSides - Margins.defaultLarge
+    width: width/1.95 - Margins.articleSides - Margins.defaultSmallMedium
   },
 
   descriptionContainer: {
@@ -119,7 +119,7 @@ const styles = ({
 
   image: {
     marginBottom: Margins.default,
-    width: width/2.25 - Margins.articleSides - Margins.defaultLarge,
+    width: width/1.95 - Margins.articleSides - Margins.defaultSmallMedium,
     marginLeft: Margins.articleSides,
     marginRight: 0,
     height: 3/4 * width/2.2

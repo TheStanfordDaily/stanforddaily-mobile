@@ -86,6 +86,7 @@ export default function Home(props) {
     return (
         <View style={styles.container}>
             <ScrollView>
+              {/* <Text>{JSON.stringify(allArticles["news"][7].parsely.meta.creator)} | {JSON.stringify(allArticles["news"][7].coauthors)}</Text> */}
                 <Carousel
                     layout={"default"}
                     data={allArticles['featured']}

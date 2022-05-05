@@ -11,29 +11,29 @@ import {
   Platform,
   Appearance
 } from 'react-native';
-import moment from 'moment';
 import "moment-timezone";
 import _ from "lodash";
 import Separator from './Separator';
 import { Strings, Fonts, Margins, Alignments, FontSizes } from '../constants';
-import { getThumbnailURL, formatDate, formatAuthors, normalize } from '../helpers/format';
+import { getThumbnailURL, formatDate, normalize, decodeEntityHTML } from '../helpers/format';
+import { decode } from 'html-entities'
+import Byline from './Byline';
 
 const { width, height } = Dimensions.get('window');
 
 export default class Column extends Component {
 
     toPost() {
-        this.props.onPress();
-      }
-    
-      toAuthor() {
-        this.props.onAuthorPress(authorID);
-      }
+      this.props.onPress();
+    }
+  
+    toAuthor() {
+      this.props.onAuthorPress(authorID);
+    }
 
     render() {
         const { item, navigation, slideIndex } = this.props;
         // console.log(slideIndex)
-        // console.log(item)
         return (
                 <FlatList
                     style={{overflow: 'visible'}}
@@ -50,11 +50,9 @@ export default class Column extends Component {
                                     <View style={{flexShrink: 1}}>
                                         <View style={{flex: 1, width: 0.5*width, flexDirection: 'column', justifyContent: 'center'}}>
                                             <View>
-                                              <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={4}>{item.title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
-                                              <Text style={styles.author}>{item._embedded.author[0].name + "\n" + new Date(item.date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</Text>
-                                                {/* <Text adjustsFontSizeToFit numberOfLines={3} minimumFontScale={0.75} allowFontScaling style={item.postCategory.includes(55796) ? {...styles.titleContainer, ...{ color: 'black' }} : slideIndex > 0 ? {...styles.titleContainer, ...{width: 0.55*width}} : styles.titleContainer}>{item.postTitle}</Text> */}
-                                                {/* <Text style={{ fontSize: 60*(1/2)^item.postTitle.split(' ').length }}>{item.postTitle.length}</Text> */}
-                                                {/* <Text style={styles.author}> {item.tsdAuthors.map(t => <TouchableWithoutFeedback onPress = {() => navigation.navigate(Strings.author, { authorID: t.id })}><Text>{t.displayName.toUpperCase()}</Text></TouchableWithoutFeedback>).reduce((prev, curr, ind) => [prev, ind === item.tsdAuthors.length - 1 ? ' and ' : ', ', curr])} • {formatDate(item)} </Text> */}
+                                                <Text style={styles.titleFont} adjustsFontSizeToFit minimumFontScale={0.75} allowFontScaling numberOfLines={4}>{decode(item.title.rendered)}</Text>
+                                                <Byline style={styles.author} names={item.parsely.meta.creator} identifiers={item.coauthors} />
+                                                <Text style={styles.author}>{new Date(item.date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</Text>
                                             </View>
                                             {index != 2 && (
                                                 <Separator />
