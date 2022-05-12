@@ -5,6 +5,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, PlatformColor } from 'react-native';
+import { createNavigationContainerRef } from '@react-navigation/native';
 
 // import { RootStackParamList } from '../types';
 import ContentStack from './ContentStack';
@@ -33,3 +34,5 @@ function RootNavigator() {
     </RootStack.Navigator>
   );
 }
+
+export const navigationRef = createNavigationContainerRef()

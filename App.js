@@ -3,12 +3,13 @@ import { View, Text } from "react-native";
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Navigation from "./navigation";
+import Navigation, { navigationRef } from "./navigation";
 import * as Font from 'expo-font';
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import { initializeApp } from 'firebase/app'
 import { getDatabase, ref, push, set } from 'firebase/database'
+import { getAuth, signInWithCustomToken } from 'firebase/auth'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -23,6 +24,7 @@ const firebaseConfig = {
   // Planning to use an environment variable.
 };
 
+const uid = "" // Also redacted.
 
 export default function App() {
   // const isLoadingComplete = useLoadedAssets();
@@ -59,7 +61,17 @@ export default function App() {
       if (matches) {
         var submatch = matches[1]
         const tokenRef = ref(db, "ExpoPushTokens/" + submatch)
-        set(tokenRef, Date())
+        console.log("Token: ", submatch)
+        const auth = getAuth()
+        auth.createCustomToken(uid).then((customToken) => {
+          console.log("Send token ", customToken)
+          signInWithCustomToken(auth, customToken).then((userCredential) => {
+            console.log(userCredential)
+            set(tokenRef, Date())
+          })
+        })
+        
+        // set(tokenRef, Date())
       }
     }
 
@@ -70,7 +82,12 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
+      console.log(response); // Somehow we're gonna get the post ID from this. Can the notification response contain the post item from n8n?
+      // navigation.navigate("Home", { item: null }) // How are we going to handle this? Maybe a helper function that gets the item for a single post ID.
+      // if (navigationRef.isReady()) {
+      //   navigationRef.navigate("Home", null)
+      // }
+      
     });
 
     return () => {
