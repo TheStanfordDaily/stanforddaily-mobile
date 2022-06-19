@@ -7,9 +7,10 @@ import Navigation, { navigationRef } from "./navigation";
 import * as Font from 'expo-font';
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
-import { initializeApp } from 'firebase/app'
+import { initializeApp } from "firebase/app"; 
 import { getDatabase, ref, push, set } from 'firebase/database'
-import { getAuth, signInWithCustomToken } from 'firebase/auth'
+import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth'
+import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from '@env'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -22,9 +23,17 @@ Notifications.setNotificationHandler({
 const firebaseConfig = {
   // This needs to be updated/redacted for security reasons.
   // Planning to use an environment variable.
+  apiKey: APIKEY,
+  authDomain: "daily-mobile-app-notifications.firebaseapp.com",
+  databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
+  projectId: "daily-mobile-app-notifications",
+  storageBucket: "daily-mobile-app-notifications.appspot.com",
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
+  serviceAccountId: SERVICE_ACCOUNT_ID
 };
 
-const uid = "" // Also redacted.
 
 export default function App() {
   // const isLoadingComplete = useLoadedAssets();
@@ -52,28 +61,25 @@ export default function App() {
       LibreFranklinBold: require('./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf'),
       LibreFranklinItalic: require('./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf'),
     }).then(setFontsLoaded(true));
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
-
-    if (Object.keys(firebaseConfig).length > 0) {
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      var matches = expoPushToken.match(/\[(.*?)\]/);
-      if (matches) {
-        var submatch = matches[1]
-        const tokenRef = ref(db, "ExpoPushTokens/" + submatch)
-        console.log("Token: ", submatch)
-        const auth = getAuth()
-        auth.createCustomToken(uid).then((customToken) => {
-          console.log("Send token ", customToken)
-          signInWithCustomToken(auth, customToken).then((userCredential) => {
-            console.log(userCredential)
+    registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(token)
+      if (Object.keys(firebaseConfig).length > 0) {
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        var matches = expoPushToken.match(/\[(.*?)\]/);
+        if (matches) {
+          var submatch = matches[1]
+          
+          const auth = getAuth(app)
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+            const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
-          })
-        })
-        
-        // set(tokenRef, Date())
+          }).catch((error) => {
+            console.log("error with signing in: ", error)
+          })  
+        }
       }
-    }
+    });
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
