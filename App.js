@@ -76,7 +76,7 @@ export default function App() {
             set(tokenRef, Date())
           }).catch((error) => {
             console.log("error with signing in: ", error)
-          })  
+          })
         }
       }
     });
