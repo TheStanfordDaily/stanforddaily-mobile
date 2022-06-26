@@ -4,7 +4,7 @@
     "description": "The Stanford Daily Mobile App",
     "slug": "StanfordDaily",
     "privacy": "public",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "platforms": [
       "ios",
       "android"
