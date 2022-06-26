@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Navigation, { navigationRef } from "./navigation";
+import Navigation, { navigate } from "./navigation";
 import * as Font from 'expo-font';
 import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
@@ -11,6 +11,8 @@ import { initializeApp } from "firebase/app";
 import { getDatabase, ref, push, set } from 'firebase/database'
 import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth'
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from '@env'
+import { getPostAsync } from './helpers/wpapi'
+import { Strings } from './constants'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -88,12 +90,9 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response); // Somehow we're gonna get the post ID from this. Can the notification response contain the post item from n8n?
-      // navigation.navigate("Home", { item: null }) // How are we going to handle this? Maybe a helper function that gets the item for a single post ID.
-      // if (navigationRef.isReady()) {
-      //   navigationRef.navigate("Home", null)
-      // }
-      
+      getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
+        navigate(Strings.post, { item: result })
+      })
     });
 
     return () => {

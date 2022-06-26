@@ -24,6 +24,10 @@ export async function getHomeMoreAsync(
     .extraPageNumber(extraPageNumber);
 }
 
+export async function getPostAsync(id) {
+  return wp.posts().id(id).embed()
+}
+
 export async function getCategoryAsync(
   categorySlugs,
   pageNumber,
