@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio } from 'react-native';
+import { Dimensions, PixelRatio, TouchableWithoutFeedback } from 'react-native';
 import moment from 'moment';
 import "moment-timezone";
 
@@ -7,7 +7,7 @@ const scale = width/320
 
 export const formatDate = post => moment.utc(post.postDateGmt).tz("America/Los_Angeles").toDate().toLocaleDateString();
 export const getThumbnailURL = ({thumbnailInfo}) => thumbnailInfo ? (thumbnailInfo.urls.mediumLarge || thumbnailInfo.urls.full): null;
-export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
+// export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 export const itemize = (elements) => {
     return [elements.slice(0, -1).join(", "), elements.length > 2 ? elements.last() : elements].join(" and ")
 }
@@ -18,6 +18,11 @@ export function normalize(size) {
     } else {
         return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
     }
+}
+
+export function decodeEntityHTML(message) {
+    const doc = new DOMParser().parseFromString(message, "text/html");
+    return doc.documentElement.textContent;
 }
 
 // const inferred = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" }) // undefined means it auto-detects locale

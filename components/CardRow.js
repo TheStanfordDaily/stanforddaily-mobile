@@ -58,26 +58,26 @@ const styles = ({
     },
 
     author: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: 10,
       marginLeft: -2,
     //   color: THEME.SECONDARY_LABEL,
     },
 
     date: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: 10,
     //   color: THEME.SECONDARY_LABEL,
     },
 
     header: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: FontSizes.large + 10,
         // color: THEME.LABEL
     },
 
     titleFont: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: FontSizes.mediumSmall,
     //   color: THEME.LABEL
     },
@@ -130,12 +130,12 @@ const styles = ({
       marginTop: 2,
     },
     searchTitle: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: 14,
       marginTop: 2,
     },
     searchDescription: {
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
       fontSize: 12,
       marginTop: 2,
       opacity: 0.80,
@@ -149,7 +149,7 @@ const styles = ({
     },
     seeAll: {
       paddingHorizontal: 15,
-      fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+      fontFamily: "MinionProDisp",
     //   color: THEME.LABEL
     }
 })

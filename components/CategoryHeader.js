@@ -24,7 +24,7 @@ export default function CategoryHeader(props) {
       seeAll: {
         paddingHorizontal: 10,
         paddingVertical: 4,
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProBoldDisp",
         backgroundColor: "#FFF",
         borderColor: "#8C1515",
         borderWidth: 1,
@@ -33,12 +33,12 @@ export default function CategoryHeader(props) {
         // color: THEME.LABEL,
       },
       titleFont: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProBoldDisp",
         fontSize: FontSizes.extraLarge,
         fontWeight: "800"
       },
       header: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: FontSizes.large + 10,
         // color: THEME.LABEL
       },
@@ -47,7 +47,7 @@ export default function CategoryHeader(props) {
   return (
     <View style={styles.titleContainer}>
         <Text style={styles.titleFont}>{props.title}</Text>
-        {props.title !== "Cartoons" && (<TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, navigation: props.navigation })}>
+        {props.title !== "Cartoons" && (<TouchableOpacity style={styles.more} onPress={ () => props.navigation.navigate(Strings.category, { data: props.articles, title: props.title, id: props.id, navigation: props.navigation })}>
             <Text style={styles.titleContainer, styles.titleFont, styles.seeAll}>See All</Text>
         </TouchableOpacity>)}
     </View>

@@ -5,6 +5,7 @@ import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { Platform, PlatformColor } from 'react-native';
+import { createNavigationContainerRef } from '@react-navigation/native';
 
 // import { RootStackParamList } from '../types';
 import ContentStack from './ContentStack';
@@ -15,7 +16,8 @@ export default function Navigation({ colorScheme }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+      ref={navigationRef}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -32,4 +34,12 @@ function RootNavigator() {
       <RootStack.Screen name="Search" component={SearchStack} options={{ title: 'Oops!' }} />
     </RootStack.Navigator>
   );
+}
+
+export const navigationRef = createNavigationContainerRef()
+
+export function navigate(name, params) {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(name, params);
+  }
 }

@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Margins, FontSizes } from '../constants';
 import { normalize } from '../helpers/format';
+import { decode } from 'html-entities';
+import Byline from './Byline';
 
 const Cell = ({item, onPress}) => {
     let thumbnailURL
@@ -21,8 +23,10 @@ const Cell = ({item, onPress}) => {
           />
      
         <View style={styles.cardInfo}>
-          <Text style={styles.cardTitle}>{item.title.rendered.replace("&#8216;", "\u2018").replace("&#8217;", "\u2019").replace("&amp;", "&").replace("&#038;", "&")}</Text>
-          <Text style={styles.date}>{item._embedded.author[0].name + "\n" + new Date(item.date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</Text>
+          <Text style={styles.cardTitle}>{decode(item.title.rendered)}</Text>
+          {/* <Text>{JSON.stringify(item)}</Text> */}
+          <Byline style={styles.date} names={item.parsely.meta.creator} identifiers={item.coauthors} />
+          <Text style={styles.date}>{new Date(item.date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}</Text>
           {/* <Text numberOfLines={2} style={styles.cardDetails}>{data.description}</Text> */}
         </View>
       </View>

@@ -100,14 +100,14 @@ const styles = ({
       },
   
       titleFont: {
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProDisp",
         fontSize: FontSizes.large,
         // color: THEME.LABEL
       },
       titleContainer: {
         marginTop: Margins.defaultSmall,
         marginHorizontal: Margins.articleSides,
-        fontFamily: Platform.OS === "ios" ? "Georgia" : "serif",
+        fontFamily: "MinionProSemiboldDisp",
         fontSize: normalize(FontSizes.large),
         // color: THEME.LABEL
       },

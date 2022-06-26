@@ -49,7 +49,7 @@ export default (props) => {
     textSelectable={props.textSelectable}
     tagsStyles={props.tagsStyles}
     containerStyle={props.containerStyle || {}}
-    baseFontStyle={{ fontFamily: Platform.OS === "ios" ? "Georgia" : "serif", ...(props.baseFontStyle || {}) }}
+    baseFontStyle={{ fontFamily: "MinionProDisp", ...(props.baseFontStyle || {}) }}
     source={{html: props.html}}
     renderers={renderers}
     imagesMaxWidth={Dimensions.get('window').width}

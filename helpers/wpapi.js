@@ -11,6 +11,10 @@ export async function getHomeAsync(id) {
   return wp.posts().categories(id).embed()
 }
 
+export async function getCategoryPageAsync(id, page) {
+  return wp.posts().categories(id).page(page).embed()
+}
+
 export async function getHomeMoreAsync(
   extraPageNumber
 ) {
@@ -18,6 +22,10 @@ export async function getHomeMoreAsync(
     .home()
     .more()
     .extraPageNumber(extraPageNumber);
+}
+
+export async function getPostAsync(id) {
+  return wp.posts().id(id).embed()
 }
 
 export async function getCategoryAsync(
