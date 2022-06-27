@@ -1,6 +1,6 @@
 {
   "build": {
-    "release": {},
+    "production": {},
     "development": {
       "developmentClient": true,
       "distribution": "internal"
