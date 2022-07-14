@@ -13,6 +13,8 @@ import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from 'fire
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from '@env'
 import { getPostAsync } from './helpers/wpapi'
 import { Strings } from './constants'
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -101,10 +103,12 @@ export default function App() {
     };
   }, []);
 
-      return (<SafeAreaProvider>
-        <Navigation />
-        <StatusBar />
-      </SafeAreaProvider>)
+      return (<ApplicationProvider {...eva} theme={eva.light}>
+                <SafeAreaProvider>
+                  <Navigation />
+                  <StatusBar />
+                </SafeAreaProvider>
+              </ApplicationProvider>)
 
 }
 

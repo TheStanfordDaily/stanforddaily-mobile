@@ -8,22 +8,17 @@ import NewsFeedItem from '../components/NewsFeedItem';
 import LightboxGallery from '../components/LightboxGallery';
 import CategoryHeader from '../components/CategoryHeader';
 import CardRow from '../components/CardRow';
-import Card from '../components/Card';
+// import Card from '../components/Card';
 import _ from 'lodash';
 import { getThumbnailURL, formatDate } from '../helpers/format';
 import Column from '../components/Column';
+import { Card, Divider, List, ListItem } from '@ui-kitten/components';
+import { renderRow } from '../helpers/render';
+import { Image } from 'react-native';
+import { ImageBackground } from 'react-native';
 
 const categoryHome = CategorySlugs[0];
 const { width, height } = Dimensions.get('window');
-
-// then(function(data) {
-//   // do something with the returned posts
-//   console.log(data)
-//   return data
-// }).catch(function(err) {
-//   // handle error
-//   console.log(err)
-// });
 
 export default function Home(props) {
 
@@ -52,11 +47,14 @@ export default function Home(props) {
     
     const _renderCardRow = ({item}) => {
       return (
-        <Card
-          item={item}
-          navigation={props.navigation}
-          onPress={ () => props.navigation.navigate(Strings.post, { item: item })} 
-        />    
+        <Card style={{ width: 200 }}
+              header={() => (<ImageBackground style={{height: 200}} source={{ uri: "https://stanforddaily.com/wp-content/uploads/2022/06/WLM_0158-Lightroom.jpg" }} />)}
+              footer={<Text>8 HOURS AGO</Text>}>
+                {/* might also have it switch from date or name depending on whether Grind article or news/sports */}
+        <Text>
+          The Maldives, officially the Republic of Maldives
+        </Text>
+      </Card>  
       );
     };
     
@@ -117,8 +115,24 @@ export default function Home(props) {
                 />
                 <Separator />
                 <CategoryHeader title={'Opinions'} navigation={props.navigation} articles={allArticles["opinions"]} id={categories["opinions"]} />
+                <List 
+      data={allArticles["opinions"].slice(0, 4)}
+      ItemSeparatorComponent={Divider}
+      renderItem={renderRow}
+    />
+
+                <Separator />
+                <CategoryHeader title={'Sports'} navigation={props.navigation} articles={allArticles['sports']} id={categories["sports"]} />
+                <CardRow
+                  data={allArticles['sports']}
+                  renderItem={_renderCardRow}
+                  title={"Sports"}
+                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
+                />
+                <Separator />
+                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artsAndLife']} id={categories["artsAndLife"]} />
                 <Carousel
-                  data={_.chunk(allArticles['opinions'], 3).filter(item => item.length === 3)}
+                  data={_.chunk(allArticles['artsAndLife'], 3).filter(item => item.length === 3)}
                   renderItem={_renderColumn}
                   sliderWidth={width}
                   itemWidth={0.92*width}
@@ -133,22 +147,6 @@ export default function Home(props) {
                         outputRange: [0, 1, 0.7],
                         extrapolate: 'clamp'
                     })}}}
-                />
-                <Separator />
-                <CategoryHeader title={'Sports'} navigation={props.navigation} articles={allArticles['sports']} id={categories["sports"]} />
-                <CardRow
-                  data={allArticles['sports']}
-                  renderItem={_renderCardRow}
-                  title={"Sports"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
-                />
-                <Separator />
-                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artsAndLife']} id={categories["artsAndLife"]} />
-                <CardRow
-                  data={allArticles['artsAndLife']}
-                  renderItem={_renderCardRow}
-                  title={"Arts & Life"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
                 />
                 <Separator />
                 <CategoryHeader title={'The Grind'} navigation={props.navigation} articles={allArticles['theGrind']} id={categories["theGrind"]}/>
