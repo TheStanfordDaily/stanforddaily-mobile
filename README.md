@@ -9,6 +9,10 @@
   <a href="https://play.google.com/store/apps/details?id=com.Stanford.Daily.App&hl=en_US&gl=US">
     <img alt="Supports Expo Android" longdesc="Supports Expo Android" src="https://img.shields.io/badge/Android-4630EB.svg?style=flat&logo=ANDROID&labelColor=A4C639&logoColor=fff" />
   </a>
+  <!-- Runs with Expo -->
+  <a href="https://github.com/expo/expo">
+    <img alt="Runs with Expo" longdesc="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat&logo=EXPO&labelColor=f3f3f3&logoColor=000">
+  </a>
 </p>
 
 Official mobile app of the independent, student-run newspaper of Stanford University. Contributions are welcome!

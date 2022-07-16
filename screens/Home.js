@@ -16,6 +16,7 @@ import { renderRow } from '../helpers/render';
 import { ImageBackground } from 'react-native';
 import moment from 'moment';
 import { News } from '../components/sections/News';
+import SectionHeading from '../components/SectionHeading';
 
 const { width, height } = Dimensions.get('window');
 const dummyData = require("../dummy.json")
@@ -30,21 +31,16 @@ export default function Home(props) {
     const [sections, setSections] = useState([]);
 
     return (
-<Layout level={"2"} style={styles.container}>
-<News articles={dummyData.slice(0, 8)} />
-</Layout>
-            
-   
+      <Layout level={"2"} style={styles.container}>
+        <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
+        <News articles={dummyData.slice(0, 8)} />
+      </Layout>
     );
 }
   
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width,
-    height,
-    // backgroundColor: '#FFFFFF'
-    // backgroundColor: PlatformPalette.background
+    flex: 1
   },
   loadingIndicator: {
     marginTop: Margins.default,

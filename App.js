@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text } from "react-native";
-import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation, { navigate } from "./navigation";
@@ -9,12 +7,14 @@ import * as Device from 'expo-device'
 import * as Notifications from 'expo-notifications'
 import { initializeApp } from "firebase/app"; 
 import { getDatabase, ref, push, set } from 'firebase/database'
-import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from '@env'
 import { getPostAsync } from './helpers/wpapi'
 import { Strings } from './constants'
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider, useTheme } from '@ui-kitten/components';
+import { ApplicationProvider, IconRegistry, useTheme } from '@ui-kitten/components';
+import { EvaIconsPack } from '@ui-kitten/eva-icons';
+import { DailyBread as bread } from "./theme"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -79,7 +79,7 @@ export default function App() {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
           }).catch((error) => {
-            console.log("error with signing in: ", error)
+            console.log("Could not sign in: ", error)
           })
         }
       }
@@ -103,12 +103,17 @@ export default function App() {
     };
   }, []);
 
-      return (<ApplicationProvider {...eva} theme={eva.light}>
-                <SafeAreaProvider>
-                  <Navigation />
-                  <StatusBar />
-                </SafeAreaProvider>
-              </ApplicationProvider>)
+      return (
+        <React.Fragment>
+          <IconRegistry icons={EvaIconsPack} />
+          <ApplicationProvider {...eva} theme={{...eva.light, ...bread}}>
+            <SafeAreaProvider>
+              <Navigation />
+              <StatusBar />
+            </SafeAreaProvider>
+          </ApplicationProvider>
+        </React.Fragment>
+      )
 
 }
 
