@@ -7550,6 +7550,11 @@ react-native-lightbox@^0.8.1:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-pager-view@^5.4.25:
+  version "5.4.25"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.25.tgz#cd639d5387a7f3d5581b55a33c5faa1cbc200f97"
+  integrity sha512-3drrYwaLat2fYszymZe3nHMPASJ4aJMaxiejfA1V5SK3OygYmdtmV2u5prX7TnjueJzGSyyaCYEr2JlrRt4YPg==
+
 react-native-reanimated@~2.2.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-2.2.4.tgz#36c5d15028b0bd7d479fba5199117ac870c7a532"

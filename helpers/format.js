@@ -1,6 +1,7 @@
 import { Dimensions, PixelRatio, TouchableWithoutFeedback } from 'react-native';
 import moment from 'moment';
 import "moment-timezone";
+import _ from 'lodash';
 
 const {width, height} = Dimensions.get('window');
 const scale = width/320
@@ -23,6 +24,13 @@ export function normalize(size) {
 export function decodeEntityHTML(message) {
     const doc = new DOMParser().parseFromString(message, "text/html");
     return doc.documentElement.textContent;
+}
+
+export function scramble() {
+    const reduced = arguments.reduce((p, q) => {
+        return p.concat(q)
+    })
+    return _.shuffle(reduced)
 }
 
 // const inferred = new Intl.RelativeTimeFormat(undefined, { numeric: "auto" }) // undefined means it auto-detects locale
