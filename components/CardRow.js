@@ -6,7 +6,7 @@ import _ from "lodash";
 
 const { width, height } = Dimensions.get('window');
 
-export default class CardRow extends Component {  
+export default class CardRow extends Component {
 
     constructor(props) {
         super(props)

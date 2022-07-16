@@ -15,7 +15,7 @@ import { Card, Divider, Layout, List, ListItem, Text } from '@ui-kitten/componen
 import { renderRow } from '../helpers/render';
 import { ImageBackground } from 'react-native';
 import moment from 'moment';
-import { News } from './News';
+import { News } from '../components/sections/News';
 
 const { width, height } = Dimensions.get('window');
 const dummyData = require("../dummy.json")
@@ -30,42 +30,20 @@ export default function Home(props) {
     const [sections, setSections] = useState([]);
 
     return (
-
-            <News articles={dummyData.slice(0, 9)} />
+<Layout level={"2"} style={styles.container}>
+<News articles={dummyData.slice(0, 8)} />
+</Layout>
+            
    
     );
 }
-
-const cardStyles = StyleSheet.create({
-  card: {
-    flex: 1,
-    margin: 2
-  },
-  headerTextContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10
-  },
-  headerImage: {
-    width: 300,
-    height: 200,
-  },
-  footerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  footerControl: {
-    marginHorizontal: 4,
-  },
-});
   
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     width,
     height,
-    backgroundColor: '#FFFFFF'
+    // backgroundColor: '#FFFFFF'
     // backgroundColor: PlatformPalette.background
   },
   loadingIndicator: {

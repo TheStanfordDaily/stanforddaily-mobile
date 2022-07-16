@@ -14,7 +14,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from './helpers/wpapi'
 import { Strings } from './constants'
 import * as eva from '@eva-design/eva';
-import { ApplicationProvider } from '@ui-kitten/components';
+import { ApplicationProvider, useTheme } from '@ui-kitten/components';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
