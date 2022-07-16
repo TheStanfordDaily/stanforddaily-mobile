@@ -1,5 +1,4 @@
 export const DailyBread = {
-
   "color-primary-100": "#F9DCCF",
   "color-primary-200": "#F4B4A1",
   "color-primary-300": "#DE7D6D",

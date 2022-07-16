@@ -28,10 +28,10 @@ const thumbnailImage = (details) => {
 
 export default function Home(props) {
 
-    const [sections, setSections] = useState([]);
+    const [sections, setSections] = useState({});
 
     return (
-      <Layout level={"2"} style={styles.container}>
+      <Layout style={styles.container}>
         <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
         <News articles={dummyData.slice(0, 8)} />
       </Layout>

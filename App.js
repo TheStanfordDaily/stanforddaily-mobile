@@ -15,6 +15,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry, useTheme } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { DailyBread as bread } from "./theme"
+import { default as mapping } from './mapping'
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -106,7 +107,7 @@ export default function App() {
       return (
         <React.Fragment>
           <IconRegistry icons={EvaIconsPack} />
-          <ApplicationProvider {...eva} theme={{...eva.light, ...bread}}>
+          <ApplicationProvider {...eva} theme={{...eva.light, ...bread}} customMapping={mapping}>
             <SafeAreaProvider>
               <Navigation />
               <StatusBar />

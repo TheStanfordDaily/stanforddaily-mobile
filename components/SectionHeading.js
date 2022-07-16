@@ -24,9 +24,5 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center"
-    },
-    icon: {
-        marginRight: -50,
-        // tintColor: theme["color-primary-500"]
     }
 })
