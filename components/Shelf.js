@@ -13,66 +13,50 @@ export default function Opinions(props) {
     }
     const theme = useTheme()
     const [cellPressed, setCellPressed] = React.useState({})
-    
     const Accessory = (props) => (
         <Image
             source={{ uri: props.uri }}
-            style={{ flex: 1/3, width: 45,  height: 60, borderRadius: 3 }}
+            style={styles.image}
         />
     )
-    const activeColor = withAlpha(theme["color-primary-100"], 0.5) // theme[props.alternate ? "color-primary-300" : "color-basic-200"]
+    const activeColor = props.alternate ? withAlpha(theme["color-primary-100"], 0.5) : theme["color-basic-200"]
     const inactiveColor = theme[props.alternate ? "color-primary-100" : "color-basic-100"]
+    
     return (
         <PagerView
-        style={styles.container}
-            initialPage={0}>
+            style={styles.container}
+            initialPage={0}
+            overdrag>
             {_.chunk(opinionsArticles, 3).map((triplet, index) => (
                 <View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={index}>
-                    {triplet.map((item, itemIndex) => (
+                    {triplet.map((item, _index) => (
                         <React.Fragment>
                             <ListItem
-                                title={() => <Text category={"p1"}>{cellPressed ? "pressed": "not pressed"}</Text>}
-                                description={() => <Text category={"label"}>Scoop Scooperstein on June 13, 2022</Text>}
+                                title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
+                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>Scoop Scooperstein on June 13</Text>}
                                 accessoryRight={<Accessory uri={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
                                 style={{
                                     flex: 1/3,
                                     paddingHorizontal: 10,
                                     paddingVertical: 10,
                                     backgroundColor: cellPressed.booleanValue &&
-                                        itemIndex === cellPressed.itemIndex &&
+                                        _index === cellPressed._index &&
                                         index === cellPressed.index ?
                                         activeColor : inactiveColor
                                 }}
-                                onPressIn={() => setCellPressed({index: index, itemIndex: itemIndex, booleanValue: true})}
-                                onPressOut={() => setCellPressed({index: index, itemIndex: itemIndex, booleanValue: false})}
+                                onPressIn={() => setCellPressed({ index: index, _index: _index, booleanValue: true })}
+                                onPressOut={() => setCellPressed({ index: index, _index: _index, booleanValue: false })}
                             />
                             <Divider />
                         </React.Fragment>
                     ))}
-                    
-                    {/* <List
-                        scrollEnabled={false}
-                        showsVerticalScrollIndicator={false}
-                        data={triplet}
-                        renderItem={({ item }) => (
-                            <ListItem
-                                title={decode(item.title.rendered)}
-                                description={`Scoop Scooperstein on ${item.date}`}
-                                // Adding the background color prop seems to erase the effect of the cells turning light grey when you tap on them.
-                                style={{ flex: 1/3 }}
-                                accessoryRight={<Accessory uri={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
-                                collapsable={false}
-                            />
-                        )}
-                        ItemSeparatorComponent={Divider}
-                        style={{ flex: 1 }}
-                    /> */}
                 </View>
             ))}
         </PagerView>
     )
 }
 
+// Assumes a white background.
 function withAlpha(hex, opacity) {
     const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
     return hex + _opacity.toString(16).toUpperCase();
@@ -81,8 +65,15 @@ function withAlpha(hex, opacity) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        minHeight: 250,
+        minHeight: 300,
         paddingHorizontal: 8,
         padddingVertical: 4,
+    },
+    image: {
+        flex: 1/3,
+        width: 45,
+        height: 60,
+        borderRadius: 3,
+        marginLeft: 4
     }
 })

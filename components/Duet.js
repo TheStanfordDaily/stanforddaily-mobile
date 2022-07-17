@@ -32,7 +32,8 @@ export default function News(props) {
     return (
         <PagerView
             style={styles.container}
-            initialPage={0}>
+            initialPage={0}
+            overdrag>
             {_.chunk(newsArticles, 2).map((duet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {duet.map((item) => (

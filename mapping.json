@@ -36,11 +36,11 @@
     
         "text-paragraph-1-font-size": 15,
         "text-paragraph-1-font-weight": "400",
-        "text-paragraph-1-font-family": "serif",
+        "text-paragraph-1-font-family": "MinionProSemiboldDisp",
     
         "text-paragraph-2-font-size": 13,
         "text-paragraph-2-font-weight": "400",
-        "text-paragraph-2-font-family": "serif",
+        "text-paragraph-2-font-family": "MinionProRegular",
     
         "text-caption-1-font-size": 12,
         "text-caption-1-font-weight": "400",

@@ -11,6 +11,7 @@ export default function Featured(props) {
 
     const featuredArticles = props.articles.slice(0, 5)
     const theme = useTheme()
+
     const Header = (props) => (
       <React.Fragment>
         <Image
@@ -27,13 +28,22 @@ export default function Featured(props) {
       </View>
     )
 
+    const Slide = (props) => (
+      <View></View>
+    )
+
+    const ObliqueSlide = (props) => (
+      <View></View>
+    )
+
     const largestImageAvailable = (details) => {
       return _.maxBy(details.media_details.sizes, "width").source_url
     }
     return (
         <PagerView
             style={styles.container}
-            initialPage={0}>
+            initialPage={0}
+            overdrag>
             {featuredArticles.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
