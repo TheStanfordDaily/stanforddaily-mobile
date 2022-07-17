@@ -6,18 +6,15 @@ import LightboxGallery from '../components/LightboxGallery';
 import { getThumbnailURL, formatDate } from '../helpers/format';
 import Column from '../components/Column';
 import { Card, Divider, Layout, List, ListItem, Text } from '@ui-kitten/components';
-import { renderRow } from '../helpers/render';
-import { ImageBackground } from 'react-native';
 import moment from 'moment';
-import { News } from '../components/sections/News';
+import Duet from '../components/Duet';
 import SectionHeading from '../components/SectionHeading';
-import Culture from '../components/sections/Culture';
-import Opinions from '../components/sections/Opinions'; // Could probably have an index file with all the sections and import all of them on one line.
-import Featured from '../components/sections/Featured';
+import Culture from '../components/Culture';
+import Shelf from '../components/Shelf'; // Could probably have an index file with all the sections and import all of them on one line.
+import Featured from "../components/Featured";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window")
 const dummyData = require("../dummy.json")
-
 
 const thumbnailImage = (details) => {
   console.log(details.sizes.thumbnail)
@@ -32,136 +29,26 @@ export default function Home(props) {
         <ScrollView>
           <Featured articles={dummyData.slice(40, 45)} />
           <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
-          <News articles={dummyData.slice(0, 10)} />
+          <Duet articles={dummyData.slice(0, 10)} />
           <Divider marginTop={8} />
           <SectionHeading title={Sections.OPINIONS.name} onPress={() => console.log("navigate to next screen")}/>
-          <Opinions articles={dummyData.slice(10, 20)} />
+          <Shelf articles={dummyData.slice(10, 20)} />
           <Divider />
           <SectionHeading title={Sections.SPORTS.name} onPress={() => console.log("navigate to next screen")}/>
-          <News articles={dummyData.slice(20, 30)} />
+          <Duet articles={dummyData.slice(20, 30)} />
           <Divider marginTop={8} />
-          <Culture theGrind={dummyData.slice(30, 33)} artsAndLife={dummyData.slice(23,26)} />
+          <Culture theGrind={dummyData.slice(30, 32)} artsAndLife={dummyData.slice(32,34)} />
           <Divider />
           <SectionHeading title={Sections.HUMOR.name} onPress={() => console.log("navigate to next screen")}/>
-          <Opinions alternate articles={dummyData.slice(33, 40)} />
+          <Shelf alternate articles={dummyData.slice(33, 40)} />
+          {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Culture` component. */}
         </ScrollView>
       </Layout>
-    );
+    )
 }
   
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  loadingIndicator: {
-    marginTop: Margins.default,
-    marginBottom: Margins.default
-  },
-  sideMenuContainer: {
-    flex: 1,
-    // backgroundColor: COLORS.WHITE,
-    alignItems: Alignments.center,
-    // paddingTop: top_padding
-  },
-  sideBarTitle: {
-    height: Heights.appHeader,
-    justifyContent: Alignments.center,
-    borderBottomWidth: 1,
-    alignSelf: 'stretch',
-    flexDirection: 'column',
-    paddingTop: Margins.NORMAL_HEADER_Margins,
-    // borderBottomColor: THEME.SECONDARY_LABEL,
-  },
-  sideBarTitleText: {
-    // color: THEME.LABEL,
-    fontFamily: Fonts.PTSerifBold,
-    fontSize: FontSizes.smallMedium,
-    //textAlign: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    marginLeft: Margins.default
-  },
-  flatListStyle: {
-    flex: 1,
-    width: '100%',
-    marginTop: 10
-  },
-  sideMenuItem: {
-    width: '100%',
-    flexDirection: Alignments.row,
-    height: Heights.sideMenuItem,
-    alignItems:  Alignments.center,
-  },
-  separator: {
-    // borderBottomColor: THEME.SECONDARY_LABEL,
-    borderBottomWidth: 1,
-  },
-  categoriesHeaderContainer: {
-    height: 60,
-    // backgroundColor: THEME.BACKGROUND,
-    alignItems: Alignments.left,
-    justifyContent: Alignments.left,
-  },
-  categoriesText: {
-    marginTop: Margins.default,
-    marginLeft: Margins.articleSides, //match category side with article edge
-    fontFamily: "MinionProDisp",
-    fontSize:25,
-    flex: 2,
-  },
-  categoryLabel: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // width: width - (2 * Margins.default)
-  },
-  header: {
-    fontFamily: "MinionProDisp",
-    fontSize: Fonts.large + 10,
-    // color: THEME.LABEL
-  },
-  humor: {
-    fontFamily: "MinionProDisp",
-    fontSize: FontSizes.large + 10,
-    // color: THEME.BACKGROUND
-  },
-  more: {
-    // backgroundColor: THEME.BUTTON,
-    marginTop: Margins.small,
-    marginHorizontal: Margins.articleSides,
-    justifyContent: 'center',
-    borderRadius: 10
-  },
-  cartoonContainer: {
-    paddingVertical: 30,
-    width: 0.75*width,
-    height: 0.75*width
-  },
-  sliderContentContainer: {
-    paddingVertical: 10 // for custom animation
-  },
-  communityContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingTop: 0,
-    width: '100%',
-  },
-  box: {
-    width: '95%',
-    height: height/8,
-    // backgroundColor: COLORS.CARDINAL,
-    margin: Margins.small,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignContent: 'center'
-  },
-  communityTitleText: {
-    fontSize: FontSizes.extraLarge,
-    fontFamily: "MinionProDisp",
-    // color: COLORS.WHITE,
-    textAlign: 'center',
   }
-});
+})

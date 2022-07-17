@@ -2,11 +2,10 @@ import React from "react"
 import { StyleSheet, View } from "react-native"
 import { Button, Card, Layout, List, Text } from "@ui-kitten/components"
 import { Image } from "react-native"
-import { scramble } from "../../helpers/format"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { render } from "react-dom"
 
+// Going to rename this component to Wildcard.
 export default function Culture({ theGrind, artsAndLife }) {
 
     const cultureArticles = _.shuffle(theGrind.concat(artsAndLife))
@@ -32,7 +31,6 @@ export default function Culture({ theGrind, artsAndLife }) {
             {cultureArticles.map((item) => (
                 <Card
                     style={styles.card}
-                    status={"basic"}
                     header={<Header title={decode(item.title.rendered)} uri={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.medium["source_url"]}/>}
                     footer={<Footer byline={"Scoop Scooperstein".toUpperCase()} section={_.sample(["The Grind", "Arts & Life"])}/>}
                 >
