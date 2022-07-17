@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Dimensions, StyleSheet, Image } from 'react-native';
+import { View, ScrollView, Dimensions, StyleSheet, Image, FlatList } from 'react-native';
 import { Strings, Heights, Margins, Fonts, Alignments, FontSizes, Sections, PlatformPalette } from '../constants';
 import Separator from '../components/Separator';
 import Carousel, { getInputRangeFromIndexes } from 'react-native-snap-carousel';
@@ -17,6 +17,8 @@ import { ImageBackground } from 'react-native';
 import moment from 'moment';
 import { News } from '../components/sections/News';
 import SectionHeading from '../components/SectionHeading';
+import Culture from '../components/sections/Culture';
+import Opinions from '../components/sections/Opinions'; // could probably ahve an index file with all the sections and import all of them on one line
 
 const { width, height } = Dimensions.get('window');
 const dummyData = require("../dummy.json")
@@ -32,8 +34,16 @@ export default function Home(props) {
 
     return (
       <Layout style={styles.container}>
-        <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
-        <News articles={dummyData.slice(0, 8)} />
+        <ScrollView>
+          <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
+          <News articles={dummyData.slice(0, 10)} />
+          <SectionHeading title={Sections.OPINIONS.name} onPress={() => console.log("navigate to next screen")}/>
+          <Opinions articles={dummyData.slice(10, 20)} />
+          <SectionHeading title={Sections.SPORTS.name} onPress={() => console.log("navigate to next screen")}/>
+          <News articles={dummyData.slice(20, 30)} />
+          <Divider marginTop={8} />
+          <Culture theGrind={dummyData.slice(30, 33)} artsAndLife={dummyData.slice(23,26)} />
+        </ScrollView>
       </Layout>
     );
 }

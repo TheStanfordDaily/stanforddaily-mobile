@@ -7,7 +7,13 @@ export default {
     NEWS: {
         name: "News",
         slug: "news",
-        id: 3
+        id: 3,
+        desks: {
+            BIZTECH: {
+                name: "Business & Technology",
+                slug: "business-and-technology-news",
+            }
+        }
     },
     SPORTS: {
         name: "Sports",
