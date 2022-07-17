@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Dimensions, StyleSheet, Image, FlatList } from 'react-native';
 import { Strings, Heights, Margins, Fonts, Alignments, FontSizes, Sections, PlatformPalette } from '../constants';
-import Separator from '../components/Separator';
-import Carousel, { getInputRangeFromIndexes } from 'react-native-snap-carousel';
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helpers/wpapi';
-import NewsFeedItem from '../components/NewsFeedItem';
 import LightboxGallery from '../components/LightboxGallery';
-import CategoryHeader from '../components/CategoryHeader';
-import CardRow from '../components/CardRow';
-// import Card from '../components/Card';
 import { getThumbnailURL, formatDate } from '../helpers/format';
 import Column from '../components/Column';
 import { Card, Divider, Layout, List, ListItem, Text } from '@ui-kitten/components';
@@ -18,7 +12,8 @@ import moment from 'moment';
 import { News } from '../components/sections/News';
 import SectionHeading from '../components/SectionHeading';
 import Culture from '../components/sections/Culture';
-import Opinions from '../components/sections/Opinions'; // could probably ahve an index file with all the sections and import all of them on one line
+import Opinions from '../components/sections/Opinions'; // Could probably have an index file with all the sections and import all of them on one line.
+import Featured from '../components/sections/Featured';
 
 const { width, height } = Dimensions.get('window');
 const dummyData = require("../dummy.json")
@@ -35,14 +30,20 @@ export default function Home(props) {
     return (
       <Layout style={styles.container}>
         <ScrollView>
+          <Featured articles={dummyData.slice(40, 45)} />
           <SectionHeading title={Sections.NEWS.name} onPress={() => console.log("navigate to next screen")}/>
           <News articles={dummyData.slice(0, 10)} />
+          <Divider marginTop={8} />
           <SectionHeading title={Sections.OPINIONS.name} onPress={() => console.log("navigate to next screen")}/>
           <Opinions articles={dummyData.slice(10, 20)} />
+          <Divider />
           <SectionHeading title={Sections.SPORTS.name} onPress={() => console.log("navigate to next screen")}/>
           <News articles={dummyData.slice(20, 30)} />
           <Divider marginTop={8} />
           <Culture theGrind={dummyData.slice(30, 33)} artsAndLife={dummyData.slice(23,26)} />
+          <Divider />
+          <SectionHeading title={Sections.HUMOR.name} onPress={() => console.log("navigate to next screen")}/>
+          <Opinions alternate articles={dummyData.slice(33, 40)} />
         </ScrollView>
       </Layout>
     );

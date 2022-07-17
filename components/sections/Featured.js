@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, Layout, Text } from "@ui-kitten/components"
+import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
 import { Image, View, StyleSheet } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
@@ -7,9 +7,10 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Sections } from "../../constants"
 
-export const News = (props) => {
+export default function Featured(props) {
 
-    const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1) // props.article.length % 2 == 0 || !props.pageSplits
+    const featuredArticles = props.articles.slice(0, 5)
+    const theme = useTheme()
     const Header = (props) => (
       <React.Fragment>
         <Image
@@ -20,36 +21,30 @@ export const News = (props) => {
     )
       
     const Footer = (props) => (
-      <View style={styles.headerTextContainer}>
-        <Text category="label">{moment(new Date(props.date)).fromNow().toUpperCase()}</Text>
+      <View style={styles.footer}>
+        <Text  category={"label"}>{"Scoop Scooperstein".toUpperCase()}</Text>
+        <Button size={"tiny"} status={"basic"}>{props.section}</Button>
       </View>
     )
 
     const largestImageAvailable = (details) => {
       return _.maxBy(details.media_details.sizes, "width").source_url
     }
-
     return (
         <PagerView
             style={styles.container}
             initialPage={0}>
-            {_.chunk(newsArticles, 2).map((duet, index) => {
-                const former = duet[0]
-                const latter = duet[1]
+            {featuredArticles.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
-                      <Card
-                          style={{ flex: 1, height: 300, marginHorizontal: 5 }}
-                          header={<Header source={former["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
-                          footer={<Footer date={former.date} />}>
-                          <Text>{decode(former.title.rendered)}</Text>
-                      </Card>
 
                       <Card
                           style={{ flex: 1, height: 300, marginHorizontal: 5 }}
-                          header={<Header source={latter["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
-                          footer={<Footer date={latter.date} />}>
-                          <Text>{decode(latter.title.rendered)}</Text>
+                          header={<Header source={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.large["source_url"]} />}
+                          footer={<Footer date={item.date} section={_.sample(["Business & Technology", "Breaking News", "Magazine", "University", "Football"])} />}>
+                          <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h6"}>{decode(item.title.rendered)}</Text>
+                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s1">{moment(new Date(item.date)).fromNow().toUpperCase()}</Text>
+                          
                       </Card>
                       
                   </View>
@@ -64,6 +59,7 @@ const styles = StyleSheet.create({
       height: 300,
       paddingHorizontal: 8,
       paddingVertical: 4,
+      marginTop: 8
     },
     tab: {
         height: 192,
@@ -91,4 +87,11 @@ const styles = StyleSheet.create({
       footerControl: {
         marginHorizontal: 4,
       },
+      footer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        paddingVertical: 5
+      }
 })

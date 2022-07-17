@@ -10,7 +10,7 @@ export default function SectionHeading(props) {
     return (
         <TouchableOpacity style={styles.container}>
                 <Text category={"h4"}>{props.title.toUpperCase()}</Text>
-                <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, tintColor: theme["text-basic-color"] }} />
+                <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, marginTop: 2, tintColor: theme["text-basic-color"] }} />
         </TouchableOpacity>
     )
 }
@@ -18,9 +18,9 @@ export default function SectionHeading(props) {
 const styles = StyleSheet.create({
     container: {
         display: "flex",
-        padding: 14,
+        padding: 5,
         width: "100%",
-        height: 70,
+        height: 50,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center"

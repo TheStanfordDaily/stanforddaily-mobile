@@ -45,7 +45,7 @@ export default function App() {
   // const colorScheme = useColorScheme();
 
   const [fontsLoaded, setFontsLoaded] = useState(false)
-  const [expoPushToken, setExpoPushToken] = useState('');
+  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();

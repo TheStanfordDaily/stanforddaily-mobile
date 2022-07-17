@@ -1,10 +1,12 @@
 {
     "strict": {
-        "text-font-family": "serif",
+        "text-font-family": "MinionProRegular",
 
         "text-heading-1-font-size": 36,
         "text-heading-1-font-weight": "800",
         "text-heading-1-font-family": "serif",
+        
+        "text-heading-2-font-family": "MinionProRegular",
 
         "text-subtitle-1-font-size": 15,
         "text-subtitle-1-font-weight": "600",
