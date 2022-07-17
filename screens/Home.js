@@ -33,13 +33,12 @@ export default function Home(props) {
           <Divider marginTop={8} />
           <SectionHeading title={Sections.OPINIONS.name} onPress={() => console.log("navigate to next screen")}/>
           <Shelf articles={dummyData.slice(10, 20)} />
-          <Divider />
           <SectionHeading title={Sections.SPORTS.name} onPress={() => console.log("navigate to next screen")}/>
           <Duet articles={dummyData.slice(20, 30)} />
           <Divider marginTop={8} />
           <Culture theGrind={dummyData.slice(30, 32)} artsAndLife={dummyData.slice(32,34)} />
           <Divider />
-          <SectionHeading title={Sections.HUMOR.name} onPress={() => console.log("navigate to next screen")}/>
+          <SectionHeading alternate title={Sections.HUMOR.name} onPress={() => console.log("navigate to next screen")}/>
           <Shelf alternate articles={dummyData.slice(33, 40)} />
           {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Culture` component. */}
         </ScrollView>

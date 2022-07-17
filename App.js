@@ -15,7 +15,7 @@ import * as eva from '@eva-design/eva';
 import { ApplicationProvider, IconRegistry, useTheme } from '@ui-kitten/components';
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { DailyBread as bread } from "./theme"
-import { default as mapping } from './mapping'
+import { default as mapping } from "./mapping.json"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

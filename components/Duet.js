@@ -40,7 +40,7 @@ export default function News(props) {
                     style={{ flex: 1, height: 300, marginHorizontal: 5 }}
                     header={<Header source={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
                     footer={<Footer date={item.date} />}>
-                    <Text>{decode(item.title.rendered)}</Text>
+                    <Text category={"p1"}>{decode(item.title.rendered)}</Text>
                   </Card>
                 ))}
               </View>
