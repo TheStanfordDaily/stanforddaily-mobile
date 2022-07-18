@@ -5,7 +5,7 @@ import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
 
-export default function Opinions(props) {
+export default function Shelf(props) {
 
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {
@@ -39,13 +39,11 @@ export default function Opinions(props) {
                                     flex: 1/3,
                                     paddingHorizontal: 10,
                                     paddingVertical: 10,
-                                    backgroundColor: cellPressed.booleanValue &&
-                                        _index === cellPressed._index &&
-                                        index === cellPressed.index ?
-                                        activeColor : inactiveColor
+                                    backgroundColor: theme[props.alternate ? "color-primary-100" : "color-basic-100"]
                                 }}
                                 onPressIn={() => setCellPressed({ index: index, _index: _index, booleanValue: true })}
                                 onPressOut={() => setCellPressed({ index: index, _index: _index, booleanValue: false })}
+                                {...{...props, activeOpacity: 0.8}}
                             />
                             <Divider />
                         </React.Fragment>
@@ -68,6 +66,7 @@ const styles = StyleSheet.create({
         minHeight: 300,
         paddingHorizontal: 8,
         padddingVertical: 4,
+        backgroundColor: "#f2f2f2"
     },
     image: {
         flex: 1/3,

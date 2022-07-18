@@ -11,7 +11,7 @@
   </a>
   <!-- Runs with Expo -->
   <a href="https://github.com/expo/expo">
-    <img alt="Runs with Expo" longdesc="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat&logo=EXPO&labelColor=f3f3f3&logoColor=000">
+    <img alt="Runs with Expo" longdesc="Runs with Expo" src="https://img.shields.io/badge/Runs%20with%20Expo-000.svg?style=flat&logo=EXPO&labelColor=ffffff&logoColor=000)">
   </a>
 </p>
 
