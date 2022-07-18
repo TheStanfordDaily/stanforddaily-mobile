@@ -53,12 +53,6 @@ export default function Shelf(props) {
     )
 }
 
-// Assumes a white background.
-function withAlpha(hex, opacity) {
-    const _opacity = Math.round(Math.min(Math.max(opacity || 1, 0), 1) * 255);
-    return hex + _opacity.toString(16).toUpperCase();
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
