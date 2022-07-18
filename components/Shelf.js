@@ -19,12 +19,11 @@ export default function Shelf(props) {
             style={styles.image}
         />
     )
-    const activeColor = props.alternate ? withAlpha(theme["color-primary-100"], 0.5) : theme["color-basic-200"]
-    const inactiveColor = theme[props.alternate ? "color-primary-100" : "color-basic-100"]
+    const inactiveColor = theme[props.alternate ? "color-primary-200" : "color-basic-300"]
     
     return (
         <PagerView
-            style={styles.container}
+            style={[styles.container, { backgroundColor: inactiveColor }]}
             initialPage={0}
             overdrag>
             {_.chunk(opinionsArticles, 3).map((triplet, index) => (
@@ -66,7 +65,6 @@ const styles = StyleSheet.create({
         minHeight: 300,
         paddingHorizontal: 8,
         padddingVertical: 4,
-        backgroundColor: "#f2f2f2"
     },
     image: {
         flex: 1/3,
