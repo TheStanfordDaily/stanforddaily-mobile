@@ -8,8 +8,7 @@ import { decode } from "html-entities"
 import { Sections } from "../constants"
 
 // Going to rename to Carousel.
-export default function Featured(props) {
-    const featuredArticles = props.articles.slice(0, 5)
+export default function Featured({ navigation, articles }) {
     const theme = useTheme()
 
     const Header = (props) => (
@@ -45,7 +44,7 @@ export default function Featured(props) {
             style={styles.container}
             initialPage={0}
             overdrag>
-            {featuredArticles.map((item, index) => {
+            {articles.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card

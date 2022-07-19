@@ -12,6 +12,7 @@ import Culture from "../components/Culture";
 import Shelf from "../components/Shelf"; // Could probably have an index file with all the sections and import all of them on one line.
 import Featured from "../components/Featured";
 import Model from "../Model";
+import { Circle } from "react-native-svg";
 
 const dummyData = require("../dummy.json")
 
@@ -23,43 +24,31 @@ const homeMember = (article, section) => {
   if (section.id === Sections.FEATURED.id) {
     return article.categories.includes(Sections.FEATURED.id)
   }
+  /*if (section.id === Sections.THE_GRIND.id || section.id === Sections.ARTS_LIFE.id) {
+    return article.categories.includes(Sections.THE_GRIND.id) || article.categories.includes(Sections.ARTS_LIFE.id)
+  }*/
   return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
-}
-
-function reducer(prev, curr) {
-  return { ...prev, [curr.slug]: curr }
 }
 
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({}) // or just append to articles like before or useReducer
     const [pageNumber, setPageNumber] = useState(0)
+    const [articlesLoaded, setArticlesLoaded] = useState(false)
     useEffect(() => {
       Model.posts().perPage(100).get().then(posts => {
-        /*for (let key of Object.keys(Sections)) {
-          setArticles(...articles, ...{key: posts})
-          console.log("new articles", articles)
-          //console.log(key, {...articles, ...{"news": posts}})
-          //setArticles({...articles, ...{"news": posts}})
-        }*/
-        //dispatchArticles({"news": posts})
-        //dispatchArticles({"opinions": posts})
         for (let value of Object.values(Sections)) {
           setArticles(articles => ({
             ...articles,
             [value.slug]: posts.filter(items => homeMember(items, value))
           }))
         }
-        
-        
-        console.log("new articles", articles["sports"])
-        // console.log(Sections.SPORTS)
-      })
+      }).finally(() => setArticlesLoaded(true))
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
-    return (
+    return (articlesLoaded &&
       <Layout style={styles.container}>
         <ScrollView>
-          {/* <Featured articles={articles.filter(article => article.categories.includes(Sections.FEATURED.id))}/> */}
+          <Featured articles={articles[Sections.FEATURED.slug]}/>
           <Mark category={Sections.NEWS} navigation={navigation}/>
           <Duet articles={articles[Sections.NEWS.slug]}/>
           <Divider marginTop={8}/>
@@ -68,7 +57,8 @@ export default function Home({ navigation }) {
           <Mark category={Sections.SPORTS} navigation={navigation}/>
           <Duet articles={articles[Sections.SPORTS.slug]}/>
           <Divider marginTop={8}/>
-          {/* <Culture articles={articles.filter(article => article.categories.includes(Sections.THE_GRIND.id) || article.categories.includes(Sections.ARTS_LIFE.id))}/> */}
+          {/* <Culture articles={}/> concatenating The Grind and Arts & Life wrecks rendering */}
+          <Culture articles={articles[Sections.THE_GRIND.slug]} navigation={navigation}/>
           <Divider/>
           <Mark category={Sections.HUMOR} navigation={navigation} alternate/>
           <Shelf articles={articles[Sections.HUMOR.slug]} alternate/>
