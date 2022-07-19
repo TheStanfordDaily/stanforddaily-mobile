@@ -33,7 +33,7 @@ export default function Shelf(props) {
                             <ListItem
                                 title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
                                 description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>Scoop Scooperstein on June 13</Text>}
-                                accessoryRight={<Accessory uri={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
+                                accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
                                 style={{
                                     flex: 1/3,
                                     paddingHorizontal: 10,

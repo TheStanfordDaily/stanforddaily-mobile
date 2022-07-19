@@ -110,7 +110,7 @@ export default function App() {
     };
   }, []);
 
-      return (
+      return (fontsLoaded &&
         <NavigationContainer>
           <IconRegistry icons={EvaIconsPack} />
           <ApplicationProvider {...eva} theme={{...eva.light, ...bread}} customMapping={mapping}>

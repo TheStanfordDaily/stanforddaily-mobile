@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { View, ScrollView, Dimensions, StyleSheet, Image, FlatList } from "react-native";
 import { Sections } from "../constants";
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from "../helpers/wpapi";
@@ -19,29 +19,59 @@ const thumbnailImage = (details) => {
   console.log(details.sizes.thumbnail)
 }
 
+const homeMember = (article, section) => {
+  if (section.id === Sections.FEATURED.id) {
+    return article.categories.includes(Sections.FEATURED.id)
+  }
+  return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
+}
+
+function reducer(prev, curr) {
+  return { ...prev, [curr.slug]: curr }
+}
+
 export default function Home({ navigation }) {
-    const [articles, setArticles] = useState([])
+    const [articles, setArticles] = useState({}) // or just append to articles like before or useReducer
     const [pageNumber, setPageNumber] = useState(0)
     useEffect(() => {
-      Model.posts().perPage(40).get().then(posts => setArticles(articles.concat(posts)))
+      Model.posts().perPage(100).get().then(posts => {
+        /*for (let key of Object.keys(Sections)) {
+          setArticles(...articles, ...{key: posts})
+          console.log("new articles", articles)
+          //console.log(key, {...articles, ...{"news": posts}})
+          //setArticles({...articles, ...{"news": posts}})
+        }*/
+        //dispatchArticles({"news": posts})
+        //dispatchArticles({"opinions": posts})
+        for (let value of Object.values(Sections)) {
+          setArticles(articles => ({
+            ...articles,
+            [value.slug]: posts.filter(items => homeMember(items, value))
+          }))
+        }
+        
+        
+        console.log("new articles", articles["sports"])
+        // console.log(Sections.SPORTS)
+      })
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     return (
       <Layout style={styles.container}>
         <ScrollView>
-          <Featured articles={dummyData.slice(40, 45)}/>
+          {/* <Featured articles={articles.filter(article => article.categories.includes(Sections.FEATURED.id))}/> */}
           <Mark category={Sections.NEWS} navigation={navigation}/>
-          <Duet articles={articles.filter(article => article.categories.includes(Sections.NEWS.id) && !article.categories.includes(Sections.FEATURED.id))}/>
+          <Duet articles={articles[Sections.NEWS.slug]}/>
           <Divider marginTop={8}/>
-          <Mark category={Sections.OPINIONS} onPress={() => console.log("navigate to next screen")}/>
-          <Shelf articles={dummyData.slice(10, 20)}/>
-          <Mark category={Sections.SPORTS} onPress={() => console.log("navigate to next screen")}/>
-          <Duet articles={dummyData.slice(20, 30)}/>
+          <Mark category={Sections.OPINIONS} navigation={navigation}/>
+          <Shelf articles={articles[Sections.OPINIONS.slug]}/>
+          <Mark category={Sections.SPORTS} navigation={navigation}/>
+          <Duet articles={articles[Sections.SPORTS.slug]}/>
           <Divider marginTop={8}/>
-          <Culture theGrind={dummyData.slice(30, 32)} artsAndLife={dummyData.slice(32,34)}/>
+          {/* <Culture articles={articles.filter(article => article.categories.includes(Sections.THE_GRIND.id) || article.categories.includes(Sections.ARTS_LIFE.id))}/> */}
           <Divider/>
-          <Mark category={Sections.HUMOR} alternate onPress={() => console.log("navigate to next screen")}/>
-          <Shelf alternate articles={dummyData.slice(33, 40)}/>
+          <Mark category={Sections.HUMOR} navigation={navigation} alternate/>
+          <Shelf articles={articles[Sections.HUMOR.slug]} alternate/>
           {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Culture` component. */}
         </ScrollView>
       </Layout>

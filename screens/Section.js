@@ -5,7 +5,8 @@ import { Margins } from "../constants";
 import { getCategoryPageAsync } from "../helpers/wpapi";
 import Model from "../Model"
 
-export default function Section({ navigation }) {
+export default function Section({ route, navigation }) {
+    const { category, seed } = route.params
     const [articlesLoading, setArticlesLoading] = useState(true)
     // const [articles, setArticles] = useState(seed)
     const [pageNumber, setPageNumber] = useState(0)
@@ -24,6 +25,7 @@ export default function Section({ navigation }) {
 
     return (
       <View style={styles.container}>
+        <Text>{category.name}</Text>
         <List onEndReached={() => console.log("Time to load next page.")} />
       </View>
     )

@@ -8,7 +8,9 @@ export default function Mark({ navigation, alternate, seed, category }) {
     const arrow = Platform.OS === "ios" ? "arrow-ios-forward-outline" : "chevron-right-outline"
     const theme = useTheme()
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("Section", { seed: seed, category: Sections.NEWS })} style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["color-basic-100"] }]}>
+        <TouchableOpacity
+            onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
+            style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["color-basic-100"] }]}>
                 <Text category={"h4"}>{category.name.toUpperCase()}</Text>
                 <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, marginTop: 2, tintColor: theme["text-basic-color"] }} />
         </TouchableOpacity>
