@@ -27,67 +27,10 @@ export default function Post(props) {
         // todo: HTML purify this if needed.
     }
 
-        // console.log(props.route.params)
-        // put the margin top for title becauase on phones with the notch it looks off center. Gotta find the right numbers on that an a dynamic implementation
-        
-        // const inferred = new Intl.DateTimeFormat(undefined, { year: 'numeric', day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric' })
-        const { item } = props.route.params
-        const { id, title, subtitle, date, parsely, _embedded, thumbnailInfo, content } = item;
-        let thumbnailURL
-        let caption
-        if (_embedded["wp:featuredmedia"][0].code) {
-          console.log(_embedded["wp:featuredmedia"][0].data.status);
-        } else {
-          thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
-          caption = _embedded["wp:featuredmedia"][0].caption
-        }
+
         return (
         <View style={{ flex: 1 }}>
-          <StatusBar barStyle={Platform.OS === "ios" ? "light-content": "dark-content"} />
-            <ImageHeaderScrollView
-              headerImage={{uri: thumbnailURL}}
-              maxOverlayOpacity={0.75}
-              minOverlayOpacity={0.6}
-              fadeOutForeground
-              maxHeight={thumbnailURL ? 270 : 0}
-              minHeight={Platform.OS === 'ios' ? 91 : 0}
-              renderForeground={() => (
-                <View style={{ height: "100%", alignItems: 'center', justifyContent: "center", }} >
-                    <Content source={{html: title.rendered}} systemFonts={systemFonts} tagsStyles={{body: { color: "white", fontWeight: "600", fontFamily: "MinionProBoldDisp", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}} />
-                </View>
-              )}
-            >
-              
-              <View style={{ marginHorizontal: Margins.articleSides, paddingTop: 0 }}>
-                
-                
-                {/* <View style={{flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: Margins.defaultSmall}}> */}
-                           <Content source={{html: caption.rendered}} systemFonts={systemFonts} tagsStyles={{body: styles.caption, fontFamily: "MinionProItDisp"}}/>
-
-  
-                  <TriggeringView style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    
-                    <View style={{flex: 1, flexDirection: 'column'}}>
-                    
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={styles.byline}>By </Text>
-                      <Byline style={styles.author} names={item.parsely.meta.creator} identifiers={item.coauthors} />
-                    </View>
-                    <Text style={styles.copy}>{new Date(date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</Text>
-                    </View>
-                    
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: "LibreFranklinBold"}}>{decode(_embedded["wp:term"][0][0].name)}</Text></TouchableOpacity>
-                  
-                  </TriggeringView>
-                {/* </View> */}
-                
-                
-                {/* {subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>} */}
-                <Content renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} systemFonts={systemFonts} source={{html: content.rendered + "<br>"}} tagsStyles={tagStyles} />
-                {/* <Text style={styles.copy}>{content.rendered}</Text> */}
-                </View>
-           
-            </ImageHeaderScrollView>
+          
         </View>
         )
     

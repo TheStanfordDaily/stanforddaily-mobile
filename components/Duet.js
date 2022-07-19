@@ -7,9 +7,9 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Sections } from "../constants"
 
-export default function News(props) {
-
-    const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1) // props.article.length % 2 == 0 || !props.pageSplits
+export default function Duet(props) {
+    const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
+    
     const Header = (props) => (
       <React.Fragment>
         <Image
@@ -39,7 +39,7 @@ export default function News(props) {
                 {duet.map((item) => (
                   <Card
                     style={{ flex: 1, height: 300, marginHorizontal: 5 }}
-                    header={<Header source={item["_embedded"]["wp:featuredmedia"][0]["media_details"].sizes.thumbnail["source_url"]} />}
+                    header={<Header source={item["jetpack_featured_media_url"]} />}
                     footer={<Footer date={item.date} />}>
                     <Text category={"p1"}>{decode(item.title.rendered)}</Text>
                   </Card>
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
       flex: 1,
       height: 300,
       paddingHorizontal: 8,
-      paddingVertical: 4,
+      paddingVertical: 4
     },
     tab: {
       height: 192,
       alignItems: "center",
-      justifyContent: "center",
+      justifyContent: "center"
     },
     card: {
       flex: 1,
@@ -72,15 +72,15 @@ const styles = StyleSheet.create({
     },
     headerImage: {
       width: 300,
-      height: 200,
+      height: 200
     },
     footerContainer: {
       flexDirection: "row",
       justifyContent: "flex-end",
       paddingHorizontal: 20,
-      paddingVertical: 20,
+      paddingVertical: 20
     },
     footerControl: {
-      marginHorizontal: 4,
-    },
+      marginHorizontal: 4
+    }
 })

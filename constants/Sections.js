@@ -12,6 +12,7 @@ export default {
             BIZTECH: {
                 name: "Business & Technology",
                 slug: "business-and-technology-news",
+                id: 16821
             }
         }
     },

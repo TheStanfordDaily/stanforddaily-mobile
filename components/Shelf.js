@@ -6,19 +6,19 @@ import { decode } from "html-entities"
 import _ from "lodash"
 
 export default function Shelf(props) {
-
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {
         opinionsArticles.pop()
     }
-    const theme = useTheme()
-    const [cellPressed, setCellPressed] = React.useState({})
+    
     const Accessory = (props) => (
         <Image
             source={{ uri: props.uri }}
             style={styles.image}
         />
     )
+
+    const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-200" : "color-basic-300"]
     
     return (
@@ -40,11 +40,9 @@ export default function Shelf(props) {
                                     paddingVertical: 10,
                                     backgroundColor: theme[props.alternate ? "color-primary-100" : "color-basic-100"]
                                 }}
-                                onPressIn={() => setCellPressed({ index: index, _index: _index, booleanValue: true })}
-                                onPressOut={() => setCellPressed({ index: index, _index: _index, booleanValue: false })}
                                 {...{...props, activeOpacity: 0.8}}
                             />
-                            <Divider />
+                            <Divider/>
                         </React.Fragment>
                     ))}
                 </View>
