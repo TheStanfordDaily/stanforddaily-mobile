@@ -28,7 +28,7 @@ export default function Shelf(props) {
             overdrag>
             {_.chunk(opinionsArticles, 3).map((triplet, index) => (
                 <View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={index}>
-                    {triplet.map((item, _index) => (
+                    {triplet.map((item) => (
                         <React.Fragment>
                             <ListItem
                                 title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
@@ -40,7 +40,7 @@ export default function Shelf(props) {
                                     paddingVertical: 10,
                                     backgroundColor: theme[props.alternate ? "color-primary-100" : "color-basic-100"]
                                 }}
-                                {...{...props, activeOpacity: 0.8}}
+                                {...{...props, activeOpacity: 0.8, onPress: () => props.navigation.navigate("Post", { article: item })}}
                             />
                             <Divider/>
                         </React.Fragment>

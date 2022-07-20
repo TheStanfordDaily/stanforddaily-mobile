@@ -7,7 +7,7 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Sections } from "../constants"
 
-export default function Duet(props) {
+export default function Diptych(props) {
     const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
     
     const Header = (props) => (
@@ -34,13 +34,14 @@ export default function Duet(props) {
             style={styles.container}
             initialPage={0}
             overdrag>
-            {_.chunk(newsArticles, 2).map((duet, index) => (
+            {_.chunk(newsArticles, 2).map((couplet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
-                {duet.map((item) => (
+                {couplet.map((item) => (
                   <Card
                     style={{ flex: 1, height: 300, marginHorizontal: 5 }}
-                    header={<Header source={item["jetpack_featured_media_url"]} />}
-                    footer={<Footer date={item.date} />}>
+                    header={<Header source={item["jetpack_featured_media_url"]}/>}
+                    footer={<Footer date={item.date}/>}
+                    {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>
                     <Text category={"p1"}>{decode(item.title.rendered)}</Text>
                   </Card>
                 ))}

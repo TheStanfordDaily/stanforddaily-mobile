@@ -12,7 +12,7 @@ export default function Mark({ navigation, alternate, seed, category }) {
             onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
             style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["color-basic-100"] }]}>
                 <Text category={"h4"}>{category.name.toUpperCase()}</Text>
-                <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, marginTop: 2, tintColor: theme["text-basic-color"] }} />
+                <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, tintColor: theme["text-basic-color"] }} />
         </TouchableOpacity>
     )
 }
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         display: "flex",
         padding: 5,
         width: "100%",
-        height: 50,
+        height: 42,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center"

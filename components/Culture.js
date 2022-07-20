@@ -6,9 +6,10 @@ import _ from "lodash"
 import { decode } from "html-entities"
 
 // Going to rename this component to Wildcard.
-export default function Culture({ navigation, articles }) {
+export default function Culture(props) {
 
-    const cultureArticles = articles // _.shuffle(theGrind.concat(artsAndLife))
+    const { navigation, articles } = props
+    const cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
     const Header = (props) => (
         <React.Fragment>
             <Text style={styles.header} category={"h6"}>{props.title}</Text>
@@ -33,6 +34,7 @@ export default function Culture({ navigation, articles }) {
                     style={styles.card}
                     header={<Header title={decode(item.title.rendered)} uri={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer byline={"Scoop Scooperstein".toUpperCase()} section={_.sample(["The Grind", "Arts & Life"])}/>}
+                    {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}
                 >
                     <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
                 </Card>

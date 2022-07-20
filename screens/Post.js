@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Dimensions, Text, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { View, Dimensions, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
+import { Text, useTheme, withStyles } from '@ui-kitten/components';
 import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
 import { getPostByIdAsync } from '../helpers/wpapi';
 import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
@@ -10,43 +11,71 @@ import { WebView } from 'react-native-webview';
 import iframe from '@native-html/iframe-plugin';
 import Byline from '../components/Byline';
 import { decode } from 'html-entities';
+import { PropsService } from '@ui-kitten/components/devsupport';
 
 const renderers = { iframe }
 const { width, height } = Dimensions.get('window');
 const systemFonts = [...defaultSystemFonts, 'MinionProDisp', 'MinionProBoldDisp', 'MinionProRegular', 'MinionProItDisp'];
 
-export default function Post(props) {
+export default function Post({ route, navigation }) {
+    const { article } = route.params
+    // if no articles, make API call
+    const featuredMedia = article["jetpack_featured_media_url"]
+    const theme = useTheme()
 
-    // A function that triggers going back to headlines
-    const goBack = () => {
-        props.navigation.goBack();
+    const Foreground = () => (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+        <Text category={"h4"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+      </View>
+    )
+
+    function captionRenderer({ TDefaultRenderer, ...props}) {
+      return (
+        <TDefaultRenderer {...props} />
+      )
     }
 
-    const createMarkup = (text) => {
-        return text;
-        // todo: HTML purify this if needed.
-    }
-
-
-        return (
-        <View style={{ flex: 1 }}>
-          
+    return (
+      <ImageHeaderScrollView
+        headerImage={{ uri: featuredMedia }}
+        renderForeground={Foreground}
+        maxOverlayOpacity={0.75}
+        minOverlayOpacity={0.6}
+        minHeight={91 + 19*(Platform.OS === "android")}
+        maxHeight={featuredMedia ? 270 : 0}
+        fadeOutForeground>
+        <View style={{ flex: 1, marginHorizontal: 14 }}>
+          {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category={"s1"}>{article["wps_subtitle"]}</Text>}
+          <Content source={{html: article.content.rendered}} systemFonts={systemFonts} baseStyle={{ fontFamily: "MinionProRegular" }}/>
         </View>
-        )
+      </ImageHeaderScrollView>
+    )
     
 }
 
 const styles = StyleSheet.create({
+  body: {
+    fontFamily: "MinionProDisp"
+  },
   copy: {
     // marginHorizontal: Margins.articleSides,
     fontFamily: "LibreFranklinRegular",
     fontSize: FontSizes.small,
     // color: THEME.LABEL
   },
+  hoveringText: {
+    color: "white",
+    paddingHorizontal: 20,
+    marginTop: 20,
+    textShadowColor: "black",
+    textShadowRadius: 1,
+    textShadowOffset: {width: 1, height: 1},
+    textAlign: "center"
+  },
   caption: {
     // marginHorizontal: Margins.articleSides,
     fontFamily: "MinionProItDisp",
-    fontSize: FontSizes.small,
+    // fontSize: FontSizes.small,
     // fontStyle: 'italic'
     // color: THEME.LABEL
   },

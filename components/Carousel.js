@@ -8,8 +8,9 @@ import { decode } from "html-entities"
 import { Sections } from "../constants"
 
 // Going to rename to Carousel.
-export default function Featured({ navigation, articles }) {
+export default function Carousel(props) {
     const theme = useTheme()
+    const { navigation, articles } = props
 
     const Header = (props) => (
       <React.Fragment>
@@ -50,9 +51,11 @@ export default function Featured({ navigation, articles }) {
                       <Card
                           style={{ flex: 1, height: 300, marginHorizontal: 5 }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
-                          footer={<Footer date={item.date} section={_.sample(["Business & Technology", "Breaking News", "Magazine", "University", "Football"])} />}>
+                          footer={<Footer date={item.date} section={_.sample(["Business & Technology", "Breaking News", "Magazine", "University", "Football"])} />}
+                            
+                          {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                           <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h6"}>{decode(item.title.rendered)}</Text>
-                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s1">
+                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
                             {moment(new Date(item.date)).fromNow().toUpperCase()}
                           </Text>
                       </Card>

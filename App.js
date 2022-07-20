@@ -112,14 +112,14 @@ export default function App() {
 
       return (fontsLoaded &&
         <NavigationContainer>
-          <IconRegistry icons={EvaIconsPack} />
+          <IconRegistry icons={EvaIconsPack}/>
           <ApplicationProvider {...eva} theme={{...eva.light, ...bread}} customMapping={mapping}>
             <SafeAreaProvider>
               <StatusBar/>
               <Stack.Navigator initialRouteName="Home">
                 <Stack.Screen name="Home" component={Home} options={{headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("./assets/media/DailyLogoCardinal.png")} />)}}/>
-                <Stack.Screen name="Post" component={Post} />
-                <Stack.Screen name="Section" component={Section} />
+                <Stack.Screen name="Post" component={Post} options={{ headerTitle: "", headerTransparent: true, headerTintColor: "white" }} />
+                <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name })}/>
               </Stack.Navigator>
             </SafeAreaProvider>
           </ApplicationProvider>

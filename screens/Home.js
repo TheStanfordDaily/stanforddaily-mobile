@@ -1,18 +1,16 @@
-import React, { useEffect, useReducer, useState } from "react";
-import { View, ScrollView, Dimensions, StyleSheet, Image, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, ScrollView, StyleSheet } from "react-native";
 import { Sections } from "../constants";
 import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from "../helpers/wpapi";
 import LightboxGallery from "../components/LightboxGallery";
 import { getThumbnailURL, formatDate } from "../helpers/format";
-import { Card, Divider, Layout, List, ListItem, Text } from "@ui-kitten/components";
-import moment from "moment";
-import Duet from "../components/Duet";
+import { Divider, Layout } from "@ui-kitten/components";
+import Diptych from "../components/Diptych";
 import Mark from "../components/Mark";
 import Culture from "../components/Culture";
 import Shelf from "../components/Shelf"; // Could probably have an index file with all the sections and import all of them on one line.
-import Featured from "../components/Featured";
+import Carousel from "../components/Carousel";
 import Model from "../Model";
-import { Circle } from "react-native-svg";
 
 const dummyData = require("../dummy.json")
 
@@ -48,20 +46,20 @@ export default function Home({ navigation }) {
     return (articlesLoaded &&
       <Layout style={styles.container}>
         <ScrollView>
-          <Featured articles={articles[Sections.FEATURED.slug]}/>
+          <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation}/>
           <Mark category={Sections.NEWS} navigation={navigation}/>
-          <Duet articles={articles[Sections.NEWS.slug]}/>
+          <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation}/>
           <Divider marginTop={8}/>
           <Mark category={Sections.OPINIONS} navigation={navigation}/>
-          <Shelf articles={articles[Sections.OPINIONS.slug]}/>
+          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation}/>
           <Mark category={Sections.SPORTS} navigation={navigation}/>
-          <Duet articles={articles[Sections.SPORTS.slug]}/>
+          <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation}/>
           <Divider marginTop={8}/>
           {/* <Culture articles={}/> concatenating The Grind and Arts & Life wrecks rendering */}
           <Culture articles={articles[Sections.THE_GRIND.slug]} navigation={navigation}/>
           <Divider/>
-          <Mark category={Sections.HUMOR} navigation={navigation} alternate/>
-          <Shelf articles={articles[Sections.HUMOR.slug]} alternate/>
+          <Mark category={Sections.HUMOR} alternate navigation={navigation}/>
+          <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation}/>
           {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Culture` component. */}
         </ScrollView>
       </Layout>
