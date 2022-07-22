@@ -23,8 +23,8 @@ export default function Carousel(props) {
       
     const Footer = (props) => (
       <View style={styles.footer}>
-        <Text category={"label"}>{"Scoop Scooperstein".toUpperCase()}</Text>
-        <Button size={"tiny"} status={"basic"}>{props.section}</Button>
+        <Text category="label">{"Scoop Scooperstein".toUpperCase()}</Text>
+        <Button size="tiny" status="basic">{props.section}</Button>
       </View>
     )
 
@@ -54,7 +54,7 @@ export default function Carousel(props) {
                           footer={<Footer date={item.date} section={_.sample(["Business & Technology", "Breaking News", "Magazine", "University", "Football"])} />}
                             
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
-                          <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h6"}>{decode(item.title.rendered)}</Text>
+                          <Text style={{ marginHorizontal: -10, marginTop: -5 }} category="h6">{decode(item.title.rendered)}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
                             {moment(new Date(item.date)).fromNow().toUpperCase()}
                           </Text>

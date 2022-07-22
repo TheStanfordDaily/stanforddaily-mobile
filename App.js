@@ -24,6 +24,7 @@ import SearchStack from "./navigation/SearchStack";
 import Post from "./screens/Post";
 import Home from "./screens/Home";
 import Section from "./screens/Section";
+import { ThemeContext } from "./theme-context";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -55,6 +56,12 @@ export default function App() {
   const responseListener = useRef();
   // const isLoadingComplete = useLoadedAssets();
   // const colorScheme = useColorScheme();
+  const [theme, setTheme] = useState("light")
+  
+  const toggleTheme = () => {
+    const next = theme === "light" ? "dark" : "light"
+    setTheme(next)
+  }
 
   useEffect(() => {
     Font.loadAsync({
@@ -113,16 +120,21 @@ export default function App() {
       return (fontsLoaded &&
         <NavigationContainer>
           <IconRegistry icons={EvaIconsPack}/>
-          <ApplicationProvider {...eva} theme={{...eva.light, ...bread}} customMapping={mapping}>
-            <SafeAreaProvider>
-              <StatusBar/>
-              <Stack.Navigator initialRouteName="Home">
-                <Stack.Screen name="Home" component={Home} options={{headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("./assets/media/DailyLogoCardinal.png")} />)}}/>
-                <Stack.Screen name="Post" component={Post} options={{ headerTitle: "", headerTransparent: true, headerTintColor: "white" }} />
-                <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name })}/>
-              </Stack.Navigator>
-            </SafeAreaProvider>
-          </ApplicationProvider>
+          <ThemeContext.Provider value={{ theme, toggleTheme }}>
+            <ApplicationProvider {...eva} theme={{...eva[theme], ...bread}} customMapping={mapping}>
+              <SafeAreaProvider>
+                <StatusBar/>
+                <Stack.Navigator initialRouteName="Home">
+                  <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("./assets/media/DailyLogoCardinal.png")} />), headerStyle: { backgroundColor: theme === "light" ? "white" : "#222B45" }, headerTintColor: bread["color-primary-500"]}}/>
+                  <Stack.Screen name="Post" component={Post} options={{ headerTitle: "", headerTransparent: true, headerTintColor: "white" }} />
+                  <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name })}/>
+                </Stack.Navigator>
+              </SafeAreaProvider>
+            </ApplicationProvider>
+          </ThemeContext.Provider>
         </NavigationContainer>
       )
 }

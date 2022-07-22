@@ -12,7 +12,7 @@
     "@eva-design/eva": "^2.1.1",
     "@expo-google-fonts/open-sans": "^0.2.0",
     "@expo-google-fonts/pt-serif": "^0.2.0",
-    "@native-html/iframe-plugin": "^1.1.2",
+    "@native-html/iframe-plugin": "^2.6.1",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
     "@react-navigation/stack": "^6.0.4",
@@ -45,7 +45,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-svg": "12.3.0",
     "react-native-web": "0.17.7",
-    "react-native-webview": "11.18.1",
+    "react-native-webview": "^11.22.7",
     "superagent": "^6.1.0",
     "unimodules": "^1.0.0",
     "wpapi": "^1.2.2"

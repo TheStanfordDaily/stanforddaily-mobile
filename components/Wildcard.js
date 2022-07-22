@@ -1,20 +1,26 @@
-import React from "react"
+import React, { useContext, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { Button, Card, Layout, List, Text } from "@ui-kitten/components"
 import { Image } from "react-native"
 import _ from "lodash"
 import { decode } from "html-entities"
+import { ThemeContext } from "../theme-context"
 
 // Going to rename this component to Wildcard.
-export default function Culture(props) {
+export default function Wlidcard(props) {
 
-    const { navigation, articles } = props
-    const cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
+    const { navigation, articles, random } = props
+    var cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
+    useEffect(() => {
+        if (random) {
+            cultureArticles = _.shuffle(articles).slice(0, 4) 
+        }
+    }, [])
     const Header = (props) => (
         <React.Fragment>
             <Text style={styles.header} category={"h6"}>{props.title}</Text>
             <Image
-                source={{ uri: props.uri }}
+                source={{ uri: props.uri + "?w=800" }}
                 style={{ flex: 1, height: 192 }}
             />
         </React.Fragment>
@@ -23,9 +29,11 @@ export default function Culture(props) {
     const Footer = (props) => (
         <View style={styles.footer}>
             <Text style={{ textAlign: "justify" }} category={"label"}>{props.byline}</Text>
-            <Button size={"tiny"} status={"basic"}>{props.section}</Button>
+            <Button size={"tiny"} status={"basic"} onPress={themeContext.toggleTheme}>{props.section}</Button>
         </View>
     )
+
+    const themeContext = useContext(ThemeContext)
     
     return (
         <View style={styles.container}>

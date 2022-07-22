@@ -10,7 +10,7 @@ export default function Mark({ navigation, alternate, seed, category }) {
     return (
         <TouchableOpacity
             onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
-            style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["color-basic-100"] }]}>
+            style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["background-color-basic-1"] }]}>
                 <Text category={"h4"}>{category.name.toUpperCase()}</Text>
                 <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, tintColor: theme["text-basic-color"] }} />
         </TouchableOpacity>

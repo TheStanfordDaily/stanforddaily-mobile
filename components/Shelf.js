@@ -19,7 +19,7 @@ export default function Shelf(props) {
     )
 
     const theme = useTheme()
-    const inactiveColor = theme[props.alternate ? "color-primary-200" : "color-basic-300"]
+    const inactiveColor = theme[props.alternate ? "color-primary-200" : "background-color-basic-2"]
     
     return (
         <PagerView
@@ -38,7 +38,7 @@ export default function Shelf(props) {
                                     flex: 1/3,
                                     paddingHorizontal: 10,
                                     paddingVertical: 10,
-                                    backgroundColor: theme[props.alternate ? "color-primary-100" : "color-basic-100"]
+                                    backgroundColor: theme[props.alternate ? "color-primary-100" : "background-basic-color-1"]
                                 }}
                                 {...{...props, activeOpacity: 0.8, onPress: () => props.navigation.navigate("Post", { article: item })}}
                             />
