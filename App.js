@@ -25,6 +25,7 @@ import Post from "./screens/Post";
 import Home from "./screens/Home";
 import Section from "./screens/Section";
 import { ThemeContext } from "./theme-context";
+import Author from "./screens/Author";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -170,6 +171,10 @@ export default function App() {
                     name="Section"
                     component={Section}
                     options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}
+                  />
+                  <Stack.Screen
+                    name="Author"
+                    component={Author}
                   />
                 </Stack.Navigator>
               </SafeAreaProvider>

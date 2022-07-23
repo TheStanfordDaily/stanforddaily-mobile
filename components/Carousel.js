@@ -5,6 +5,7 @@ import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
+import { itemize } from "../helpers/format"
 import { Sections } from "../constants"
 
 export default function Carousel(props) {
@@ -22,7 +23,7 @@ export default function Carousel(props) {
       
     const Footer = (props) => (
       <View style={styles.footer}>
-        <Text category="label">{"Scoop Scooperstein".toUpperCase()}</Text>
+        <Text style={{ flex: 0.95 }} category="label">{itemize(Object.keys(props.authors).map(name => name.toUpperCase()))}</Text>
         <Button size="tiny" status="basic">{props.section}</Button>
       </View>
     )
@@ -43,8 +44,7 @@ export default function Carousel(props) {
                       <Card
                           style={{ flex: 1, height: 300, marginHorizontal: 5 }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
-                          footer={<Footer date={item.date} section={_.sample(["Business & Technology", "Breaking News", "Magazine", "University", "Football"])} />}
-                            
+                          footer={<Footer authors={item.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} date={item.date} section={item.parsely.meta.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                           <Text style={{ marginHorizontal: -10, marginTop: -5 }} category="h6">{decode(item.title.rendered)}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">

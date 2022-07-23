@@ -6,7 +6,12 @@ const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.",
 
 // export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 export const itemize = (elements) => {
-    return [elements.slice(0, -1).join(", "), elements.length > 2 ? elements.last() : elements].join(" and ")
+  switch (elements.length) {
+    case 0: return ""
+    case 1: return elements[0]
+    default:
+      return elements.slice(0, -1).join(", ") + " and " + elements[elements.length - 1]
+  }
 }
 
 export function decodeEntityHTML(message) {

@@ -1,16 +1,16 @@
 import React from "react";
 import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
-import { Text, useTheme, withStyles } from "@ui-kitten/components";
-import { formatDate } from "../helpers/format";
+import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { getPostByIdAsync } from "../helpers/wpapi";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
-import { Margins, Strings } from "../constants";
+import { Spacing } from "../constants";
 import Content, { defaultSystemFonts } from "react-native-render-html";
 import { FontSizes } from "../constants";
 import WebView from "react-native-webview";
-import Byline from "../components/Byline";
 import { decode } from "html-entities";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
+import { itemize, formatDate } from "../helpers/format";
+import Byline from "./Byline";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [...defaultSystemFonts, "MinionProDisp", "MinionProBoldDisp", "MinionProRegular", "MinionProItDisp"];
@@ -21,6 +21,7 @@ export default function Post({ route, navigation }) {
     const featuredMedia = article["jetpack_featured_media_url"]
     const theme = useTheme()
     const dateInstance = new Date(article.date)
+    const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     
     const renderers = {
       iframe: IframeRenderer
@@ -35,6 +36,22 @@ export default function Post({ route, navigation }) {
         <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
+
+    // const Byline = () => {
+    //   const names = Object.keys(authors)
+    //   return (
+    //   <View style={styles.byline}>
+    //     <View style={{ flex: 0.95 }}>
+    //       <View>
+    //         {names[0].toLowerCase() !== "from the community" && (<Text category={"label"}>By </Text>)}
+    //         <Text category="label">{itemize(names)}</Text>
+    //         {/* actually going to need some mapping here see previous byline component and edit that actually */}
+    //         </View>
+    //       <Text category="label">{formatDate(dateInstance)}</Text>
+    //     </View>
+    //     <Button size="tiny" status="basic">{article.parsely.meta.articleSection}</Button>
+    //   </View>
+    // )}
 
     return (
       <ImageHeaderScrollView
@@ -52,10 +69,11 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             {/* Byline will go here */}
-            <Text category="label">{formatDate(dateInstance)}</Text>
+            <Byline authors={authors} section={article.parsely.meta.articleSection} date={formatDate(dateInstance)} />
+            
           </TriggeringView>
           <Content
-            source={{html: article.content.rendered}}
+            source={{ html: article.content.rendered }}
             defaultTextProps={{ selectable: true }}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
