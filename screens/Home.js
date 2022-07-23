@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { Divider, Layout, useTheme } from "@ui-kitten/components";
+import { Divider, Layout } from "@ui-kitten/components";
 import Carousel from "../components/Carousel";
 import Diptych from "../components/Diptych";
 import Mark from "../components/Mark";
 import Shelf from "../components/Shelf";
 import Wildcard from "../components/Wildcard";
 import Model from "../Model";
-import { Sections } from "../constants";
+import { Sections, Spacing } from "../constants";
 
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
@@ -43,18 +43,18 @@ export default function Home({ navigation }) {
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
-          <Divider marginTop={8} />
+          <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={articles[Sections.OPINIONS.slug]} navigation={navigation} />
           <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
           <Mark category={Sections.SPORTS} seed={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
-          <Divider marginTop={8} />
+          <Divider marginTop={Spacing.medium} />
           <Wildcard articles={articles["culture"]} navigation={navigation} random />
-          <Divider/>
+          <Divider />
           {articles[Sections.HUMOR.slug].length >= 3 && (
             <React.Fragment>
               <Mark category={Sections.HUMOR} seed={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
-              <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation}/>
+              <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
             </React.Fragment>
           )}
           {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Wildcard` component. */}
