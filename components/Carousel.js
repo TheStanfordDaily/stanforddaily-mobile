@@ -7,7 +7,6 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Sections } from "../constants"
 
-// Going to rename to Carousel.
 export default function Carousel(props) {
     const theme = useTheme()
     const { navigation, articles } = props
@@ -15,7 +14,7 @@ export default function Carousel(props) {
     const Header = (props) => (
       <React.Fragment>
         <Image
-          source={{ uri: props.source }}
+          source={{ uri: props.source + "?w=800" }}
           style={{ flex: 1, height: 192 }}
         />
       </React.Fragment>
@@ -35,10 +34,6 @@ export default function Carousel(props) {
     const ObliqueSlide = (props) => (
       <View></View>
     )
-
-    const largestImageAvailable = (details) => {
-      return _.maxBy(details.media_details.sizes, "width").source_url
-    }
 
     return (
         <PagerView style={styles.container} initialPage={0} overdrag>

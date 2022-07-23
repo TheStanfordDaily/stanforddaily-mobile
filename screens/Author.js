@@ -1,6 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
 import { FlatList, Text } from 'react-native';
-import Separator from '../components/Separator';
 import { Margins } from '../constants';
 
 export default function Author(props) {
@@ -27,7 +26,7 @@ export default function Author(props) {
         <FlatList
             data={authorPosts}
             renderItem={renderItem}
-            ItemSeparatorComponent={() => <Separator />}
+            // ItemSeparatorComponent={() => <Separator />}
             style={{ backgroundColor: 'white' }}
         />
     )

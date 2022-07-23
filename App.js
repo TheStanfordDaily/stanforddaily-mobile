@@ -31,8 +31,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: false,
     shouldSetBadge: false,
-  }),
-});
+  })
+})
 
 const firebaseConfig = {
   apiKey: APIKEY,
@@ -44,7 +44,7 @@ const firebaseConfig = {
   appId: APP_ID,
   measurementId: MEASUREMENT_ID,
   serviceAccountId: SERVICE_ACCOUNT_ID
-};
+}
 
 const cardinalLogo = require("./assets/media/DailyLogoCardinal.png")
 const whiteLogo = require("./assets/media/DailyLogoWhite.png")
@@ -52,10 +52,10 @@ const Stack = createStackNavigator()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  const [expoPushToken, setExpoPushToken] = useState("")
+  const [notification, setNotification] = useState(false)
+  const notificationListener = useRef()
+  const responseListener = useRef()
   // const isLoadingComplete = useLoadedAssets();
   // const colorScheme = useColorScheme();
   const [theme, setTheme] = useState("light")
@@ -66,10 +66,12 @@ export default function App() {
   }
 
   const headerOptions = {
-    headerTitle: () => (<Image
-      style={{ width: 260, height: 30 }}
-      source={theme === "light" ? cardinalLogo : whiteLogo}
-    />),
+    headerTitle: () => (
+      <Image
+        style={{ width: 260, height: 30 }}
+        source={theme === "light" ? cardinalLogo : whiteLogo}
+      />
+    ),
     headerStyle: {
       backgroundColor: bread[theme]["background-basic-color-1"]
     },
@@ -107,17 +109,16 @@ export default function App() {
       MinionProSemiboldItDisp: require("./assets/fonts/Minion_Pro/MinionPro-SemiboldItDisp.ttf"),
       LibreFranklinRegular: require("./assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf"),
       LibreFranklinBold: require("./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf"),
-      LibreFranklinItalic: require("./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf"),
-    }).then(setFontsLoaded(true));
+      LibreFranklinItalic: require("./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf")
+    }).then(setFontsLoaded(true))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        var matches = expoPushToken.match(/\[(.*?)\]/);
+        const app = initializeApp(firebaseConfig)
+        const db = getDatabase(app)
+        var matches = expoPushToken.match(/\[(.*?)\]/)
         if (matches) {
           var submatch = matches[1]
-          
           const auth = getAuth(app)
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
@@ -127,25 +128,25 @@ export default function App() {
           })
         }
       }
-    });
+    })
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+      setNotification(notification)
+    })
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
         navigate(Strings.post, { item: result })
       })
-    });
+    })
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+      Notifications.removeNotificationSubscription(notificationListener.current)
+      Notifications.removeNotificationSubscription(responseListener.current)
+    }
+  }, [])
 
       return (fontsLoaded &&
         <NavigationContainer>
@@ -158,9 +159,18 @@ export default function App() {
                   <Stack.Screen
                     name="Home"
                     component={Home}
-                    options={headerOptions}/>
-                  <Stack.Screen name="Post" component={Post} options={detailHeaderOptions} />
-                  <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}/>
+                    options={headerOptions}
+                  />
+                  <Stack.Screen
+                    name="Post"
+                    component={Post}
+                    options={detailHeaderOptions}
+                  />
+                  <Stack.Screen
+                    name="Section"
+                    component={Section}
+                    options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}
+                  />
                 </Stack.Navigator>
               </SafeAreaProvider>
             </ApplicationProvider>
@@ -170,21 +180,21 @@ export default function App() {
 }
 
 async function registerForPushNotificationsAsync() {
-  let token;
+  let token
   if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
     if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
+      alert("Failed to get token for push notification.")
+      return
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (await Notifications.getExpoPushTokenAsync()).data
   } else {
-    alert("Must use physical device for Push Notifications");
+    alert("Must use physical device for Push Notifications.")
   }
 
   if (Platform.OS === "android") {
@@ -192,9 +202,9 @@ async function registerForPushNotificationsAsync() {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
+      lightColor: "#FF231F7C"
+    })
   }
 
-  return token;
+  return token
 }
