@@ -1,0 +1,12 @@
+{
+  "build": {
+    "production": {},
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    }
+  },
+  "cli": {
+    "version": ">= 0.46.0"
+  }
+}

@@ -1,49 +1,141 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import Index from "./index";
-import { Notifications } from 'expo';
-import { registerForPushNotificationsAsync } from './app/helper/PushNotification';
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text } from "react-native";
+import 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Navigation, { navigate } from "./navigation";
+import * as Font from 'expo-font';
+import * as Device from 'expo-device'
+import * as Notifications from 'expo-notifications'
+import { initializeApp } from "firebase/app"; 
+import { getDatabase, ref, push, set } from 'firebase/database'
+import { getAuth, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth'
+import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from '@env'
+import { getPostAsync } from './helpers/wpapi'
+import { Strings } from './constants'
 
-export default class App extends React.Component {
-  state = {
-    notification: {},
-  };
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
-  componentDidMount() {
-    registerForPushNotificationsAsync();
+const firebaseConfig = {
+  // This needs to be updated/redacted for security reasons.
+  // Planning to use an environment variable.
+  apiKey: APIKEY,
+  authDomain: "daily-mobile-app-notifications.firebaseapp.com",
+  databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
+  projectId: "daily-mobile-app-notifications",
+  storageBucket: "daily-mobile-app-notifications.appspot.com",
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
+  serviceAccountId: SERVICE_ACCOUNT_ID
+};
 
-    // Handle notifications that are received or selected while the app
-    // is open. If the app was closed and then opened by tapping the
-    // notification (rather than just tapping the app icon to open it),
-    // this function will fire on the next tick after the app starts
-    // with the notification data.
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
-  }
 
-  _handleNotification = (notification) => {
-    this.setState({ notification: notification });
-  };
+export default function App() {
+  // const isLoadingComplete = useLoadedAssets();
+  // const colorScheme = useColorScheme();
 
-  render() {
-    /*
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Origin: {this.state.notification.origin}</Text>
-        <Text>Data: {JSON.stringify(this.state.notification.data)}</Text>
-      </View>
-    );
-    */
-    return (
-      <Index notificationData={this.state.notification.data} />
-    );
-  }
+  const [fontsLoaded, setFontsLoaded] = useState(false)
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
+  useEffect(() => {
+    Font.loadAsync({
+      // Loads fonts from static resource.
+      MinionProDisp: require('./assets/fonts/Minion_Pro/MinionPro-Disp.ttf'),
+      MinionProRegular: require('./assets/fonts/Minion_Pro/MinionPro-Regular.ttf'),
+      MinionProItDisp: require('./assets/fonts/Minion_Pro/MinionPro-ItDisp.ttf'),
+      MinionProBoldDisp: require('./assets/fonts/Minion_Pro/MinionPro-BoldDisp.ttf'),
+      MinionProBoldItDisp: require('./assets/fonts/Minion_Pro/MinionPro-BoldItDisp.ttf'),
+      MinionProMediumDisp: require('./assets/fonts/Minion_Pro/MinionPro-MediumDisp.ttf'),
+      MinionProMediumItDisp: require('./assets/fonts/Minion_Pro/MinionPro-MediumItDisp.ttf'),
+      MinionProSemiboldDisp: require('./assets/fonts/Minion_Pro/MinionPro-SemiboldDisp.ttf'),
+      MinionProSemiboldItDisp: require('./assets/fonts/Minion_Pro/MinionPro-SemiboldItDisp.ttf'),
+      LibreFranklinRegular: require('./assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf'),
+      LibreFranklinBold: require('./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf'),
+      LibreFranklinItalic: require('./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf'),
+    }).then(setFontsLoaded(true));
+    registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(token)
+      if (Object.keys(firebaseConfig).length > 0) {
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        var matches = expoPushToken.match(/\[(.*?)\]/);
+        if (matches) {
+          var submatch = matches[1]
+          
+          const auth = getAuth(app)
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+            const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
+            set(tokenRef, Date())
+          }).catch((error) => {
+            console.log("error with signing in: ", error)
+          })
+        }
+      }
+    });
+
+    // This listener is fired whenever a notification is received while the app is foregrounded.
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
+        navigate(Strings.post, { item: result })
+      })
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
+
+      return (<SafeAreaProvider>
+        <Navigation />
+        <StatusBar />
+      </SafeAreaProvider>)
+
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+async function registerForPushNotificationsAsync() {
+
+  let token;
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+
+}
