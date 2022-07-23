@@ -1,110 +1,103 @@
-import React, { Component } from 'react';
-import { View, Dimensions, Text, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
-import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
-import { getPostByIdAsync } from '../helpers/wpapi';
-import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
-import { Margins, Strings } from '../constants';
-import Content, { defaultSystemFonts } from 'react-native-render-html';
-import { FontSizes } from '../constants';
-import { WebView } from 'react-native-webview';
-import iframe from '@native-html/iframe-plugin';
-import Byline from '../components/Byline';
-import { decode } from 'html-entities';
+import React, { Component } from "react";
+import { View, Dimensions, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from "react-native";
+import { Text, useTheme, withStyles } from "@ui-kitten/components";
+import { formatDate } from "../helpers/format";
+import { getPostByIdAsync } from "../helpers/wpapi";
+import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
+import { Margins, Strings } from "../constants";
+import Content, { defaultSystemFonts } from "react-native-render-html";
+import { FontSizes } from "../constants";
+import WebView from "react-native-webview";
+import iframe from "@native-html/iframe-plugin";
+import Byline from "../components/Byline";
+import { decode } from "html-entities";
+import { PropsService } from "@ui-kitten/components/devsupport";
+import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
+import { Layout } from "@ui-kitten/components";
 
-const renderers = { iframe }
-const { width, height } = Dimensions.get('window');
-const systemFonts = [...defaultSystemFonts, 'MinionProDisp', 'MinionProBoldDisp', 'MinionProRegular', 'MinionProItDisp'];
+// const renderers = { iframe }
+const { width, height } = Dimensions.get("window");
+const systemFonts = [...defaultSystemFonts, "MinionProDisp", "MinionProBoldDisp", "MinionProRegular", "MinionProItDisp"];
 
-export default function Post(props) {
+export default function Post({ route, navigation }) {
+    const { article } = route.params
+    // if no articles, make API call
+    const featuredMedia = article["jetpack_featured_media_url"]
+    const theme = useTheme()
+    const dateInstance = new Date(article.date)
+    const renderers = {
+      iframe: IframeRenderer
+    };
+    
+    const customHTMLElementModels = {
+      iframe: iframeModel
+    };
 
-    // A function that triggers going back to headlines
-    const goBack = () => {
-        props.navigation.goBack();
-    }
+    const Foreground = () => (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+        <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+      </View>
+    )
 
-    const createMarkup = (text) => {
-        return text;
-        // todo: HTML purify this if needed.
-    }
-
-        // console.log(props.route.params)
-        // put the margin top for title becauase on phones with the notch it looks off center. Gotta find the right numbers on that an a dynamic implementation
-        
-        // const inferred = new Intl.DateTimeFormat(undefined, { year: 'numeric', day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric' })
-        const { item } = props.route.params
-        const { id, title, subtitle, date, parsely, _embedded, thumbnailInfo, content } = item;
-        let thumbnailURL
-        let caption
-        if (_embedded["wp:featuredmedia"][0].code) {
-          console.log(_embedded["wp:featuredmedia"][0].data.status);
-        } else {
-          thumbnailURL = _embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url
-          caption = _embedded["wp:featuredmedia"][0].caption
-        }
-        return (
-        <View style={{ flex: 1 }}>
-          <StatusBar barStyle={Platform.OS === "ios" ? "light-content": "dark-content"} />
-            <ImageHeaderScrollView
-              headerImage={{uri: thumbnailURL}}
-              maxOverlayOpacity={0.75}
-              minOverlayOpacity={0.6}
-              fadeOutForeground
-              maxHeight={thumbnailURL ? 270 : 0}
-              minHeight={Platform.OS === 'ios' ? 91 : 0}
-              renderForeground={() => (
-                <View style={{ height: "100%", alignItems: 'center', justifyContent: "center", }} >
-                    <Content source={{html: title.rendered}} systemFonts={systemFonts} tagsStyles={{body: { color: "white", fontWeight: "600", fontFamily: "MinionProBoldDisp", paddingHorizontal: Margins.articleSides, marginTop: 20, fontSize: normalize(FontSizes.large), textShadowColor: 'black', textShadowRadius: 1, textShadowOffset: {width: 1, height: 1}, textAlign: 'center' }}} />
-                </View>
-              )}
-            >
-              
-              <View style={{ marginHorizontal: Margins.articleSides, paddingTop: 0 }}>
-                
-                
-                {/* <View style={{flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center', marginTop: Margins.defaultSmall}}> */}
-                           <Content source={{html: caption.rendered}} systemFonts={systemFonts} tagsStyles={{body: styles.caption, fontFamily: "MinionProItDisp"}}/>
-
-  
-                  <TriggeringView style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    
-                    <View style={{flex: 1, flexDirection: 'column'}}>
-                    
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={styles.byline}>By </Text>
-                      <Byline style={styles.author} names={item.parsely.meta.creator} identifiers={item.coauthors} />
-                    </View>
-                    <Text style={styles.copy}>{new Date(date).toLocaleString('en-us', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' })}</Text>
-                    </View>
-                    
-                    <TouchableOpacity style={styles.category}><Text style={{fontFamily: "LibreFranklinBold"}}>{decode(_embedded["wp:term"][0][0].name)}</Text></TouchableOpacity>
-                  
-                  </TriggeringView>
-                {/* </View> */}
-                
-                
-                {/* {subtitle && <Text style={styles.copy}>{subtitle.rendered}</Text>} */}
-                <Content renderers={renderers} renderersProps={{ iframe: { scalesPageToFit: true } }} WebView={WebView} systemFonts={systemFonts} source={{html: content.rendered + "<br>"}} tagsStyles={tagStyles} />
-                {/* <Text style={styles.copy}>{content.rendered}</Text> */}
-                </View>
-           
-            </ImageHeaderScrollView>
+    return (
+      <ImageHeaderScrollView
+        headerImage={{ uri: featuredMedia }}
+        renderForeground={Foreground}
+        maxOverlayOpacity={0.75}
+        minOverlayOpacity={0.6}
+        minHeight={91 + 19*(Platform.OS === "android")}
+        maxHeight={featuredMedia ? 270 : 0}
+        fadeOutForeground
+        scrollViewBackgroundColor={theme["background-basic-color-1"]}>
+        {/* Could change this to `Layout` and work with theming that way as well. */}
+        {/* Need to add back the `TriggeringView` so that the image scales when user pulls. */}
+        <View style={{ flex: 1, marginHorizontal: 14 }}>
+          <TriggeringView>
+            {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
+            {/* Byline will go here */}
+            <Text category="label">{formatDate(dateInstance)}</Text>
+          </TriggeringView>
+          <Content
+            source={{html: article.content.rendered}}
+            WebView={WebView}
+            customHTMLElementModels={customHTMLElementModels}
+            systemFonts={systemFonts}
+            contentWidth={width}
+            baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            renderers={renderers}
+            backgroundColor={theme["background-color-basic-2"]}
+            enableExperimentalMarginCollapsing
+          />
         </View>
-        )
+      </ImageHeaderScrollView>
+    )
     
 }
 
 const styles = StyleSheet.create({
+  body: {
+    fontFamily: "MinionProDisp"
+  },
   copy: {
     // marginHorizontal: Margins.articleSides,
     fontFamily: "LibreFranklinRegular",
     fontSize: FontSizes.small,
     // color: THEME.LABEL
   },
+  hoveringText: {
+    color: "white",
+    paddingHorizontal: 20,
+    marginTop: 20,
+    textShadowColor: "black",
+    textShadowRadius: 1,
+    textShadowOffset: {width: 1, height: 1},
+    textAlign: "center"
+  },
   caption: {
     // marginHorizontal: Margins.articleSides,
     fontFamily: "MinionProItDisp",
-    fontSize: FontSizes.small,
-    // fontStyle: 'italic'
+    // fontSize: FontSizes.small,
+    // fontStyle: "italic"
     // color: THEME.LABEL
   },
   byline: {
@@ -136,16 +129,3 @@ const styles = StyleSheet.create({
     // color: THEME.LABEL
   },
 })
-
-const tagStyles = {
-  body: {
-    whiteSpace: 'normal',
-    fontSize: FontSizes.smallMedium,
-    fontFamily: "MinionProRegular"
-  },
-  a: {
-    color: '#8c1515',
-    textDecorationColor: '#8c1515'
-    // need to change the underline offset somehow
-  }
-}

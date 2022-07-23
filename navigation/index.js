@@ -18,21 +18,21 @@ export default function Navigation({ colorScheme }) {
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
       ref={navigationRef}>
-      <RootNavigator />
+      <NavigationRoot />
     </NavigationContainer>
   );
 }
 
 // A root stack navigator is often used for displaying modals on top of all other content
 // Read more here: https://reactnavigation.org/docs/modal
-const RootStack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
-function RootNavigator() {
+function NavigationRoot() {
   return (
-    <RootStack.Navigator screenOptions={{ headerShown: false }}>
-      <RootStack.Screen name="Content" component={ContentStack} />
-      <RootStack.Screen name="Search" component={SearchStack} options={{ title: 'Oops!' }} />
-    </RootStack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Content" component={ContentStack} />
+      <Stack.Screen name="Search" component={SearchStack} options={{ title: 'Oops!' }} />
+    </Stack.Navigator>
   );
 }
 

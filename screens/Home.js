@@ -1,317 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, Dimensions, StyleSheet } from 'react-native';
-import { Strings, CategorySlugs, HomeSections, Heights, Margins, Fonts, Alignments, FontSizes, Sections, PlatformPalette } from '../constants';
-import Separator from '../components/Separator';
-import Carousel, { getInputRangeFromIndexes } from 'react-native-snap-carousel';
-import { getHomeAsync, getCategoryAsync, getHomeMoreAsync } from '../helpers/wpapi';
-import NewsFeedItem from '../components/NewsFeedItem';
-import LightboxGallery from '../components/LightboxGallery';
-import CategoryHeader from '../components/CategoryHeader';
-import CardRow from '../components/CardRow';
-import Card from '../components/Card';
-import _ from 'lodash';
-import { getThumbnailURL, formatDate } from '../helpers/format';
-import Column from '../components/Column';
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet } from "react-native";
+import { Divider, Layout, useTheme } from "@ui-kitten/components";
+import Carousel from "../components/Carousel";
+import Diptych from "../components/Diptych";
+import Mark from "../components/Mark";
+import Shelf from "../components/Shelf";
+import Wildcard from "../components/Wildcard";
+import Model from "../Model";
+import { Sections } from "../constants";
 
-const categoryHome = CategorySlugs[0];
-const { width, height } = Dimensions.get('window');
+export default function Home({ navigation }) {
+    const [articles, setArticles] = useState({})
+    const [pageNumber, setPageNumber] = useState(0)
+    const [articlesLoaded, setArticlesLoaded] = useState(false)
 
-// then(function(data) {
-//   // do something with the returned posts
-//   console.log(data)
-//   return data
-// }).catch(function(err) {
-//   // handle error
-//   console.log(err)
-// });
-
-export default function Home(props) {
-
-    const [category, setCategory] = useState(categoryHome);
-    const [articles, setArticles] = useState([]);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [allArticles, setAllArticles] = useState([]);
-
-    const _renderRow = ({item, index}) => {
-      return (<NewsFeedItem
-        key={"article-" + item.id}
-        item={item}
-        index={index}
-        isFeatured={true}
-        onPress={ () => props.navigation.navigate(Strings.post, { item: item })}
-        onAuthor={ (authorID) => props.navigation.navigate(Strings.author, { authorID: authorID }) }
-        />
-        );
-    };
-
-    const _renderImage = ({item}) => {
-      return (item._embedded["wp:featuredmedia"][0].media_details &&
-        <LightboxGallery title={item.title.rendered} authors={item._embedded.author[0].name} imageResource={item._embedded["wp:featuredmedia"][0].media_details.sizes.full.source_url} date={formatDate(item)} navigation={props.navigation} />   
-      )
-    };
+    const homeMember = (article, section) => {
+      if (section.id === Sections.FEATURED.id) {
+        return article.categories.includes(Sections.FEATURED.id)
+      }
     
-    const _renderCardRow = ({item}) => {
-      return (
-        <Card
-          item={item}
-          navigation={props.navigation}
-          onPress={ () => props.navigation.navigate(Strings.post, { item: item })} 
-        />    
-      );
-    };
+      return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
+    }
     
-    const _renderColumn = ({item, index}) => {
-      return (
-        <Column
-          item={item}
-          navigation={props.navigation}
-          slideIndex={index}
-        />
-      )
-    };
-    const categories = {"featured": 1485, "news": 3, "theGrind": 32278, "artsAndLife": 25, "sports": 23, "opinions": 24, "humor": 55796, "cartoons": 41527};
-
     useEffect(() => {
-        (async () => {
-          // let newsResults = await getHomeAsync(3);
-          // setNewsArticles(newsResults);
-          
-          for (const [slug, id] of Object.entries(categories)) {
-            let articles = await getHomeAsync(id);
-            setAllArticles(allArticles => ({...allArticles, [slug]: slug !== "featured" ? articles.filter(article => !article.categories.includes(1485)) : articles}));
-          }
-        })();
-      }, [pageNumber, category]);
+      Model.posts().perPage(50).get().then(posts => {
+        for (let value of Object.values(Sections)) {
+          setArticles(articles => ({
+            ...articles,
+            [value.slug]: posts.filter(items => homeMember(items, value)),
+          }))
+        }
+        setArticles(articles => ({
+          ...articles,
+          "culture": posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id)),
+        }))
+      }).finally(() => setArticlesLoaded(true))
+    }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
-    return (
-        <View style={styles.container}>
-            <ScrollView>
-              {/* <Text>{JSON.stringify(allArticles["news"][7].parsely.meta.creator)} | {JSON.stringify(allArticles["news"][7].coauthors)}</Text> */}
-                <Carousel
-                    layout={"default"}
-                    data={allArticles['featured']}
-                    renderItem={_renderRow}
-                    sliderWidth={width}
-                    itemWidth={0.92*width}
-                    activeSlideAlignment={'start'}
-                    inactiveSlideScale={1}
-                    scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
-                    const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
-                    const outputRange = range; return { inputRange, outputRange }}}
-                    slideInterpolatedStyle={(index, animatedValue, carouselProps) => { return {
-                      zIndex: carouselProps.data.length - index,
-                      opacity: animatedValue.interpolate({
-                          inputRange: [-1, 0, 1],
-                          outputRange: index == 1 ? [0, 1, 0.7] : [0, 1, 0],
-                          extrapolate: 'clamp'
-                        })
-                    }}}
-                />
-                <Separator />
-                <CategoryHeader title={'News'} navigation={props.navigation} articles={allArticles['news']} id={categories["news"]} />
-                <CardRow
-                  data={allArticles["news"]}
-                  renderItem={_renderCardRow}
-                  title={"News"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles["news"], title: 'News', navigation: props.navigation })} 
-                />
-                <Separator />
-                <CategoryHeader title={'Opinions'} navigation={props.navigation} articles={allArticles["opinions"]} id={categories["opinions"]} />
-                <Carousel
-                  data={_.chunk(allArticles['opinions'], 3).filter(item => item.length === 3)}
-                  renderItem={_renderColumn}
-                  sliderWidth={width}
-                  itemWidth={0.92*width}
-                  activeSlideAlignment={'start'}
-                  inactiveSlideScale={1}
-                  scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
-                    const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
-                    const outputRange = range; return { inputRange, outputRange }}}
-                  slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
-                    opacity: animatedValue.interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: [0, 1, 0.7],
-                        extrapolate: 'clamp'
-                    })}}}
-                />
-                <Separator />
-                <CategoryHeader title={'Sports'} navigation={props.navigation} articles={allArticles['sports']} id={categories["sports"]} />
-                <CardRow
-                  data={allArticles['sports']}
-                  renderItem={_renderCardRow}
-                  title={"Sports"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['sports'], title: 'Sports', navigation: props.navigation })}
-                />
-                <Separator />
-                <CategoryHeader title={'Arts & Life'} navigation={props.navigation} articles={allArticles['artsAndLife']} id={categories["artsAndLife"]} />
-                <CardRow
-                  data={allArticles['artsAndLife']}
-                  renderItem={_renderCardRow}
-                  title={"Arts & Life"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['artsAndLife'], title: 'Arts and Life', navigation: props.navigation })}
-                />
-                <Separator />
-                <CategoryHeader title={'The Grind'} navigation={props.navigation} articles={allArticles['theGrind']} id={categories["theGrind"]}/>
-                <CardRow
-                  data={allArticles['theGrind']}
-                  renderItem={_renderCardRow}
-                  title={"The Grind"}
-                  onPress={ () => props.navigation.navigate(STRINGS.CATEGORY, { data: allArticles['theGrind'], title: 'The Grind', navigation: props.navigation })} 
-                />
-                <Separator />
-                <CategoryHeader title={'Humor'} navigation={props.navigation} articles={allArticles['humor']} id={categories["humor"]} />
-                <Carousel
-                  data={_.chunk(allArticles['humor'], 3).filter(item => item.length === 3)}
-                  renderItem={_renderColumn}
-                  sliderWidth={width}
-                  itemWidth={0.92*width}
-                  containerCustomStyle={{backgroundColor: "#fef2f2"}}
-                  activeSlideAlignment={'start'}
-                  inactiveSlideScale={1}
-                  scrollInterpolator={(index, carouselProps) => {const range = [3, 2, 1, 0, -1];
-                    const inputRange = getInputRangeFromIndexes(range, index, carouselProps);
-                    const outputRange = range; return { inputRange, outputRange }}}
-                  slideInterpolatedStyle={(index, animatedValue, carouselProps) => {  return {
-                    opacity: animatedValue.interpolate({
-                        inputRange: [-1, 0, 1],
-                        outputRange: [0, 1, 0.7],
-                        extrapolate: 'clamp'
-                    })}}}
-                />
-                <CategoryHeader title={'Cartoons'} paddingTop={4} />
-                <Carousel
-                  layout={'tinder'}
-                  activeSlideAlignment={'center'}
-                  data={allArticles['cartoons']}
-                  renderItem={_renderImage}
-                  enableMomentum={true}
-                  sliderWidth={width}
-                  itemWidth={0.85*width}
-                  containerCustomStyle={styles.slider}
-                  contentContainerCustomStyle={styles.sliderContentContainer}
-                />
-            </ScrollView>
-        </View>
-    );
+    return (articlesLoaded &&
+      <Layout style={styles.container}>
+        <ScrollView>
+          <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
+          <Mark category={Sections.NEWS} seed={articles[Sections.NEWS.slug]} navigation={navigation} />
+          <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
+          <Divider marginTop={8} />
+          <Mark category={Sections.OPINIONS} seed={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+          <Mark category={Sections.SPORTS} seed={articles[Sections.SPORTS.slug]} navigation={navigation} />
+          <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
+          <Divider marginTop={8} />
+          <Wildcard articles={articles["culture"]} navigation={navigation} random />
+          <Divider/>
+          {articles[Sections.HUMOR.slug].length >= 3 && (
+            <React.Fragment>
+              <Mark category={Sections.HUMOR} seed={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
+              <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation}/>
+            </React.Fragment>
+          )}
+          {/* Infinite scroll/wildcard will go here, with cell similar to the ones in `Wildcard` component. */}
+        </ScrollView>
+      </Layout>
+    )
 }
   
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width,
-    height,
-    backgroundColor: '#FFFFFF'
-    // backgroundColor: PlatformPalette.background
-  },
-  loadingIndicator: {
-    marginTop: Margins.default,
-    marginBottom: Margins.default
-  },
-  sideMenuContainer: {
-    flex: 1,
-    // backgroundColor: COLORS.WHITE,
-    alignItems: Alignments.center,
-    // paddingTop: top_padding
-  },
-  sideBarTitle: {
-    height: Heights.appHeader,
-    justifyContent: Alignments.center,
-    borderBottomWidth: 1,
-    alignSelf: 'stretch',
-    flexDirection: 'column',
-    paddingTop: Margins.NORMAL_HEADER_Margins,
-    // borderBottomColor: THEME.SECONDARY_LABEL,
-  },
-  sideBarTitleText: {
-    // color: THEME.LABEL,
-    fontFamily: Fonts.PTSerifBold,
-    fontSize: FontSizes.smallMedium,
-    //textAlign: 'center',
-    flex: 1,
-    justifyContent: 'center',
-    marginLeft: Margins.default
-  },
-  flatListStyle: {
-    flex: 1,
-    width: '100%',
-    marginTop: 10
-  },
-  sideMenuItem: {
-    width: '100%',
-    flexDirection: Alignments.row,
-    height: Heights.sideMenuItem,
-    alignItems:  Alignments.center,
-  },
-  separator: {
-    // borderBottomColor: THEME.SECONDARY_LABEL,
-    borderBottomWidth: 1,
-  },
-  categoriesHeaderContainer: {
-    height: 60,
-    // backgroundColor: THEME.BACKGROUND,
-    alignItems: Alignments.left,
-    justifyContent: Alignments.left,
-  },
-  categoriesText: {
-    marginTop: Margins.default,
-    marginLeft: Margins.articleSides, //match category side with article edge
-    fontFamily: "MinionProDisp",
-    fontSize:25,
-    flex: 2,
-  },
-  categoryLabel: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    // width: width - (2 * Margins.default)
-  },
-  header: {
-    fontFamily: "MinionProDisp",
-    fontSize: Fonts.large + 10,
-    // color: THEME.LABEL
-  },
-  humor: {
-    fontFamily: "MinionProDisp",
-    fontSize: FontSizes.large + 10,
-    // color: THEME.BACKGROUND
-  },
-  more: {
-    // backgroundColor: THEME.BUTTON,
-    marginTop: Margins.small,
-    marginHorizontal: Margins.articleSides,
-    justifyContent: 'center',
-    borderRadius: 10
-  },
-  cartoonContainer: {
-    paddingVertical: 30,
-    width: 0.75*width,
-    height: 0.75*width
-  },
-  sliderContentContainer: {
-    paddingVertical: 10 // for custom animation
-  },
-  communityContainer: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingTop: 0,
-    width: '100%',
-  },
-  box: {
-    width: '95%',
-    height: height/8,
-    // backgroundColor: COLORS.CARDINAL,
-    margin: Margins.small,
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignContent: 'center'
-  },
-  communityTitleText: {
-    fontSize: FontSizes.extraLarge,
-    fontFamily: "MinionProDisp",
-    // color: COLORS.WHITE,
-    textAlign: 'center',
+    flex: 1
   }
-});
+})
