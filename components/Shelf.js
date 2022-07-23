@@ -1,6 +1,6 @@
 import React from "react"
 import { View, StyleSheet, Image } from "react-native"
-import { Button, Divider, Layout, List, ListItem, Text, useTheme } from "@ui-kitten/components"
+import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
@@ -22,10 +22,7 @@ export default function Shelf(props) {
     const inactiveColor = theme[props.alternate ? "color-primary-200" : "background-color-basic-2"]
     
     return (
-        <PagerView
-            style={[styles.container, { backgroundColor: inactiveColor }]}
-            initialPage={0}
-            overdrag>
+        <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
             {_.chunk(opinionsArticles, 3).map((triplet, index) => (
                 <View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={index}>
                     {triplet.map((item) => (

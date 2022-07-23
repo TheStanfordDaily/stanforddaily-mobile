@@ -9,10 +9,30 @@ export default {
         slug: "news",
         id: 3,
         desks: {
+            ACADEMICS: {
+                name: "Academics",
+                slug: "academics-news",
+                id: 4408
+            },
             BIZTECH: {
                 name: "Business & Technology",
                 slug: "business-and-technology-news",
                 id: 16821
+            },
+            CAMPUS_LIFE: {
+                name: "Campus Life",
+                slug: "campus-life-news",
+                id: 4423
+            },
+            GRADUATE_STUDENTS: {
+                name: "Graduate Students",
+                slug: "graduate-students",
+                id: 75212
+            },
+            UNIVERSITY: {
+                name: "University",
+                slug: "university-news",
+                id: 4424
             }
         }
     },
@@ -34,7 +54,25 @@ export default {
     ARTS_LIFE: {
         name: "Arts & Life",
         slug: "artsAndLife",
-        id: 25
+        id: 25,
+        desks: {
+            CULTURE: {
+                name: "Culture",
+                slug: "culture",
+            },
+            MUSIC: {
+                name: "Music",
+                slug: "music-intermission",
+            },
+            READS: {
+                name: "Reads",
+                slug: "reads",
+            },
+            SCREEN: {
+                name: "Screen",
+                slug: "screen",
+            }
+        }
     },
     CARTOONS: {
         name: "Cartoons",

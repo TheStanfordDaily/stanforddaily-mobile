@@ -12,10 +12,7 @@ export default function Diptych(props) {
     
     const Header = (props) => (
       <React.Fragment>
-        <Image
-          source={{ uri: props.source }}
-          style={{ flex: 1, height: 192 }}
-        />
+        <Image source={{ uri: props.source }} style={{ flex: 1, height: 192 }} />
       </React.Fragment>
     )
       
@@ -30,15 +27,12 @@ export default function Diptych(props) {
     }
 
     return (
-        <PagerView
-            style={styles.container}
-            initialPage={0}
-            overdrag>
+        <PagerView style={styles.container} initialPage={0} overdrag>
             {_.chunk(newsArticles, 2).map((couplet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {couplet.map((item) => (
                   <Card
-                    style={{ flex: 1, height: 300, marginHorizontal: 5 }}
+                    style={styles.card}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer date={item.date}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>
@@ -65,7 +59,9 @@ const styles = StyleSheet.create({
     },
     card: {
       flex: 1,
-      margin: 2
+      height: 300,
+      marginHorizontal: 5
+      // margin: 2
     },
     headerTextContainer: {
       paddingHorizontal: 20,

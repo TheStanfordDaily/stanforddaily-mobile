@@ -46,6 +46,8 @@ const firebaseConfig = {
   serviceAccountId: SERVICE_ACCOUNT_ID
 };
 
+const cardinalLogo = require("./assets/media/DailyLogoCardinal.png")
+const whiteLogo = require("./assets/media/DailyLogoWhite.png")
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -61,6 +63,34 @@ export default function App() {
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
+  }
+
+  const headerOptions = {
+    headerTitle: () => (<Image
+      style={{ width: 260, height: 30 }}
+      source={theme === "light" ? cardinalLogo : whiteLogo}
+    />),
+    headerStyle: {
+      backgroundColor: bread[theme]["background-basic-color-1"]
+    },
+    headerTintColor: eva[theme]["color-primary-500"]
+  }
+
+  const detailHeaderOptions = {
+    headerTitle: "",
+    headerTransparent: true,
+    headerTintColor: "white",
+    headerBackTitleVisible: false
+  }
+
+  const sectionHeaderOptions = {
+    headerStyle: {
+      backgroundColor: bread[theme]["background-basic-color-1"]
+    },
+    headerTintColor: bread[theme]["color-primary-500"],
+    headerTitleStyle: {
+      color: eva[theme][theme === "light" ? "color-basic-800" : "color-basic-100"]
+    }
   }
 
   useEffect(() => {
@@ -121,16 +151,16 @@ export default function App() {
         <NavigationContainer>
           <IconRegistry icons={EvaIconsPack}/>
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
-            <ApplicationProvider {...eva} theme={{...eva[theme], ...bread}} customMapping={mapping}>
+            <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
                 <StatusBar/>
                 <Stack.Navigator initialRouteName="Home">
                   <Stack.Screen
                     name="Home"
                     component={Home}
-                    options={{headerTitle: () => (<Image style={{ width: 260, height: 30 }} source={require("./assets/media/DailyLogoCardinal.png")} />), headerStyle: { backgroundColor: theme === "light" ? "white" : "#222B45" }, headerTintColor: bread["color-primary-500"]}}/>
-                  <Stack.Screen name="Post" component={Post} options={{ headerTitle: "", headerTransparent: true, headerTintColor: "white" }} />
-                  <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name })}/>
+                    options={headerOptions}/>
+                  <Stack.Screen name="Post" component={Post} options={detailHeaderOptions} />
+                  <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}/>
                 </Stack.Navigator>
               </SafeAreaProvider>
             </ApplicationProvider>

@@ -1,24 +1,23 @@
-import React, { Component } from 'react';
-import { View, Dimensions, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from 'react-native';
-import { Text, useTheme, withStyles } from '@ui-kitten/components';
-import { getThumbnailURL, formatDate, normalize } from '../helpers/format';
-import { getPostByIdAsync } from '../helpers/wpapi';
-import { ImageHeaderScrollView, TriggeringView } from 'react-native-image-header-scroll-view';
-import { Margins, Strings } from '../constants';
-import Content, { defaultSystemFonts } from 'react-native-render-html';
-import { FontSizes } from '../constants';
-import WebView from 'react-native-webview';
-import iframe from '@native-html/iframe-plugin';
-import Byline from '../components/Byline';
-import { decode } from 'html-entities';
-import { PropsService } from '@ui-kitten/components/devsupport';
+import React, { Component } from "react";
+import { View, Dimensions, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from "react-native";
+import { Text, useTheme, withStyles } from "@ui-kitten/components";
+import { formatDate } from "../helpers/format";
+import { getPostByIdAsync } from "../helpers/wpapi";
+import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
+import { Margins, Strings } from "../constants";
+import Content, { defaultSystemFonts } from "react-native-render-html";
+import { FontSizes } from "../constants";
+import WebView from "react-native-webview";
+import iframe from "@native-html/iframe-plugin";
+import Byline from "../components/Byline";
+import { decode } from "html-entities";
+import { PropsService } from "@ui-kitten/components/devsupport";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
-import { Layout } from '@ui-kitten/components';
+import { Layout } from "@ui-kitten/components";
 
-const renderers = { iframe }
-const { width, height } = Dimensions.get('window');
-const systemFonts = [...defaultSystemFonts, 'MinionProDisp', 'MinionProBoldDisp', 'MinionProRegular', 'MinionProItDisp'];
-const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
+// const renderers = { iframe }
+const { width, height } = Dimensions.get("window");
+const systemFonts = [...defaultSystemFonts, "MinionProDisp", "MinionProBoldDisp", "MinionProRegular", "MinionProItDisp"];
 
 export default function Post({ route, navigation }) {
     const { article } = route.params
@@ -36,34 +35,9 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
-        <Text category={"h4"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+        <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
-
-    function captionRenderer({ TDefaultRenderer, ...props}) {
-      return (
-        <TDefaultRenderer {...props} />
-      )
-    }
-
-
-    const formattedDate = () => {
-      let formattedMonth = MONTHS[dateInstance.getMonth()]
-      let formattedDay = dateInstance.getDate()
-      let formattedYear = dateInstance.getFullYear()
-      let formattedHours = dateInstance.getHours() % 12
-      if (formattedHours == 0) {
-        formattedHours = 12
-      }
-      let formattedMinutes = dateInstance.getMinutes()
-      if (formattedMinutes < 10) {
-        formattedMinutes = `0${formattedMinutes}`
-      }
-      let formattedMeridian = dateInstance.getUTCHours % 24 < 7 ? "a.m." : "p.m."
-      return `${formattedMonth} ${formattedDay}, ${formattedYear}, ${formattedHours}:${formattedMinutes} ${formattedMeridian}`
-    }
-
-    
 
     return (
       <ImageHeaderScrollView
@@ -73,20 +47,25 @@ export default function Post({ route, navigation }) {
         minOverlayOpacity={0.6}
         minHeight={91 + 19*(Platform.OS === "android")}
         maxHeight={featuredMedia ? 270 : 0}
-        fadeOutForeground>
+        fadeOutForeground
+        scrollViewBackgroundColor={theme["background-basic-color-1"]}>
         {/* Could change this to `Layout` and work with theming that way as well. */}
+        {/* Need to add back the `TriggeringView` so that the image scales when user pulls. */}
         <View style={{ flex: 1, marginHorizontal: 14 }}>
-          {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category={"s1"}>{article["wps_subtitle"]}</Text>}
-          {/* Byline will go here */}
-          <Text category="label">{formattedDate()}</Text>
+          <TriggeringView>
+            {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
+            {/* Byline will go here */}
+            <Text category="label">{formatDate(dateInstance)}</Text>
+          </TriggeringView>
           <Content
             source={{html: article.content.rendered}}
             WebView={WebView}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
             contentWidth={width}
-            baseStyle={{ fontFamily: "MinionProRegular", fontSize: 16 }}
+            baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
             renderers={renderers}
+            backgroundColor={theme["background-color-basic-2"]}
             enableExperimentalMarginCollapsing
           />
         </View>
@@ -118,7 +97,7 @@ const styles = StyleSheet.create({
     // marginHorizontal: Margins.articleSides,
     fontFamily: "MinionProItDisp",
     // fontSize: FontSizes.small,
-    // fontStyle: 'italic'
+    // fontStyle: "italic"
     // color: THEME.LABEL
   },
   byline: {
