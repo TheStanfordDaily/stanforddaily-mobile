@@ -37,22 +37,6 @@ export default function Post({ route, navigation }) {
       </View>
     )
 
-    // const Byline = () => {
-    //   const names = Object.keys(authors)
-    //   return (
-    //   <View style={styles.byline}>
-    //     <View style={{ flex: 0.95 }}>
-    //       <View>
-    //         {names[0].toLowerCase() !== "from the community" && (<Text category={"label"}>By </Text>)}
-    //         <Text category="label">{itemize(names)}</Text>
-    //         {/* actually going to need some mapping here see previous byline component and edit that actually */}
-    //         </View>
-    //       <Text category="label">{formatDate(dateInstance)}</Text>
-    //     </View>
-    //     <Button size="tiny" status="basic">{article.parsely.meta.articleSection}</Button>
-    //   </View>
-    // )}
-
     return (
       <ImageHeaderScrollView
         headerImage={{ uri: featuredMedia }}
@@ -69,11 +53,11 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             {/* Byline will go here */}
-            <Byline authors={authors} section={article.parsely.meta.articleSection} date={formatDate(dateInstance)} />
+            <Byline authors={authors} section={article.parsely.meta.articleSection} date={formatDate(dateInstance, true)} navigation={navigation} />
             
           </TriggeringView>
           <Content
-            source={{ html: article.content.rendered }}
+            source={{ html: article.content.rendered + "<br/>" }}
             defaultTextProps={{ selectable: true }}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}

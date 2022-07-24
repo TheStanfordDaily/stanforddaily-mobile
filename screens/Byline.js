@@ -4,20 +4,21 @@ import { Button, Text } from "@ui-kitten/components"
 import { Spacing } from "../constants"
 
 export default function Byline({ authors, section, date, navigation }) {
+  const entries = Object.entries(authors)
+  const bylineFontSize = entries.length < 3 ? 16 : 14
 
   const Name = ({ detail }) => (
-    <TouchableOpacity onPress={() => console.log(detail[1])}>
-      <Text category="label" status="primary">{detail[0]}</Text>
+    <TouchableOpacity onPress={() => navigation.navigate("Author", { name: detail[0], id: detail[1] })}>
+      <Text category="label" status="primary" style={{ fontSize: bylineFontSize }}>{detail[0]}</Text>
     </TouchableOpacity>
   )
-  const entries = Object.entries(authors)
 
   return (
     <View style={styles.byline}>
       <View style={{ flex: 0.95 }}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          <Text category="label">By </Text>
-          {entries.map(entry => <Name detail={entry} />).reduce((p, q, index) => [p, <Text category="label">{index < entries.length - 1 ? ", " : " and "}</Text>, q])}
+          {entries[0][1] != 16735 && (<Text category="label" style={{ fontSize: bylineFontSize }}>By </Text>)}
+          {entries.map(entry => <Name detail={entry} />).reduce((p, q, index) => [p, <Text category="label" style={{ fontSize: bylineFontSize }}>{index < entries.length - 1 ? ", " : " and "}</Text>, q])}
         </View>
       <Text category="label">{date}</Text>
       </View>

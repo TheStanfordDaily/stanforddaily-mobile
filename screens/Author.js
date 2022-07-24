@@ -1,25 +1,44 @@
-import React, { Component, useState, useEffect } from 'react';
-import { FlatList, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ImageBackground, FlatList } from 'react-native';
+import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins } from '../constants';
+import Model from "../Model";
+import { decode } from "html-entities";
+import { formatDate } from '../helpers/format';
 
-export default function Author(props) {
+const kate = require("../kate.json")
 
-    const [authorName, setAuthorName] = useState('');
-    const [authorPosts, setAuthorPosts] = useState([]);
-    const { authorID } = props.route.params;
-    var WPAPI = require('wpapi');
-    var wp = new WPAPI({ endpoint:  'http://stanforddaily.com/wp-json' });
+export default function Author({ route, navigation }) {
+    const { name, id } = route.params
+    const [pageNumber, setPageNumber] = useState(0)
+    const [articles, setArticles] = useState([])
+    const [index, setIndex] = useState(0)
 
-    useEffect(() => {
-        wp.posts().perPage(25).author(authorID).embed().get()
-        .then(posts => { setAuthorPosts(posts) });
-        wp.users().id(authorID).get()
-            .then( data => {
-                setAuthorName(data.name)
-            })
-    })
+    const Header = ({ uri }) => (
+        <ImageBackground source={{ uri: uri }} style={{ height: 140 }} />
+    )
+
+    // useEffect(() => {
+    //     Model.posts().param("coauthor", id).get().then(posts => {
+    //       setArticles(posts)
+    //     }).finally(() => setArticlesLoaded(true))
+    //   }, [pageNumber])
+    // with the formatted date below next time we can drop the time of day from the card
 
     return (
-        <Text>Author</Text>
+        <Layout>
+            <List
+                data={kate}
+                numColumns={2}
+                onEndReached={() => setPageNumber(pageNumber + 1)}
+                onEndReachedThreshold={0.5}
+                renderItem={({ item }) => (
+                    <Card style={{ flex: 1/2 }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
+                        <Text category="p1">{decode(item.title.rendered)}</Text>
+                        <Text category="label">{formatDate(new Date(item.date), false)}</Text>
+                    </Card>
+                )}
+            />
+        </Layout>
     )
 }

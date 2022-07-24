@@ -175,6 +175,7 @@ export default function App() {
                   <Stack.Screen
                     name="Author"
                     component={Author}
+                    options={({ route }) => ({ title: route.params.name })}
                   />
                 </Stack.Navigator>
               </SafeAreaProvider>

@@ -19,7 +19,7 @@ export function decodeEntityHTML(message) {
     return doc.documentElement.textContent;
 }
 
-export const formatDate = (instance) => {
+export const formatDate = (instance, verbose) => {
     let formattedMonth = MONTHS[instance.getMonth()]
     let formattedDay = instance.getDate()
     let formattedYear = instance.getFullYear()
@@ -32,5 +32,5 @@ export const formatDate = (instance) => {
       formattedMinutes = `0${formattedMinutes}`
     }
     let formattedMeridian = instance.getUTCHours % 24 < 7 ? "a.m." : "p.m."
-    return `${formattedMonth} ${formattedDay}, ${formattedYear}, ${formattedHours}:${formattedMinutes} ${formattedMeridian}`
+    return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`
 }
