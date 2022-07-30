@@ -11,9 +11,13 @@ import { decode } from "html-entities";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { itemize, formatDate } from "../helpers/format";
 import Byline from "./Byline";
+import { minion } from "../custom-fonts";
 
 const { width, height } = Dimensions.get("window");
-const systemFonts = [...defaultSystemFonts, "MinionProDisp", "MinionProBoldDisp", "MinionProRegular", "MinionProItDisp"];
+const systemFonts = [
+    ...Object.keys(minion).map(key => String(key)),
+    ...defaultSystemFonts
+];
 
 export default function Post({ route, navigation }) {
     const { article } = route.params
@@ -22,9 +26,12 @@ export default function Post({ route, navigation }) {
     const theme = useTheme()
     const dateInstance = new Date(article.date)
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
-    
+    var seen = []
     const renderers = {
-      iframe: IframeRenderer
+      iframe: IframeRenderer,
+      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props.tnode.styles.nativeTextFlow.fontSize }}>{props.tnode.init.textNode.data}</Text>,
+      strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props.tnode.styles.nativeTextFlow.fontSize }}>{props.tnode.init.textNode.data}</Text>,
+      // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
     };
     
     const customHTMLElementModels = {

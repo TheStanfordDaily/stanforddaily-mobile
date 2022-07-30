@@ -26,6 +26,7 @@ import Home from "./screens/Home";
 import Section from "./screens/Section";
 import { ThemeContext } from "./theme-context";
 import Author from "./screens/Author";
+import { minion } from "./custom-fonts";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -97,21 +98,8 @@ export default function App() {
   }
 
   useEffect(() => {
-    Font.loadAsync({
-      // Loads fonts from static resource.
-      MinionProDisp: require("./assets/fonts/Minion_Pro/MinionPro-Disp.ttf"),
-      MinionProRegular: require("./assets/fonts/Minion_Pro/MinionPro-Regular.ttf"),
-      MinionProItDisp: require("./assets/fonts/Minion_Pro/MinionPro-ItDisp.ttf"),
-      MinionProBoldDisp: require("./assets/fonts/Minion_Pro/MinionPro-BoldDisp.ttf"),
-      MinionProBoldItDisp: require("./assets/fonts/Minion_Pro/MinionPro-BoldItDisp.ttf"),
-      MinionProMediumDisp: require("./assets/fonts/Minion_Pro/MinionPro-MediumDisp.ttf"),
-      MinionProMediumItDisp: require("./assets/fonts/Minion_Pro/MinionPro-MediumItDisp.ttf"),
-      MinionProSemiboldDisp: require("./assets/fonts/Minion_Pro/MinionPro-SemiboldDisp.ttf"),
-      MinionProSemiboldItDisp: require("./assets/fonts/Minion_Pro/MinionPro-SemiboldItDisp.ttf"),
-      LibreFranklinRegular: require("./assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf"),
-      LibreFranklinBold: require("./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf"),
-      LibreFranklinItalic: require("./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf")
-    }).then(setFontsLoaded(true))
+    // Loads fonts from static resource.
+    Font.loadAsync(minion).then(setFontsLoaded(true))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {

@@ -1,12 +1,12 @@
 import { List } from "@ui-kitten/components";
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { View, Button, ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Wlidcard from "../components/Wildcard";
 import { Margins } from "../constants";
 import { getCategoryPageAsync } from "../helpers/wpapi";
 import Model from "../Model"
-import { Tab, TabView } from "@ui-kitten/components";
+import { Tab, TabView, Text } from "@ui-kitten/components";
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -27,25 +27,35 @@ export default function Section({ route, navigation }) {
       setArticlesLoading(false)
     }*/
 
+    var sortedArticles = {}
+    if (category.desks) {
+      Object.values(category.desks).forEach(desk => {
+        sortedArticles[desk.name] = seed.filter(article => article.categories.includes(desk.id))
+      })
+    }
+    console.log(sortedArticles)
+
     const [articles, setArticles] = useState(seed)
 
     return (category.desks ?
       <TabView selectedIndex={selection} onSelect={index => setSelection(index)}>
-        <Tab title={category.name + "desk 1"}>
-            <ScrollView>
+        <Tab title="All">
+        <ScrollView>
               <Wlidcard articles={seed} navigation={navigation} verbose />
-              {/* Going to use that verbose value and when true (as it is here), we'll display the date and a little bit more information. */}
             </ScrollView>
         </Tab>
-        <Tab title="Two">
-          <Text category="h3">Two</Text>
-        </Tab>
-        <Tab title="Three">
-          <Text category="h3">Three</Text>
-        </Tab>
+        {Object.values(category.desks).map(desk => (
+          <Tab title={desk.name}>
+            <ScrollView>
+              <Wlidcard articles={sortedArticles[desk.name]} navigation={navigation} verbose />
+            </ScrollView>
+          </Tab>
+        ))}
       </TabView> :
       <View>
-        <Text>fdsiudhui</Text>
+        <ScrollView>
+          <Wlidcard articles={seed} navigation={navigation} verbose />
+        </ScrollView>
       </View>
     )
 }
