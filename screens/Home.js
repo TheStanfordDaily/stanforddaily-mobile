@@ -13,7 +13,6 @@ export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoaded, setArticlesLoaded] = useState(false)
-    const [wildcards, setWildcards] = useState([])
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -49,7 +48,7 @@ export default function Home({ navigation }) {
 
     return (articlesLoaded &&
       <Layout style={styles.container}>
-        <ScrollView maintainVisibleContentPosition onScroll={(e) => {
+        <ScrollView onScroll={(e) => {
           let paddingToBottom = 10;
           paddingToBottom += e.nativeEvent.layoutMeasurement.height;
           if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {

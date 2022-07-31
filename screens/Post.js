@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
-import { getPostByIdAsync } from "../helpers/wpapi";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
 import Content, { defaultSystemFonts } from "react-native-render-html";
@@ -28,7 +27,7 @@ export default function Post({ route, navigation }) {
 
     const renderers = {
       iframe: IframeRenderer,
-      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props.tnode.init.textNode.data}</Text>,
+      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
     };
