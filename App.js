@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image } from "react-native";
+import { Appearance, Image, useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
@@ -59,8 +59,8 @@ export default function App() {
   const notificationListener = useRef()
   const responseListener = useRef()
   // const isLoadingComplete = useLoadedAssets();
-  // const colorScheme = useColorScheme();
-  const [theme, setTheme] = useState("light")
+  const colorScheme = Appearance.getColorScheme()
+  const [theme, setTheme] = useState(colorScheme)
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"

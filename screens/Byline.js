@@ -23,7 +23,11 @@ export default function Byline({ authors, section, category, date, navigation })
         </View>
       <Text category="label">{date}</Text>
       </View>
-      <Button onPress={() => navigation.navigate("Section", { category: category, seed: [] })} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(section)}</Button>
+      <Button onPress={() => {
+        if (category) {
+          category.name === section ? navigation.navigate("Section", { category: category, seed: [] }) : navigation.push("Section", { category: category, seed: [] })
+        }
+      }} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(section)}</Button>
     </View>
   )
 }

@@ -48,7 +48,7 @@ export default function Home({ navigation }) {
 
     return (articlesLoaded &&
       <Layout style={styles.container}>
-        <ScrollView onScroll={(e) => {
+        <ScrollView scrollEventThrottle={400} onScroll={(e) => {
           let paddingToBottom = 10;
           paddingToBottom += e.nativeEvent.layoutMeasurement.height;
           if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {

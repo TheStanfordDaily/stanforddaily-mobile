@@ -15,18 +15,22 @@ export default function Section({ route, navigation }) {
     const [selection, setSelection] = useState(0)
     const [pageNumber, setPageNumber] = useState(seed.length == 0 ? 1 : 2)
     const themeContext = useContext(ThemeContext)
+    const [articles, setArticles] = useState(seed)
+
     useEffect(() => {
       setArticlesLoading(true)
-      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => setArticles([...articles, ...posts]))
+      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => setArticles([...articles, ...posts])).catch(error => {
+        console.log(error)
+      })
       setArticlesLoading(false)
+      console.log(category.id)
     }, [pageNumber])
 
-    const [articles, setArticles] = useState(seed)
 
     return (
       themeContext.theme === "dark" ? (
         <Layout>
-        <ScrollView onScroll={(e) => {
+        <ScrollView scrollEventThrottle={400} onScroll={(e) => {
           let paddingToBottom = 10;
           paddingToBottom += e.nativeEvent.layoutMeasurement.height;
           if(e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
@@ -39,7 +43,7 @@ export default function Section({ route, navigation }) {
       </Layout>
       ) : (
       <View>
-        <ScrollView onScroll={(e) => {
+        <ScrollView scrollEventThrottle={400} onScroll={(e) => {
           let paddingToBottom = 10;
           paddingToBottom += e.nativeEvent.layoutMeasurement.height;
           if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {

@@ -42,12 +42,13 @@ export default function Wlidcard(props) {
 
     return (
         <View style={styles.container}>
-            {cultureArticles.map((item) => (
+            {cultureArticles.map((item, index) => (
                 <Card
+                    key={index}
                     style={styles.card}
                     header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}
-                    {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}
+                    {...{...props, onPress: () => navigation.push("Post", { article: item })}}
                 >
                     <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
                 </Card>
