@@ -45,12 +45,11 @@ export default function Post({ route, navigation }) {
     )
 
     useEffect(() => {
-      console.log(article.parsely.meta.articleSection)
-      Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(posts => {
-        const resolvedCategory = posts.filter(c => c.name === article.parsely.meta.articleSection)[0]
+      Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
+        const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
-    }, [])
+    }, [article])
 
     return (
       <ImageHeaderScrollView

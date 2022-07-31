@@ -12,24 +12,14 @@ import { ThemeContext } from "../theme-context";
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
     const [articlesLoading, setArticlesLoading] = useState(true)
-    // const [articles, setArticles] = useState(seed)
     const [selection, setSelection] = useState(0)
-    const [pageNumber, setPageNumber] = useState(2)
+    const [pageNumber, setPageNumber] = useState(seed.length == 0 ? 1 : 2)
     const themeContext = useContext(ThemeContext)
     useEffect(() => {
       setArticlesLoading(true)
-      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(seed.length == 0 ? pageNumber - 1 : pageNumber).get().then(posts => setArticles([...articles, ...posts]))
+      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => setArticles([...articles, ...posts]))
       setArticlesLoading(false)
     }, [pageNumber])
-
-    /*const fetchNextPage = () => {
-      setIsLoading(true)
-      getCategoryPageAsync(id, page + 1).then(result => {
-        setArticles(articles => [...articles, ...result])
-        setPage(page + 1)
-      })
-      setArticlesLoading(false)
-    }*/
 
     const [articles, setArticles] = useState(seed)
 
