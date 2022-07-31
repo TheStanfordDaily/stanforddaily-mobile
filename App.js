@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Image } from "react-native";
+import { Appearance, Image } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
@@ -13,7 +13,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, IconRegistry, useTheme } from "@ui-kitten/components";
+import { ApplicationProvider, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"

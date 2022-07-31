@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
@@ -11,6 +11,7 @@ import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { itemize, formatDate } from "../helpers/format";
 import Byline from "./Byline";
 import { minion } from "../custom-fonts";
+import Model from "../Model"
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -24,6 +25,7 @@ export default function Post({ route, navigation }) {
     const theme = useTheme()
     const dateInstance = new Date(article.date)
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
+    const [displayCategory, setDisplayCategory] = useState({})
 
     const renderers = {
       iframe: IframeRenderer,
@@ -37,10 +39,18 @@ export default function Post({ route, navigation }) {
     };
 
     const Foreground = () => (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
+
+    useEffect(() => {
+      console.log(article.parsely.meta.articleSection)
+      Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(posts => {
+        const resolvedCategory = posts.filter(c => c.name === article.parsely.meta.articleSection)[0]
+        setDisplayCategory(resolvedCategory)
+      })
+    }, [])
 
     return (
       <ImageHeaderScrollView
@@ -56,7 +66,7 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             {/* Byline will go here */}
-            <Byline authors={authors} section={article.parsely.meta.articleSection} date={formatDate(dateInstance, true)} navigation={navigation} />
+            <Byline authors={authors} section={article.parsely.meta.articleSection} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
             
           </TriggeringView>
           <Content

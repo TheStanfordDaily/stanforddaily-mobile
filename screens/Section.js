@@ -18,7 +18,7 @@ export default function Section({ route, navigation }) {
     const themeContext = useContext(ThemeContext)
     useEffect(() => {
       setArticlesLoading(true)
-      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => setArticles([...articles, ...posts]))
+      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(seed.length == 0 ? pageNumber - 1 : pageNumber).get().then(posts => setArticles([...articles, ...posts]))
       setArticlesLoading(false)
     }, [pageNumber])
 
