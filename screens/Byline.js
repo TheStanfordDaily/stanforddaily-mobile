@@ -2,8 +2,9 @@ import React from "react"
 import { TouchableOpacity, StyleSheet, View } from "react-native"
 import { Button, Text } from "@ui-kitten/components"
 import { Spacing } from "../constants"
+import { decode } from "html-entities"
 
-export default function Byline({ authors, section, date, navigation }) {
+export default function Byline({ authors, section, category, date, navigation }) {
   const entries = Object.entries(authors)
   const bylineFontSize = entries.length < 3 ? 16 : 14
 
@@ -22,7 +23,7 @@ export default function Byline({ authors, section, date, navigation }) {
         </View>
       <Text category="label">{date}</Text>
       </View>
-      <Button style={{ maxHeight: 100 }} size="tiny" status="basic">{section}</Button>
+      <Button style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(section)}</Button>
     </View>
   )
 }

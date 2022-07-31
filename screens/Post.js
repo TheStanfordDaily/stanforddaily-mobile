@@ -21,16 +21,15 @@ const systemFonts = [
 
 export default function Post({ route, navigation }) {
     const { article } = route.params
-    // if no articles, make API call
     const featuredMedia = article["jetpack_featured_media_url"]
     const theme = useTheme()
     const dateInstance = new Date(article.date)
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
-    var seen = []
+
     const renderers = {
       iframe: IframeRenderer,
-      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props.tnode.styles.nativeTextFlow.fontSize }}>{props.tnode.init.textNode.data}</Text>,
-      strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props.tnode.styles.nativeTextFlow.fontSize }}>{props.tnode.init.textNode.data}</Text>,
+      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props.tnode.init.textNode.data}</Text>,
+      strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
     };
     
@@ -54,8 +53,6 @@ export default function Post({ route, navigation }) {
         maxHeight={featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        {/* Could change this to `Layout` and work with theming that way as well. */}
-        {/* Need to add back the `TriggeringView` so that the image scales when user pulls. */}
         <View style={{ flex: 1, marginHorizontal: 14 }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}

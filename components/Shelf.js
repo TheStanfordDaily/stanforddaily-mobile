@@ -4,6 +4,7 @@ import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
+import { formatDate, itemize } from "../helpers/format"
 
 export default function Shelf(props) {
     const theme = useTheme()
@@ -26,7 +27,7 @@ export default function Shelf(props) {
                         <React.Fragment>
                             <ListItem
                                 title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
-                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>Scoop Scooperstein on June 13</Text>}
+                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
                                 accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
                                 style={{
                                     flex: 1/3,

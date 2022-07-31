@@ -5,10 +5,11 @@ import { Image } from "react-native"
 import _ from "lodash"
 import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
+import { formatDate, itemize } from "../helpers/format"
 
 // Going to rename this component to Wildcard.
 export default function Wlidcard(props) {
-    const { navigation, articles, random } = props
+    const { navigation, articles, random, verbose } = props
     const themeContext = useContext(ThemeContext)
     var cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
 
@@ -20,7 +21,11 @@ export default function Wlidcard(props) {
     
     const Header = (props) => (
         <React.Fragment>
+            <View>
             <Text style={styles.header} category="h6">{props.title}</Text>
+            {verbose && (<Text style={styles.date} category="c1">{formatDate(new Date(props.date))}</Text>)}
+            </View>
+            
             <Image
                 source={{ uri: props.uri + "?w=800" }}
                 style={{ flex: 1, height: 192 }}
@@ -30,8 +35,8 @@ export default function Wlidcard(props) {
 
     const Footer = (props) => (
         <View style={styles.footer}>
-            <Text style={{ textAlign: "justify" }} category="label">{props.byline}</Text>
-            <Button size="tiny" status="basic" onPress={themeContext.toggleTheme}>{props.section}</Button>
+            <Text style={{ textAlign: "justify", flex: 0.95 }} category="label">{props.byline}</Text>
+            <Button size="tiny" status="basic" onPress={themeContext.toggleTheme}>{decode(props.section)}</Button>
         </View>
     )
 
@@ -40,8 +45,8 @@ export default function Wlidcard(props) {
             {cultureArticles.map((item) => (
                 <Card
                     style={styles.card}
-                    header={<Header title={decode(item.title.rendered)} uri={item["jetpack_featured_media_url"]}/>}
-                    footer={<Footer byline={"Scoop Scooperstein".toUpperCase()} section={_.sample(["The Grind", "Arts & Life"])}/>}
+                    header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
+                    footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}
                     {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}
                 >
                     <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
@@ -64,6 +69,11 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 10,
         paddingVertical: 5
+    },
+    date: {
+        paddingHorizontal: 20,
+        paddingTop: 0,
+        paddingBottom: 10
     },
     card: {
         marginVertical: 4

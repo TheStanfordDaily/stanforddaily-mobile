@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
 import { Image, View, StyleSheet } from "react-native"
 import PagerView from "react-native-pager-view"
@@ -7,10 +7,12 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
 import { Sections } from "../constants"
+import { ThemeContext } from "../theme-context"
 
 export default function Carousel(props) {
     const theme = useTheme()
     const { navigation, articles } = props
+    const themeContext = useContext(ThemeContext)
 
     const Header = (props) => (
       <React.Fragment>
@@ -42,7 +44,7 @@ export default function Carousel(props) {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card
-                          style={{ flex: 1, height: 300, marginHorizontal: 5 }}
+                          style={{ flex: 1, height: 300, marginHorizontal: 5, borderColor: themeContext.theme == "light" ? theme["color-basic-default"] : "transparent" }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} date={item.date} section={item.parsely.meta.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>

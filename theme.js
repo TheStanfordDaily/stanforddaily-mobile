@@ -51,6 +51,9 @@ export const DailyBread = {
     "background-basic-color-1": "#121212",
     "background-basic-color-2": "#2D2D2F",
     "background-basic-color-3": "#4D4D4F",
-    "background-basic-color-4": "#6D6D71"
+    "background-basic-color-4": "#6D6D71",
+    "border-basic-color-4": "#4d4d4d",
+    "color-primary-500": "#BE4B45",
+    "color-primary-600": "#DE7D6D",
   }
 };
