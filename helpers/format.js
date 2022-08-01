@@ -1,10 +1,5 @@
-import { Dimensions } from "react-native";
-
-const { width, height } = Dimensions.get("window");
-const scale = width/320
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
-// export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 export const itemize = (elements) => {
   switch (elements.length) {
     case 0: return ""
@@ -12,11 +7,6 @@ export const itemize = (elements) => {
     default:
       return elements.slice(0, -1).join(", ") + " and " + elements[elements.length - 1]
   }
-}
-
-export function decodeEntityHTML(message) {
-    const doc = new DOMParser().parseFromString(message, "text/html");
-    return doc.documentElement.textContent;
 }
 
 export const formatDate = (instance, verbose) => {

@@ -48,8 +48,11 @@ const firebaseConfig = {
   serviceAccountId: SERVICE_ACCOUNT_ID
 }
 
-const cardinalLogo = require("./assets/media/DailyLogoCardinal.png")
-const whiteLogo = require("./assets/media/DailyLogoWhite.png")
+const logoAssets = {
+  "light": require("./assets/media/DailyLogoCardinal.png"),
+  "dark": require("./assets/media/DailyLogoWhite.png")
+}
+
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -71,7 +74,7 @@ export default function App() {
     headerTitle: () => (
       <Image
         style={{ width: 260, height: 30 }}
-        source={theme === "light" ? cardinalLogo : whiteLogo}
+        source={logoAssets[theme]}
       />
     ),
     headerStyle: {
@@ -118,6 +121,12 @@ export default function App() {
         }
       }
     })
+
+    // Handles any event in which appearance preferences change.
+    Appearance.addChangeListener(listener => {
+      setTheme(listener.colorScheme)
+      // TODO: Add return function for removing listener when user opts out of automatic theme changes.
+    })    
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
