@@ -110,7 +110,7 @@ export default function App() {
     headerTintColor: "white",
     headerBackTitleVisible: false,
     headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article["_links"].self[0].href, decode(route.params.article.title.rendered))}>
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
         <Icon name="share-outline" width={24} height={24} fill="white" />
       </TouchableOpacity>
     )
