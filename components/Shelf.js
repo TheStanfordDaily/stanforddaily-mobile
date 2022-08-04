@@ -4,23 +4,21 @@ import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
+import { formatDate, itemize } from "../helpers/format"
 
 export default function Shelf(props) {
+    const theme = useTheme()
+    const inactiveColor = theme[props.alternate ? "color-primary-200" : "background-color-basic-2"]
+
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {
         opinionsArticles.pop()
     }
     
     const Accessory = (props) => (
-        <Image
-            source={{ uri: props.uri }}
-            style={styles.image}
-        />
+        <Image source={{ uri: props.uri + "?w=200" }} style={styles.image} />
     )
 
-    const theme = useTheme()
-    const inactiveColor = theme[props.alternate ? "color-primary-200" : "background-color-basic-2"]
-    
     return (
         <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
             {_.chunk(opinionsArticles, 3).map((triplet, index) => (
@@ -29,7 +27,7 @@ export default function Shelf(props) {
                         <React.Fragment>
                             <ListItem
                                 title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
-                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>Scoop Scooperstein on June 13</Text>}
+                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
                                 accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
                                 style={{
                                     flex: 1/3,
@@ -39,7 +37,7 @@ export default function Shelf(props) {
                                 }}
                                 {...{...props, activeOpacity: 0.8, onPress: () => props.navigation.navigate("Post", { article: item })}}
                             />
-                            <Divider/>
+                            <Divider />
                         </React.Fragment>
                     ))}
                 </View>
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
         flex: 1,
         minHeight: 300,
         paddingHorizontal: 8,
-        padddingVertical: 4,
+        padddingVertical: 4
     },
     image: {
         flex: 1/3,

@@ -1,18 +1,19 @@
 import React from "react"
-import { Platform, StyleSheet, View, TouchableOpacity } from "react-native"
+import { StyleSheet, View, TouchableOpacity } from "react-native"
 import { Text, useTheme } from "@ui-kitten/components"
-import { Button, Icon } from "@ui-kitten/components"
-import { Sections } from "../constants"
 
 export default function Mark({ navigation, alternate, seed, category }) {
-    const arrow = Platform.OS === "ios" ? "arrow-ios-forward-outline" : "chevron-right-outline"
     const theme = useTheme()
+
     return (
         <TouchableOpacity
             onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
             style={[styles.container, { backgroundColor: alternate ? theme["color-primary-100"] : theme["background-color-basic-1"] }]}>
-                <Text category={"h4"}>{category.name.toUpperCase()}</Text>
-                <Icon width={42} height={42} name={arrow} style={{ marginRight: -42, tintColor: theme["text-basic-color"] }} />
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Text style={{ opacity: 0 }}>{"  \u276f"}</Text>
+                    <Text category={"h4"}>{category.name.toUpperCase()}</Text>
+                    <Text>{"  \u276f"}</Text>
+                </View>
         </TouchableOpacity>
     )
 }

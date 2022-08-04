@@ -1,20 +1,15 @@
-import { Dimensions } from "react-native";
-
-const { width, height } = Dimensions.get("window");
-const scale = width/320
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
-// export const formatAuthors = ({tsdAuthors}) => (tsdAuthors || []).map(e => e.displayName).join(", ");
 export const itemize = (elements) => {
-    return [elements.slice(0, -1).join(", "), elements.length > 2 ? elements.last() : elements].join(" and ")
+  switch (elements.length) {
+    case 0: return ""
+    case 1: return elements[0]
+    default:
+      return elements.slice(0, -1).join(", ") + " and " + elements[elements.length - 1]
+  }
 }
 
-export function decodeEntityHTML(message) {
-    const doc = new DOMParser().parseFromString(message, "text/html");
-    return doc.documentElement.textContent;
-}
-
-export const formatDate = (instance) => {
+export const formatDate = (instance, verbose) => {
     let formattedMonth = MONTHS[instance.getMonth()]
     let formattedDay = instance.getDate()
     let formattedYear = instance.getFullYear()
@@ -27,5 +22,5 @@ export const formatDate = (instance) => {
       formattedMinutes = `0${formattedMinutes}`
     }
     let formattedMeridian = instance.getUTCHours % 24 < 7 ? "a.m." : "p.m."
-    return `${formattedMonth} ${formattedDay}, ${formattedYear}, ${formattedHours}:${formattedMinutes} ${formattedMeridian}`
+    return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`
 }

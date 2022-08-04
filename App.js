@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Image } from "react-native";
+import { Appearance, Image, useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
@@ -13,7 +13,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, IconRegistry, useTheme } from "@ui-kitten/components";
+import { ApplicationProvider, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
@@ -25,14 +25,16 @@ import Post from "./screens/Post";
 import Home from "./screens/Home";
 import Section from "./screens/Section";
 import { ThemeContext } from "./theme-context";
+import Author from "./screens/Author";
+import { minion } from "./custom-fonts";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: false,
     shouldSetBadge: false,
-  }),
-});
+  })
+})
 
 const firebaseConfig = {
   apiKey: APIKEY,
@@ -44,21 +46,24 @@ const firebaseConfig = {
   appId: APP_ID,
   measurementId: MEASUREMENT_ID,
   serviceAccountId: SERVICE_ACCOUNT_ID
-};
+}
 
-const cardinalLogo = require("./assets/media/DailyLogoCardinal.png")
-const whiteLogo = require("./assets/media/DailyLogoWhite.png")
+const logoAssets = {
+  "light": require("./assets/media/DailyLogoCardinal.png"),
+  "dark": require("./assets/media/DailyLogoWhite.png")
+}
+
 const Stack = createStackNavigator()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  const [expoPushToken, setExpoPushToken] = useState("")
+  const [notification, setNotification] = useState(false)
+  const notificationListener = useRef()
+  const responseListener = useRef()
   // const isLoadingComplete = useLoadedAssets();
-  // const colorScheme = useColorScheme();
-  const [theme, setTheme] = useState("light")
+  const colorScheme = Appearance.getColorScheme()
+  const [theme, setTheme] = useState(colorScheme)
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -66,10 +71,12 @@ export default function App() {
   }
 
   const headerOptions = {
-    headerTitle: () => (<Image
-      style={{ width: 260, height: 30 }}
-      source={theme === "light" ? cardinalLogo : whiteLogo}
-    />),
+    headerTitle: () => (
+      <Image
+        style={{ width: 260, height: 30 }}
+        source={logoAssets[theme]}
+      />
+    ),
     headerStyle: {
       backgroundColor: bread[theme]["background-basic-color-1"]
     },
@@ -94,30 +101,16 @@ export default function App() {
   }
 
   useEffect(() => {
-    Font.loadAsync({
-      // Loads fonts from static resource.
-      MinionProDisp: require("./assets/fonts/Minion_Pro/MinionPro-Disp.ttf"),
-      MinionProRegular: require("./assets/fonts/Minion_Pro/MinionPro-Regular.ttf"),
-      MinionProItDisp: require("./assets/fonts/Minion_Pro/MinionPro-ItDisp.ttf"),
-      MinionProBoldDisp: require("./assets/fonts/Minion_Pro/MinionPro-BoldDisp.ttf"),
-      MinionProBoldItDisp: require("./assets/fonts/Minion_Pro/MinionPro-BoldItDisp.ttf"),
-      MinionProMediumDisp: require("./assets/fonts/Minion_Pro/MinionPro-MediumDisp.ttf"),
-      MinionProMediumItDisp: require("./assets/fonts/Minion_Pro/MinionPro-MediumItDisp.ttf"),
-      MinionProSemiboldDisp: require("./assets/fonts/Minion_Pro/MinionPro-SemiboldDisp.ttf"),
-      MinionProSemiboldItDisp: require("./assets/fonts/Minion_Pro/MinionPro-SemiboldItDisp.ttf"),
-      LibreFranklinRegular: require("./assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf"),
-      LibreFranklinBold: require("./assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf"),
-      LibreFranklinItalic: require("./assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf"),
-    }).then(setFontsLoaded(true));
+    // Loads fonts from static resource.
+    Font.loadAsync(minion).then(setFontsLoaded(true))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        var matches = expoPushToken.match(/\[(.*?)\]/);
+        const app = initializeApp(firebaseConfig)
+        const db = getDatabase(app)
+        var matches = expoPushToken.match(/\[(.*?)\]/)
         if (matches) {
           var submatch = matches[1]
-          
           const auth = getAuth(app)
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
@@ -127,25 +120,31 @@ export default function App() {
           })
         }
       }
-    });
+    })
+
+    // Handles any event in which appearance preferences change.
+    Appearance.addChangeListener(listener => {
+      setTheme(listener.colorScheme)
+      // TODO: Add return function for removing listener when user opts out of automatic theme changes.
+    })    
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      setNotification(notification);
-    });
+      setNotification(notification)
+    })
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed).
+    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
         navigate(Strings.post, { item: result })
       })
-    });
+    })
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+      Notifications.removeNotificationSubscription(notificationListener.current)
+      Notifications.removeNotificationSubscription(responseListener.current)
+    }
+  }, [])
 
       return (fontsLoaded &&
         <NavigationContainer>
@@ -158,9 +157,23 @@ export default function App() {
                   <Stack.Screen
                     name="Home"
                     component={Home}
-                    options={headerOptions}/>
-                  <Stack.Screen name="Post" component={Post} options={detailHeaderOptions} />
-                  <Stack.Screen name="Section" component={Section} options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}/>
+                    options={headerOptions}
+                  />
+                  <Stack.Screen
+                    name="Post"
+                    component={Post}
+                    options={detailHeaderOptions}
+                  />
+                  <Stack.Screen
+                    name="Section"
+                    component={Section}
+                    options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}
+                  />
+                  <Stack.Screen
+                    name="Author"
+                    component={Author}
+                    options={({ route }) => ({ title: route.params.name })}
+                  />
                 </Stack.Navigator>
               </SafeAreaProvider>
             </ApplicationProvider>
@@ -170,21 +183,21 @@ export default function App() {
 }
 
 async function registerForPushNotificationsAsync() {
-  let token;
+  let token
   if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
+    const { status: existingStatus } = await Notifications.getPermissionsAsync()
+    let finalStatus = existingStatus
     if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
+      alert("Failed to get token for push notification.")
+      return
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
+    token = (await Notifications.getExpoPushTokenAsync()).data
   } else {
-    alert("Must use physical device for Push Notifications");
+    alert("Must use physical device for Push Notifications.")
   }
 
   if (Platform.OS === "android") {
@@ -192,9 +205,9 @@ async function registerForPushNotificationsAsync() {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
+      lightColor: "#FF231F7C"
+    })
   }
 
-  return token;
+  return token
 }

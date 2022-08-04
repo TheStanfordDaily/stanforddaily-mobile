@@ -1,18 +1,17 @@
 import React from "react"
-import { Card, Layout, Text } from "@ui-kitten/components"
+import { Card, Text } from "@ui-kitten/components"
 import { Image, View, StyleSheet } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { Sections } from "../constants"
 
 export default function Diptych(props) {
     const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
     
     const Header = (props) => (
       <React.Fragment>
-        <Image source={{ uri: props.source }} style={{ flex: 1, height: 192 }} />
+        <Image source={{ uri: props.source + "?w=500" }} style={{ flex: 1, height: 192 }} />
       </React.Fragment>
     )
       

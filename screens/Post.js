@@ -1,32 +1,37 @@
-import React, { Component } from "react";
-import { View, Dimensions, StatusBar, TouchableWithoutFeedback, TouchableOpacity, StyleSheet, Image, Platform } from "react-native";
-import { Text, useTheme, withStyles } from "@ui-kitten/components";
-import { formatDate } from "../helpers/format";
-import { getPostByIdAsync } from "../helpers/wpapi";
+import React, { useEffect, useState } from "react";
+import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
+import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
-import { Margins, Strings } from "../constants";
+import { Spacing } from "../constants";
 import Content, { defaultSystemFonts } from "react-native-render-html";
 import { FontSizes } from "../constants";
 import WebView from "react-native-webview";
-import iframe from "@native-html/iframe-plugin";
-import Byline from "../components/Byline";
 import { decode } from "html-entities";
-import { PropsService } from "@ui-kitten/components/devsupport";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
-import { Layout } from "@ui-kitten/components";
+import { itemize, formatDate } from "../helpers/format";
+import Byline from "./Byline";
+import { minion } from "../custom-fonts";
+import Model from "../Model"
 
-// const renderers = { iframe }
 const { width, height } = Dimensions.get("window");
-const systemFonts = [...defaultSystemFonts, "MinionProDisp", "MinionProBoldDisp", "MinionProRegular", "MinionProItDisp"];
+const systemFonts = [
+    ...Object.keys(minion).map(key => String(key)),
+    ...defaultSystemFonts
+];
 
 export default function Post({ route, navigation }) {
     const { article } = route.params
-    // if no articles, make API call
     const featuredMedia = article["jetpack_featured_media_url"]
     const theme = useTheme()
     const dateInstance = new Date(article.date)
+    const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
+    const [displayCategory, setDisplayCategory] = useState({})
+
     const renderers = {
-      iframe: IframeRenderer
+      iframe: IframeRenderer,
+      em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
+      strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
+      // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
     };
     
     const customHTMLElementModels = {
@@ -34,10 +39,17 @@ export default function Post({ route, navigation }) {
     };
 
     const Foreground = () => (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
+
+    useEffect(() => {
+      Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
+        const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
+        setDisplayCategory(resolvedCategory)
+      })
+    }, [article])
 
     return (
       <ImageHeaderScrollView
@@ -49,29 +61,28 @@ export default function Post({ route, navigation }) {
         maxHeight={featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        {/* Could change this to `Layout` and work with theming that way as well. */}
-        {/* Need to add back the `TriggeringView` so that the image scales when user pulls. */}
         <View style={{ flex: 1, marginHorizontal: 14 }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             {/* Byline will go here */}
-            <Text category="label">{formatDate(dateInstance)}</Text>
+            <Byline authors={authors} section={article.parsely.meta.articleSection} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
+            
           </TriggeringView>
           <Content
-            source={{html: article.content.rendered}}
-            WebView={WebView}
+            source={{ html: article.content.rendered + "<br/>" }}
+            defaultTextProps={{ selectable: true }}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
             contentWidth={width}
             baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
             renderers={renderers}
+            WebView={WebView}
             backgroundColor={theme["background-color-basic-2"]}
             enableExperimentalMarginCollapsing
           />
         </View>
       </ImageHeaderScrollView>
     )
-    
 }
 
 const styles = StyleSheet.create({
@@ -90,42 +101,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     textShadowColor: "black",
     textShadowRadius: 1,
-    textShadowOffset: {width: 1, height: 1},
+    textShadowOffset: {
+      width: 1,
+      height: 1
+    },
     textAlign: "center"
-  },
-  caption: {
-    // marginHorizontal: Margins.articleSides,
-    fontFamily: "MinionProItDisp",
-    // fontSize: FontSizes.small,
-    // fontStyle: "italic"
-    // color: THEME.LABEL
-  },
-  byline: {
-    marginTop: Margins.defaultSmall,
-    // marginLeft: Margins.articleSides,
-    fontFamily: "LibreFranklinRegular", // Looking for semibold option. Ditto for category button.
-    fontSize: FontSizes.default,
-  },
-  author: {
-    marginTop: Margins.defaultSmall,
-    // marginHorizontal: Margins.articleSides,
-    fontFamily: "LibreFranklinBold",
-    fontSize: FontSizes.default,
-    color: "#8c1515",
-    fontWeight: "600"
-    // color: THEME.LABEL
-  },
-  category: {
-    marginTop: Margins.defaultSmall,
-    // marginHorizontal: Margins.articleSides,
-    fontFamily: "MinionProDisp",
-    fontSize: FontSizes.default,
-    fontWeight: "600",
-    color: "black",
-    backgroundColor: "#D8D8D8",
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 5,
-    // color: THEME.LABEL
-  },
+  }
 })

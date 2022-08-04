@@ -1,45 +1,65 @@
-import { List } from "@ui-kitten/components";
-import React, { useEffect, useState } from "react";
-import { View, Text, Button, ActivityIndicator, FlatList, StyleSheet } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { Layout, List } from "@ui-kitten/components";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Button, ActivityIndicator, FlatList, StyleSheet } from "react-native";
+import { ScrollView } from "react-native";
 import Wlidcard from "../components/Wildcard";
 import { Margins } from "../constants";
 import { getCategoryPageAsync } from "../helpers/wpapi";
 import Model from "../Model"
-import { Layout } from "@ui-kitten/components";
+import { Tab, TabView, Text } from "@ui-kitten/components";
+import { ThemeContext } from "../theme-context";
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
     const [articlesLoading, setArticlesLoading] = useState(true)
-    // const [articles, setArticles] = useState(seed)
-    const [pageNumber, setPageNumber] = useState(0)
+    const [selection, setSelection] = useState(0)
+    const [pageNumber, setPageNumber] = useState(seed.length == 0 ? 1 : 2)
+    const themeContext = useContext(ThemeContext)
+    const [articles, setArticles] = useState(seed)
+
     useEffect(() => {
-      // Model.posts().categories(category.id).perPage(20).get().then(posts => console.log(posts))
-    }, [pageNumber])
-  
-    /*const fetchNextPage = () => {
-      setIsLoading(true)
-      getCategoryPageAsync(id, page + 1).then(result => {
-        setArticles(articles => [...articles, ...result])
-        setPage(page + 1)
+      setArticlesLoading(true)
+      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => setArticles([...articles, ...posts])).catch(error => {
+        console.log(error)
       })
       setArticlesLoading(false)
-    }*/
+      console.log(category.id)
+    }, [pageNumber])
 
-    // const [articles, setArticles] = useState(seed)
 
     return (
-      <Layout style={styles.container}>
-        <ScrollView>
-          <Wlidcard articles={seed} navigation={navigation} />
+      themeContext.theme === "dark" ? (
+        <Layout>
+        <ScrollView scrollEventThrottle={400} onScroll={(e) => {
+          let paddingToBottom = 10;
+          paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+          if(e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
+            setPageNumber(pageNumber + 1)
+          }
+        }}>
+          <Wlidcard articles={articles} navigation={navigation} verbose />
+          <ActivityIndicator hidesWhenStopped isLoading={articlesLoading} />
         </ScrollView>
-        {/* <List onEndReached={() => console.log("Time to load next page.")} /> */}
       </Layout>
+      ) : (
+      <View>
+        <ScrollView scrollEventThrottle={400} onScroll={(e) => {
+          let paddingToBottom = 10;
+          paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+          if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
+            setPageNumber(pageNumber + 1)
+          }
+        }}>
+          <Wlidcard articles={articles} navigation={navigation} verbose />
+          <ActivityIndicator hidesWhenStopped isLoading={articlesLoading} />
+        </ScrollView>
+      </View>
+      )
     )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   }
 })
