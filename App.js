@@ -135,7 +135,7 @@ export default function App() {
         const app = initializeApp(firebaseConfig)
         const db = getDatabase(app)
         var matches = expoPushToken.match(/\[(.*?)\]/)
-        /*if (matches) {
+        if (matches) {
           var submatch = matches[1]
           const auth = getAuth(app)
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
@@ -144,7 +144,7 @@ export default function App() {
           }).catch((error) => {
             console.log("Could not sign in: ", error)
           })
-        }*/
+        }
       }
     })
 
