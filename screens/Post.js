@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
+import { View, Dimensions, Share, StatusBar, StyleSheet, Platform } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";

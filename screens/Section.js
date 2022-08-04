@@ -29,7 +29,7 @@ export default function Section({ route, navigation }) {
 
     return (
       themeContext.theme === "dark" ? (
-        <Layout>
+      <Layout>
         <ScrollView scrollEventThrottle={400} onScroll={(e) => {
           let paddingToBottom = 10;
           paddingToBottom += e.nativeEvent.layoutMeasurement.height;

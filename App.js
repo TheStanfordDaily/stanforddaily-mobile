@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, useColorScheme } from "react-native";
+import { Appearance, Image, Share, TouchableOpacity, useColorScheme } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
@@ -13,11 +13,11 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
+import { ApplicationProvider, Button, Icon, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ContentStack from "./navigation/ContentStack";
 import SearchStack from "./navigation/SearchStack";
@@ -27,6 +27,7 @@ import Section from "./screens/Section";
 import { ThemeContext } from "./theme-context";
 import Author from "./screens/Author";
 import { minion } from "./custom-fonts";
+import { decode } from "html-entities";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -70,6 +71,26 @@ export default function App() {
     setTheme(next)
   }
 
+  const onShare = async (url, title) => {
+    try {
+      const result = await Share.share({
+        url: url,
+        message: title + " | The Stanford Daily"
+      })
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared successfully with activity type of result.activityType.
+        } else {
+          // Shared successfully.
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed.
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
   const headerOptions = {
     headerTitle: () => (
       <Image
@@ -83,12 +104,17 @@ export default function App() {
     headerTintColor: eva[theme]["color-primary-500"]
   }
 
-  const detailHeaderOptions = {
+  const detailHeaderOptions = ({ navigation, route }) => {return {
     headerTitle: "",
     headerTransparent: true,
     headerTintColor: "white",
-    headerBackTitleVisible: false
-  }
+    headerBackTitleVisible: false,
+    headerRight: () => (
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article["_links"].self[0].href, decode(route.params.article.title.rendered))}>
+        <Icon name="share-outline" width={24} height={24} fill="white" />
+      </TouchableOpacity>
+    )
+  }}
 
   const sectionHeaderOptions = {
     headerStyle: {
@@ -109,7 +135,7 @@ export default function App() {
         const app = initializeApp(firebaseConfig)
         const db = getDatabase(app)
         var matches = expoPushToken.match(/\[(.*?)\]/)
-        if (matches) {
+        /*if (matches) {
           var submatch = matches[1]
           const auth = getAuth(app)
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
@@ -118,7 +144,7 @@ export default function App() {
           }).catch((error) => {
             console.log("Could not sign in: ", error)
           })
-        }
+        }*/
       }
     })
 
