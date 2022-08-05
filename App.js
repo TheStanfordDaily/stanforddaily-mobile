@@ -91,6 +91,11 @@ export default function App() {
     }
   }
 
+  const navigatorTheme = {
+    light: DefaultTheme,
+    dark: DarkTheme
+  }
+
   const headerOptions = {
     headerTitle: () => (
       <Image
@@ -98,10 +103,6 @@ export default function App() {
         source={logoAssets[theme]}
       />
     ),
-    headerStyle: {
-      backgroundColor: bread[theme]["background-basic-color-1"]
-    },
-    headerTintColor: eva[theme]["color-primary-500"]
   }
 
   const detailHeaderOptions = ({ navigation, route }) => {return {
@@ -115,16 +116,6 @@ export default function App() {
       </TouchableOpacity>
     )
   }}
-
-  const sectionHeaderOptions = {
-    headerStyle: {
-      backgroundColor: bread[theme]["background-basic-color-1"]
-    },
-    headerTintColor: bread[theme]["color-primary-500"],
-    headerTitleStyle: {
-      color: eva[theme][theme === "light" ? "color-basic-800" : "color-basic-100"]
-    }
-  }
 
   useEffect(() => {
     // Loads fonts from static resource.
@@ -173,12 +164,12 @@ export default function App() {
   }, [])
 
       return (fontsLoaded &&
-        <NavigationContainer>
-          <IconRegistry icons={EvaIconsPack}/>
+        <NavigationContainer theme={navigatorTheme[theme]}>
+          <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
-                <StatusBar/>
+                <StatusBar />
                 <Stack.Navigator initialRouteName="Home">
                   <Stack.Screen
                     name="Home"
@@ -193,7 +184,7 @@ export default function App() {
                   <Stack.Screen
                     name="Section"
                     component={Section}
-                    options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}
+                    options={({ route }) => ({ headerTitle: () => <Text category="h4">{route.params.category.name}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
                   />
                   <Stack.Screen
                     name="Author"

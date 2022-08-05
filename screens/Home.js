@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 import { Divider, Layout } from "@ui-kitten/components";
+import Canvas from "../components/Canvas";
 import Carousel from "../components/Carousel";
 import Diptych from "../components/Diptych";
 import Mark from "../components/Mark";
@@ -70,8 +71,10 @@ export default function Home({ navigation }) {
             <React.Fragment>
               <Mark category={Sections.HUMOR} seed={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
               <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
+              <Divider />
             </React.Fragment>
           )}
+          <Canvas articles={articles[Sections.CARTOONS.slug]} />
           {articles["wildcards"]?.length > 0 && (
             <React.Fragment>
               <Divider />

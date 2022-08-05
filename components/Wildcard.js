@@ -7,7 +7,6 @@ import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
 
-// Going to rename this component to Wildcard.
 export default function Wlidcard(props) {
     const { navigation, articles, random, verbose } = props
     const themeContext = useContext(ThemeContext)
@@ -36,7 +35,7 @@ export default function Wlidcard(props) {
     const Footer = (props) => (
         <View style={styles.footer}>
             <Text style={{ textAlign: "justify", flex: 0.95 }} category="label">{props.byline}</Text>
-            <Button size="tiny" status="basic" onPress={themeContext.toggleTheme}>{decode(props.section)}</Button>
+            <Button size="tiny" status="basic">{decode(props.section)}</Button>
         </View>
     )
 

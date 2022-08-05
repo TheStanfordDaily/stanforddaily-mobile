@@ -14,11 +14,13 @@ export default function Carousel(props) {
     const { navigation, articles } = props
     const themeContext = useContext(ThemeContext)
 
+    // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
+    // Might have to do with the dynamic styling of the border below.
     const Header = (props) => (
       <React.Fragment>
         <Image
           source={{ uri: props.source + "?w=800" }}
-          style={{ flex: 1, height: 192 }}
+          style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
         />
       </React.Fragment>
     )

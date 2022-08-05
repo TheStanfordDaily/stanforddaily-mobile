@@ -64,7 +64,6 @@ export default function Post({ route, navigation }) {
         <View style={{ flex: 1, marginHorizontal: 14 }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            {/* Byline will go here */}
             <Byline authors={authors} section={article.parsely.meta.articleSection} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
             
           </TriggeringView>
