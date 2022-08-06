@@ -31,8 +31,8 @@ export default function Author({ route, navigation }) {
           setArticlesLoading(false)
         }).catch(error => {
             console.log(error)
-            setArticlesLoading(false)
         })
+        setArticlesLoading(false)
       }, [pageNumber])
 
     return (

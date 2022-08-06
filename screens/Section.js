@@ -30,7 +30,6 @@ export default function Section({ route, navigation }) {
         console.log(error)
       })
       setArticlesLoading(false)
-      console.log(category.id)
     }, [pageNumber])
 
 
