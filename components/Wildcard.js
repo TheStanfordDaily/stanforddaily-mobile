@@ -8,7 +8,7 @@ import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
 
 export default function Wlidcard(props) {
-    const { navigation, articles, random, verbose } = props
+    const { navigation, articles, random, verbose, title } = props
     const themeContext = useContext(ThemeContext)
     var cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
 
@@ -35,7 +35,7 @@ export default function Wlidcard(props) {
     const Footer = (props) => (
         <View style={styles.footer}>
             <Text style={{ textAlign: "justify", flex: 0.95 }} category="label">{props.byline}</Text>
-            <Button size="tiny" status="basic">{decode(props.section)}</Button>
+            <Button size="tiny" status="basic">{decode(props.section).replace('\'', '\u{2019}')}</Button>
         </View>
     )
 
@@ -47,7 +47,7 @@ export default function Wlidcard(props) {
                     style={styles.card}
                     header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}
-                    {...{...props, onPress: () => navigation.push("Post", { article: item })}}
+                    {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
                 >
                     <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
                 </Card>

@@ -1,34 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { ImageBackground, FlatList } from 'react-native';
+import { ImageBackground, FlatList, ActivityIndicator } from 'react-native';
 import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins } from '../constants';
 import Model from "../Model";
 import { decode } from "html-entities";
 import { formatDate } from '../helpers/format';
 
-const kate = require("../kate.json")
-
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
     const [pageNumber, setPageNumber] = useState(0)
     const [articles, setArticles] = useState([])
+    const [articlesLoading, setArticlesLoading] = useState(true)
     const [index, setIndex] = useState(0)
 
     const Header = ({ uri }) => (
         <ImageBackground source={{ uri: uri }} style={{ height: 140 }} />
     )
 
-    // useEffect(() => {
-    //     Model.posts().param("coauthor", id).get().then(posts => {
-    //       setArticles(posts)
-    //     }).finally(() => setArticlesLoaded(true))
-    //   }, [pageNumber])
+    useEffect(() => {
+        Model.posts().param("coauthors", id).get().then(posts => {
+          setArticles(posts)
+        }).finally(() => setArticlesLoading(false))
+      }, [pageNumber])
     // with the formatted date below next time we can drop the time of day from the card
 
     return (
         <Layout>
             <List
-                data={kate}
+                data={articles}
                 numColumns={2}
                 onEndReached={() => setPageNumber(pageNumber + 1)}
                 onEndReachedThreshold={0.5}
@@ -39,6 +38,7 @@ export default function Author({ route, navigation }) {
                     </Card>
                 )}
             />
+            {articlesLoading && <ActivityIndicator />}
         </Layout>
     )
 }

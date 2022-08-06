@@ -26,8 +26,8 @@ export default function Shelf(props) {
                     {triplet.map((item) => (
                         <React.Fragment>
                             <ListItem
-                                title={() => <Text style={{ paddingHorizontal: 4 }} category={"p1"}>{decode(item.title.rendered)}</Text>}
-                                description={() => <Text style={{ paddingHorizontal: 4 }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
+                                title={() => <Text numberOfLines={4} ellipsizeMode="tail" style={{ paddingHorizontal: 4, fontSize: 18 }} allowFontScaling category={"p1"}>{decode(item.title.rendered)}</Text>}
+                                description={() => <Text style={{ paddingHorizontal: 4, fontSize: 14 }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
                                 accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
                                 style={{
                                     flex: 1/3,

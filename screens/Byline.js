@@ -1,12 +1,13 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { TouchableOpacity, StyleSheet, View } from "react-native"
 import { Button, Text } from "@ui-kitten/components"
 import { Spacing } from "../constants"
 import { decode } from "html-entities"
 
-export default function Byline({ authors, section, category, date, navigation }) {
+export default function Byline({ authors, section, sourceName, category, date, navigation }) {
   const entries = Object.entries(authors)
   const bylineFontSize = entries.length < 3 ? 16 : 14
+  const [sameCategory, setSameCategory] = useState(false)
 
   const Name = ({ detail }) => (
     <TouchableOpacity onPress={() => navigation.navigate("Author", { name: detail[0], id: detail[1] })}>
@@ -25,9 +26,9 @@ export default function Byline({ authors, section, category, date, navigation })
       </View>
       <Button onPress={() => {
         if (category) {
-          category.name === section ? navigation.navigate("Section", { category: category, seed: [] }) : navigation.push("Section", { category: category, seed: [] })
+          category.name === sourceName ? navigation.navigate("Section", { category: category, seed: [] }) : navigation.push("Section", { category: category, seed: [] })
         }
-      }} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(section)}</Button>
+      }} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(section).replace('\'', '\u{2019}')}</Button>
     </View>
   )
 }

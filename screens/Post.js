@@ -20,7 +20,7 @@ const systemFonts = [
 ];
 
 export default function Post({ route, navigation }) {
-    const { article } = route.params
+    const { article, sourceName } = route.params
     const featuredMedia = article["jetpack_featured_media_url"]
     const theme = useTheme()
     const dateInstance = new Date(article.date)
@@ -28,7 +28,8 @@ export default function Post({ route, navigation }) {
     const [displayCategory, setDisplayCategory] = useState({})
 
     const renderers = {
-      iframe: IframeRenderer,
+      // Note: Chrome URL protocol causes a crash with the renderer below.
+      // iframe: IframeRenderer,
       em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
@@ -64,8 +65,7 @@ export default function Post({ route, navigation }) {
         <View style={{ flex: 1, marginHorizontal: 14 }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            <Byline authors={authors} section={article.parsely.meta.articleSection} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
-            
+            <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
           </TriggeringView>
           <Content
             source={{ html: article.content.rendered + "<br/>" }}
