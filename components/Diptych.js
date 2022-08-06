@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Card, Text } from "@ui-kitten/components"
 import { Dimensions, Image, View, StyleSheet } from "react-native"
 import PagerView from "react-native-pager-view"
@@ -6,26 +6,13 @@ import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
 import { Spacing } from "../constants"
+import { ref } from "firebase/database"
 
 const { width, height } = Dimensions.get("window")
 
 export default function Diptych(props) {
-    const newsArticles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
+    const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
     const [selection, setSelection] = useState(0)
-    const [offset, setOffset] = useState({ margin: -25, flex: 9/10 })
-
-    const onOblique = (index) => {
-        if (index > 0) {
-            setOffset({ "margin": undefined, "flex": 1 })
-        } else {
-            setOffset({ "margin": -25, "flex": 9/10 })
-        }
-    }
-
-    useEffect(() => {
-      setSelection(1)
-      setSelection(0)
-    }, [])
     
     const Header = (props) => (
       <React.Fragment>
@@ -39,13 +26,9 @@ export default function Diptych(props) {
       </View>
     )
 
-    const largestImageAvailable = (details) => {
-      return _.maxBy(details.media_details.sizes, "width").source_url
-    }
-
     return (
-        <PagerView style={styles.container} initialPage={0} pageMargin={selection > 0 ? undefined : -Spacing.large} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
-            {_.chunk(newsArticles, 2).map((couplet, index) => (
+        <PagerView peekEnabled style={styles.container} initialPage={0} pageMargin={selection > 0 ? undefined : -Spacing.large} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
+            {_.chunk(articles, 2).map((couplet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {couplet.map((item) => (
                   <Card

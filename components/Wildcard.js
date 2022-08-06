@@ -9,12 +9,11 @@ import { formatDate, itemize } from "../helpers/format"
 
 export default function Wlidcard(props) {
     const { navigation, articles, random, verbose, title } = props
-    const themeContext = useContext(ThemeContext)
-    var cultureArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
+    var wildcardArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
 
     useEffect(() => {
         if (random) {
-            cultureArticles = _.shuffle(articles).slice(0, 4) 
+            wildcardArticles = _.shuffle(articles).slice(0, 4) 
         }
     }, [])
     
@@ -34,14 +33,14 @@ export default function Wlidcard(props) {
 
     const Footer = (props) => (
         <View style={styles.footer}>
-            <Text style={{ textAlign: "justify", flex: 0.95 }} category="label">{props.byline}</Text>
+            <Text style={{ textAlign: "left", flex: 0.95 }} category="label">{props.byline}</Text>
             <Button size="tiny" status="basic">{decode(props.section).replace('\'', '\u{2019}')}</Button>
         </View>
     )
 
     return (
         <View style={styles.container}>
-            {cultureArticles.map((item, index) => (
+            {wildcardArticles.map((item, index) => (
                 <Card
                     key={index}
                     style={styles.card}
