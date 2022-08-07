@@ -32,7 +32,7 @@ export default function Diptych(props) {
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {couplet.map((item) => (
                   <Card
-                    style={{...styles.card, flex: selection > 0 ? 1 : (1 - Spacing.large / width) / 2, marginLeft: selection === 0 && index === 1 ? -Spacing.large : undefined}}
+                    style={styles.card}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer date={item["date_gmt"]}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>

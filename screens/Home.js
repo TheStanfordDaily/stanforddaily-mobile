@@ -67,7 +67,7 @@ export default function Home({ navigation }) {
 
     return (articlesLoaded &&
       <Layout style={styles.container}>
-        <ScrollView scrollEventThrottle={400} onScroll={checkBottom}>
+        <ScrollView onScroll={checkBottom}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
