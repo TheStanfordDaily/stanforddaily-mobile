@@ -4,9 +4,7 @@ import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins, Spacing } from '../constants';
 import Model from "../Model";
 import { decode } from "html-entities";
-import { formatDate, stringMode } from '../helpers/format';
-import { useTheme } from '@react-navigation/native';
-import Profile from '../components/Profile';
+import { formatDate, stringMode } from "../helpers/format";
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
@@ -58,7 +56,6 @@ export default function Author({ route, navigation }) {
                         <Text category="label">{formatDate(new Date(item.date), false)}</Text>
                     </Card>
                 )}
-                ListHeaderComponent={() => authorDetail && authorDetail.length > 0 && <Text category="p2" style={{ padding: Spacing.large }}>{decode(authorDetail)}</Text>}
                 ListFooterComponent={() => articlesLoading && <ActivityIndicator />}
             />
         </Layout>
