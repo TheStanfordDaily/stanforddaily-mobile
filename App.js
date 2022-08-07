@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, Share, TouchableOpacity, useColorScheme } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { Appearance, Image, Share, StatusBar, TouchableOpacity, useColorScheme } from "react-native";
+// import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
 import * as Font from "expo-font";
@@ -105,17 +105,30 @@ export default function App() {
     ),
   }
 
-  const detailHeaderOptions = ({ navigation, route }) => {return {
-    headerTitle: "",
-    headerTransparent: true,
-    headerTintColor: "white",
-    headerBackTitleVisible: false,
-    headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
-        <Icon name="share-outline" width={24} height={24} fill="white" />
-      </TouchableOpacity>
-    )
-  }}
+  const detailHeaderOptions = ({ navigation, route }) => {
+    return {
+      headerTitle: "",
+      headerTransparent: true,
+      headerTintColor: "white",
+      headerBackTitleVisible: false,
+      headerRight: () => (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
+          <Icon name="share-outline" width={24} height={24} fill="white" />
+        </TouchableOpacity>
+      )
+    }
+  }
+
+  const detailHeaderListeners = () => {
+    return {
+      focus: () => {
+        StatusBar.setBarStyle("light-content", true)
+      },
+      blur: () => {
+        StatusBar.setBarStyle(theme === "light" ? "dark" : "light" + "-content", true)
+      }
+    }
+  }
 
   useEffect(() => {
     // Loads fonts from static resource.
@@ -169,7 +182,7 @@ export default function App() {
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
-                <StatusBar />
+                {/* <StatusBar /> */}
                 <Stack.Navigator initialRouteName="Home">
                   <Stack.Screen
                     name="Home"
@@ -180,6 +193,7 @@ export default function App() {
                     name="Post"
                     component={Post}
                     options={detailHeaderOptions}
+                    listeners={detailHeaderListeners}
                   />
                   <Stack.Screen
                     name="Section"

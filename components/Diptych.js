@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Card, Text } from "@ui-kitten/components"
-import { Dimensions, Image, View, StyleSheet } from "react-native"
+import { Dimensions, Image, View, StyleSheet, Platform } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
@@ -32,7 +32,7 @@ export default function Diptych(props) {
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {couplet.map((item) => (
                   <Card
-                    style={[styles.card, { flex: selection > 0 ? 1 : (1 - Spacing.large / width) / 2 }]}
+                    style={[styles.card, Platform.OS === "ios" ? { width: (100*(width - Spacing.large )/width/2).toString() + "%" } : { flex: selection > 0 ? 1 : (1 - Spacing.large / width) / 2 }]}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer date={item["date_gmt"]}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>

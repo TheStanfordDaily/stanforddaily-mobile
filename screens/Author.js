@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ImageBackground, FlatList } from 'react-native';
+import { ActivityIndicator, ImageBackground, FlatList, StatusBar } from 'react-native';
 import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins } from '../constants';
 import Model from "../Model";
 import { decode } from "html-entities";
 import { formatDate } from '../helpers/format';
+import { useTheme } from '@react-navigation/native';
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params

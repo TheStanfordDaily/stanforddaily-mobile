@@ -1,7 +1,8 @@
+import { useTheme } from "@react-navigation/native";
 import { Layout } from "@ui-kitten/components";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { ScrollView } from "react-native";
+import { ScrollView, StatusBar } from "react-native";
 import Wlidcard from "../components/Wildcard";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
@@ -10,7 +11,7 @@ export default function Section({ route, navigation }) {
     const { category, seed } = route.params
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [selection, setSelection] = useState(0)
-    const [pageNumber, setPageNumber] = useState(seed.length == 0 ? 1 : 2)
+    const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2)
     const themeContext = useContext(ThemeContext)
     const [articles, setArticles] = useState(seed)
 

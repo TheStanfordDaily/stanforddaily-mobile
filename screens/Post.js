@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Dimensions, Share, StatusBar, StyleSheet, Platform } from "react-native";
+import React, { useEffect, useFocusEffect, useState } from "react";
+import { View, Dimensions, StatusBar, Share, StyleSheet, Platform } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -12,6 +12,7 @@ import { itemize, formatDate } from "../helpers/format";
 import Byline from "./Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -50,6 +51,9 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
+      return () => {
+        StatusBar.setBarStyle(theme + "-content", true)
+      }
     }, [article])
 
     return (
