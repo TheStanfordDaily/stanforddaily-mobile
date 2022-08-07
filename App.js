@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native";
-// import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Navigation, { navigate } from "./navigation";
+import { navigate, logoAssets, statusBarStyles } from "./navigation";
 import * as Font from "expo-font";
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
@@ -13,7 +12,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Button, Icon, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
@@ -26,7 +25,6 @@ import { ThemeContext } from "./theme-context";
 import Author from "./screens/Author";
 import { minion } from "./custom-fonts";
 import { decode } from "html-entities";
-import { statusBarStyles } from "./navigation"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -48,11 +46,6 @@ const firebaseConfig = {
   serviceAccountId: SERVICE_ACCOUNT_ID
 }
 
-const logoAssets = {
-  "light": require("./assets/media/DailyLogoCardinal.png"),
-  "dark": require("./assets/media/DailyLogoWhite.png")
-}
-
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -61,7 +54,6 @@ export default function App() {
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
-  // const isLoadingComplete = useLoadedAssets();
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   
@@ -118,15 +110,9 @@ export default function App() {
     }
   }
 
-  const detailHeaderListeners = () => {
-    return {
-      focus: () => {
-        StatusBar.setBarStyle("light-content", true)
-      },
-      blur: () => {
-        StatusBar.setBarStyle(statusBarStyles[Platform.OS][theme], true)
-      }
-    }
+  const detailHeaderListeners = {
+    focus: () => StatusBar.setBarStyle("light-content", true),
+    blur: () => StatusBar.setBarStyle(statusBarStyles[Platform.OS][theme], true)
   }
 
   useEffect(() => {

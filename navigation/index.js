@@ -44,6 +44,11 @@ export function navigate(name, params) {
   }
 }
 
+export const logoAssets = {
+  "light": require("../assets/media/DailyLogoCardinal.png"),
+  "dark": require("../assets/media/DailyLogoWhite.png")
+}
+
 export const statusBarStyles = {
   ios: {
     light: "light-content",
