@@ -17,7 +17,7 @@ export default function Section({ route, navigation }) {
 
     const checkBottom = (e) => {
         let paddingToBottom = 10;
-        paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+        paddingToBottom += e.nativeEvent.layoutMeasurement.height
         if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom && !articlesLoading) {
           setArticlesLoading(true)
           setPageNumber(pageNumber + 1)

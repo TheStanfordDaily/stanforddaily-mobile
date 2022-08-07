@@ -30,7 +30,7 @@ export default function Home({ navigation }) {
 
     const checkBottom = (e) => {
       let paddingToBottom = 10;
-      paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+      paddingToBottom += e.nativeEvent.layoutMeasurement.height
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
         setPageNumber(pageNumber + 1)
       }
@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
     
     useEffect(() => {
       if (pageNumber == 1) {
-        Model.posts().perPage(50).get().then(posts => {
+        Model.posts().perPage(48).get().then(posts => {
           for (let value of Object.values(Sections)) {
             setArticles(articles => ({
               ...articles,
@@ -56,7 +56,7 @@ export default function Home({ navigation }) {
           }))
         }).finally(() => setArticlesLoaded(true))
       } else {
-        Model.posts().perPage(25).page(pageNumber + 2).get().then(posts => {
+        Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
           if ("wildcards" in articles) {
         setArticles(articles => ({...articles, "wildcards": [...articles["wildcards"], ...posts]}))
           } else {

@@ -12,10 +12,11 @@ export default function Author({ route, navigation }) {
     const [articles, setArticles] = useState([])
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
+    const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
 
     const checkBottom = (e) => {
         let paddingToBottom = 10;
-        paddingToBottom += e.nativeEvent.layoutMeasurement.height;
+        paddingToBottom += e.nativeEvent.layoutMeasurement.height
         if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
           setPageNumber(pageNumber + 1)
         }
@@ -37,6 +38,7 @@ export default function Author({ route, navigation }) {
           }
         }).catch(error => {
             console.log(error)
+            setPossiblyReachedEnd(true)
         })
 
         setArticlesLoading(false)
@@ -56,7 +58,7 @@ export default function Author({ route, navigation }) {
                         <Text category="label">{formatDate(new Date(item.date), false)}</Text>
                     </Card>
                 )}
-                ListFooterComponent={() => articlesLoading && <ActivityIndicator />}
+                ListFooterComponent={() => !possiblyReachedEnd && <ActivityIndicator />}
             />
         </Layout>
     )
