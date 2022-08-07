@@ -43,3 +43,14 @@ export function navigate(name, params) {
     navigationRef.navigate(name, params);
   }
 }
+
+export const statusBarStyles = {
+  ios: {
+    light: "light-content",
+    dark: "dark-content"
+  },
+  android: {
+    light: "dark-content",
+    dark: "light-content"
+  }
+}

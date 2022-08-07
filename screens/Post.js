@@ -1,5 +1,5 @@
-import React, { useEffect, useFocusEffect, useState } from "react";
-import { View, Dimensions, StatusBar, Share, StyleSheet, Platform } from "react-native";
+import React, { useContext, useEffect, useFocusEffect, useState } from "react";
+import { View, Dimensions, StatusBar, Share, StyleSheet, Platform, useColorScheme } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -13,6 +13,8 @@ import Byline from "./Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { ThemeContext } from "../theme-context";
+import { statusBarStyles } from "../navigation";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -23,10 +25,12 @@ const systemFonts = [
 export default function Post({ route, navigation }) {
     const { article, sourceName } = route.params
     const featuredMedia = article["jetpack_featured_media_url"]
+    const colorScheme = useColorScheme()
     const theme = useTheme()
     const dateInstance = new Date(article.date)
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
+    const themeContext = useContext(ThemeContext)
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -51,8 +55,9 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
+
       return () => {
-        StatusBar.setBarStyle(theme + "-content", true)
+        StatusBar.setBarStyle(statusBarStyles[Platform.OS][colorScheme], true)
       }
     }, [article])
 
@@ -78,6 +83,7 @@ export default function Post({ route, navigation }) {
             systemFonts={systemFonts}
             contentWidth={width}
             baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
             renderers={renderers}
             WebView={WebView}
             backgroundColor={theme["background-color-basic-2"]}

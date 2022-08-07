@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, Share, StatusBar, TouchableOpacity, useColorScheme } from "react-native";
+import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native";
 // import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Navigation, { navigate } from "./navigation";
@@ -26,6 +26,7 @@ import { ThemeContext } from "./theme-context";
 import Author from "./screens/Author";
 import { minion } from "./custom-fonts";
 import { decode } from "html-entities";
+import { statusBarStyles } from "./navigation"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -123,7 +124,7 @@ export default function App() {
         StatusBar.setBarStyle("light-content", true)
       },
       blur: () => {
-        StatusBar.setBarStyle(theme === "light" ? "dark" : "light" + "-content", true)
+        StatusBar.setBarStyle(statusBarStyles[Platform.OS][theme], true)
       }
     }
   }
@@ -180,7 +181,6 @@ export default function App() {
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
-                {/* <StatusBar /> */}
                 <Stack.Navigator initialRouteName="Home">
                   <Stack.Screen
                     name="Home"
