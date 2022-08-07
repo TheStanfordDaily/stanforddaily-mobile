@@ -19,8 +19,6 @@ import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import ContentStack from "./navigation/ContentStack";
-import SearchStack from "./navigation/SearchStack";
 import Post from "./screens/Post";
 import Home from "./screens/Home";
 import Section from "./screens/Section";
