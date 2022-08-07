@@ -24,3 +24,7 @@ export const formatDate = (instance, verbose) => {
     let formattedMeridian = instance.getUTCHours() % 24 < 12 ? "a.m." : "p.m."
     return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`
 }
+
+export const stringMode = (strings) => {
+    return strings.sort((a,b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
+}
