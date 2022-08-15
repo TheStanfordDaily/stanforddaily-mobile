@@ -36,7 +36,7 @@ export default function Home({ navigation }) {
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles[Sections.OPINIONS.slug].length >= 3 && (
+          {articles[Sections.OPINIONS.slug]?.length >= 3 && (
             <React.Fragment>
               <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
               <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
@@ -45,9 +45,9 @@ export default function Home({ navigation }) {
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles["culture"].map((item, index) => <Wildcard item={item} index={index} navigation={navigation} />)}
+          {articles["culture"]?.map((item, index) => <Wildcard item={item} index={index} navigation={navigation} />)}
           <Divider />
-          {articles[Sections.HUMOR.slug].length >= 3 && (
+          {articles[Sections.HUMOR.slug]?.length >= 3 && (
             <React.Fragment>
               <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
               <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
@@ -78,7 +78,10 @@ export default function Home({ navigation }) {
             ...articles,
             "culture": _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4),
           }))
+        }).catch(error => {
+          console.log(error)
         }).finally(() => setArticlesLoaded(true))
+        
       }
 
       Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
@@ -93,8 +96,7 @@ export default function Home({ navigation }) {
 
     return articlesLoaded && (
       <Layout style={styles.container}>
-        <List
-          keyExtractor={item => item.id}
+        <FlatList
           onEndReached={() => {
             if (!articlesLoading) {
               setPageNumber(pageNumber + 1)
@@ -103,9 +105,9 @@ export default function Home({ navigation }) {
           ListHeaderComponent={Header}
           ListFooterComponent={<ActivityIndicator />}
           onEndReachedThreshold={1}
-          style={{ flex: 1 }}
+          scrollEventThrottle={16}
           data={articles["wildcards"]}
-          renderItem={({item, index}) => (<Wildcard item={item} index={index} navigation={navigation} verbose />)}
+          renderItem={({item, index}) => (<Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />)}
         />
       </Layout>
     )

@@ -35,7 +35,7 @@ export default function Section({ route, navigation }) {
         <Layout>
             <List
                 data={articles}
-                showsVerticalScrollIndicator={false}
+                scrollEventThrottle={perPageNumber}
                 onEndReachedThreshold={1}
                 onEndReached={() => {
                     if (!articlesLoading) {

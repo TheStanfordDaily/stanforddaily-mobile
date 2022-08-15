@@ -40,7 +40,6 @@ export default function Wlidcard(props) {
 
     return (
         <Card
-            key={index}
             style={styles.card}
             header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
             footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}

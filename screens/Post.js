@@ -12,9 +12,7 @@ import { itemize, formatDate } from "../helpers/format";
 import Byline from "./Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeContext } from "../theme-context";
-import { statusBarStyles } from "../navigation";
 import { useHeaderHeight } from "@react-navigation/elements"
 
 const { width, height } = Dimensions.get("window");
