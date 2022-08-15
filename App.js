@@ -112,7 +112,7 @@ export default function App() {
 
   const detailHeaderListeners = {
     focus: () => StatusBar.setBarStyle("light-content", true),
-    blur: () => StatusBar.setBarStyle(statusBarStyles[Platform.OS][theme], true)
+    blur: () => StatusBar.setBarStyle(theme === "light" ? "dark" : "light", true)
   }
 
   useEffect(() => {

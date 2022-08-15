@@ -57,7 +57,9 @@ export default function Post({ route, navigation }) {
       })
 
       return () => {
-        StatusBar.setBarStyle(statusBarStyles[Platform.OS][colorScheme], true)
+        if (colorScheme === "light") {
+          StatusBar.setBarStyle("dark-content", true)
+        }
       }
     }, [article])
 
@@ -67,7 +69,6 @@ export default function Post({ route, navigation }) {
         renderForeground={Foreground}
         maxOverlayOpacity={0.75}
         minOverlayOpacity={0.6}
-        minHeight={91 + 19*(Platform.OS === "android")}
         maxHeight={featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>

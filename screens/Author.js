@@ -40,7 +40,6 @@ export default function Author({ route, navigation }) {
             console.log(error)
             setPossiblyReachedEnd(true)
         })
-
         setArticlesLoading(false)
       }, [pageNumber])
 

@@ -44,11 +44,9 @@
     
         "text-caption-1-font-size": 12,
         "text-caption-1-font-weight": "400",
-        "text-caption-1-font-family": null,
     
         "text-caption-2-font-size": 12,
         "text-caption-2-font-weight": "600",
-        "text-caption-2-font-family": null,
     
         "text-label-font-size": 12,
         "text-label-font-weight": "800",
