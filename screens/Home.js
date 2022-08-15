@@ -30,7 +30,7 @@ export default function Home({ navigation }) {
       return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
     }
     
-    const Header = () => (
+    const DefaultContent = () => (
       <Layout>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
@@ -102,12 +102,11 @@ export default function Home({ navigation }) {
               setPageNumber(pageNumber + 1)
             }
           }}
-          ListHeaderComponent={Header}
+          ListHeaderComponent={DefaultContent}
           ListFooterComponent={<ActivityIndicator />}
           onEndReachedThreshold={1}
-          scrollEventThrottle={16}
           data={articles["wildcards"]}
-          renderItem={({item, index}) => (<Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />)}
+          renderItem={({item, index}) => <Wildcard key={item.id + pageNumber} item={item} index={index} navigation={navigation} verbose />}
         />
       </Layout>
     )

@@ -1,8 +1,7 @@
 import { useTheme } from "@react-navigation/native";
-import { Card, Layout, List, Text } from "@ui-kitten/components";
+import { Layout, List, Text } from "@ui-kitten/components";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { ScrollView, StatusBar } from "react-native";
 import Wlidcard from "../components/Wildcard";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
@@ -32,6 +31,7 @@ export default function Section({ route, navigation }) {
 
 
     return (
+      themeContext.theme === "dark" ? (
         <Layout>
             <List
                 data={articles}
@@ -43,10 +43,28 @@ export default function Section({ route, navigation }) {
                     }
                 }}
                 renderItem={({ item, index }) => (
-                    <Wlidcard item={item} index={index} navigation={navigation} verbose />
+                    <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
                 )}
                 ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
             />
         </Layout>
+      ) : (
+        <View>
+            <List
+                data={articles}
+                scrollEventThrottle={perPageNumber}
+                onEndReachedThreshold={1}
+                onEndReached={() => {
+                    if (!articlesLoading) {
+                        setPageNumber(pageNumber + 1)
+                    }
+                }}
+                renderItem={({ item, index }) => (
+                    <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+                )}
+                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+            />
+        </View>
+      )
     )
 }

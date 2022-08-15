@@ -9,19 +9,12 @@ import { formatDate, itemize } from "../helpers/format"
 
 export default function Wlidcard(props) {
     const { navigation, articles, random, verbose, title, item, index } = props
-    // var wildcardArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
-
-    /*useEffect(() => {
-        if (random) {
-            wildcardArticles = _.shuffle(articles).slice(0, 4) 
-        }
-    }, [])*/
     
     const Header = (props) => (
         <React.Fragment>
             <View>
-            <Text style={styles.header} category="h6">{props.title}</Text>
-            {verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
+                <Text style={styles.header} category="h6">{props.title}</Text>
+                {verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
             </View>
             
             <Image
