@@ -23,36 +23,45 @@ export default function Author({ route, navigation }) {
     }
 
     const Header = ({ uri }) => (
-        <ImageBackground source={{ uri: uri }} style={{ height: 140 }} />
+        <ImageBackground source={{ uri: uri + "?w=300" }} style={{ height: 140 }} />
     )
 
     useEffect(() => {
         setArticlesLoading(true)
-        Model.posts().param("coauthors", id).page(pageNumber).param("_embed", pageNumber === 1).get().then(posts => {
-          setArticles([...articles, ...posts])
-          setArticlesLoading(false)
-          if (pageNumber === 1) {
-            const descriptions = posts.map(post => post["_embedded"].author.map(a => a.description).reduce((p, q) => p + q))
-            console.log(stringMode(descriptions))
-            setAuthorDetail(stringMode(descriptions))
-          }
-        }).catch(error => {
-            console.log(error)
-            setPossiblyReachedEnd(true)
-        })
+        
+        if (!possiblyReachedEnd) {
+            Model.posts().param("coauthors", id).page(pageNumber).param("_embed", pageNumber === 1).get().then(posts => {
+                setArticles([...articles, ...posts])
+                setArticlesLoading(false)
+                if (pageNumber === 1) {
+                    const descriptions = posts.map(post => post["_embedded"].author.map(a => a.description).reduce((p, q) => p + q))
+                    setAuthorDetail(stringMode(descriptions))
+                }
+            }).catch(error => {
+                console.log(error)
+                setPossiblyReachedEnd(true)
+            })
+        }
+        
         setArticlesLoading(false)
-      }, [pageNumber])
+
+        // FIXME: Not all of the asynchronous tasks are being canceled, so there needs to be a cleanup function to avoid a memory leak.
+    }, [pageNumber])
 
     return (
         <Layout>
             <List
                 data={articles}
                 numColumns={2}
-                onScroll={checkBottom}
-                onEndReached={() => setPageNumber(pageNumber + 1)}
-                onEndReachedThreshold={0.5}
+                showsVerticalScrollIndicator={false}
+                onEndReachedThreshold={1}
+                onEndReached={() => {
+                    if (!articlesLoading) {
+                        setPageNumber(pageNumber + 1)
+                    }
+                }}
                 renderItem={({ item }) => (
-                    <Card onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1/2 }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
+                    <Card key={item.id} onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1/2 }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
                         <Text category="p1">{decode(item.title.rendered)}</Text>
                         <Text category="label">{formatDate(new Date(item.date), false)}</Text>
                     </Card>

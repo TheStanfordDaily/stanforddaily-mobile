@@ -28,7 +28,7 @@ export default function Carousel(props) {
     const Footer = (props) => (
       <View style={styles.footer}>
         <Text style={{ flex: 0.95 }} category="label">{itemize(Object.keys(props.authors).map(name => name.toUpperCase()))}</Text>
-        <Button size="tiny" status="basic">{props.section}</Button>
+        <Button size="tiny" status="basic">{decode(props.section)}</Button>
       </View>
     )
 
@@ -50,7 +50,7 @@ export default function Carousel(props) {
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely.meta.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
-                          <Text style={{ marginHorizontal: -10, marginTop: -5, fontFamily: "MinionProBold" }} category="h5">{decode(item.title.rendered)}</Text>
+                          <Text style={{ marginHorizontal: -10, marginTop: -5, fontFamily: "MinionProBold" }} category="h5">{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
                             {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
                           </Text>

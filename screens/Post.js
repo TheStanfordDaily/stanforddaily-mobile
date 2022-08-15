@@ -15,6 +15,7 @@ import Model from "../Model"
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeContext } from "../theme-context";
 import { statusBarStyles } from "../navigation";
+import { useHeaderHeight } from "@react-navigation/elements"
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -31,6 +32,7 @@ export default function Post({ route, navigation }) {
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
     const themeContext = useContext(ThemeContext)
+    const headerHeight = useHeaderHeight()
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -69,6 +71,7 @@ export default function Post({ route, navigation }) {
         renderForeground={Foreground}
         maxOverlayOpacity={0.75}
         minOverlayOpacity={0.6}
+        minHeight={headerHeight}
         maxHeight={featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>

@@ -37,14 +37,14 @@ export default function Section({ route, navigation }) {
     return (
       themeContext.theme === "dark" ? (
       <Layout>
-        <ScrollView scrollEventThrottle={400} onScroll={checkBottom}>
+        <ScrollView scrollEventThrottle={160} onScroll={checkBottom}>
           <Wlidcard articles={articles} navigation={navigation} title={category.name} verbose />
           <ActivityIndicator />
         </ScrollView>
       </Layout>
       ) : (
       <View>
-        <ScrollView scrollEventThrottle={400} onScroll={checkBottom}>
+        <ScrollView scrollEventThrottle={160} onScroll={checkBottom}>
           <Wlidcard articles={articles} navigation={navigation} title={category.name} verbose />
           <ActivityIndicator />
         </ScrollView>

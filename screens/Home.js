@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
-import { Divider, Layout } from "@ui-kitten/components";
+import { ActivityIndicator, FlatList, ScrollView, StyleSheet } from "react-native";
+import { Divider, Layout, List } from "@ui-kitten/components";
 import Canvas from "../components/Canvas";
 import Carousel from "../components/Carousel";
 import Diptych from "../components/Diptych";
@@ -10,7 +10,7 @@ import Wildcard from "../components/Wildcard";
 import Model from "../Model";
 import { Sections, Spacing } from "../constants";
 
-// There are no recent opinions at time of writing.
+// There are too few recent opinions at time of writing.
 const staticOpinions = require("../opinions.json");
 
 export default function Home({ navigation }) {
@@ -67,15 +67,15 @@ export default function Home({ navigation }) {
 
     return (articlesLoaded &&
       <Layout style={styles.container}>
-        <ScrollView onScroll={checkBottom}>
+        <ScrollView scrollEventThrottle={160} onScroll={checkBottom}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {opinions.length > 3 && (
+          {articles[Sections.OPINIONS.slug].length >= 3 && (
             <React.Fragment>
-              <Mark category={Sections.OPINIONS} seed={staticOpinions} navigation={navigation} />
-              <Shelf articles={opinions} navigation={navigation} />
+              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
             </React.Fragment>
           )}
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
