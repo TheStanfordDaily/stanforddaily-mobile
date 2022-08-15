@@ -10,8 +10,6 @@ import Wildcard from "../components/Wildcard";
 import Model from "../Model";
 import { Sections, Spacing } from "../constants";
 import _ from "lodash";
-import { decode } from "html-entities";
-import { formatDate } from "../helpers/format";
 
 // There are too few recent opinions at time of writing.
 const staticOpinions = require("../opinions.json");
@@ -31,19 +29,8 @@ export default function Home({ navigation }) {
     
       return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
     }
-
-    const checkBottom = (e) => {
-      let paddingToBottom = 10;
-      paddingToBottom += e.nativeEvent.layoutMeasurement.height
-      if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
-        setPageNumber(pageNumber + 1)
-      }
-    }
     
-    const Header = () => {
-
- 
-      return (
+    const Header = () => (
       <Layout>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
@@ -69,11 +56,11 @@ export default function Home({ navigation }) {
           )}
           <Canvas articles={articles[Sections.CARTOONS.slug]} />
           {articles["wildcards"]?.length > 0 && <Divider />}
-      </Layout>)
-}
+      </Layout>
+    )
 
     useEffect(() => {
-
+      setArticlesLoading(true)
       if (pageNumber == 1) {
         Model.posts().perPage(48).get().then(posts => {
           for (let value of Object.values(Sections)) {
@@ -94,32 +81,33 @@ export default function Home({ navigation }) {
         }).finally(() => setArticlesLoaded(true))
       }
 
-        console.log("retree wildcards")
-        Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
-          if ("wildcards" in articles) {
-        setArticles(articles => ({...articles, "wildcards": [...articles["wildcards"], ...posts]}))
-          } else {
-            setArticles(articles => ({...articles, "wildcards": posts}))
-          }
+      Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
+        if ("wildcards" in articles) {
+          setArticles(articles => ({...articles, "wildcards": [...articles["wildcards"], ...posts]}))
+        } else {
+          setArticles(articles => ({...articles, "wildcards": posts}))
+        }
       })
-
+      setArticlesLoading(false)
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     return articlesLoaded && (
       <Layout style={styles.container}>
-              <List
-        keyExtractor={item => item.id}
-        onEndReached={() => setPageNumber(pageNumber + 1)}
-        ListHeaderComponent={Header}
-        ListFooterComponent={<ActivityIndicator />}
-        onEndReachedThreshold={1}
-        style={{ flex: 1 }}
-        data={articles["wildcards"]}
-        renderItem={({item, index}) => (<Wildcard item={item} index={index} navigation={navigation} verbose />)}
-      />
+        <List
+          keyExtractor={item => item.id}
+          onEndReached={() => {
+            if (!articlesLoading) {
+              setPageNumber(pageNumber + 1)
+            }
+          }}
+          ListHeaderComponent={Header}
+          ListFooterComponent={<ActivityIndicator />}
+          onEndReachedThreshold={1}
+          style={{ flex: 1 }}
+          data={articles["wildcards"]}
+          renderItem={({item, index}) => (<Wildcard item={item} index={index} navigation={navigation} verbose />)}
+        />
       </Layout>
-
-
     )
 }
   
