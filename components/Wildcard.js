@@ -8,20 +8,20 @@ import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
 
 export default function Wlidcard(props) {
-    const { navigation, articles, random, verbose, title } = props
-    var wildcardArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
+    const { navigation, articles, random, verbose, title, item, index } = props
+    // var wildcardArticles = articles //  _.shuffle(articles[0].concat(articles[1]))
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (random) {
             wildcardArticles = _.shuffle(articles).slice(0, 4) 
         }
-    }, [])
+    }, [])*/
     
     const Header = (props) => (
         <React.Fragment>
             <View>
             <Text style={styles.header} category="h6">{props.title}</Text>
-            {verbose && (<Text style={styles.date} category="c1">{formatDate(new Date(props.date))}</Text>)}
+            {verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
             </View>
             
             <Image
@@ -39,19 +39,15 @@ export default function Wlidcard(props) {
     )
 
     return (
-        <View style={styles.container}>
-            {wildcardArticles.map((item, index) => (
-                <Card
-                    key={index}
-                    style={styles.card}
-                    header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
-                    footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}
-                    {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
-                >
-                    <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
-                </Card>
-            ))}
-        </View>
+        <Card
+            key={index}
+            style={styles.card}
+            header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
+            footer={<Footer byline={itemize(item.parsely.meta.creator.map(name => name.toUpperCase()))} section={item.parsely.meta.articleSection}/>}
+            {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
+        >
+            <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
+        </Card>
     )
 }
 
@@ -72,9 +68,13 @@ const styles = StyleSheet.create({
     date: {
         paddingHorizontal: 20,
         paddingTop: 0,
-        paddingBottom: 10
+        paddingBottom: 10,
+        fontFamily: undefined,
+        fontWeight: "bold"
     },
     card: {
+        flex: 1,
+        marginHorizontal: 8,
         marginVertical: 4
     },
     container: {

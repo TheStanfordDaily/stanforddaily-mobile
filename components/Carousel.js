@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
-import { Image, View, StyleSheet } from "react-native"
+import { Dimensions, Image, View, StyleSheet } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
@@ -8,6 +8,8 @@ import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
 import { Sections } from "../constants"
 import { ThemeContext } from "../theme-context"
+
+const { width, height } = Dimensions.get("window")
 
 export default function Carousel(props) {
     const theme = useTheme()

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ImageBackground, FlatList, StatusBar } from 'react-native';
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, StatusBar } from 'react-native';
 import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins, Spacing } from '../constants';
 import Model from "../Model";
@@ -13,14 +13,6 @@ export default function Author({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-
-    const checkBottom = (e) => {
-        let paddingToBottom = 10;
-        paddingToBottom += e.nativeEvent.layoutMeasurement.height
-        if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
-          setPageNumber(pageNumber + 1)
-        }
-    }
 
     const Header = ({ uri }) => (
         <ImageBackground source={{ uri: uri + "?w=300" }} style={{ height: 140 }} />

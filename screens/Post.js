@@ -72,16 +72,16 @@ export default function Post({ route, navigation }) {
         maxOverlayOpacity={0.75}
         minOverlayOpacity={0.6}
         minHeight={headerHeight}
-        maxHeight={featuredMedia ? 270 : 0}
+        maxHeight={headerHeight + featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        <View style={{ flex: 1, marginHorizontal: 14 }}>
+        <View style={{ flex: 1, marginHorizontal: 14, paddingBottom: Spacing.large }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
           </TriggeringView>
           <Content
-            source={{ html: article.content.rendered + "<br/>" }}
+            source={{ html: article.content.rendered }}
             defaultTextProps={{ selectable: true }}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}

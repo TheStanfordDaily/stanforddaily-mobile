@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import { Layout } from "@ui-kitten/components";
+import { Card, Layout, List, Text } from "@ui-kitten/components";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { ScrollView, StatusBar } from "react-native";
@@ -14,41 +14,39 @@ export default function Section({ route, navigation }) {
     const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2)
     const themeContext = useContext(ThemeContext)
     const [articles, setArticles] = useState(seed)
-
-    const checkBottom = (e) => {
-        let paddingToBottom = 10;
-        paddingToBottom += e.nativeEvent.layoutMeasurement.height
-        if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom && !articlesLoading) {
-          setArticlesLoading(true)
-          setPageNumber(pageNumber + 1)
-        }
-    }
+    const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
+    const perPageNumber = 16
+    const basePageCount = Math.max(0, Math.floor(seed.length/perPageNumber) - 1)
 
     useEffect(() => {
-      Model.posts().categories(category.id).perPage(seed.length >= 10 ? seed.length : seed.length + 10).page(pageNumber).get().then(posts => {
+      Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
         setArticles([...articles, ...posts])
       }).catch(error => {
         console.log(error)
+        if (error.data?.status === 400) {
+          setPossiblyReachedEnd(true)
+        }
       })
       setArticlesLoading(false)
     }, [pageNumber])
 
 
     return (
-      themeContext.theme === "dark" ? (
-      <Layout>
-        <ScrollView scrollEventThrottle={160} onScroll={checkBottom}>
-          <Wlidcard articles={articles} navigation={navigation} title={category.name} verbose />
-          <ActivityIndicator />
-        </ScrollView>
-      </Layout>
-      ) : (
-      <View>
-        <ScrollView scrollEventThrottle={160} onScroll={checkBottom}>
-          <Wlidcard articles={articles} navigation={navigation} title={category.name} verbose />
-          <ActivityIndicator />
-        </ScrollView>
-      </View>
-      )
+        <Layout>
+            <List
+                data={articles}
+                showsVerticalScrollIndicator={false}
+                onEndReachedThreshold={1}
+                onEndReached={() => {
+                    if (!articlesLoading) {
+                        setPageNumber(pageNumber + 1)
+                    }
+                }}
+                renderItem={({ item, index }) => (
+                    <Wlidcard item={item} index={index} navigation={navigation} verbose />
+                )}
+                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+            />
+        </Layout>
     )
 }
