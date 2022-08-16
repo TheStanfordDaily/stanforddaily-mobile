@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 import Wlidcard from "../components/Wildcard";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
+import * as Device from "expo-device";
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -16,8 +17,13 @@ export default function Section({ route, navigation }) {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 16
     const basePageCount = Math.max(0, Math.floor(seed.length/perPageNumber) - 1)
+    const [columnCount, setColumnCount] = useState(1)
+    const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     useEffect(() => {
+      if (!layoutLoaded) {
+        Device.getDeviceTypeAsync().then(result => setColumnCount(result === "PHONE" ? 1 : 2))
+      }
       Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
         setArticles([...articles, ...posts])
       }).catch(error => {
@@ -26,15 +32,18 @@ export default function Section({ route, navigation }) {
           setPossiblyReachedEnd(true)
         }
       })
+      setLayoutLoaded(true)
       setArticlesLoading(false)
     }, [pageNumber])
 
 
-    return (
+    return (layoutLoaded &&
       themeContext.theme === "dark" ? (
         <Layout>
             <List
                 data={articles}
+                numColumns={columnCount}
+                key={columnCount}
                 scrollEventThrottle={perPageNumber}
                 showsVerticalScrollIndicator={false}
                 onEndReachedThreshold={1}
@@ -54,6 +63,8 @@ export default function Section({ route, navigation }) {
             <List
                 data={articles}
                 scrollEventThrottle={perPageNumber}
+                numColumns={columnCount}
+                key={columnCount}
                 onEndReachedThreshold={1}
                 onEndReached={() => {
                     if (!articlesLoading) {

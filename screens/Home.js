@@ -22,7 +22,7 @@ export default function Home({ navigation }) {
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
-    const [articlesLoaded, setArticlesLoaded] = useState(false)
+    const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
 
@@ -63,8 +63,7 @@ export default function Home({ navigation }) {
           }))
         }).catch(error => {
           console.log(error)
-        }).finally(() => setArticlesLoaded(true))
-        
+        }).finally(() => setLayoutLoaded(true))
       }
 
       Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
@@ -77,7 +76,7 @@ export default function Home({ navigation }) {
       setArticlesLoading(false)
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
-    return (articlesLoaded && 
+    return (layoutLoaded && 
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
@@ -89,14 +88,14 @@ export default function Home({ navigation }) {
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles["culture"].map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} />)}
+          {articles.culture?.map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} />)}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
           <Shelf articles={articles[Sections.HUMOR.slug].length >= 3 ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
           <Divider />
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
-          {articles["wildcard"].map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose />)}
+          {articles.wildcard?.map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose />)}
         </ScrollView>
       </Layout>
     )

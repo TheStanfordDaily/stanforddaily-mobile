@@ -13,7 +13,8 @@ import Byline from "./Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
-import { useHeaderHeight } from "@react-navigation/elements"
+import { useHeaderHeight } from "@react-navigation/elements";
+import * as Device from "expo-device";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -31,6 +32,8 @@ export default function Post({ route, navigation }) {
     const [displayCategory, setDisplayCategory] = useState({})
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
+    const [deviceType, setDeviceType] = useState("PHONE")
+    const contentEdgeInset = deviceType === "PHONE" ? 14 : 56
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -46,11 +49,12 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType === "PHONE" ? "h4" : "h3"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
 
     useEffect(() => {
+      Device.getDeviceTypeAsync().then(result => setDeviceType(result))
       Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
@@ -73,7 +77,7 @@ export default function Post({ route, navigation }) {
         maxHeight={headerHeight + featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        <View style={{ flex: 1, marginHorizontal: 14, paddingBottom: Spacing.large }}>
+        <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingBottom: Spacing.large }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
@@ -84,7 +88,7 @@ export default function Post({ route, navigation }) {
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
             contentWidth={width}
-            baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType === "PHONE" ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
             tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
             renderers={renderers}
             WebView={WebView}
@@ -116,6 +120,7 @@ const styles = StyleSheet.create({
       width: 1,
       height: 1
     },
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: "MinionProBold",
   }
 })

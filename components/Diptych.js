@@ -7,12 +7,15 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Spacing } from "../constants"
 import { ref } from "firebase/database"
+import * as Device from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 
 export default function Diptych(props) {
     const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
     const [selection, setSelection] = useState(0)
+    const [groupSize, setGroupSize] = useState(2)
+    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 2 : 3))
     
     const Header = (props) => (
       <React.Fragment>
@@ -28,7 +31,7 @@ export default function Diptych(props) {
 
     return (
         <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
-            {_.chunk(articles, 2).map((couplet, index) => (
+            {_.chunk(articles, groupSize).map((couplet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                 {couplet.map((item) => (
                   <Card

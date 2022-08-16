@@ -1,14 +1,17 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, StyleSheet, Image } from "react-native"
 import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
 import { formatDate, itemize } from "../helpers/format"
+import * as Device from "expo-device"
 
 export default function Shelf(props) {
     const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
+    const [groupSize, setGroupSize] = useState(2)
+    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 1 : 2))
 
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {
@@ -21,9 +24,10 @@ export default function Shelf(props) {
 
     return (
         <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
-            {_.chunk(opinionsArticles, 3).map((triplet, index) => (
-                <View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={index}>
-                    {triplet.map((item) => (
+            {_.chunk(opinionsArticles, 3 * groupSize).map((triplet, index) => (
+                <View style={{ flex: 1, flexDirection: "row" }}>
+                    {_.chunk(triplet, 3).map((group, outerIndex) => (<View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>
+                    {group.map((item) => (
                         <React.Fragment>
                             <ListItem
                                 title={() => <Text numberOfLines={4} ellipsizeMode="tail" style={{ paddingHorizontal: 4, fontSize: 18, color: props.alternate ? "white" : theme["text-basic-color"] }} allowFontScaling category={"p1"}>{decode(item.title.rendered)}</Text>}
@@ -40,7 +44,9 @@ export default function Shelf(props) {
                             <Divider />
                         </React.Fragment>
                     ))}
+                </View>))}
                 </View>
+                
             ))}
         </PagerView>
     )

@@ -5,6 +5,7 @@ import { Margins, Spacing } from '../constants';
 import Model from "../Model";
 import { decode } from "html-entities";
 import { formatDate, stringMode } from "../helpers/format";
+import * as Device from "expo-device";
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
@@ -13,6 +14,8 @@ export default function Author({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
+    const [groupSize, setGroupSize] = useState(2)
+    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 2 : 3))
 
     const Header = ({ uri }) => (
         <ImageBackground source={{ uri: uri + "?w=300" }} style={{ height: 140 }} />
@@ -44,7 +47,8 @@ export default function Author({ route, navigation }) {
         <Layout>
             <List
                 data={articles}
-                numColumns={2}
+                numColumns={groupSize}
+                key={groupSize}
                 showsVerticalScrollIndicator={false}
                 onEndReachedThreshold={1}
                 onEndReached={() => {
