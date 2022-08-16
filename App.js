@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, useColorScheme } from "react-native";
-import { StatusBar } from "expo-status-bar";
+import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import Navigation, { navigate } from "./navigation";
+import { navigate, logoAssets, statusBarStyles } from "./navigation";
 import * as Font from "expo-font";
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
@@ -13,20 +12,19 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD,
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, IconRegistry, Text, TopNavigation, useTheme } from "@ui-kitten/components";
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import ContentStack from "./navigation/ContentStack";
-import SearchStack from "./navigation/SearchStack";
 import Post from "./screens/Post";
 import Home from "./screens/Home";
 import Section from "./screens/Section";
 import { ThemeContext } from "./theme-context";
 import Author from "./screens/Author";
 import { minion } from "./custom-fonts";
+import { decode } from "html-entities";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -48,11 +46,6 @@ const firebaseConfig = {
   serviceAccountId: SERVICE_ACCOUNT_ID
 }
 
-const logoAssets = {
-  "light": require("./assets/media/DailyLogoCardinal.png"),
-  "dark": require("./assets/media/DailyLogoWhite.png")
-}
-
 const Stack = createStackNavigator()
 
 export default function App() {
@@ -61,13 +54,38 @@ export default function App() {
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
-  // const isLoadingComplete = useLoadedAssets();
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
+  const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
+  }
+
+  const onShare = async (url, title) => {
+    try {
+      const result = await Share.share({
+        url: url,
+        message: title + " | The Stanford Daily"
+      })
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared successfully with activity type of result.activityType.
+        } else {
+          // Shared successfully.
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed.
+      }
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  const navigatorTheme = {
+    light: DefaultTheme,
+    dark: DarkTheme
   }
 
   const headerOptions = {
@@ -77,32 +95,34 @@ export default function App() {
         source={logoAssets[theme]}
       />
     ),
-    headerStyle: {
-      backgroundColor: bread[theme]["background-basic-color-1"]
-    },
-    headerTintColor: eva[theme]["color-primary-500"]
   }
 
-  const detailHeaderOptions = {
-    headerTitle: "",
-    headerTransparent: true,
-    headerTintColor: "white",
-    headerBackTitleVisible: false
+  const detailHeaderOptions = ({ navigation, route }) => {
+    return {
+      headerTitle: "",
+      headerTransparent: true,
+      headerTintColor: "white",
+      headerBackTitleVisible: false,
+      headerRight: () => (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
+          <Icon name="share-outline" width={24} height={24} fill="white" />
+        </TouchableOpacity>
+      )
+    }
   }
 
-  const sectionHeaderOptions = {
-    headerStyle: {
-      backgroundColor: bread[theme]["background-basic-color-1"]
-    },
-    headerTintColor: bread[theme]["color-primary-500"],
-    headerTitleStyle: {
-      color: eva[theme][theme === "light" ? "color-basic-800" : "color-basic-100"]
+  const detailHeaderListeners = {
+    focus: () => StatusBar.setBarStyle("light-content", true),
+    blur: () => {
+      if (theme === "light") {
+        StatusBar.setBarStyle("dark-content", true)
+      }
     }
   }
 
   useEffect(() => {
     // Loads fonts from static resource.
-    Font.loadAsync(minion).then(setFontsLoaded(true))
+    Font.loadAsync(minion).then(() => setFontsLoaded(true))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {
@@ -147,12 +167,11 @@ export default function App() {
   }, [])
 
       return (fontsLoaded &&
-        <NavigationContainer>
-          <IconRegistry icons={EvaIconsPack}/>
+        <NavigationContainer theme={navigatorTheme[theme]}>
+          <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
-                <StatusBar/>
                 <Stack.Navigator initialRouteName="Home">
                   <Stack.Screen
                     name="Home"
@@ -163,16 +182,17 @@ export default function App() {
                     name="Post"
                     component={Post}
                     options={detailHeaderOptions}
+                    listeners={detailHeaderListeners}
                   />
                   <Stack.Screen
                     name="Section"
                     component={Section}
-                    options={({ route }) => ({ title: route.params.category.name, ...sectionHeaderOptions })}
+                    options={({ route }) => ({ headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
                   />
                   <Stack.Screen
                     name="Author"
                     component={Author}
-                    options={({ route }) => ({ title: route.params.name })}
+                    options={({ route }) => ({ headerTitle: () => <Text category="h4">{route.params.name}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
                   />
                 </Stack.Navigator>
               </SafeAreaProvider>
@@ -210,4 +230,11 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
+}
+
+export const deviceType = () => {
+  Device.getDeviceTypeAsync().then(result => {
+    return result
+  })
+  return Device.DeviceType.PHONE
 }

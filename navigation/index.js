@@ -23,7 +23,7 @@ export default function Navigation({ colorScheme }) {
   );
 }
 
-// A root stack navigator is often used for displaying modals on top of all other content
+// A root stack navigator is often used for displaying modals on top of all other content.
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createNativeStackNavigator();
 
@@ -41,5 +41,21 @@ export const navigationRef = createNavigationContainerRef()
 export function navigate(name, params) {
   if (navigationRef.isReady()) {
     navigationRef.navigate(name, params);
+  }
+}
+
+export const logoAssets = {
+  "light": require("../assets/media/DailyLogoCardinal.png"),
+  "dark": require("../assets/media/DailyLogoWhite.png")
+}
+
+export const statusBarStyles = {
+  ios: {
+    light: "light-content",
+    dark: "dark-content"
+  },
+  android: {
+    light: "dark-content",
+    dark: "light-content"
   }
 }

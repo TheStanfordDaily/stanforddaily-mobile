@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, Dimensions, StatusBar, StyleSheet, Platform } from "react-native";
+import React, { useContext, useEffect, useFocusEffect, useState } from "react";
+import { View, Dimensions, StatusBar, Share, StyleSheet, Platform, useColorScheme } from "react-native";
 import { Button, Text, useTheme, withStyles } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -12,6 +12,10 @@ import { itemize, formatDate } from "../helpers/format";
 import Byline from "./Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
+import { ThemeContext } from "../theme-context";
+import { useHeaderHeight } from "@react-navigation/elements";
+import * as Device from "expo-device";
+import { deviceType } from "../App";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -20,15 +24,20 @@ const systemFonts = [
 ];
 
 export default function Post({ route, navigation }) {
-    const { article } = route.params
+    const { article, sourceName } = route.params
     const featuredMedia = article["jetpack_featured_media_url"]
+    const colorScheme = useColorScheme()
     const theme = useTheme()
     const dateInstance = new Date(article.date)
     const authors = article.parsely.meta.creator.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
+    const themeContext = useContext(ThemeContext)
+    const headerHeight = useHeaderHeight()
+    const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
 
     const renderers = {
-      iframe: IframeRenderer,
+      // Note: Chrome URL protocol causes a crash with the renderer below.
+      // iframe: IframeRenderer,
       em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
@@ -40,7 +49,7 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category="h4" style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType() === Device.DeviceType.PHONE ? "h4" : "h2"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
 
@@ -49,6 +58,12 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
+
+      return () => {
+        if (colorScheme === "light") {
+          StatusBar.setBarStyle("dark-content", true)
+        }
+      }
     }, [article])
 
     return (
@@ -57,24 +72,23 @@ export default function Post({ route, navigation }) {
         renderForeground={Foreground}
         maxOverlayOpacity={0.75}
         minOverlayOpacity={0.6}
-        minHeight={91 + 19*(Platform.OS === "android")}
-        maxHeight={featuredMedia ? 270 : 0}
+        minHeight={headerHeight}
+        maxHeight={headerHeight + featuredMedia ? 270 : 0}
         fadeOutForeground
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        <View style={{ flex: 1, marginHorizontal: 14 }}>
+        <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingBottom: Spacing.large }}>
           <TriggeringView>
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            {/* Byline will go here */}
-            <Byline authors={authors} section={article.parsely.meta.articleSection} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
-            
+            <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
           </TriggeringView>
           <Content
-            source={{ html: article.content.rendered + "<br/>" }}
+            source={{ html: article.content.rendered }}
             defaultTextProps={{ selectable: true }}
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
             contentWidth={width}
-            baseStyle={{ fontFamily: "MinionProRegular", fontSize: 18, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType() === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
             renderers={renderers}
             WebView={WebView}
             backgroundColor={theme["background-color-basic-2"]}
@@ -97,7 +111,7 @@ const styles = StyleSheet.create({
   },
   hoveringText: {
     color: "white",
-    paddingHorizontal: 20,
+    paddingHorizontal: 20, // deviceType() === Device.DeviceType.PHONE ? 20 : 60,
     marginTop: 20,
     textShadowColor: "black",
     textShadowRadius: 1,
@@ -105,6 +119,7 @@ const styles = StyleSheet.create({
       width: 1,
       height: 1
     },
-    textAlign: "center"
+    textAlign: "center",
+    fontFamily: "MinionProBold",
   }
 })
