@@ -112,12 +112,16 @@ export default function App() {
 
   const detailHeaderListeners = {
     focus: () => StatusBar.setBarStyle("light-content", true),
-    blur: () => StatusBar.setBarStyle(theme === "light" ? "dark" : "light", true)
+    blur: () => {
+      if (theme === "light") {
+        StatusBar.setBarStyle("dark-content", true)
+      }
+    }
   }
 
   useEffect(() => {
     // Loads fonts from static resource.
-    Font.loadAsync(minion).then(setFontsLoaded(true))
+    Font.loadAsync(minion).then(() => setFontsLoaded(true))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {
