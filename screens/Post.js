@@ -15,7 +15,7 @@ import Model from "../Model"
 import { ThemeContext } from "../theme-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as Device from "expo-device";
-import { isPhone } from "../App";
+import { deviceType } from "../App";
 
 const { width, height } = Dimensions.get("window");
 const systemFonts = [
@@ -33,7 +33,7 @@ export default function Post({ route, navigation }) {
     const [displayCategory, setDisplayCategory] = useState({})
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
-    const contentEdgeInset = isPhone() ? 14 : 56
+    const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -49,7 +49,7 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category={isPhone() ? "h4" : "h2"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType() === Device.DeviceType.PHONE ? "h4" : "h2"} style={styles.hoveringText}>{decode(article.title.rendered)}</Text>
       </View>
     )
 
@@ -87,7 +87,7 @@ export default function Post({ route, navigation }) {
             customHTMLElementModels={customHTMLElementModels}
             systemFonts={systemFonts}
             contentWidth={width}
-            baseStyle={{ fontFamily: "MinionProRegular", fontSize: isPhone() ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+            baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType() === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
             tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
             renderers={renderers}
             WebView={WebView}
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   hoveringText: {
     color: "white",
-    paddingHorizontal: isPhone() ? 20 : 60,
+    paddingHorizontal: 20, // deviceType() === Device.DeviceType.PHONE ? 20 : 60,
     marginTop: 20,
     textShadowColor: "black",
     textShadowRadius: 1,

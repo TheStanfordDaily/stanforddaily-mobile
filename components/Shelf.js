@@ -11,7 +11,7 @@ export default function Shelf(props) {
     const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
     const [groupSize, setGroupSize] = useState(2)
-    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 1 : 2))
+    Device.getDeviceTypeAsync().then(result => setGroupSize(result === Device.DeviceType.PHONE ? 1 : 2))
 
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {

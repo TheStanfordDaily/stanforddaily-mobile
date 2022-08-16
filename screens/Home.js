@@ -10,7 +10,6 @@ import Wildcard from "../components/Wildcard";
 import Model from "../Model";
 import { Sections, Spacing } from "../constants";
 import _ from "lodash";
-import * as Device from "expo-device";
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json");
@@ -27,7 +26,6 @@ export default function Home({ navigation }) {
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
     const [groupSize, setGroupSize] = useState(1)
-    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 1 : 2))
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -93,26 +91,20 @@ export default function Home({ navigation }) {
           <Divider marginTop={Spacing.medium} />
           {_.chunk(articles.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-{group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)
-}
+              {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
             </View>
-))}
+          ))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
           <Shelf articles={articles[Sections.HUMOR.slug].length >= 3 ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
           <Divider />
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
-          {/* <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose /> */}
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-{group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)
-}
+              {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
             </View>
-))}
-            
-           
-          
+          ))}
         </ScrollView>
       </Layout>
     )

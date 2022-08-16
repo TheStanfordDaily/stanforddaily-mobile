@@ -56,6 +56,7 @@ export default function App() {
   const responseListener = useRef()
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
+  const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -231,9 +232,9 @@ async function registerForPushNotificationsAsync() {
   return token
 }
 
-export function isPhone() {
+export const deviceType = () => {
   Device.getDeviceTypeAsync().then(result => {
-    return result === "PHONE"
+    return result
   })
-  return false
+  return Device.DeviceType.PHONE
 }

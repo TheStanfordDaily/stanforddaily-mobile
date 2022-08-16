@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
 import { Dimensions, Image, View, StyleSheet, Platform } from "react-native"
 import PagerView from "react-native-pager-view"
@@ -8,7 +8,8 @@ import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
 import { Sections } from "../constants"
 import { ThemeContext } from "../theme-context"
-import { isPhone } from "../App"
+import * as Device from "expo-device"
+import { deviceType } from "../App"
 
 const { width, height } = Dimensions.get("window")
 
@@ -16,7 +17,8 @@ export default function Carousel(props) {
     const theme = useTheme()
     const { navigation, articles } = props
     const themeContext = useContext(ThemeContext)
-
+    
+    console.log("device type", deviceType())
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
     const Header = (props) => (
@@ -53,7 +55,7 @@ export default function Carousel(props) {
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely.meta.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
-                          <Text style={{ marginHorizontal: -10, marginTop: -5, fontFamily: "MinionProBold" }} category={isPhone() ? "h4" : "h3"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
+                          <Text style={{ marginHorizontal: -10, marginTop: -5, fontFamily: "MinionProBold" }} category={deviceType() === Device.DeviceType.PHONE ? "h5" : "h3"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
                             {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
                           </Text>
