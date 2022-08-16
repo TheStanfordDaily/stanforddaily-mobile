@@ -12,10 +12,10 @@ import { Sections, Spacing } from "../constants";
 import _ from "lodash";
 
 // There are too few recent opinions at time of writing.
-const staticOpinions = require("../opinions.json");
+const localOpinions = require("../opinions.json");
 
 // There are too few recent humor articles at time of writing.
-const staticHumor = require("../humor.json");
+const localHumor = require("../humor.json");
 
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
@@ -23,8 +23,8 @@ export default function Home({ navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [articlesLoaded, setArticlesLoaded] = useState(false)
-    const opinions = staticOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
-    const humor = staticHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
+    const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
+    const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
