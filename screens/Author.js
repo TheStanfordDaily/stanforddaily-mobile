@@ -6,6 +6,7 @@ import Model from "../Model";
 import { decode } from "html-entities";
 import { formatDate, stringMode } from "../helpers/format";
 import * as Device from "expo-device";
+import { isPhone } from '../App';
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
@@ -14,8 +15,9 @@ export default function Author({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-    const [groupSize, setGroupSize] = useState(2)
-    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 2 : 3))
+    // const [groupSize, setGroupSize] = useState(2)
+    // Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 2 : 3))
+    const groupSize = isPhone() ? 2 : 3
 
     const Header = ({ uri }) => (
         <ImageBackground source={{ uri: uri + "?w=300" }} style={{ height: 140 }} />
@@ -57,7 +59,7 @@ export default function Author({ route, navigation }) {
                     }
                 }}
                 renderItem={({ item }) => (
-                    <Card key={item.id} onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1/2 }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
+                    <Card key={item.id} onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1/groupSize }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
                         <Text category="p1">{decode(item.title.rendered)}</Text>
                         <Text category="label">{formatDate(new Date(item.date), false)}</Text>
                     </Card>

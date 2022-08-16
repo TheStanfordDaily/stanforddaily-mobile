@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
-import { Divider, Layout } from "@ui-kitten/components";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { Divider, Layout, Text } from "@ui-kitten/components";
 import Canvas from "../components/Canvas";
 import Carousel from "../components/Carousel";
 import Diptych from "../components/Diptych";
@@ -10,6 +10,7 @@ import Wildcard from "../components/Wildcard";
 import Model from "../Model";
 import { Sections, Spacing } from "../constants";
 import _ from "lodash";
+import * as Device from "expo-device";
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json");
@@ -25,6 +26,8 @@ export default function Home({ navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
+    const [groupSize, setGroupSize] = useState(1)
+    Device.getDeviceTypeAsync().then(result => setGroupSize(result === "PHONE" ? 1 : 2))
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -88,14 +91,28 @@ export default function Home({ navigation }) {
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles.culture?.map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} />)}
+          {_.chunk(articles.culture, groupSize)?.map((group, outerIndex) => (
+            <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
+{group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)
+}
+            </View>
+))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
           <Shelf articles={articles[Sections.HUMOR.slug].length >= 3 ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
           <Divider />
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
-          {articles.wildcard?.map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose />)}
+          {/* <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose /> */}
+          {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
+            <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
+{group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)
+}
+            </View>
+))}
+            
+           
+          
         </ScrollView>
       </Layout>
     )

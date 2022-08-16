@@ -230,3 +230,10 @@ async function registerForPushNotificationsAsync() {
 
   return token
 }
+
+export function isPhone() {
+  Device.getDeviceTypeAsync().then(result => {
+    return result === "PHONE"
+  })
+  return false
+}

@@ -5,7 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 import Wlidcard from "../components/Wildcard";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
-import * as Device from "expo-device";
+import { isPhone } from "../App";
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -17,13 +17,10 @@ export default function Section({ route, navigation }) {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 16
     const basePageCount = Math.max(0, Math.floor(seed.length/perPageNumber) - 1)
-    const [columnCount, setColumnCount] = useState(1)
+    const columnCount = isPhone() ? 1 : 2
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     useEffect(() => {
-      if (!layoutLoaded) {
-        Device.getDeviceTypeAsync().then(result => setColumnCount(result === "PHONE" ? 1 : 2))
-      }
       Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
         setArticles([...articles, ...posts])
       }).catch(error => {
@@ -37,7 +34,7 @@ export default function Section({ route, navigation }) {
     }, [pageNumber])
 
 
-    return (layoutLoaded &&
+    return (
       themeContext.theme === "dark" ? (
         <Layout>
             <List
