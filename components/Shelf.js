@@ -8,7 +8,7 @@ import { formatDate, itemize } from "../helpers/format"
 
 export default function Shelf(props) {
     const theme = useTheme()
-    const inactiveColor = theme[props.alternate ? "color-primary-200" : "background-color-basic-2"]
+    const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
 
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {
@@ -26,14 +26,14 @@ export default function Shelf(props) {
                     {triplet.map((item) => (
                         <React.Fragment>
                             <ListItem
-                                title={() => <Text numberOfLines={4} ellipsizeMode="tail" style={{ paddingHorizontal: 4, fontSize: 18 }} allowFontScaling category={"p1"}>{decode(item.title.rendered)}</Text>}
-                                description={() => <Text style={{ paddingHorizontal: 4, fontSize: 14 }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
+                                title={() => <Text numberOfLines={4} ellipsizeMode="tail" style={{ paddingHorizontal: 4, fontSize: 18, color: props.alternate ? "white" : theme["text-basic-color"] }} allowFontScaling category={"p1"}>{decode(item.title.rendered)}</Text>}
+                                description={() => <Text style={{ paddingHorizontal: 4, fontSize: 14, color: props.alternate ? "white" : theme["text-basic-color"] }} category={"p2"}>{itemize(item.parsely.meta.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
                                 accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
                                 style={{
                                     flex: 1/3,
                                     paddingHorizontal: 10,
                                     paddingVertical: 10,
-                                    backgroundColor: theme[props.alternate ? "color-primary-100" : "background-basic-color-1"]
+                                    backgroundColor: theme[props.alternate ? "color-primary-600" : "background-basic-color-1"]
                                 }}
                                 {...{...props, activeOpacity: 0.8, onPress: () => props.navigation.navigate("Post", { article: item })}}
                             />

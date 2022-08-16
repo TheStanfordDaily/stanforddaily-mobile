@@ -94,7 +94,7 @@ export default function Home({ navigation }) {
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
           <Shelf articles={articles[Sections.HUMOR.slug].length >= 3 ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
           <Divider />
-          <Canvas articles={articles[Sections.CARTOONS.slug]} />
+          {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
           {articles["wildcard"].map((item, index) => <Wildcard item={item} index={index} key={item.id.toString()} navigation={navigation} verbose />)}
         </ScrollView>
