@@ -68,7 +68,7 @@ export default function Post({ route, navigation }) {
     }, [article])
 
     Appearance.addChangeListener(listener => {
-      if (colorScheme === "light") {
+      if (listener.colorScheme === "light") {
         StatusBar.setBarStyle("light-content", true)
       }
     })
