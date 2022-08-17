@@ -97,6 +97,10 @@ export default function App() {
     ),
   }
 
+  const headerListeners = {
+    focus: () => StatusBar.setBarStyle(theme === ("light" ? "dark" : "light") + "-content", true)
+  }
+
   const detailHeaderOptions = ({ navigation, route }) => {
     return {
       headerTitle: "",
@@ -178,6 +182,7 @@ export default function App() {
                     name="Home"
                     component={Home}
                     options={headerOptions}
+                    listeners={headerListeners}
                   />
                   <Stack.Screen
                     name="Post"
