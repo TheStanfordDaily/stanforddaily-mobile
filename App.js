@@ -98,7 +98,12 @@ export default function App() {
   }
 
   const headerListeners = {
-    focus: () => StatusBar.setBarStyle(theme === ("light" ? "dark" : "light") + "-content", true)
+    focus: () => {
+      if (theme === "light") {
+        StatusBar.setBarStyle("dark-content", true)
+
+      }
+    }
   }
 
   const detailHeaderOptions = ({ navigation, route }) => {
