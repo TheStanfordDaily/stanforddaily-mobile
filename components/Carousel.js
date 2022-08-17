@@ -55,7 +55,7 @@ export default function Carousel(props) {
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
-                          <Text style={{ marginHorizontal: -10, marginTop: -5, fontFamily: "MinionProBold" }} category={deviceType() === Device.DeviceType.PHONE ? "h5" : "h3"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
+                          <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
                             {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
                           </Text>

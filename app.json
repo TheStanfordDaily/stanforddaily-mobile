@@ -9,6 +9,7 @@
       "ios",
       "android"
     ],
+    "userInterfaceStyle": "automatic",
     "githubUrl": "https://github.com/TheStanfordDaily/stanforddaily-mobile",
     "orientation": "portrait",
     "primaryColor": "#94171C",

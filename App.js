@@ -144,6 +144,7 @@ export default function App() {
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
+      StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
       setTheme(listener.colorScheme)
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
     })    

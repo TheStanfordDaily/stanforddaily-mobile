@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme } from "react-native";
+import { View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance } from "react-native";
 import { Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -66,6 +66,13 @@ export default function Post({ route, navigation }) {
         }
       }
     }, [article])
+
+    Appearance.addChangeListener(listener => {
+      if (colorScheme === "light") {
+        StatusBar.setBarStyle("light-content", true)
+      }
+    })
+
 
     return (
       <ImageHeaderScrollView
