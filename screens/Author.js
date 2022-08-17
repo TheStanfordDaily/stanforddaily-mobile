@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ImageBackground, FlatList, StatusBar } from 'react-native';
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from 'react-native';
 import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
 import { Margins, Spacing } from '../constants';
 import Model from "../Model";
@@ -7,6 +7,9 @@ import { decode } from "html-entities";
 import { formatDate, stringMode } from "../helpers/format";
 import * as Device from "expo-device";
 import { deviceType } from '../App';
+
+const { width, height } = Dimensions.get('window')
+const pixelRatio = PixelRatio.get()
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
@@ -18,7 +21,8 @@ export default function Author({ route, navigation }) {
     const groupSize = deviceType() === Device.DeviceType.PHONE ? 2 : 3
 
     const Header = ({ uri }) => (
-        <ImageBackground source={{ uri: uri + "?w=300" }} style={{ height: 140 }} />
+        // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
+        <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/groupSize}` }} style={{ height: 140 }} />
     )
 
     useEffect(() => {
@@ -44,11 +48,12 @@ export default function Author({ route, navigation }) {
     }, [pageNumber])
 
     return (
-        <Layout>
+        <Layout style={styles.container}>
             <List
                 data={articles}
                 numColumns={groupSize}
                 key={groupSize}
+                style={{ flex: 1 }}
                 showsVerticalScrollIndicator={false}
                 onEndReachedThreshold={1}
                 onEndReached={() => {
@@ -67,3 +72,9 @@ export default function Author({ route, navigation }) {
         </Layout>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    }
+})

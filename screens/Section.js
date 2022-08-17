@@ -1,12 +1,14 @@
 import { useTheme } from "@react-navigation/native";
 import { Layout, List, Text } from "@ui-kitten/components";
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Dimensions, View } from "react-native";
 import { deviceType } from "../App";
 import Wlidcard from "../components/Wildcard";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
 import * as Device from "expo-device"
+
+const { width, height } = Dimensions.get("window")
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -37,9 +39,10 @@ export default function Section({ route, navigation }) {
 
     return (
       themeContext.theme === "dark" ? (
-        <Layout>
+        <Layout style={{ flex: 1 }}>
             <List
                 data={articles}
+                style={{ backgroundColor: "transparent" }}
                 numColumns={columnCount}
                 key={columnCount}
                 scrollEventThrottle={perPageNumber}
@@ -57,7 +60,7 @@ export default function Section({ route, navigation }) {
             />
         </Layout>
       ) : (
-        <View>
+        <View style={{ flex: 1 }}>
             <List
                 data={articles}
                 scrollEventThrottle={perPageNumber}
