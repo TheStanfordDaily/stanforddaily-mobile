@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native";
 import { Divider, Layout, Text } from "@ui-kitten/components";
 import Canvas from "../components/Canvas";
 import Carousel from "../components/Carousel";
@@ -16,6 +16,8 @@ const localOpinions = require("../opinions.json");
 
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json");
+
+const { width, height } = Dimensions.get("window");
 
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})

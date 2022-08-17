@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Card, Text } from "@ui-kitten/components"
-import { Dimensions, Image, View, StyleSheet, Platform } from "react-native"
+import { Dimensions, Image, View, StyleSheet, Platform, PixelRatio } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
@@ -11,6 +11,7 @@ import * as Device from "expo-device"
 import { deviceType } from "../App"
 
 const { width, height } = Dimensions.get("window")
+const pixelRatio = PixelRatio.get()
 
 export default function Diptych(props) {
     const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
@@ -19,7 +20,7 @@ export default function Diptych(props) {
     
     const Header = (props) => (
       <React.Fragment>
-        <Image source={{ uri: props.source + "?w=500" }} style={{ flex: 1, height: 192 }} />
+        <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1, height: 192 }} />
       </React.Fragment>
     )
 
