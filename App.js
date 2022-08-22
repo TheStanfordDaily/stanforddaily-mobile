@@ -61,6 +61,7 @@ export default function App() {
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
+    StatusBar.setBarStyle((next === "light" ? "dark" : "light") + "-content")
   }
 
   const onShare = async (url, title) => {

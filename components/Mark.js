@@ -7,7 +7,7 @@ export default function Mark({ navigation, alternate, seed, category }) {
 
     return (
         <TouchableOpacity
-            activeOpacity={alternate ? 0.9 : 0.8}
+            activeOpacity={alternate ? 0.8 : 0.5}
             onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
             style={[styles.container, { backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"] }]}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>

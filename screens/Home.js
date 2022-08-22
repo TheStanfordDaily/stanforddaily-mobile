@@ -107,6 +107,7 @@ export default function Home({ navigation }) {
               {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
             </View>
           ))}
+          <ActivityIndicator style={{ marginBottom: Spacing.medium }} />
         </ScrollView>
       </Layout>
     )
