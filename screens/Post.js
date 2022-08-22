@@ -6,7 +6,7 @@ import { Spacing } from "../constants";
 import Content, { defaultSystemFonts } from "react-native-render-html";
 import { FontSizes } from "../constants";
 import WebView from "react-native-webview";
-import { decode } from "html-entities";
+import { decode, encode } from "html-entities";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { formatDate } from "../helpers/format";
 import Byline from "../components/Byline";
@@ -129,27 +129,30 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-            <TouchableOpacity onPress={() => console.log()} style={{ flexDirection: "row", alignItems: "center" }}>
-
-              <View style={{ backgroundColor: "#f0f4f4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
-              <Icon  name="headphones-outline" width={15} height={15} fill={theme["text-basic-color"]} />
-              </View>
-              <Text category="label">Listen to this article</Text>
-      
-              
-                
-                </TouchableOpacity>
-                         <Button onPress={() => {
-                  navigation.navigate("Section", { category: displayCategory, seed: [] }) // use sourceName and compare : navigation.push("Section", { category: category, seed: [] })
-                }} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(article.parsely.meta.articleSection).replace('\'', '\u{2019}')}</Button>
+            
+                         
               {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
 
-            </View>
 
    
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
-            
+            <TouchableOpacity onPress={() => console.log("https://storage.googleapis.com/ad-auris-narrations/The%20Stanford%20Daily/rss/" + decode(article.title.rendered))} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+              <View style={{ backgroundColor: "#F0F4F4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
+              <Icon name="headphones-outline" width={15} height={15} fill={theme["text-basic-color"]} />
+              </View>
+              <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 0, paddingHorizontal: Spacing.small, borderRadius: 3, backgroundColor: theme["text-basic-color"] }}>
+              <View style={{ flex: 0.25, flexDirection: "row" }}>
+              <Icon name="skip-back-outline" width={25} height={25} fill="white" />
+              <Icon name="arrow-right-outline" width={25} height={25} fill="white" />
+              <Icon name="skip-forward-outline" width={25} height={25} fill="white" />
+              </View>
+              <View style={{ flex: 0.75 }}>
+              {/* <Text style={{ color: "white", textAlign: "center" }} category="label">Listen to this article</Text> */}
+              </View>
+              
+              
+              </View>
+            </TouchableOpacity>
           </TriggeringView>
           <Content
             source={{ html: article.content.rendered }}
