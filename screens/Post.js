@@ -9,7 +9,7 @@ import WebView from "react-native-webview";
 import { decode } from "html-entities";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { formatDate } from "../helpers/format";
-import Byline from "./Byline";
+import Byline from "../components/Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
 import { ThemeContext } from "../theme-context";
@@ -129,8 +129,8 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-            <TouchableOpacity onPress={() => console.log()} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+            <TouchableOpacity onPress={() => console.log()} style={{ flexDirection: "row", alignItems: "center" }}>
 
               <View style={{ backgroundColor: "#f0f4f4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
               <Icon  name="headphones-outline" width={15} height={15} fill={theme["text-basic-color"]} />
@@ -139,7 +139,7 @@ export default function Post({ route, navigation }) {
       
               
                 
-                         </TouchableOpacity>
+                </TouchableOpacity>
                          <Button onPress={() => {
                   navigation.navigate("Section", { category: displayCategory, seed: [] }) // use sourceName and compare : navigation.push("Section", { category: category, seed: [] })
                 }} style={{ maxHeight: 100 }} size="tiny" status="basic">{decode(article.parsely.meta.articleSection).replace('\'', '\u{2019}')}</Button>
