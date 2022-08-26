@@ -32,6 +32,7 @@ export default function Post({ route, navigation }) {
     const dateInstance = new Date(article.date)
     const authors = article.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
+    const [caption, setCaption] = useState('')
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
@@ -59,6 +60,9 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
+        Model.media().id(article["featured_media"]).get().then(media => {
+            setCaption(decode(media.caption?.rendered).slice(3, -5))
+        })
 
       return () => {
         if (colorScheme === "light") {
@@ -86,6 +90,7 @@ export default function Post({ route, navigation }) {
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
         <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
           <TriggeringView>
+              {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
           </TriggeringView>
