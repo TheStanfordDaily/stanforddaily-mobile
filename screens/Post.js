@@ -36,7 +36,7 @@ export default function Post({ route, navigation }) {
     const dateInstance = new Date(article.date)
     const authors = article.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
-    const [caption, setCaption] = useState("")
+    const [caption, setCaption] = useState('')
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
@@ -97,6 +97,9 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
+        Model.media().id(article["featured_media"]).get().then(media => {
+            setCaption(decode(media.caption?.rendered).slice(3, -5))
+        })
 
       return () => {
         if (colorScheme === "light") {
