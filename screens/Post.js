@@ -88,18 +88,15 @@ export default function Post({ route, navigation }) {
     
 
     useEffect(() => {
-      Model.media().id(article["featured_media"]).get().then(media => {
-        setCaption(decode(media.caption?.rendered).slice(3, -5))
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      })
-
       Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
-        Model.media().id(article["featured_media"]).get().then(media => {
-            setCaption(decode(media.caption?.rendered).slice(3, -5))
-        })
+
+      Model.media().id(article["featured_media"]).get().then(media => {
+          setCaption(decode(media.caption?.rendered).slice(3, -5))
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      })
 
       return () => {
         if (colorScheme === "light") {
@@ -129,12 +126,9 @@ export default function Post({ route, navigation }) {
           <TriggeringView>
             {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-            
-                         
-              {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
+       
+            {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
 
-
-   
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
             <TouchableOpacity onPress={() => console.log("https://storage.googleapis.com/ad-auris-narrations/The%20Stanford%20Daily/rss/" + decode(article.title.rendered), "https://narrations.ad-auris.com/widget/the-stanford-daily/" + article.slug)} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
               <View style={{ backgroundColor: "#F0F4F4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
@@ -179,8 +173,7 @@ const styles = StyleSheet.create({
   copy: {
     // marginHorizontal: Margins.articleSides,
     fontFamily: "LibreFranklinRegular",
-    fontSize: FontSizes.small,
-    // color: THEME.LABEL
+    fontSize: FontSizes.small
   },
   hoveringText: {
     color: "white",
