@@ -24,10 +24,7 @@ const systemFonts = [
     ...defaultSystemFonts
 ];
 
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
@@ -136,7 +133,7 @@ export default function Post({ route, navigation }) {
 
    
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
-            <TouchableOpacity onPress={() => console.log("https://storage.googleapis.com/ad-auris-narrations/The%20Stanford%20Daily/rss/" + decode(article.title.rendered))} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
+            <TouchableOpacity onPress={() => console.log("https://storage.googleapis.com/ad-auris-narrations/The%20Stanford%20Daily/rss/" + decode(article.title.rendered), "https://narrations.ad-auris.com/widget/the-stanford-daily/" + article.slug)} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
               <View style={{ backgroundColor: "#F0F4F4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
               <Icon name="headphones-outline" width={15} height={15} fill={theme["text-basic-color"]} />
               </View>
