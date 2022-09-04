@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { LayoutAnimation, Animated, Easing, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native";
+import { LayoutAnimation, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -17,6 +17,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import * as Device from "expo-device";
 import { deviceType } from "../App";
 import { FloatingAction } from "react-native-floating-action";
+import { Audio } from "expo-av"
 
 const { width, height } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
@@ -43,23 +44,6 @@ export default function Post({ route, navigation }) {
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
-    const captionSize = new Animated.Value(0)
-    const captionOpacity = useRef(new Animated.Value(0)).current
-    const floatingActionOpacity = useRef(new Animated.Value(0)).current
-
-    const animateOpacity = (opacity, duration) => {
-      Animated.timing(opacity, {
-          toValue: 1,
-          duration: duration,
-        }
-      ).start();
-    }
-
-    const size = captionSize.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, 80]
-    });
-
     const audioActions = [
       {
         position: 3,
@@ -116,7 +100,6 @@ export default function Post({ route, navigation }) {
 
       Model.media().id(article["featured_media"]).get().then(media => {
           setCaption(decode(media.caption?.rendered).slice(3, -5))
-          animateOpacity(captionOpacity, 500)
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
@@ -126,17 +109,17 @@ export default function Post({ route, navigation }) {
         if (matches) {
           let audioURL = matches[1];
           setAudioURL(audioURL)
-          animateOpacity(floatingActionOpacity, 250)
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
       }).catch(error => {
         console.log(error)
         fetch(narrationEndpoint + sluggify(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
-        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
-        if (matches) {
-          let audioURL = matches[1];
-          setAudioURL(audioURL)
-          animateOpacity(floatingActionOpacity, 250)
-        }
+          var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
+          if (matches) {
+            let audioURL = matches[1];
+            setAudioURL(audioURL)
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+          }
         })
       })
 
@@ -144,6 +127,9 @@ export default function Post({ route, navigation }) {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
         }
+        // if (sound) {
+        //   sound.unloadAsync()
+        // }
       }
     }, [article])
 
@@ -167,10 +153,7 @@ export default function Post({ route, navigation }) {
           scrollViewBackgroundColor={theme["background-basic-color-1"]}>
           <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
             <TriggeringView>
-              {caption !== "" && (
-              <Animated.View style={{ opacity: captionOpacity }}>
-                <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>
-              </Animated.View>)}
+              {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
               {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
         
               {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
@@ -193,7 +176,6 @@ export default function Post({ route, navigation }) {
           </View>
         </ImageHeaderScrollView>
         {audioURL !== "" && (
-          <Animated.View style={{ opacity: floatingActionOpacity }}>
             <FloatingAction
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
@@ -201,9 +183,13 @@ export default function Post({ route, navigation }) {
                 actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
                 onPressItem={name => {
                   console.log(`selected button: ${name}`);
+                  // playSound()
+                  // switch (name) {
+                  //   case "play": playSound()
+                  //   default: break
+                  // }
                 }}
-            />
-          </Animated.View>
+            />    
         )}
       </React.Fragment>
     )
