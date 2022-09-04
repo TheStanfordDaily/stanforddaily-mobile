@@ -29,6 +29,7 @@ export const stringMode = (strings) => {
     return strings.sort((a,b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
 }
 
+// https://gist.github.com/codeguy/6684588
 export const sluggify = (s) => {
   s = s.replace(/^\s+|\s+$/g, ''); // trim
   s = s.toLowerCase();

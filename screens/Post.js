@@ -99,39 +99,20 @@ export default function Post({ route, navigation }) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      Promise.all([fetch(narrationEndpoint + article.slug), fetch(narrationEndpoint + sluggify(decode(article.title.rendered)))])
-      .then(response => Promise.all(response.map(r => r.ok && r.text())).then(bodies => {
-        //console.log("first", bodies.find(body => body?.match(/<meta.*?property="og:audio".*?content="(.*?)"/)?.[1]))
-        // console.log(bodies.find(body => body.match(/<meta.*?property="og:audio".*?content="(.*?)"/)))
-        for (let body of bodies) {
-          var matches = body?.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
-          if (matches) {
-            console.log(matches[1])
-          }
+      fetch(narrationEndpoint + article.slug).then(response => response.text()).then(data => {
+        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
+        console.log(sluggify(decode(article.title.rendered)))
+        if (matches) {
+          let audioURL = matches[1];
+          console.log(audioURL)
         }
-      }))
-
-      // fetch("https://narrations.ad-auris.com/widget/the-stanford-daily/" + article.slug).then(response => response.text()).then(data => {
-      //   var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
-      //   console.log(sluggify(decode(article.title.rendered)))
-      //   if (matches) {
-      //     let audioURL = matches[1];
-      //     console.log(audioURL)
-      //   }
         
-      //   // var dummy = document.createElement("html");
-      //   // dummy.innerHTML = data
-      //   // console.log(dummy.getElementsByTagName("audio")[0])
-      // }).catch(error => {
-      //   console.log(error)
-      //   fetch("https://narrations.ad-auris.com/widget/the-stanford-daily/" + sluggify(decode(article.title.rendered))).then(response => response.text()).then(data => {
-      //     var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
-      //     if (matches) {
-      //       let audioURL = matches[1];
-      //       console.log(audioURL)
-      //     }
-      //   })
-      // })
+        // var dummy = document.createElement("html");
+        // dummy.innerHTML = data
+        // console.log(dummy.getElementsByTagName("audio")[0])
+      }).catch(error => {
+        console.log(error)
+      })
 
       return () => {
         if (colorScheme === "light") {
