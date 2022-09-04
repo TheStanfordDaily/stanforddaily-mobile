@@ -36,7 +36,8 @@ export default function Post({ route, navigation }) {
     const dateInstance = new Date(article.date)
     const authors = article.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
-    const [caption, setCaption] = useState('')
+    const [caption, setCaption] = useState("")
+    const [audioURL, setAudioURL] = useState("")
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
@@ -99,19 +100,22 @@ export default function Post({ route, navigation }) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      fetch(narrationEndpoint + article.slug).then(response => response.text()).then(data => {
-        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
-        console.log(sluggify(decode(article.title.rendered)))
+      // Attempts to retrieve the narration file for the article.
+      fetch(narrationEndpoint + article.slug).then(response => response.ok && response.text()).then(data => {
+        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
         if (matches) {
           let audioURL = matches[1];
-          console.log(audioURL)
+          setAudioURL(audioURL)
         }
-        
-        // var dummy = document.createElement("html");
-        // dummy.innerHTML = data
-        // console.log(dummy.getElementsByTagName("audio")[0])
       }).catch(error => {
         console.log(error)
+        fetch(narrationEndpoint + sluggify(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
+        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
+        if (matches) {
+          let audioURL = matches[1];
+          setAudioURL(audioURL)
+        }
+        })
       })
 
       return () => {

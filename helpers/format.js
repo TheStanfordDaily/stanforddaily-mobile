@@ -29,21 +29,17 @@ export const stringMode = (strings) => {
     return strings.sort((a,b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
 }
 
-// https://gist.github.com/codeguy/6684588
+// Modified from https://gist.github.com/codeguy/6684588 to keep dashes instead of collapsing them.
+// Used to generate slugs for the Ad Auris audio URL.
 export const sluggify = (s) => {
-  s = s.replace(/^\s+|\s+$/g, ''); // trim
+  s = s.replace(/^\s+|\s+$/g, '');
   s = s.toLowerCase();
 
-  // remove accents, swap ñ for n, etc
-  var from = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;";
-  var to   = "aaaaeeeeiiiioooouuuunc------";
-  for (var i = 0, l = from.length; i < l; i++) {
-      s = s.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  var source = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;\u2018\u2019";
+  var destination   = "aaaaeeeeiiiioooouuuunc----------";
+  for (var i = 0, l = source.length; i < l; i++) {
+      s = s.replace(new RegExp(source.charAt(i), 'g'), destination.charAt(i));
   }
 
-  s = s.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-      .replace(/\s+/g, '-') // collapse whitespace and replace by -
-      //.replace(/-+/g, '-'); // collapse dashes
-
-  return s;
+  return s.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-')
 }
