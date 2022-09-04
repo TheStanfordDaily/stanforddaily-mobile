@@ -8,7 +8,7 @@ import { FontSizes } from "../constants";
 import WebView from "react-native-webview";
 import { decode, encode } from "html-entities";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
-import { formatDate } from "../helpers/format";
+import { formatDate, sluggify } from "../helpers/format";
 import Byline from "../components/Byline";
 import { minion } from "../custom-fonts";
 import Model from "../Model"
@@ -40,6 +40,7 @@ export default function Post({ route, navigation }) {
     const themeContext = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
+    const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
     let captionOpacity = new Animated.Value(0);
 
   const animateCaption = easing => {
@@ -97,6 +98,40 @@ export default function Post({ route, navigation }) {
           setCaption(decode(media.caption?.rendered).slice(3, -5))
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
+
+      Promise.all([fetch(narrationEndpoint + article.slug), fetch(narrationEndpoint + sluggify(decode(article.title.rendered)))])
+      .then(response => Promise.all(response.map(r => r.ok && r.text())).then(bodies => {
+        //console.log("first", bodies.find(body => body?.match(/<meta.*?property="og:audio".*?content="(.*?)"/)?.[1]))
+        // console.log(bodies.find(body => body.match(/<meta.*?property="og:audio".*?content="(.*?)"/)))
+        for (let body of bodies) {
+          var matches = body?.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
+          if (matches) {
+            console.log(matches[1])
+          }
+        }
+      }))
+
+      // fetch("https://narrations.ad-auris.com/widget/the-stanford-daily/" + article.slug).then(response => response.text()).then(data => {
+      //   var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
+      //   console.log(sluggify(decode(article.title.rendered)))
+      //   if (matches) {
+      //     let audioURL = matches[1];
+      //     console.log(audioURL)
+      //   }
+        
+      //   // var dummy = document.createElement("html");
+      //   // dummy.innerHTML = data
+      //   // console.log(dummy.getElementsByTagName("audio")[0])
+      // }).catch(error => {
+      //   console.log(error)
+      //   fetch("https://narrations.ad-auris.com/widget/the-stanford-daily/" + sluggify(decode(article.title.rendered))).then(response => response.text()).then(data => {
+      //     var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/);
+      //     if (matches) {
+      //       let audioURL = matches[1];
+      //       console.log(audioURL)
+      //     }
+      //   })
+      // })
 
       return () => {
         if (colorScheme === "light") {
