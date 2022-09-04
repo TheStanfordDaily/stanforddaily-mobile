@@ -31,6 +31,7 @@ export const stringMode = (strings) => {
 
 // Modified from https://gist.github.com/codeguy/6684588 to keep dashes instead of collapsing them.
 // Used to generate slugs for the Ad Auris audio URL.
+// TODO: Adapt one of the simpler solutions listed on the page.
 export const sluggify = (s) => {
   s = s.replace(/^\s+|\s+$/g, '');
   s = s.toLowerCase();

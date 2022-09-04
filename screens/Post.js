@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { LayoutAnimation, Animated, Easing, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native";
 import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
@@ -16,6 +16,7 @@ import { ThemeContext } from "../theme-context";
 import { useHeaderHeight } from "@react-navigation/elements";
 import * as Device from "expo-device";
 import { deviceType } from "../App";
+import { FloatingAction } from "react-native-floating-action";
 
 const { width, height } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
@@ -42,29 +43,52 @@ export default function Post({ route, navigation }) {
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
-    let captionOpacity = new Animated.Value(0);
+    const captionSize = new Animated.Value(0)
+    const captionOpacity = useRef(new Animated.Value(0)).current
+    const floatingActionOpacity = useRef(new Animated.Value(0)).current
 
-  const animateCaption = easing => {
-    captionOpacity.setValue(0);
-    Animated.timing(captionOpacity, {
-      toValue: 1,
-      duration: 1200,
-      easing
-    }).start();
-  };
-
-  const size = captionOpacity.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 80]
-  });
-
-  const animatedStyles = [
-    {
-      opacity: captionOpacity,
-      height: size
+    const animateOpacity = (opacity, duration) => {
+      Animated.timing(opacity, {
+          toValue: 1,
+          duration: duration,
+        }
+      ).start();
     }
-  ];
 
+    const size = captionSize.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 80]
+    });
+
+    const audioActions = [
+      {
+        position: 3,
+        text: "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
+        name: "play",
+        icon: <Icon name="arrow-right-outline" width={30} height={30} fill="white" />,
+        color: theme["color-primary-500"]
+      },
+      {
+        position: 2,
+        name: "stop",
+        icon: <Icon name="square-outline" width={20} height={20} fill="white" />,
+        color: theme["color-primary-500"]
+      },
+      {
+        position: 0,
+        // text: "Skip 15 seconds",
+        name: "skip",
+        icon: <Icon name="skip-forward-outline" width={30} height={30} fill="#242c45" />,
+        color: "#F0F4F4"
+      },
+      {
+        position: 1,
+        // text: "Rewind 15 seconds",
+        name: "rewind",
+        icon: <Icon name="skip-back-outline" width={30} height={30} fill="#242c45" />,
+        color: "#F0F4F4",
+      }
+    ]
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -72,7 +96,7 @@ export default function Post({ route, navigation }) {
       em: (props) => <Text {...props} style={{ fontFamily: "MinionProIt", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       strong: (props) => <Text {...props} style={{ fontFamily: "MinionProBold", fontSize: props?.tnode?.styles?.nativeTextFlow?.fontSize }}>{props?.tnode?.init?.textNode?.data}</Text>,
       // h4: (props) => <Text {...props} category="h4">{props.tnode.children[0].children[0].init.textNode.data}</Text>,
-    };
+    }
     
     const customHTMLElementModels = {
       iframe: iframeModel
@@ -84,11 +108,6 @@ export default function Post({ route, navigation }) {
       </View>
     )
 
-    if (caption !== "") {
-      animateCaption(Easing.ease)
-    }
-    
-
     useEffect(() => {
       Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
@@ -97,6 +116,7 @@ export default function Post({ route, navigation }) {
 
       Model.media().id(article["featured_media"]).get().then(media => {
           setCaption(decode(media.caption?.rendered).slice(3, -5))
+          animateOpacity(captionOpacity, 500)
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
@@ -106,6 +126,7 @@ export default function Post({ route, navigation }) {
         if (matches) {
           let audioURL = matches[1];
           setAudioURL(audioURL)
+          animateOpacity(floatingActionOpacity, 250)
         }
       }).catch(error => {
         console.log(error)
@@ -114,6 +135,7 @@ export default function Post({ route, navigation }) {
         if (matches) {
           let audioURL = matches[1];
           setAudioURL(audioURL)
+          animateOpacity(floatingActionOpacity, 250)
         }
         })
       })
@@ -133,56 +155,57 @@ export default function Post({ route, navigation }) {
 
 
     return (
-      <ImageHeaderScrollView
-        headerImage={{ uri: featuredMedia }}
-        renderForeground={Foreground}
-        maxOverlayOpacity={0.75}
-        minOverlayOpacity={0.6}
-        minHeight={headerHeight}
-        maxHeight={headerHeight + featuredMedia ? 270 : 0}
-        fadeOutForeground
-        scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-        <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
-          <TriggeringView>
-            {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
-            {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-       
-            {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
+      <React.Fragment>
+        <ImageHeaderScrollView
+          headerImage={{ uri: featuredMedia }}
+          renderForeground={Foreground}
+          maxOverlayOpacity={0.75}
+          minOverlayOpacity={0.6}
+          minHeight={headerHeight}
+          maxHeight={headerHeight + featuredMedia ? 270 : 0}
+          fadeOutForeground
+          scrollViewBackgroundColor={theme["background-basic-color-1"]}>
+          <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
+            <TriggeringView>
+              {caption !== "" && (
+              <Animated.View style={{ opacity: captionOpacity }}>
+                <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>
+              </Animated.View>)}
+              {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
+        
+              {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
 
-            <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
-            <TouchableOpacity onPress={() => console.log("https://storage.googleapis.com/ad-auris-narrations/The%20Stanford%20Daily/rss/" + decode(article.title.rendered), "https://narrations.ad-auris.com/widget/the-stanford-daily/" + article.slug)} style={{ flexDirection: "row", alignItems: "center", marginTop: 10 }}>
-              <View style={{ backgroundColor: "#F0F4F4", width: 30, height: 30, borderRadius: 15, marginRight: 10, overflow: "hidden", alignItems: "center", justifyContent: "center" }}>
-              <Icon name="headphones-outline" width={15} height={15} fill={theme["text-basic-color"]} />
-              </View>
-              <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 0, paddingHorizontal: Spacing.small, borderRadius: 3, backgroundColor: theme["text-basic-color"] }}>
-              <View style={{ flex: 0.25, flexDirection: "row" }}>
-              <Icon name="skip-back-outline" width={25} height={25} fill="white" />
-              <Icon name="arrow-right-outline" width={25} height={25} fill="white" />
-              <Icon name="skip-forward-outline" width={25} height={25} fill="white" />
-              </View>
-              <View style={{ flex: 0.75 }}>
-              {/* <Text style={{ color: "white", textAlign: "center" }} category="label">Listen to this article</Text> */}
-              </View>
-              
-              
-              </View>
-            </TouchableOpacity>
-          </TriggeringView>
-          <Content
-            source={{ html: article.content.rendered }}
-            defaultTextProps={{ selectable: true }}
-            customHTMLElementModels={customHTMLElementModels}
-            systemFonts={systemFonts}
-            contentWidth={width}
-            baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType() === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
-            tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
-            renderers={renderers}
-            WebView={WebView}
-            backgroundColor={theme["background-color-basic-2"]}
-            enableExperimentalMarginCollapsing
-          />
-        </View>
-      </ImageHeaderScrollView>
+              <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
+            </TriggeringView>
+            <Content
+              source={{ html: article.content.rendered }}
+              defaultTextProps={{ selectable: true }}
+              customHTMLElementModels={customHTMLElementModels}
+              systemFonts={systemFonts}
+              contentWidth={width}
+              baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType() === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+              tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
+              renderers={renderers}
+              WebView={WebView}
+              backgroundColor={theme["background-color-basic-2"]}
+              enableExperimentalMarginCollapsing
+            />
+          </View>
+        </ImageHeaderScrollView>
+        {audioURL !== "" && (
+          <Animated.View style={{ opacity: floatingActionOpacity }}>
+            <FloatingAction
+              color={theme["color-primary-500"]}
+              distanceToEdge={Spacing.large}
+                floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
+                actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
+                onPressItem={name => {
+                  console.log(`selected button: ${name}`);
+                }}
+            />
+          </Animated.View>
+        )}
+      </React.Fragment>
     )
 }
 
