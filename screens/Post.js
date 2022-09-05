@@ -1,30 +1,32 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { LayoutAnimation, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native";
-import { Button, Icon, Text, useTheme } from "@ui-kitten/components";
-import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
-import { Spacing } from "../constants";
-import Content, { defaultSystemFonts } from "react-native-render-html";
-import { FontSizes } from "../constants";
-import WebView from "react-native-webview";
-import { decode, encode } from "html-entities";
-import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
-import { formatDate, sluggify } from "../helpers/format";
-import Byline from "../components/Byline";
-import { minion } from "../custom-fonts";
+import React, { useContext, useEffect, useState } from "react"
+import { LayoutAnimation, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native"
+import { Button, Icon, Text, useTheme } from "@ui-kitten/components"
+import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
+import { Spacing } from "../constants"
+import Content, { defaultSystemFonts } from "react-native-render-html"
+import { FontSizes } from "../constants"
+import WebView from "react-native-webview"
+import { decode } from "html-entities"
+import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin"
+import { formatDate, sluggify } from "../helpers/format"
+import Byline from "../components/Byline"
+import { minion } from "../custom-fonts"
 import Model from "../Model"
-import { ThemeContext } from "../theme-context";
-import { useHeaderHeight } from "@react-navigation/elements";
-import * as Device from "expo-device";
-import { deviceType } from "../App";
-import { FloatingAction } from "react-native-floating-action";
+import { ThemeContext } from "../theme-context"
+import { useHeaderHeight } from "@react-navigation/elements"
+import * as Device from "expo-device"
+import { deviceType } from "../App"
+import { FloatingAction } from "react-native-floating-action"
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
 
-const { width, height } = Dimensions.get("window");
-const pixelRatio = PixelRatio.get();
+const { width, height } = Dimensions.get("window")
+const pixelRatio = PixelRatio.get()
 const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
-];
+]
+const articleAudio = new Audio.Sound()
+
 Audio.setAudioModeAsync({
   playsInSilentModeIOS: true,
   allowsRecordingIOS: false,
@@ -35,10 +37,8 @@ Audio.setAudioModeAsync({
   playThroughEarpieceAndroid: false
 })
 
-const articleAudio = new Audio.Sound()
-
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+  UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
 export default function Post({ route, navigation }) {
@@ -87,9 +87,9 @@ export default function Post({ route, navigation }) {
 
     const playSound = async () => {
       try {
-        await articleAudio.loadAsync({ uri: encodeURI(audioURL) }) // The headphone icon could become ActivityIndicator while loading.
+        // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
+        await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
         await articleAudio.playAsync()
-        // Your sound is playing!
       } catch (error) {
         console.log(error)
       }
@@ -105,7 +105,7 @@ export default function Post({ route, navigation }) {
     
     const customHTMLElementModels = {
       iframe: iframeModel
-    };
+    }
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -125,10 +125,11 @@ export default function Post({ route, navigation }) {
       })
 
       // Attempts to retrieve the narration file for the article.
+      // This is a temporary solution. Might use .finally instead of writing the same thing twice, but even then there's probably a prettier way.
       fetch(narrationEndpoint + article.slug).then(response => response.ok && response.text()).then(data => {
         var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
         if (matches) {
-          let audioURL = matches[1];
+          let audioURL = matches[1]
           setAudioURL(audioURL)
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
@@ -137,13 +138,12 @@ export default function Post({ route, navigation }) {
         fetch(narrationEndpoint + sluggify(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
-            let audioURL = matches[1];
+            let audioURL = matches[1]
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
         })
       })
-
       
       return () => {
         if (colorScheme === "light") {
@@ -175,11 +175,8 @@ export default function Post({ route, navigation }) {
           scrollViewBackgroundColor={theme["background-basic-color-1"]}>
           <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
             <TriggeringView>
-              {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
-              {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
-        
-              {/* Now the category button could go on opposite side of listen to article button. Audio label switches to activity indicator when loading and now playing could be bar chart thing */}
-
+              {caption !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{caption}</Text>}
+              {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{article["wps_subtitle"]}</Text>}
               <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
             </TriggeringView>
             <Content
