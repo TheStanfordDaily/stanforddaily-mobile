@@ -52,14 +52,15 @@ export default function Post({ route, navigation }) {
     const [trackStatus, setTrackStatus] = useState({})
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
+    const [displayAllActions, setDisplayAllActions] = useState(false)
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
     const audioActions = [
       {
         position: 3,
-        text: trackStatus?.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
+        text: displayAllActions ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
         name: "play",
-        icon: <Icon name={Object.keys(trackStatus).length > 0 && !trackStatus?.isPlaying ? "pause-circle" : "arrow-right"} width={30} height={30} fill="white" />,
+        icon: <Icon name="arrow-right" width={30} height={30} fill="white" />,
         color: theme["color-primary-500"]
       },
       {
@@ -85,11 +86,13 @@ export default function Post({ route, navigation }) {
     ]
 
     const toggleTrack = async () => {
-      if ("isPlaying" in trackStatus && trackStatus.isPlaying) {
+      const currentStatus = await articleAudio.getStatusAsync()
+      if (currentStatus.isPlaying) {
         console.log("pausing")
         await articleAudio.pauseAsync()
-      } else if ("isLoaded" in trackStatus && trackStatus.isLoaded) {
-        await articleAudio.playAsync()
+      } else if (currentStatus.isLoaded) {
+        console.log(currentStatus)
+        await articleAudio.playFromPositionAsync(50000)
       }
     }
 
@@ -98,6 +101,7 @@ export default function Post({ route, navigation }) {
         // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
         await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
         await articleAudio.playAsync()
+        setDisplayAllActions(true)
       } catch (error) {
         console.log(error)
       }
@@ -109,12 +113,12 @@ export default function Post({ route, navigation }) {
 
     const skipTrack = async () => {
       console.log("skipping")
-      await articleAudio.setPositionAsync(trackStatus.positionMillis + 15000)
+      await articleAudio.setPositionAsync((await articleAudio.getStatusAsync()).positionMillis + 15000)
     }
 
     const rewindTrack = async () => {
       console.log("rewinding")
-      await articleAudio.setPositionAsync(trackStatus.positionMillis - 15000)
+      await articleAudio.setPositionAsync((await articleAudio.getStatusAsync()).positionMillis - 15000)
     }
 
     const renderers = {
@@ -215,16 +219,20 @@ export default function Post({ route, navigation }) {
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
               floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
-              actions={audioActions.slice(0, Object.keys(trackStatus).length === 0 || ("isLoaded" in trackStatus && !trackStatus.isLoaded) ? 1 : undefined)} // When track is inactive it only shows first button 
-              onPressItem={name => {
+              actions={displayAllActions ? audioActions : audioActions.slice(0, 1)} // When track is inactive it only shows first button 
+              onPressItem={async (name) => {
                 switch (name) {
-                  case "play": trackStatus?.isLoaded ? toggleTrack() : startTrack()
+                  case "play": (await articleAudio.getStatusAsync()).isLoaded ? toggleTrack() : startTrack()
                   case "stop": stopTrack()
                   case "skip": skipTrack()
                   case "rewind": rewindTrack()
                   default: break
                 }
-                articleAudio?.getStatusAsync().then(setTrackStatus)
+                if ((await articleAudio.getStatusAsync()).isPlaying) {
+                  // Set play icon to pause icon.
+                } else {
+                  // Set pause icon to play icon.
+                }
               }}
             />    
         )}
