@@ -4,7 +4,6 @@ import { Button, Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
 import Content, { defaultSystemFonts } from "react-native-render-html"
-import { FontSizes } from "../constants"
 import WebView from "react-native-webview"
 import { decode } from "html-entities"
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin"
@@ -145,7 +144,7 @@ export default function Post({ route, navigation }) {
         })
       })
       
-      
+
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)

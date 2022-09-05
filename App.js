@@ -9,7 +9,6 @@ import { initializeApp } from "firebase/app"
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
-import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -25,6 +24,7 @@ import { ThemeContext } from "./theme-context"
 import Author from "./screens/Author"
 import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
+import Model from "./Model"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -157,7 +157,7 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
+      Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then((result) => {
         navigate(Strings.post, { item: result })
       })
     })
