@@ -143,6 +143,8 @@ export default function App() {
       }
     })
 
+    Device.getDeviceTypeAsync().then(setDeviceType)
+
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
       StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
@@ -172,7 +174,7 @@ export default function App() {
       return (fontsLoaded &&
         <NavigationContainer theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
-          <ThemeContext.Provider value={{ theme, toggleTheme }}>
+          <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
                 <Stack.Navigator initialRouteName="Home">
@@ -233,11 +235,4 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
-}
-
-export const deviceType = () => {
-  Device.getDeviceTypeAsync().then(result => {
-    return result
-  })
-  return Device.DeviceType.PHONE
 }

@@ -13,10 +13,9 @@ import { minion } from "../custom-fonts"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { useHeaderHeight } from "@react-navigation/elements"
-import * as Device from "expo-device"
-import { deviceType } from "../App"
 import { FloatingAction } from "react-native-floating-action"
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
+import * as Device from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -50,16 +49,17 @@ export default function Post({ route, navigation }) {
     const [displayCategory, setDisplayCategory] = useState({})
     const [caption, setCaption] = useState("")
     const [audioURL, setAudioURL] = useState("")
-    const themeContext = useContext(ThemeContext)
+    const [trackStatus, setTrackStatus] = useState({})
+    const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
-    const contentEdgeInset = deviceType() === Device.DeviceType.PHONE ? 14 : 56
+    const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
     const audioActions = [
       {
         position: 3,
-        text: "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
+        text: trackStatus?.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
         name: "play",
-        icon: <Icon name="arrow-right-outline" width={30} height={30} fill="white" />,
+        icon: trackStatus?.isPlaying ? <Icon name="pause-circle" width={30} height={30} fill="white" /> : <Icon name="arrow-right" width={30} height={30} fill="white" />,
         color: theme["color-primary-500"]
       },
       {
@@ -72,26 +72,37 @@ export default function Post({ route, navigation }) {
         position: 0,
         // text: "Skip 15 seconds",
         name: "skip",
-        icon: <Icon name="skip-forward-outline" width={30} height={30} fill="#242c45" />,
+        icon: <Icon name="skip-forward" width={30} height={30} fill="#242c45" />,
         color: "#F0F4F4"
       },
       {
         position: 1,
         // text: "Rewind 15 seconds",
         name: "rewind",
-        icon: <Icon name="skip-back-outline" width={30} height={30} fill="#242c45" />,
+        icon: <Icon name="skip-back" width={30} height={30} fill="#242c45" />,
         color: "#F0F4F4",
       }
     ]
 
-    const playSound = async () => {
-      try {
-        // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
-        await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
-        await articleAudio.playAsync()
-      } catch (error) {
-        console.log(error)
+    console.log("Context: ", deviceType)
+
+    const toggleTrack = async () => {
+      if (articleAudio) {
+        if (trackStatus?.isPlaying) {
+          articleAudio.pauseAsync()
+        } else {
+          articleAudio.playFromPositionAsync(trackStatus?.positionMillis).catch(error => console.log(error))
+        }
+      } else {
+        try {
+          // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
+          await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
+          await articleAudio.playAsync()
+        } catch (error) {
+          console.log(error)
+        }
       }
+      setTrackStatus(await articleAudio?.getStatusAsync())
     }
 
     const renderers = {
@@ -108,7 +119,7 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category={deviceType() === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType() === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
       </View>
     )
 
@@ -141,7 +152,7 @@ export default function Post({ route, navigation }) {
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
-        })
+        }).catch(error => console.log(error))
       })
       
 
@@ -150,7 +161,7 @@ export default function Post({ route, navigation }) {
           StatusBar.setBarStyle("dark-content", true)
         }
         if (articleAudio) {
-          sound.unloadAsync()
+          articleAudio.unloadAsync()
         }
       }
     }, [article])
@@ -173,7 +184,7 @@ export default function Post({ route, navigation }) {
           maxHeight={headerHeight + featuredMedia ? 270 : 0}
           fadeOutForeground
           scrollViewBackgroundColor={theme["background-basic-color-1"]}>
-          <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
+          <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
             <TriggeringView>
               {caption !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{caption}</Text>}
               {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{article["wps_subtitle"]}</Text>}
@@ -185,7 +196,7 @@ export default function Post({ route, navigation }) {
               customHTMLElementModels={customHTMLElementModels}
               systemFonts={systemFonts}
               contentWidth={width}
-              baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType() === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
+              baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }} // TODO: Replace with PixelRatio.
               tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
               renderers={renderers}
               WebView={WebView}
@@ -199,10 +210,10 @@ export default function Post({ route, navigation }) {
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
               floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
-              actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
+              actions={audioActions.slice(0, trackStatus?.isLoaded ? 1 : undefined)} // When track is inactive it only shows first button 
               onPressItem={name => {
                 switch (name) {
-                  case "play": playSound()
+                  case "play": toggleTrack()
                   default: break
                 }
               }}

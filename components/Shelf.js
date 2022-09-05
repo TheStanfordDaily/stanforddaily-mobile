@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Dimensions, View, StyleSheet, Image, PixelRatio } from "react-native"
 import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
@@ -6,7 +6,7 @@ import { decode } from "html-entities"
 import _ from "lodash"
 import { formatDate, itemize } from "../helpers/format"
 import * as Device from "expo-device"
-import { deviceType } from "../App"
+import { ThemeContext } from "../theme-context"
 
 const pixelRatio = PixelRatio.get()
 const { width, height } = Dimensions.get("window")
@@ -14,7 +14,8 @@ const { width, height } = Dimensions.get("window")
 export default function Shelf(props) {
     const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
-    const groupSize = deviceType() === Device.DeviceType.PHONE ? 1 : 2
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
 
     var opinionsArticles = props.articles
     while (opinionsArticles.length % 3 != 0) {

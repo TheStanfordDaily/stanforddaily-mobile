@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native"
 import { Divider, Layout, Text } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
@@ -10,6 +10,8 @@ import Wildcard from "../components/Wildcard"
 import Model from "../Model"
 import { Sections, Spacing } from "../constants"
 import _ from "lodash"
+import * as Device from "expo-device"
+import { ThemeContext } from "../theme-context"
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json")
@@ -25,7 +27,8 @@ export default function Home({ navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
-    const [groupSize, setGroupSize] = useState(1)
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {

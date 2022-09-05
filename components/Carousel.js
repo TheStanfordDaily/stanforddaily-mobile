@@ -9,7 +9,6 @@ import { itemize } from "../helpers/format"
 import { Sections } from "../constants"
 import { ThemeContext } from "../theme-context"
 import * as Device from "expo-device"
-import { deviceType } from "../App"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -17,7 +16,8 @@ const pixelRatio = PixelRatio.get()
 export default function Carousel(props) {
     const theme = useTheme()
     const { navigation, articles } = props
-    const themeContext = useContext(ThemeContext)
+    const { themeContext, deviceType } = useContext(ThemeContext)
+    const carouselHeight = deviceType === Device.DeviceType.PHONE ? 300 : 350
     
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
@@ -46,12 +46,12 @@ export default function Carousel(props) {
     )
 
     return (
-        <PagerView style={styles.container} initialPage={0} overdrag>
+        <PagerView style={{...styles.container, height: carouselHeight}} initialPage={0} overdrag>
             {articles.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card
-                          style={{ flex: 1, height: 300, marginHorizontal: 5, borderColor: themeContext.theme == "light" ? theme["color-basic-default"] : "transparent" }}
+                          style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: themeContext == "light" ? theme["color-basic-default"] : "transparent" }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>

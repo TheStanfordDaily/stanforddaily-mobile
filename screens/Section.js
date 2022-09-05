@@ -2,7 +2,6 @@ import { useTheme } from "@react-navigation/native"
 import { Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Dimensions, View } from "react-native"
-import { deviceType } from "../App"
 import Wlidcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
@@ -18,7 +17,8 @@ export default function Section({ route, navigation }) {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 16
     const basePageCount = Math.max(0, Math.floor(seed.length/perPageNumber) - 1)
-    const columnCount = deviceType() === Device.DeviceType.PHONE ? 1 : 2
+    const { deviceType } = useContext(ThemeContext)
+    const columnCount = deviceType === Device.DeviceType.PHONE ? 1 : 2
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     useEffect(() => {

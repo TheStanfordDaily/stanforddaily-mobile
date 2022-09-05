@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { Card, Text } from "@ui-kitten/components"
 import { Dimensions, Image, View, StyleSheet, Platform, PixelRatio } from "react-native"
 import PagerView from "react-native-pager-view"
@@ -7,8 +7,8 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { Spacing } from "../constants"
 import { ref } from "firebase/database"
+import { ThemeContext } from "../theme-context"
 import * as Device from "expo-device"
-import { deviceType } from "../App"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -16,7 +16,8 @@ const pixelRatio = PixelRatio.get()
 export default function Diptych(props) {
     const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
     const [selection, setSelection] = useState(0)
-    const groupSize  = deviceType() === Device.DeviceType.PHONE ? 2 : 3
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
     
     const Header = (props) => (
       <React.Fragment>
