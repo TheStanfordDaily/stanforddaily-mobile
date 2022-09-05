@@ -125,8 +125,6 @@ export default function App() {
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
-    Audio.requestPermissionsAsync().then(result => console.log(result))
-    Audio.setIsEnabledAsync().then(result => console.log(result))
     registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       if (Object.keys(firebaseConfig).length > 0) {

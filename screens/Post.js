@@ -17,7 +17,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import * as Device from "expo-device";
 import { deviceType } from "../App";
 import { FloatingAction } from "react-native-floating-action";
-import { Audio } from "expo-av"
+import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
 
 const { width, height } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
@@ -25,6 +25,12 @@ const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
 ];
+
+
+const articleSound = new Audio.Sound()
+const status = {
+  shouldPlay: false
+}
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -74,6 +80,31 @@ export default function Post({ route, navigation }) {
       }
     ]
 
+    const playSound = async () => {
+      const audioMode = {
+        playsInSilentModeIOS: true,
+        allowsRecordingIOS: false,
+        staysActiveInBackground: true,
+        interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+        interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+        shouldDuckAndroid: false,
+        playThroughEarpieceAndroid: false,
+      };
+      Audio.setAudioModeAsync(audioMode);
+  
+      const soundObject = new Audio.Sound();
+      try {
+        await soundObject.loadAsync({
+          uri:
+            'https://ia800304.us.archive.org/34/items/PaulWhitemanwithMildredBailey/PaulWhitemanwithMildredBailey-AllofMe.mp3',
+        });
+        await soundObject.playAsync();
+        // Your sound is playing!
+      } catch (error) {
+        // An error occurred!
+      }
+    };
+
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
       // iframe: IframeRenderer,
@@ -108,6 +139,9 @@ export default function Post({ route, navigation }) {
         var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
         if (matches) {
           let audioURL = matches[1];
+          console.log("audio URL", audioURL)
+          articleSound.loadAsync({ uri: audioURL }, status, false).then(() => articleSound.playAsync()) // The headphone icon could become ActivityIndicator while loading.
+
           setAudioURL(audioURL)
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
@@ -117,12 +151,15 @@ export default function Post({ route, navigation }) {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
             let audioURL = matches[1];
+            console.log("audio URL", audioURL)
+            articleSound.loadAsync({ uri: audioURL }, status, false).then(() => articleSound.playAsync()) // The headphone icon could become ActivityIndicator while loading.
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
         })
       })
 
+      
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
@@ -183,6 +220,7 @@ export default function Post({ route, navigation }) {
                 actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
                 onPressItem={name => {
                   console.log(`selected button: ${name}`);
+                  playSound()
                   // playSound()
                   // switch (name) {
                   //   case "play": playSound()
