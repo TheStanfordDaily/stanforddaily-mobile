@@ -59,7 +59,7 @@ export default function Post({ route, navigation }) {
         position: 3,
         text: trackStatus?.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
         name: "play",
-        icon: trackStatus?.isPlaying ? <Icon name="pause-circle" width={30} height={30} fill="white" /> : <Icon name="arrow-right" width={30} height={30} fill="white" />,
+        icon: <Icon name={Object.keys(trackStatus).length > 0 && !trackStatus?.isPlaying ? "pause-circle" : "arrow-right"} width={30} height={30} fill="white" />,
         color: theme["color-primary-500"]
       },
       {
@@ -85,22 +85,36 @@ export default function Post({ route, navigation }) {
     ]
 
     const toggleTrack = async () => {
-      if (articleAudio) {
-        if (trackStatus?.isPlaying) {
-          articleAudio.pauseAsync()
-        } else {
-          articleAudio.playFromPositionAsync(trackStatus?.positionMillis).catch(error => console.log(error))
-        }
-      } else {
-        try {
-          // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
-          await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
-          await articleAudio.playAsync()
-        } catch (error) {
-          console.log(error)
-        }
+      if ("isPlaying" in trackStatus && trackStatus.isPlaying) {
+        console.log("pausing")
+        await articleAudio.pauseAsync()
+      } else if ("isLoaded" in trackStatus && trackStatus.isLoaded) {
+        await articleAudio.playAsync()
       }
-      setTrackStatus(await articleAudio?.getStatusAsync())
+    }
+
+    const startTrack = async () => {
+      try {
+        // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
+        await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
+        await articleAudio.playAsync()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const stopTrack = async () => {
+      await articleAudio.stopAsync()
+    }
+
+    const skipTrack = async () => {
+      console.log("skipping")
+      await articleAudio.setPositionAsync(trackStatus.positionMillis + 15000)
+    }
+
+    const rewindTrack = async () => {
+      console.log("rewinding")
+      await articleAudio.setPositionAsync(trackStatus.positionMillis - 15000)
     }
 
     const renderers = {
@@ -201,12 +215,16 @@ export default function Post({ route, navigation }) {
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
               floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
-              actions={audioActions.slice(0, trackStatus?.isLoaded ? 1 : undefined)} // When track is inactive it only shows first button 
+              actions={audioActions.slice(0, Object.keys(trackStatus).length === 0 || ("isLoaded" in trackStatus && !trackStatus.isLoaded) ? 1 : undefined)} // When track is inactive it only shows first button 
               onPressItem={name => {
                 switch (name) {
-                  case "play": toggleTrack()
+                  case "play": trackStatus?.isLoaded ? toggleTrack() : startTrack()
+                  case "stop": stopTrack()
+                  case "skip": skipTrack()
+                  case "rewind": rewindTrack()
                   default: break
                 }
+                articleAudio?.getStatusAsync().then(setTrackStatus)
               }}
             />    
         )}
