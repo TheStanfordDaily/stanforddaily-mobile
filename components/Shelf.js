@@ -17,9 +17,9 @@ export default function Shelf(props) {
     const { deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
 
-    var opinionsArticles = props.articles
-    while (opinionsArticles.length % 3 != 0) {
-        opinionsArticles.pop()
+    var shelfArticles = props.articles
+    while (shelfArticles.length % (3*groupSize) != 0) {
+        shelfArticles.pop()
     }
     
     const Accessory = (props) => (
@@ -28,7 +28,7 @@ export default function Shelf(props) {
 
     return (
         <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
-            {_.chunk(opinionsArticles, 3 * groupSize).map((triplet, index) => (
+            {_.chunk(shelfArticles, 3*groupSize).map((triplet, index) => (
                 <View style={{ flex: 1, flexDirection: "row" }}>
                     {_.chunk(triplet, 3).map((group, outerIndex) => (<View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>
                     {group.map((item) => (

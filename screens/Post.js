@@ -84,8 +84,6 @@ export default function Post({ route, navigation }) {
       }
     ]
 
-    console.log("Context: ", deviceType)
-
     const toggleTrack = async () => {
       if (articleAudio) {
         if (trackStatus?.isPlaying) {
@@ -134,21 +132,14 @@ export default function Post({ route, navigation }) {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      // Attempts to retrieve the narration file for the article.
-      // This is a temporary solution. Might use .finally instead of writing the same thing twice, but even then there's probably a prettier way.
-      fetch(narrationEndpoint + article.slug).then(response => response.ok && response.text()).then(data => {
-        var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
-        if (matches) {
-          let audioURL = matches[1]
-          setAudioURL(audioURL)
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-        }
-      }).catch(error => {
-        console.log(error)
-        fetch(narrationEndpoint + generateSlug(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
+      // Attempts to retrieve the remote narration file URL for the article.
+      fetch(narrationEndpoint + article.slug).then(response => {
+        const narrationPath = response.ok ? article.slug : generateSlug(decode(article.title.rendered))
+        fetch(narrationEndpoint + narrationPath).then(response => response.text()).then(data => {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
             let audioURL = matches[1]
+            console.log(audioURL)
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
