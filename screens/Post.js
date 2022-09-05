@@ -25,12 +25,17 @@ const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
 ];
+Audio.setAudioModeAsync({
+  playsInSilentModeIOS: true,
+  allowsRecordingIOS: false,
+  staysActiveInBackground: true,
+  interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+  interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+  shouldDuckAndroid: false,
+  playThroughEarpieceAndroid: false
+})
 
-
-const articleSound = new Audio.Sound()
-const status = {
-  shouldPlay: false
-}
+const articleAudio = new Audio.Sound()
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -81,29 +86,14 @@ export default function Post({ route, navigation }) {
     ]
 
     const playSound = async () => {
-      const audioMode = {
-        playsInSilentModeIOS: true,
-        allowsRecordingIOS: false,
-        staysActiveInBackground: true,
-        interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-        interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-        shouldDuckAndroid: false,
-        playThroughEarpieceAndroid: false,
-      };
-      Audio.setAudioModeAsync(audioMode);
-  
-      const soundObject = new Audio.Sound();
       try {
-        await soundObject.loadAsync({
-          uri:
-            'https://ia800304.us.archive.org/34/items/PaulWhitemanwithMildredBailey/PaulWhitemanwithMildredBailey-AllofMe.mp3',
-        });
-        await soundObject.playAsync();
+        await articleAudio.loadAsync({ uri: encodeURI(audioURL) }) // The headphone icon could become ActivityIndicator while loading.
+        await articleAudio.playAsync()
         // Your sound is playing!
       } catch (error) {
-        // An error occurred!
+        console.log(error)
       }
-    };
+    }
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -139,9 +129,6 @@ export default function Post({ route, navigation }) {
         var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
         if (matches) {
           let audioURL = matches[1];
-          console.log("audio URL", audioURL)
-          articleSound.loadAsync({ uri: audioURL }, status, false).then(() => articleSound.playAsync()) // The headphone icon could become ActivityIndicator while loading.
-
           setAudioURL(audioURL)
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         }
@@ -151,8 +138,6 @@ export default function Post({ route, navigation }) {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
             let audioURL = matches[1];
-            console.log("audio URL", audioURL)
-            articleSound.loadAsync({ uri: audioURL }, status, false).then(() => articleSound.playAsync()) // The headphone icon could become ActivityIndicator while loading.
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
@@ -164,9 +149,9 @@ export default function Post({ route, navigation }) {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
         }
-        // if (sound) {
-        //   sound.unloadAsync()
-        // }
+        if (articleAudio) {
+          sound.unloadAsync()
+        }
       }
     }, [article])
 
