@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       height: 300,
-      paddingHorizontal: 8,
+      paddingHorizontal: Spacing.medium,
       paddingVertical: 4
     },
     tab: {

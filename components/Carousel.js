@@ -6,7 +6,7 @@ import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
-import { Sections } from "../constants"
+import { Spacing } from "../constants"
 import { ThemeContext } from "../theme-context"
 import * as Device from "expo-device"
 
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       height: 300,
-      paddingHorizontal: 8,
+      paddingHorizontal: Spacing.medium,
       paddingVertical: 4,
-      marginTop: 8
+      marginTop: Spacing.medium
     },
     tab: {
         height: 192,

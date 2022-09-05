@@ -7,6 +7,7 @@ import _ from "lodash"
 import { formatDate, itemize } from "../helpers/format"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
+import { Spacing } from "../constants"
 
 const pixelRatio = PixelRatio.get()
 const { width, height } = Dimensions.get("window")
@@ -60,7 +61,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         minHeight: 300,
-        paddingHorizontal: 8,
+        paddingHorizontal: Spacing.medium,
         padddingVertical: 4
     },
     image: {

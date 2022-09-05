@@ -6,6 +6,7 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
+import { Spacing } from "../constants"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -69,12 +70,12 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        marginHorizontal: 8,
+        marginHorizontal: Spacing.medium,
         marginVertical: 4
     },
     container: {
         flex: 1,
-        paddingHorizontal: 8,
+        paddingHorizontal: Spacing.medium,
         paddingVertical: 4
     }
 })
