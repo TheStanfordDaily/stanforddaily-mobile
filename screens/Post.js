@@ -8,7 +8,7 @@ import { FontSizes } from "../constants"
 import WebView from "react-native-webview"
 import { decode } from "html-entities"
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin"
-import { formatDate, sluggify } from "../helpers/format"
+import { formatDate, generateSlug } from "../helpers/format"
 import Byline from "../components/Byline"
 import { minion } from "../custom-fonts"
 import Model from "../Model"
@@ -135,7 +135,7 @@ export default function Post({ route, navigation }) {
         }
       }).catch(error => {
         console.log(error)
-        fetch(narrationEndpoint + sluggify(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
+        fetch(narrationEndpoint + generateSlug(decode(article.title.rendered))).then(response => response.ok && response.text()).then(data => {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
             let audioURL = matches[1]
@@ -144,6 +144,7 @@ export default function Post({ route, navigation }) {
           }
         })
       })
+      
       
       return () => {
         if (colorScheme === "light") {
@@ -198,17 +199,14 @@ export default function Post({ route, navigation }) {
             <FloatingAction
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
-                floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
-                actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
-                onPressItem={name => {
-                  console.log(`selected button: ${name}`);
-                  playSound()
-                  // playSound()
-                  // switch (name) {
-                  //   case "play": playSound()
-                  //   default: break
-                  // }
-                }}
+              floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
+              actions={audioActions.slice(0, false ? 1 : undefined)} // When track is inactive it only shows first button 
+              onPressItem={name => {
+                switch (name) {
+                  case "play": playSound()
+                  default: break
+                }
+              }}
             />    
         )}
       </React.Fragment>
@@ -218,11 +216,6 @@ export default function Post({ route, navigation }) {
 const styles = StyleSheet.create({
   body: {
     fontFamily: "MinionProDisp"
-  },
-  copy: {
-    // marginHorizontal: Margins.articleSides,
-    fontFamily: "LibreFranklinRegular",
-    fontSize: FontSizes.small
   },
   hoveringText: {
     color: "white",

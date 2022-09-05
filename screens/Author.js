@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from 'react-native';
-import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
-import { Margins, Spacing } from '../constants';
-import Model from "../Model";
-import { decode } from "html-entities";
-import { formatDate, stringMode } from "../helpers/format";
-import * as Device from "expo-device";
-import { deviceType } from '../App';
+import React, { useEffect, useState } from "react"
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from "react-native"
+import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components"
+import { Margins, Spacing } from "../constants"
+import Model from "../Model"
+import { decode } from "html-entities"
+import { formatDate, stringMode } from "../helpers/format"
+import * as Device from "expo-device"
+import { deviceType } from "../App"
 
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Author({ route, navigation }) {
@@ -47,6 +47,7 @@ export default function Author({ route, navigation }) {
         // FIXME: Not all of the asynchronous tasks are being canceled, so there needs to be a cleanup function to avoid a memory leak.
     }, [pageNumber])
 
+    
     return (
         <Layout style={styles.container}>
             <List

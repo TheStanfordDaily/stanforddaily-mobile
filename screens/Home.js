@@ -1,23 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { Divider, Layout, Text } from "@ui-kitten/components";
-import Canvas from "../components/Canvas";
-import Carousel from "../components/Carousel";
-import Diptych from "../components/Diptych";
-import Mark from "../components/Mark";
-import Shelf from "../components/Shelf";
-import Wildcard from "../components/Wildcard";
-import Model from "../Model";
-import { Sections, Spacing } from "../constants";
-import _ from "lodash";
+import React, { useEffect, useState } from "react"
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native"
+import { Divider, Layout, Text } from "@ui-kitten/components"
+import Canvas from "../components/Canvas"
+import Carousel from "../components/Carousel"
+import Diptych from "../components/Diptych"
+import Mark from "../components/Mark"
+import Shelf from "../components/Shelf"
+import Wildcard from "../components/Wildcard"
+import Model from "../Model"
+import { Sections, Spacing } from "../constants"
+import _ from "lodash"
 
 // There are too few recent opinions at time of writing.
-const localOpinions = require("../opinions.json");
+const localOpinions = require("../opinions.json")
 
 // There are too few recent humor articles at time of writing.
-const localHumor = require("../humor.json");
-
-const { width, height } = Dimensions.get("window");
+const localHumor = require("../humor.json")
 
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
@@ -25,8 +23,8 @@ export default function Home({ navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
-    const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id));
-    const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id));
+    const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
+    const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const [groupSize, setGroupSize] = useState(1)
 
     const homeMember = (article, section) => {
@@ -38,7 +36,7 @@ export default function Home({ navigation }) {
     }
     
     const checkBottom = (e) => {
-      let paddingToBottom = 10;
+      let paddingToBottom = 10
       paddingToBottom += e.nativeEvent.layoutMeasurement.height
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
         setPageNumber(pageNumber + 1)
@@ -79,6 +77,7 @@ export default function Home({ navigation }) {
       setArticlesLoading(false)
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
+    
     return (layoutLoaded && 
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>

@@ -1,14 +1,12 @@
-import { useTheme } from "@react-navigation/native";
-import { Layout, List, Text } from "@ui-kitten/components";
-import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, View } from "react-native";
-import { deviceType } from "../App";
-import Wlidcard from "../components/Wildcard";
+import { useTheme } from "@react-navigation/native"
+import { Layout, List, Text } from "@ui-kitten/components"
+import React, { useContext, useEffect, useState } from "react"
+import { ActivityIndicator, Dimensions, View } from "react-native"
+import { deviceType } from "../App"
+import Wlidcard from "../components/Wildcard"
 import Model from "../Model"
-import { ThemeContext } from "../theme-context";
+import { ThemeContext } from "../theme-context"
 import * as Device from "expo-device"
-
-const { width, height } = Dimensions.get("window")
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params

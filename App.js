@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { navigate, logoAssets, statusBarStyles } from "./navigation";
-import * as Font from "expo-font";
+import React, { useState, useEffect, useRef } from "react"
+import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native"
+import { SafeAreaProvider } from "react-native-safe-area-context"
+import { navigate, logoAssets, statusBarStyles } from "./navigation"
+import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app"; 
+import { initializeApp } from "firebase/app" 
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
 import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
-import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
-import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import * as eva from "@eva-design/eva"
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
+import { EvaIconsPack } from "@ui-kitten/eva-icons"
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import Post from "./screens/Post";
-import Home from "./screens/Home";
-import Section from "./screens/Section";
-import { ThemeContext } from "./theme-context";
-import Author from "./screens/Author";
-import { minion } from "./custom-fonts";
-import { decode } from "html-entities";
-import { Audio } from "expo-av"
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
+import { createStackNavigator } from "@react-navigation/stack"
+import Post from "./screens/Post"
+import Home from "./screens/Home"
+import Section from "./screens/Section"
+import { ThemeContext } from "./theme-context"
+import Author from "./screens/Author"
+import { minion } from "./custom-fonts"
+import { decode } from "html-entities"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -169,6 +168,7 @@ export default function App() {
     }
   }, [])
 
+  
       return (fontsLoaded &&
         <NavigationContainer theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
