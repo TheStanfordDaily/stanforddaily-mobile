@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, View } from "react-native"
-import { Divider, Layout, Text } from "@ui-kitten/components"
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native"
+import { Divider, Layout } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -66,7 +66,7 @@ export default function Home({ navigation }) {
             "culture": _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4),
           }))
         }).catch(error => {
-          console.log(error)
+          console.trace(error)
         }).finally(() => setLayoutLoaded(true))
       }
 
@@ -81,7 +81,7 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     
-    return (layoutLoaded && 
+    return layoutLoaded && (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />

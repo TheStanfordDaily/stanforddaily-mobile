@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
-import { LayoutAnimation, View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance, Platform, UIManager, TouchableOpacity } from "react-native"
-import { Button, Icon, Text, useTheme } from "@ui-kitten/components"
+import { Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
+import { Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
 import Content, { defaultSystemFonts } from "react-native-render-html"
@@ -16,6 +16,7 @@ import { useHeaderHeight } from "@react-navigation/elements"
 import { FloatingAction } from "react-native-floating-action"
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
 import * as Device from "expo-device"
+import CircleSlider from "react-native-circle-slider"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -53,6 +54,7 @@ export default function Post({ route, navigation }) {
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const [displayAllActions, setDisplayAllActions] = useState(false)
+    const [mostRecentPosition, setMostRecentPosition] = useState(0)
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
     const audioActions = [
@@ -89,10 +91,11 @@ export default function Post({ route, navigation }) {
       const currentStatus = await articleAudio.getStatusAsync()
       if (currentStatus.isPlaying) {
         console.log("pausing")
+        setMostRecentPosition(currentStatus.positionMillis)
         await articleAudio.pauseAsync()
       } else if (currentStatus.isLoaded) {
         console.log(currentStatus)
-        await articleAudio.playFromPositionAsync(50000)
+        await articleAudio.playFromPositionAsync(mostRecentPosition)
       }
     }
 
@@ -100,10 +103,11 @@ export default function Post({ route, navigation }) {
       try {
         // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
         await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
+        articleAudio.setOnPlaybackStatusUpdate(setTrackStatus)
         await articleAudio.playAsync()
         setDisplayAllActions(true)
       } catch (error) {
-        console.log(error)
+        console.trace(error)
       }
     }
 
@@ -139,6 +143,15 @@ export default function Post({ route, navigation }) {
       </View>
     )
 
+    const AudioIcon = () => (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />
+        <View style={{ alignItems: "center", alignContent: "center", position: "absolute" }}>
+				  <CircleSlider dialRadius={28} value={trackStatus?.isPlaying && 359 * trackStatus.positionMillis / trackStatus.durationMillis} btnRadius={trackStatus?.isPlaying ? 2.5 : 0} strokeWidth={5} strokeColor="transparent" textColor="transparent" meterColor={theme["text-basic-color"]} />
+        </View>
+			</View>
+    )
+
     useEffect(() => {
       Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
@@ -170,6 +183,7 @@ export default function Post({ route, navigation }) {
           StatusBar.setBarStyle("dark-content", true)
         }
         if (articleAudio) {
+          articleAudio.stopAsync()
           articleAudio.unloadAsync()
         }
       }
@@ -218,7 +232,7 @@ export default function Post({ route, navigation }) {
             <FloatingAction
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
-              floatingIcon={<Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />}
+              floatingIcon={<AudioIcon />}
               actions={displayAllActions ? audioActions : audioActions.slice(0, 1)} // When track is inactive it only shows first button 
               onPressItem={async (name) => {
                 switch (name) {
@@ -228,7 +242,10 @@ export default function Post({ route, navigation }) {
                   case "rewind": rewindTrack()
                   default: break
                 }
-                if ((await articleAudio.getStatusAsync()).isPlaying) {
+                const audioStatus = await articleAudio.getStatusAsync()
+                // console.log(359 * audioStatus.positionMillis / audioStatus.durationMillis)
+                console.log(trackStatus)
+                if (audioStatus.isPlaying) {
                   // Set play icon to pause icon.
                 } else {
                   // Set pause icon to play icon.

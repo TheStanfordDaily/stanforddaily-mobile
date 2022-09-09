@@ -30,7 +30,12 @@
       "bundleIdentifier": "com.Stanford.Daily.App",
       "buildNumber": "20",
       "appStoreUrl": "https://itunes.apple.com/app/stanford-daily/id1341270063",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "audio"
+        ]
+      }
     },
     "android": {
       "package": "com.Stanford.Daily.App",

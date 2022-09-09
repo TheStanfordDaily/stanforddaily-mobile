@@ -14,9 +14,8 @@ const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Carousel(props) {
-    const theme = useTheme()
     const { navigation, articles } = props
-    const { themeContext, deviceType } = useContext(ThemeContext)
+    const { theme, deviceType } = useContext(ThemeContext)
     const carouselHeight = deviceType === Device.DeviceType.PHONE ? 300 : 350
     
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
@@ -51,12 +50,12 @@ export default function Carousel(props) {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card
-                          style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: themeContext == "light" ? theme["color-basic-default"] : "transparent" }}
+                          style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: theme === "light" ? "#E7EBF3" : "transparent" }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                           <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
-                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
+                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: useTheme()["color-primary-600"] }} category="s2">
                             {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
                           </Text>
                       </Card>
