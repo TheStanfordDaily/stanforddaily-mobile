@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
 import { Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
@@ -51,18 +51,18 @@ export default function Post({ route, navigation }) {
     const [caption, setCaption] = useState("")
     const [audioURL, setAudioURL] = useState("")
     const [trackStatus, setTrackStatus] = useState({})
+    const [spinning, setSpinning] = useState(false)
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
-    const [displayAllActions, setDisplayAllActions] = useState(false)
     const [mostRecentPosition, setMostRecentPosition] = useState(0)
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
     const audioActions = [
       {
         position: 3,
-        text: displayAllActions ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
+        text: trackStatus?.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
         name: "play",
-        icon: <Icon name="arrow-right" width={30} height={30} fill="white" />,
+        icon: <Icon name={trackStatus?.isPlaying ? "archive-outline" : "arrow-right"} width={30} height={30} fill="white" />,
         color: theme["color-primary-500"]
       },
       {
@@ -88,27 +88,27 @@ export default function Post({ route, navigation }) {
     ]
 
     const toggleTrack = async () => {
-      const currentStatus = await articleAudio.getStatusAsync()
-      if (currentStatus.isPlaying) {
-        console.log("pausing")
-        setMostRecentPosition(currentStatus.positionMillis)
+      if (trackStatus.isPlaying) {
+        // Pause track.
+        setMostRecentPosition(trackStatus.positionMillis)
         await articleAudio.pauseAsync()
-      } else if (currentStatus.isLoaded) {
-        console.log(currentStatus)
+      } else {
+        // Resume track.
+        console.log(trackStatus)
         await articleAudio.playFromPositionAsync(mostRecentPosition)
       }
     }
 
     const startTrack = async () => {
+      setSpinning(true)
       try {
         // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
         await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
-        articleAudio.setOnPlaybackStatusUpdate(setTrackStatus)
         await articleAudio.playAsync()
-        setDisplayAllActions(true)
       } catch (error) {
         console.trace(error)
       }
+      setSpinning(false)
     }
 
     const stopTrack = async () => {
@@ -170,12 +170,13 @@ export default function Post({ route, navigation }) {
           var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
           if (matches) {
             let audioURL = matches[1]
-            console.log(audioURL)
             setAudioURL(audioURL)
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           }
         }).catch(error => console.log(error))
       })
+
+      articleAudio.setOnPlaybackStatusUpdate(setTrackStatus)
       
 
       return () => {
@@ -232,23 +233,15 @@ export default function Post({ route, navigation }) {
             <FloatingAction
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
-              floatingIcon={<AudioIcon />}
-              actions={displayAllActions ? audioActions : audioActions.slice(0, 1)} // When track is inactive it only shows first button 
-              onPressItem={async (name) => {
+              floatingIcon={spinning ? <ActivityIndicator /> : <AudioIcon />}
+              actions={trackStatus?.isLoaded ? audioActions : audioActions.slice(0, 1)} // When track is inactive it only shows first button 
+              onPressItem={name => {
                 switch (name) {
-                  case "play": (await articleAudio.getStatusAsync()).isLoaded ? toggleTrack() : startTrack()
+                  case "play": (trackStatus?.isLoaded && trackStatus?.isPlaying) ? toggleTrack() : startTrack()
                   case "stop": stopTrack()
                   case "skip": skipTrack()
                   case "rewind": rewindTrack()
                   default: break
-                }
-                const audioStatus = await articleAudio.getStatusAsync()
-                // console.log(359 * audioStatus.positionMillis / audioStatus.durationMillis)
-                console.log(trackStatus)
-                if (audioStatus.isPlaying) {
-                  // Set play icon to pause icon.
-                } else {
-                  // Set pause icon to play icon.
                 }
               }}
             />    
