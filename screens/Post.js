@@ -29,7 +29,7 @@ const articleAudio = new Audio.Sound()
 Audio.setAudioModeAsync({
   playsInSilentModeIOS: true,
   allowsRecordingIOS: false,
-  staysActiveInBackground: true,
+  staysActiveInBackground: false,
   interruptionModeIOS: InterruptionModeIOS.DoNotMix,
   interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
   shouldDuckAndroid: false,
@@ -50,7 +50,13 @@ export default function Post({ route, navigation }) {
     const [displayCategory, setDisplayCategory] = useState({})
     const [caption, setCaption] = useState("")
     const [audioURL, setAudioURL] = useState("")
-    const [trackStatus, setTrackStatus] = useState({})
+    const [trackStatus, setTrackStatus] = useState({
+        isLoaded: false,
+        isPlaying: false,
+        isBuffering: false,
+        didJustFinish: false,
+        isLooping: false
+    })
     const [spinning, setSpinning] = useState(false)
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
@@ -60,9 +66,9 @@ export default function Post({ route, navigation }) {
     const audioActions = [
       {
         position: 3,
-        text: trackStatus?.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
+        text: trackStatus.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
         name: "play",
-        icon: <Icon name={trackStatus?.isPlaying ? "archive-outline" : "arrow-right"} width={30} height={30} fill="white" />,
+        icon: <Icon name={trackStatus.isPlaying ? "archive-outline" : "arrow-right"} width={30} height={30} fill="white" />,
         color: theme["color-primary-500"]
       },
       {
@@ -88,13 +94,14 @@ export default function Post({ route, navigation }) {
     ]
 
     const toggleTrack = async () => {
-      if (trackStatus.isPlaying) {
+      const playbackStatus = await articleAudio.getStatusAsync()
+      if (playbackStatus.isPlaying) {
         // Pause track.
-        setMostRecentPosition(trackStatus.positionMillis)
+        setMostRecentPosition(playbackStatus.positionMillis)
         await articleAudio.pauseAsync()
+        console.log("Paused: ", playbackStatus)
       } else {
         // Resume track.
-        console.log(trackStatus)
         await articleAudio.playFromPositionAsync(mostRecentPosition)
       }
     }
@@ -113,16 +120,19 @@ export default function Post({ route, navigation }) {
 
     const stopTrack = async () => {
       await articleAudio.stopAsync()
+      await articleAudio.unloadAsync()
     }
 
     const skipTrack = async () => {
       console.log("skipping")
-      await articleAudio.setPositionAsync((await articleAudio.getStatusAsync()).positionMillis + 15000)
+      articleAudio.setStatusAsync({ ...(await articleAudio.getStatusAsync()), positionMillis: mostRecentPosition + 15000 })
+      
+      // playbackStatus.positionMillis += 15000
     }
 
-    const rewindTrack = async () => {
+    const rewindTrack = () => {
       console.log("rewinding")
-      await articleAudio.setPositionAsync((await articleAudio.getStatusAsync()).positionMillis - 15000)
+      // playbackStatus.positionMillis -= 15000
     }
 
     const renderers = {
@@ -147,7 +157,7 @@ export default function Post({ route, navigation }) {
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />
         <View style={{ alignItems: "center", alignContent: "center", position: "absolute" }}>
-				  <CircleSlider dialRadius={28} value={trackStatus?.isPlaying && 359 * trackStatus.positionMillis / trackStatus.durationMillis} btnRadius={trackStatus?.isPlaying ? 2.5 : 0} strokeWidth={5} strokeColor="transparent" textColor="transparent" meterColor={theme["text-basic-color"]} />
+				  <CircleSlider dialRadius={28} value={trackStatus.isLoaded && 359 * trackStatus.positionMillis / trackStatus.durationMillis} btnRadius={trackStatus.isPlaying ? 2.5 : 0} strokeWidth={5} strokeColor="transparent" textColor="transparent" meterColor={theme["text-basic-color"]} />
         </View>
 			</View>
     )
@@ -184,7 +194,6 @@ export default function Post({ route, navigation }) {
           StatusBar.setBarStyle("dark-content", true)
         }
         if (articleAudio) {
-          articleAudio.stopAsync()
           articleAudio.unloadAsync()
         }
       }
@@ -234,10 +243,10 @@ export default function Post({ route, navigation }) {
               color={theme["color-primary-500"]}
               distanceToEdge={Spacing.large}
               floatingIcon={spinning ? <ActivityIndicator /> : <AudioIcon />}
-              actions={trackStatus?.isLoaded ? audioActions : audioActions.slice(0, 1)} // When track is inactive it only shows first button 
-              onPressItem={name => {
+              actions={trackStatus.isLoaded ? audioActions : audioActions.slice(0, 1)}
+              onPressItem={async (name) => {
                 switch (name) {
-                  case "play": (trackStatus?.isLoaded && trackStatus?.isPlaying) ? toggleTrack() : startTrack()
+                  case "play": (await articleAudio.getStatusAsync()).isLoaded ? toggleTrack() : startTrack()
                   case "stop": stopTrack()
                   case "skip": skipTrack()
                   case "rewind": rewindTrack()
