@@ -40,6 +40,10 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+}
+
 export default function Post({ route, navigation }) {
     const { article, sourceName } = route.params
     const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio*width}`
@@ -149,7 +153,8 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category={deviceType === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType() === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
+        {article["wps_subtitle"]?.length > 0 && <Text category="s1" style={{ ...styles.hoveringText, fontFamily: "MinionProBoldIt", marginTop: 10, paddingHorizontal: 10 }}>{article["wps_subtitle"]}</Text>}
       </View>
     )
 
@@ -168,9 +173,14 @@ export default function Post({ route, navigation }) {
         setDisplayCategory(resolvedCategory)
       })
 
+      // Maybe we can get the captions in the initial home screen API call in the future.
+      // Hoping there is a better way than using the `_embed` query parameter.
+      // That would vastly increase loading time when so many posts are being fetched at once,
+      // most of which are not going to be tapped on anyway.
+
       Model.media().id(article["featured_media"]).get().then(media => {
-          setCaption(decode(media.caption?.rendered).slice(3, -5))
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        setCaption(decode(media.caption?.rendered).slice(3, -5))
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
       // Attempts to retrieve the remote narration file URL for the article.
@@ -188,7 +198,7 @@ export default function Post({ route, navigation }) {
 
       articleAudio.setOnPlaybackStatusUpdate(setTrackStatus)
       
-
+      
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
@@ -260,9 +270,6 @@ export default function Post({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  body: {
-    fontFamily: "MinionProDisp"
-  },
   hoveringText: {
     color: "white",
     marginTop: 20,
