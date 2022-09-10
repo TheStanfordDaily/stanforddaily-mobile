@@ -153,7 +153,7 @@ export default function Post({ route, navigation }) {
 
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text category={deviceType() === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
+        <Text category={deviceType === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
         {article["wps_subtitle"]?.length > 0 && <Text category="s1" style={{ ...styles.hoveringText, fontFamily: "MinionProBoldIt", marginTop: 10, paddingHorizontal: 10 }}>{article["wps_subtitle"]}</Text>}
       </View>
     )
@@ -230,7 +230,6 @@ export default function Post({ route, navigation }) {
           <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
             <TriggeringView>
               {caption !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{caption}</Text>}
-              {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{article["wps_subtitle"]}</Text>}
               <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
             </TriggeringView>
             <Content
