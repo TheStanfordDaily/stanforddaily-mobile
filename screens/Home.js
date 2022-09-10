@@ -105,8 +105,11 @@ export default function Home({ navigation }) {
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
-            <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-              {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
+            <View>
+              <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
+                {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
+              </View>
+              {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator />}
             </View>
           ))}
           <ActivityIndicator style={{ marginBottom: Spacing.medium }} />
