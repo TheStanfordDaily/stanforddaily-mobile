@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Dimensions, StatusBar, StyleSheet, PixelRatio, useColorScheme, Appearance } from "react-native";
+import { View, Dimensions, StatusBar, StyleSheet, PixelRatio, LayoutAnimation, useColorScheme, Appearance, UIManager } from "react-native";
 import { Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import { Spacing } from "../constants";
@@ -23,6 +23,10 @@ const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
 ];
+
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+}
 
 export default function Post({ route, navigation }) {
     const { article, sourceName } = route.params
@@ -60,9 +64,16 @@ export default function Post({ route, navigation }) {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
         setDisplayCategory(resolvedCategory)
       })
-        Model.media().id(article["featured_media"]).get().then(media => {
-            setCaption(decode(media.caption?.rendered).slice(3, -5))
-        })
+
+      // Maybe we can get the captions in the initial home screen API call in the future.
+      // Hoping there is a better way than using the `_embed` query parameter.
+      // That would vastly increase loading time when so many posts are being fetched at once,
+      // most of which are not going to be tapped on anyway.
+
+      Model.media().id(article["featured_media"]).get().then(media => {
+        setCaption(decode(media.caption?.rendered).slice(3, -5))
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      })
 
       return () => {
         if (colorScheme === "light") {
@@ -90,7 +101,7 @@ export default function Post({ route, navigation }) {
         scrollViewBackgroundColor={theme["background-basic-color-1"]}>
         <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType() === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
           <TriggeringView>
-              {caption !== "" && <Text style={{ paddingTop: 8 }} category="s1">{caption}</Text>}
+            {caption !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{caption}</Text>}
             {article["wps_subtitle"] !== "" && <Text style={{ paddingTop: 8 }} category="s1">{article["wps_subtitle"]}</Text>}
             <Byline authors={authors} section={article.parsely.meta.articleSection} sourceName={sourceName} category={displayCategory} date={formatDate(dateInstance, true)} navigation={navigation} />
           </TriggeringView>
@@ -113,15 +124,6 @@ export default function Post({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  body: {
-    fontFamily: "MinionProDisp"
-  },
-  copy: {
-    // marginHorizontal: Margins.articleSides,
-    fontFamily: "LibreFranklinRegular",
-    fontSize: FontSizes.small,
-    // color: THEME.LABEL
-  },
   hoveringText: {
     color: "white",
     marginTop: 20,
