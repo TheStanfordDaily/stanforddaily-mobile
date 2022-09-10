@@ -107,7 +107,7 @@ export default function Home({ navigation }) {
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
             <View>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-                {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
+                {group.map((item, index) =>  <Wildcard item={item} index={index * (outerIndex + 1)} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
               {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator />}
             </View>
