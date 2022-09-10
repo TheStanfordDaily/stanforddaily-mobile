@@ -40,10 +40,6 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true)
-}
-
 export default function Post({ route, navigation }) {
     const { article, sourceName } = route.params
     const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio*width}`
@@ -67,6 +63,7 @@ export default function Post({ route, navigation }) {
     const [mostRecentPosition, setMostRecentPosition] = useState(0)
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
     const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
+    // TODO: Add info icon for disclosure about Ad Auris and narration.
     const audioActions = [
       {
         position: 3,
@@ -113,7 +110,6 @@ export default function Post({ route, navigation }) {
     const startTrack = async () => {
       setSpinning(true)
       try {
-        // The headphone icon could become ActivityIndicator while loading. When playing, the icon could become animating vertical bars.
         await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
         await articleAudio.playAsync()
       } catch (error) {
