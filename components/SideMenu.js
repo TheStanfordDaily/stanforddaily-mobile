@@ -23,7 +23,7 @@ export const SideMenu = () => (
     <Switch />
     <Text>Push Notifications</Text>
     </View> */}
-        <View style={styles.sideMenuItem, { marginBottom: 40, flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
+        <View style={{...styles.sideMenuItem, marginBottom: 40, flexDirection: 'row', justifyContent: 'center', marginRight: MARGINS.ARTICLE_SIDES }}>
         <TouchableOpacity onPress={ () => {Linking.openURL('https://open.spotify.com/show/2ty8gvAnvYP31X8TUrFwoj?si=YmnmqxYuSFq8U2mv_P2fCg')}}><Image style={{width: 32, height: 32}} source={require('../media/spotify.png')} /></TouchableOpacity>
         <TouchableOpacity style={{ marginLeft: 10 }} onPress={ ()=>{ Linking.openURL('https://www.youtube.com/channel/UCWg3QqUzqxXt6herm5sMjNw')}}><Ionicons name="logo-youtube" size={32} /></TouchableOpacity>
         </View>
