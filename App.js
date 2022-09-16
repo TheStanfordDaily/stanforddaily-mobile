@@ -95,7 +95,7 @@ export default function App() {
         style={{ width: 260, height: 30 }}
         source={logoAssets[theme]}
       />
-    ),
+    )
   }
 
   const detailHeaderOptions = ({ navigation, route }) => {

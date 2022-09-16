@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View } from "react-native"
-import { Divider, Layout } from "@ui-kitten/components"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -35,9 +35,17 @@ export default function Home({ navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
-    const { deviceType } = useContext(ThemeContext)
+    const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
     const batchSize = 18
+
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => console.log("tapped")}>
+            <Icon name={ "search-outline"} width={24} height={24} fill={useTheme() === "dark" ? "white" : "black"} />
+        </TouchableOpacity>
+      )
+    })
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -103,9 +111,12 @@ export default function Home({ navigation }) {
         Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))
 
         // TODO: If humor or opinions are empty, retrieve more posts specific to those sections.
+        
       }
 
-      Model.posts().perPage(batchSize/2).page(pageNumber*2 + 2).get().then(posts => {
+      console.log(navigation.options)
+
+      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
           setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
         } else {
