@@ -12,6 +12,7 @@ import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
+import { BlurView } from "@react-native-community/blur";
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json")
@@ -30,6 +31,7 @@ export default function Home({ navigation }) {
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
+    const [searching, setSearching] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
@@ -99,6 +101,8 @@ export default function Home({ navigation }) {
 
         // Retrieve second batch.
         Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))
+
+        // TODO: If humor or opinions are empty, retrieve more posts specific to those sections.
       }
 
       Model.posts().perPage(batchSize/2).page(pageNumber*2 + 2).get().then(posts => {
@@ -114,13 +118,14 @@ export default function Home({ navigation }) {
     
     return layoutLoaded && (
       <Layout style={styles.container}>
+        {searching && <BlurView style={styles.absolute} blurType="light" blurAmount={10} reducedTransparencyFallbackColor="white" />}
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={articles[Sections.OPINIONS.slug].length >= 3 ? articles[Sections.OPINIONS.slug] : opinions} navigation={navigation} />
+          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
