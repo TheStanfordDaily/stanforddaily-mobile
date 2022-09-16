@@ -7,26 +7,29 @@ import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
 import { Spacing } from "../constants"
+import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Wlidcard(props) {
     const { navigation, articles, random, verbose, title, item, index } = props
+    const { deviceType } = useContext(ThemeContext)
     
-    const Header = (props) => (
+    const Header = React.memo((props) => (
         <React.Fragment>
             <View>
                 <Text style={styles.header} category="h6">{props.title}</Text>
                 {verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
             </View>
-            
             <Image
-                source={{ uri: `${props.uri}?w=${width*pixelRatio/(true ? 1 : 2)}` }}
-                style={{ flex: 1, height: 192 }}
+            source={{ uri: `${props.uri}?w=${width*pixelRatio/(deviceType === DeviceType.PHONE ? 1 : 2)}` }}
+            style={{ flex: 1, height: 192 }}
             />
+
+            
         </React.Fragment>
-    )
+    ))
 
     const Footer = (props) => (
         <View style={styles.footer}>

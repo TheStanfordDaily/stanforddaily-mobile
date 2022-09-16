@@ -89,13 +89,19 @@ export default function App() {
     dark: DarkTheme
   }
 
-  const headerOptions = {
+  const headerOptions = ({ navigation, route }) => {
+    return {
     headerTitle: () => (
       <Image
         style={{ width: 260, height: 30 }}
         source={logoAssets[theme]}
       />
-    )
+    ),
+    headerRight: () => (
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Section", { category: "CATEGORY_SEARCH", seed: {}, search: true})}>
+          <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+      </TouchableOpacity>
+    )}
   }
 
   const detailHeaderOptions = ({ navigation, route }) => {

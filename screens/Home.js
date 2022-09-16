@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal } from "react-native"
 import { Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
@@ -12,7 +12,7 @@ import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
-import { BlurView } from "@react-native-community/blur";
+import { BlurView } from "expo-blur"
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json")
@@ -31,21 +31,12 @@ export default function Home({ navigation }) {
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
-    const [searching, setSearching] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
     const batchSize = 18
-
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => console.log("tapped")}>
-            <Icon name={ "search-outline"} width={24} height={24} fill={useTheme() === "dark" ? "white" : "black"} />
-        </TouchableOpacity>
-      )
-    })
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -129,7 +120,6 @@ export default function Home({ navigation }) {
     
     return layoutLoaded && (
       <Layout style={styles.container}>
-        {searching && <BlurView style={styles.absolute} blurType="light" blurAmount={10} reducedTransparencyFallbackColor="white" />}
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />

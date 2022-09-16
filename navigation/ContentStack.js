@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Image, Text, Platform } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from '../screens/Home';
-import Search from '../screens/Search';
 import Post from '../screens/Post';
 import Author from '../screens/Author';
 import Category from '../screens/Section';

@@ -1,5 +1,4 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Search from '../screens/Search';
 import Post from '../screens/Post';
 
 const Stack = createNativeStackNavigator();
