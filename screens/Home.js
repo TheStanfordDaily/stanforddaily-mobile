@@ -46,40 +46,29 @@ export default function Home({ navigation }) {
       }
     }
 
-    const assignPosts = (posts) => {
+    const assignPosts = (posts, appendItems) => {
+      
+
       for (let value of Object.values(Sections)) {
-        if (value.slug in articles) {
-          setArticles(articles => ({
-            ...articles,
-            [value.slug]: [...articles[value.slug], posts.filter(items => homeMember(items, value))]
-          }))
-
-          setSeeds(articles => ({
-            ...articles,
-            [value.slug]: [...seeds[value.slug], posts.filter(items => items.categories.includes(value.id))]
-          }))
-        } else {
-          setArticles(articles => ({
-            ...articles,
-            [value.slug]: posts.filter(items => homeMember(items, value))
-          }))
-
-          setSeeds(articles => ({
-            ...articles,
-            [value.slug]: posts.filter(items => items.categories.includes(value.id))
-          }))
-        }
-        
+const homeMembers = posts.filter(items => homeMember(items, value))
+      const homeSeeds = posts.filter(items => items.categories.includes(value.id))
+        setArticles(articles => ({
+          ...articles,
+          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeMembers] : homeMembers
+        }))
         
         setSeeds(articles => ({
           ...articles,
-          [value.slug]: posts.filter(items => items.categories.includes(value.id))
-        }))
+          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
+        }))      
       }
+      const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
+
+
 
       setArticles(articles => ({
         ...articles,
-        "culture": _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4),
+        "culture": ("culture" in articles && appendItems) ? [...articles["culture"], ...cultureMembers] : cultureMembers
       }))
     }
 
@@ -96,7 +85,7 @@ export default function Home({ navigation }) {
         })
 
         Model.posts().perPage(16).page(2).get().then(posts => {
-          assignPosts(posts)
+          assignPosts(posts, true)
         })
       }
 
