@@ -13,10 +13,7 @@ import { minion } from "../custom-fonts"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { useHeaderHeight } from "@react-navigation/elements"
-import { FloatingAction } from "react-native-floating-action"
-import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
 import * as Device from "expo-device"
-import CircleSlider from "react-native-circle-slider"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -24,17 +21,6 @@ const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
 ]
-const articleAudio = new Audio.Sound()
-
-Audio.setAudioModeAsync({
-  playsInSilentModeIOS: true,
-  allowsRecordingIOS: false,
-  staysActiveInBackground: false,
-  interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-  interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-  shouldDuckAndroid: false,
-  playThroughEarpieceAndroid: false
-})
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -49,91 +35,9 @@ export default function Post({ route, navigation }) {
     const authors = article.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: article.coauthors[index]}), {})
     const [displayCategory, setDisplayCategory] = useState({})
     const [caption, setCaption] = useState("")
-    const [audioURL, setAudioURL] = useState("")
-    const [trackStatus, setTrackStatus] = useState({
-        isLoaded: false,
-        isPlaying: false,
-        isBuffering: false,
-        didJustFinish: false,
-        isLooping: false
-    })
-    const [spinning, setSpinning] = useState(false)
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
-    const [mostRecentPosition, setMostRecentPosition] = useState(0)
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
-    const narrationEndpoint = "https://narrations.ad-auris.com/widget/the-stanford-daily/"
-    // TODO: Add info icon for disclosure about Ad Auris and narration.
-    const audioActions = [
-      {
-        position: 3,
-        text: trackStatus.isLoaded ? "" : "Listen to this article", // if track is inactive it says this and otherwise will say play/pause icon and no text
-        name: "play",
-        icon: <Icon name={trackStatus.isPlaying ? "archive-outline" : "arrow-right"} width={30} height={30} fill="white" />,
-        color: theme["color-primary-500"]
-      },
-      {
-        position: 2,
-        name: "stop",
-        icon: <Icon name="square-outline" width={20} height={20} fill="white" />,
-        color: theme["color-primary-500"]
-      },
-      {
-        position: 0,
-        // text: "Skip 15 seconds",
-        name: "skip",
-        icon: <Icon name="skip-forward" width={30} height={30} fill="#242c45" />,
-        color: "#F0F4F4"
-      },
-      {
-        position: 1,
-        // text: "Rewind 15 seconds",
-        name: "rewind",
-        icon: <Icon name="skip-back" width={30} height={30} fill="#242c45" />,
-        color: "#F0F4F4",
-      }
-    ]
-
-    const toggleTrack = async () => {
-      const playbackStatus = await articleAudio.getStatusAsync()
-      if (playbackStatus.isPlaying) {
-        // Pause track.
-        setMostRecentPosition(playbackStatus.positionMillis)
-        await articleAudio.pauseAsync()
-        console.log("Paused: ", playbackStatus)
-      } else {
-        // Resume track.
-        await articleAudio.playFromPositionAsync(mostRecentPosition)
-      }
-    }
-
-    const startTrack = async () => {
-      setSpinning(true)
-      try {
-        await articleAudio.loadAsync({ uri: encodeURI(audioURL) })
-        await articleAudio.playAsync()
-      } catch (error) {
-        console.trace(error)
-      }
-      setSpinning(false)
-    }
-
-    const stopTrack = async () => {
-      await articleAudio.stopAsync()
-      await articleAudio.unloadAsync()
-    }
-
-    const skipTrack = async () => {
-      console.log("skipping")
-      articleAudio.setStatusAsync({ ...(await articleAudio.getStatusAsync()), positionMillis: mostRecentPosition + 15000 })
-      
-      // playbackStatus.positionMillis += 15000
-    }
-
-    const rewindTrack = () => {
-      console.log("rewinding")
-      // playbackStatus.positionMillis -= 15000
-    }
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -154,15 +58,6 @@ export default function Post({ route, navigation }) {
       </View>
     )
 
-    const AudioIcon = () => (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Icon name="headphones-outline" width={25} height={25} backgroundColor={"transparent"} fill="white" />
-        <View style={{ alignItems: "center", alignContent: "center", position: "absolute" }}>
-				  <CircleSlider dialRadius={28} value={trackStatus.isLoaded && 359 * trackStatus.positionMillis / trackStatus.durationMillis} btnRadius={trackStatus.isPlaying ? 2.5 : 0} strokeWidth={5} strokeColor="transparent" textColor="transparent" meterColor={theme["text-basic-color"]} />
-        </View>
-			</View>
-    )
-
     useEffect(() => {
       Promise.all(article.categories.map(category => Model.categories().id(category).get())).then(p => {
         const resolvedCategory = p.filter(q => q.name === article.parsely.meta.articleSection)[0]
@@ -178,29 +73,11 @@ export default function Post({ route, navigation }) {
         setCaption(decode(media.caption?.rendered).slice(3, -5))
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
-
-      // Attempts to retrieve the remote narration file URL for the article.
-      fetch(narrationEndpoint + article.slug).then(response => {
-        const narrationPath = response.ok ? article.slug : generateSlug(decode(article.title.rendered))
-        fetch(narrationEndpoint + narrationPath).then(response => response.text()).then(data => {
-          var matches = data.match(/<meta.*?property="og:audio".*?content="(.*?)"/)
-          if (matches) {
-            let audioURL = matches[1]
-            setAudioURL(audioURL)
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          }
-        }).catch(error => console.log(error))
-      })
-
-      articleAudio.setOnPlaybackStatusUpdate(setTrackStatus)
       
       
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
-        }
-        if (articleAudio) {
-          articleAudio.unloadAsync()
         }
       }
     }, [article])
@@ -243,23 +120,6 @@ export default function Post({ route, navigation }) {
             />
           </View>
         </ImageHeaderScrollView>
-        {audioURL !== "" && (
-            <FloatingAction
-              color={theme["color-primary-500"]}
-              distanceToEdge={Spacing.large}
-              floatingIcon={spinning ? <ActivityIndicator /> : <AudioIcon />}
-              actions={trackStatus.isLoaded ? audioActions : audioActions.slice(0, 1)}
-              onPressItem={async (name) => {
-                switch (name) {
-                  case "play": (await articleAudio.getStatusAsync()).isLoaded ? toggleTrack() : startTrack()
-                  case "stop": stopTrack()
-                  case "skip": skipTrack()
-                  case "rewind": rewindTrack()
-                  default: break
-                }
-              }}
-            />    
-        )}
       </React.Fragment>
     )
 }

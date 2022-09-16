@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View } from "react-native"
 import { Divider, Layout } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
@@ -19,6 +19,12 @@ const localOpinions = require("../opinions.json")
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json")
 
+if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true)
+}
+
+// TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
+
 export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
     const [seeds, setSeeds] = useState({})
@@ -29,6 +35,7 @@ export default function Home({ navigation }) {
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
+    const batchSize = 18
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -46,10 +53,11 @@ export default function Home({ navigation }) {
       }
     }
 
-    const assignPosts = (posts, appendItems) => {
+    const categorizePosts = (posts, appendItems) => {
       for (let value of Object.values(Sections)) {
         const homeMembers = posts.filter(items => homeMember(items, value))
         const homeSeeds = posts.filter(items => items.categories.includes(value.id))
+
         setArticles(articles => ({
           ...articles,
           [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeMembers] : homeMembers
@@ -64,15 +72,16 @@ export default function Home({ navigation }) {
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
       const opinionsMembers = posts.filter(items => items.categories.includes(Sections.OPINIONS.id))
       
-      if (articles[Sections.OPINIONS.slug].length < 3*groupSize) {
+      if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
         setArticles(articles => ({
           ...articles,
           [Sections.OPINIONS.slug]: Sections.OPINIONS.slug in articles ? [...articles[Sections.OPINIONS.slug], ...opinionsMembers] : opinionsMembers
         }))
       }
+      
       setArticles(articles => ({
         ...articles,
-        "culture": ("culture" in articles && appendItems) ? [...articles["culture"], ...cultureMembers] : cultureMembers
+        "culture": ("culture" in articles) ? [...articles["culture"], ...cultureMembers] : cultureMembers
       }))
     }
 
@@ -80,20 +89,19 @@ export default function Home({ navigation }) {
       setArticlesLoading(true)
       if (pageNumber == 1) {
         // Retrieve only the posts that would be immediately visible.
-        Model.posts().perPage(16).get().then(posts => {
-          assignPosts(posts)
+        Model.posts().perPage(batchSize).get().then(posts => {
+          categorizePosts(posts)
         }).catch(error => {
           console.trace(error)
         }).finally(() => {
           setLayoutLoaded(true)
         })
 
-        Model.posts().perPage(16).page(2).get().then(posts => {
-          assignPosts(posts, true)
-        })
+        // Retrieve second batch.
+        Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))
       }
 
-      Model.posts().perPage(16).page(pageNumber + 2).get().then(posts => {
+      Model.posts().perPage(batchSize/2).page(pageNumber*2 + 2).get().then(posts => {
         if ("wildcard" in articles) {
           setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
         } else {
@@ -135,7 +143,6 @@ export default function Home({ navigation }) {
               {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator />}
             </View>
           ))}
-          <ActivityIndicator style={{ marginBottom: Spacing.medium }} />
         </ScrollView>
       </Layout>
     )
