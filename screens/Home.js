@@ -46,31 +46,61 @@ export default function Home({ navigation }) {
       }
     }
 
+    const assignPosts = (posts) => {
+      for (let value of Object.values(Sections)) {
+        if (value.slug in articles) {
+          setArticles(articles => ({
+            ...articles,
+            [value.slug]: [...articles[value.slug], posts.filter(items => homeMember(items, value))]
+          }))
+
+          setSeeds(articles => ({
+            ...articles,
+            [value.slug]: [...seeds[value.slug], posts.filter(items => items.categories.includes(value.id))]
+          }))
+        } else {
+          setArticles(articles => ({
+            ...articles,
+            [value.slug]: posts.filter(items => homeMember(items, value))
+          }))
+
+          setSeeds(articles => ({
+            ...articles,
+            [value.slug]: posts.filter(items => items.categories.includes(value.id))
+          }))
+        }
+        
+        
+        setSeeds(articles => ({
+          ...articles,
+          [value.slug]: posts.filter(items => items.categories.includes(value.id))
+        }))
+      }
+
+      setArticles(articles => ({
+        ...articles,
+        "culture": _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4),
+      }))
+    }
+
     useEffect(() => {
       setArticlesLoading(true)
       if (pageNumber == 1) {
-        Model.posts().perPage(48).get().then(posts => {
-          for (let value of Object.values(Sections)) {
-            setArticles(articles => ({
-              ...articles,
-              [value.slug]: posts.filter(items => homeMember(items, value))
-            }))
-            
-            setSeeds(articles => ({
-              ...articles,
-              [value.slug]: posts.filter(items => items.categories.includes(value.id))
-            }))
-          }
-          setArticles(articles => ({
-            ...articles,
-            "culture": _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4),
-          }))
+        // Retrieve only the posts that would be immediately visible.
+        Model.posts().perPage(16).get().then(posts => {
+          assignPosts(posts)
         }).catch(error => {
           console.trace(error)
-        }).finally(() => setLayoutLoaded(true))
+        }).finally(() => {
+          setLayoutLoaded(true)
+        })
+
+        Model.posts().perPage(16).page(2).get().then(posts => {
+          assignPosts(posts)
+        })
       }
 
-      Model.posts().perPage(16).page(pageNumber + 3).get().then(posts => {
+      Model.posts().perPage(16).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
           setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
         } else {
