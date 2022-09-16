@@ -47,11 +47,9 @@ export default function Home({ navigation }) {
     }
 
     const assignPosts = (posts, appendItems) => {
-      
-
       for (let value of Object.values(Sections)) {
-const homeMembers = posts.filter(items => homeMember(items, value))
-      const homeSeeds = posts.filter(items => items.categories.includes(value.id))
+        const homeMembers = posts.filter(items => homeMember(items, value))
+        const homeSeeds = posts.filter(items => items.categories.includes(value.id))
         setArticles(articles => ({
           ...articles,
           [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeMembers] : homeMembers
@@ -62,10 +60,16 @@ const homeMembers = posts.filter(items => homeMember(items, value))
           [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
         }))      
       }
+      
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
-
-
-
+      const opinionsMembers = posts.filter(items => items.categories.includes(Sections.OPINIONS.id))
+      
+      if (articles[Sections.OPINIONS.slug].length < 3*groupSize) {
+        setArticles(articles => ({
+          ...articles,
+          [Sections.OPINIONS.slug]: Sections.OPINIONS.slug in articles ? [...articles[Sections.OPINIONS.slug], ...opinionsMembers] : opinionsMembers
+        }))
+      }
       setArticles(articles => ({
         ...articles,
         "culture": ("culture" in articles && appendItems) ? [...articles["culture"], ...cultureMembers] : cultureMembers
