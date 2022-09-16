@@ -1,7 +1,7 @@
 
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import { Avatar, Button, Divider, Layout, Text } from "@ui-kitten/components";
+import React from "react"
+import { StyleSheet, View } from "react-native"
+import { Avatar, Button, Divider, Layout, Text } from "@ui-kitten/components"
 
 export default function Profile({ profile }) {
     return (profile &&

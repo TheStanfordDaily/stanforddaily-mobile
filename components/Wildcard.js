@@ -6,8 +6,7 @@ import _ from "lodash"
 import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
-import { deviceType } from "../App"
-import * as Device from "expo-device"
+import { Spacing } from "../constants"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -23,7 +22,7 @@ export default function Wlidcard(props) {
             </View>
             
             <Image
-                source={{ uri: `${props.uri}?w=${width*pixelRatio/(deviceType() === Device.DeviceType.PHONE ? 1 : 2)}` }}
+                source={{ uri: `${props.uri}?w=${width*pixelRatio/(true ? 1 : 2)}` }}
                 style={{ flex: 1, height: 192 }}
             />
         </React.Fragment>
@@ -71,12 +70,12 @@ const styles = StyleSheet.create({
     },
     card: {
         flex: 1,
-        marginHorizontal: 8,
+        marginHorizontal: Spacing.medium,
         marginVertical: 4
     },
     container: {
         flex: 1,
-        paddingHorizontal: 8,
+        paddingHorizontal: Spacing.medium,
         paddingVertical: 4
     }
 })

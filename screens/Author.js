@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from 'react-native';
-import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
-import { Margins, Spacing } from '../constants';
-import Model from "../Model";
-import { decode } from "html-entities";
-import { formatDate, stringMode } from "../helpers/format";
-import * as Device from "expo-device";
-import { deviceType } from '../App';
+import React, { useContext, useEffect, useState } from "react"
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from "react-native"
+import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components"
+import { Margins, Spacing } from "../constants"
+import Model from "../Model"
+import { decode } from "html-entities"
+import { formatDate, stringMode } from "../helpers/format"
+import { ThemeContext } from "../theme-context"
+import * as Device from "expo-device"
 
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Author({ route, navigation }) {
@@ -18,7 +18,8 @@ export default function Author({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-    const groupSize = deviceType() === Device.DeviceType.PHONE ? 2 : 3
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3
 
     const Header = ({ uri }) => (
         // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
@@ -47,6 +48,7 @@ export default function Author({ route, navigation }) {
         // FIXME: Not all of the asynchronous tasks are being canceled, so there needs to be a cleanup function to avoid a memory leak.
     }, [pageNumber])
 
+    
     return (
         <Layout style={styles.container}>
             <List

@@ -1,30 +1,30 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { navigate, logoAssets, statusBarStyles } from "./navigation";
-import * as Font from "expo-font";
+import React, { useState, useEffect, useRef } from "react"
+import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native"
+import { SafeAreaProvider } from "react-native-safe-area-context"
+import { navigate, logoAssets, statusBarStyles } from "./navigation"
+import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app"; 
+import { initializeApp } from "firebase/app" 
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
-import { getPostAsync } from "./helpers/wpapi"
 import { Strings } from "./constants"
-import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
-import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import * as eva from "@eva-design/eva"
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
+import { EvaIconsPack } from "@ui-kitten/eva-icons"
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import Post from "./screens/Post";
-import Home from "./screens/Home";
-import Section from "./screens/Section";
-import { ThemeContext } from "./theme-context";
-import Author from "./screens/Author";
-import { minion } from "./custom-fonts";
-import { decode } from "html-entities";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
+import { createStackNavigator } from "@react-navigation/stack"
+import Post from "./screens/Post"
+import Home from "./screens/Home"
+import Section from "./screens/Section"
+import { ThemeContext } from "./theme-context"
+import Author from "./screens/Author"
+import { minion } from "./custom-fonts"
+import { decode } from "html-entities"
+import Model from "./Model"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -61,6 +61,7 @@ export default function App() {
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
+    StatusBar.setBarStyle((next === "light" ? "dark" : "light") + "-content")
   }
 
   const onShare = async (url, title) => {
@@ -142,6 +143,8 @@ export default function App() {
       }
     })
 
+    Device.getDeviceTypeAsync().then(setDeviceType)
+
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
       StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
@@ -156,7 +159,7 @@ export default function App() {
 
     // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      getPostAsync(response.notification.request.trigger.payload.body.postID).then(result => {
+      Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then((result) => {
         navigate(Strings.post, { item: result })
       })
     })
@@ -167,10 +170,11 @@ export default function App() {
     }
   }, [])
 
+  
       return (fontsLoaded &&
         <NavigationContainer theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
-          <ThemeContext.Provider value={{ theme, toggleTheme }}>
+          <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
               <SafeAreaProvider>
                 <Stack.Navigator initialRouteName="Home">
@@ -231,11 +235,4 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
-}
-
-export const deviceType = () => {
-  Device.getDeviceTypeAsync().then(result => {
-    return result
-  })
-  return Device.DeviceType.PHONE
 }
