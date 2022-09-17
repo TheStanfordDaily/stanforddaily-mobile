@@ -13,6 +13,7 @@ import _ from "lodash"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
 import { BlurView } from "expo-blur"
+import Section from "./Section"
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json")
@@ -37,6 +38,7 @@ export default function Home({ navigation }) {
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
     const batchSize = 18
+    const [dynamicOpinions, setDynamicOpinions] = useState([])
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -73,12 +75,12 @@ export default function Home({ navigation }) {
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
       const opinionsMembers = posts.filter(items => items.categories.includes(Sections.OPINIONS.id))
       
-      if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
-        setArticles(articles => ({
-          ...articles,
-          [Sections.OPINIONS.slug]: Sections.OPINIONS.slug in articles ? [...articles[Sections.OPINIONS.slug], ...opinionsMembers] : opinionsMembers
-        }))
-      }
+      // if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
+      //   setArticles(articles => ({
+      //     ...articles,
+      //     [Sections.OPINIONS.slug]: Sections.OPINIONS.slug in articles ? [...articles[Sections.OPINIONS.slug], ...opinionsMembers] : opinionsMembers
+      //   }))
+      // }
       
       setArticles(articles => ({
         ...articles,
@@ -100,12 +102,21 @@ export default function Home({ navigation }) {
 
         // Retrieve second batch.
         Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))
+        
+        
 
         // TODO: If humor or opinions are empty, retrieve more posts specific to those sections.
+
         
       }
 
       console.log(navigation.options)
+
+      Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
+        let intermediate = [...articles[Sections.OPINIONS.slug], ...posts]
+              setArticles(articles => ({...articles, "opinions": posts}))
+
+      })
 
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
@@ -121,6 +132,7 @@ export default function Home({ navigation }) {
     return layoutLoaded && (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
+          <Text>{JSON.stringify(articles["opinions"])}</Text>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
