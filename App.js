@@ -128,6 +128,10 @@ export default function App() {
     }
   }
 
+  const searchHeaderOptions = {
+    headerTintColor: bread[theme]["color-primary-500"]
+  }
+
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
@@ -178,7 +182,7 @@ export default function App() {
   }, [])
 
   
-      return (fontsLoaded &&
+      return fontsLoaded && (
         <NavigationContainer theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
@@ -207,9 +211,9 @@ export default function App() {
                     options={({ route }) => ({ headerTitle: () => <Text category="h4">{route.params.name}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
                   />
                   <Stack.Screen
-                  name="Search"
-                  component={Search}
-                    options={({ route }) => ({ headerTintColor: bread[theme]["color-primary-500"] })}
+                    name="Search"
+                    component={Search}
+                    options={searchHeaderOptions}
                   />
                 </Stack.Navigator>
               </SafeAreaProvider>

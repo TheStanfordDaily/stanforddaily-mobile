@@ -1,14 +1,13 @@
 import { useTheme } from "@react-navigation/native"
-import { Button, Icon, Input, Layout, List, Text } from "@ui-kitten/components"
+import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity } from "react-native"
 import Wlidcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../constants"
 import Fuse from "fuse.js"
-import { search } from "superagent"
 
 const { width, height } = Dimensions.get("window")
 
@@ -55,35 +54,35 @@ export default function Search({ route, navigation }) {
     return articles.length === 0 || searching ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
           {tags.map((tag, index) => (
-          <Button key={index} appearance='ghost' status='primary' onPress={() => {
+          <TouchableOpacity key={index} onPress={() => {
             setSearchText(tag.name)
             setSearching(true)
             performSearch()
           }}>
             {tag.name.toUpperCase()}
-          </Button>
+          </TouchableOpacity>
           ))}
         </Layout>
     ) : (
-      <Layout style={{ flex: 1 }}>
-        <List
-            data={articles}
-            style={{ backgroundColor: "transparent" }}
-            numColumns={columnCount}
-            key={columnCount}
-            scrollEventThrottle={perPageNumber}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={1}
-            onEndReached={() => {
-                if (!articlesLoading) {
-                    setPageNumber(pageNumber + 1)
-                }
-            }}
-            renderItem={({ item, index }) => (
-                <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-            )}
-            ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
-        />
-      </Layout>
+        <Layout style={{ flex: 1 }}>
+          <List
+              data={articles}
+              style={{ backgroundColor: "transparent" }}
+              numColumns={columnCount}
+              key={columnCount}
+              scrollEventThrottle={perPageNumber}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold={1}
+              onEndReached={() => {
+                  if (!articlesLoading) {
+                      setPageNumber(pageNumber + 1)
+                  }
+              }}
+              renderItem={({ item, index }) => (
+                  <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+              )}
+              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+          />
+        </Layout>
     )
 }
