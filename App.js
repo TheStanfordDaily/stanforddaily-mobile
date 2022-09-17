@@ -25,6 +25,7 @@ import Author from "./screens/Author"
 import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
+import Search from "./screens/Search"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -98,7 +99,7 @@ export default function App() {
       />
     ),
     headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Section", { category: "CATEGORY_SEARCH", seed: {}, search: true})}>
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Search")}>
           <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
       </TouchableOpacity>
     )}
@@ -204,6 +205,11 @@ export default function App() {
                     name="Author"
                     component={Author}
                     options={({ route }) => ({ headerTitle: () => <Text category="h4">{route.params.name}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
+                  />
+                  <Stack.Screen
+                  name="Search"
+                  component={Search}
+                    options={({ route }) => ({ headerTintColor: bread[theme]["color-primary-500"] })}
                   />
                 </Stack.Navigator>
               </SafeAreaProvider>
