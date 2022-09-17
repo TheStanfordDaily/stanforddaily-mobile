@@ -8,6 +8,7 @@ import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../constants"
 import Fuse from "fuse.js"
+import { search } from "superagent"
 
 const { width, height } = Dimensions.get("window")
 
@@ -23,12 +24,16 @@ export default function Search({ route, navigation }) {
     const [searching, setSearching] = useState(false)
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
-    const fuse = new Fuse(articles, { includeScore: true, keys: ["title.rendered", "content.rendered", "parsely.meta.creator", "tags"] })
 
     const performSearch = () => {
-      Model.posts().perPage(perPageNumber).search("Marriage Pact").get().then((posts) => {
+      Model.posts().perPage(perPageNumber).search(searchText).get().then((posts) => {
         setArticles(posts)
-      }).finally(() => setSearching(false))
+        // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
+        // console.log(fuse.search("dragon"))
+      }).finally(() => {
+        
+        setSearching(false)
+      })
     }
 
     navigation.setOptions({
