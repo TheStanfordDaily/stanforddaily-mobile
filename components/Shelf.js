@@ -5,7 +5,7 @@ import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
 import { formatDate, itemize } from "../helpers/format"
-import * as Device from "expo-device"
+import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
 import { Spacing } from "../constants"
 
@@ -16,7 +16,7 @@ export default function Shelf(props) {
     const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
     const { deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
+    const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
 
     var shelfArticles = props.articles
     while (shelfArticles.length % (3*groupSize) != 0) {

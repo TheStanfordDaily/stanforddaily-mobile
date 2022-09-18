@@ -7,6 +7,7 @@ import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../constants"
+import { RecyclerListView } from "recyclerlistview"
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -39,8 +40,8 @@ export default function Section({ route, navigation }) {
     return (
       themeContext.theme === "dark" ? (
         <Layout style={{ flex: 1 }}>
-            <List
-                data={articles}
+            <RecyclerListView
+                dataProvider={articles}
                 style={{ backgroundColor: "transparent" }}
                 numColumns={columnCount}
                 key={columnCount}
@@ -52,7 +53,7 @@ export default function Section({ route, navigation }) {
                         setPageNumber(pageNumber + 1)
                     }
                 }}
-                renderItem={({ item, index }) => (
+                rowRenderer={({ item, index }) => (
                     <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
                 )}
                 ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
@@ -60,8 +61,8 @@ export default function Section({ route, navigation }) {
         </Layout>
       ) : (
         <View style={{ flex: 1 }}>
-            <List
-                data={articles}
+            <RecyclerListView
+                dataProvider={articles}
                 scrollEventThrottle={perPageNumber}
                 numColumns={columnCount}
                 key={columnCount}
@@ -71,7 +72,7 @@ export default function Section({ route, navigation }) {
                         setPageNumber(pageNumber + 1)
                     }
                 }}
-                renderItem={({ item, index }) => (
+                rowRenderer={({ item, index }) => (
                     <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
                 )}
                 ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}

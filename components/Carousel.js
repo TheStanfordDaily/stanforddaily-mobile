@@ -8,7 +8,7 @@ import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
 import { Spacing } from "../constants"
 import { ThemeContext } from "../theme-context"
-import * as Device from "expo-device"
+import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -16,7 +16,7 @@ const pixelRatio = PixelRatio.get()
 export default function Carousel(props) {
     const { navigation, articles } = props
     const { theme, deviceType } = useContext(ThemeContext)
-    const carouselHeight = deviceType === Device.DeviceType.PHONE ? 300 : 350
+    const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350
     
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.

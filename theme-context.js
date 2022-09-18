@@ -1,8 +1,8 @@
 import React from "react";
-import * as Device from "expo-device"
+import { DeviceType } from "expo-device"
 
 export const ThemeContext = React.createContext({
   theme: "light",
   toggleTheme: () => {},
-  deviceType: Device.DeviceType.PHONE
+  deviceType: DeviceType.PHONE
 })

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal } from "react-native"
-import { Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
+import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal, Image, PixelRatio, Dimensions } from "react-native"
+import { Card, Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -10,8 +10,13 @@ import Wildcard from "../components/Wildcard"
 import Model from "../Model"
 import { Sections, Spacing } from "../constants"
 import _ from "lodash"
-import * as Device from "expo-device"
+import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
+import { Freeze } from "react-freeze"
+import { decode } from "html-entities"
+import { itemize } from "../helpers/format"
+const { width, height } = Dimensions.get("window")
+const pixelRatio = PixelRatio.get()
 
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json")
@@ -19,6 +24,17 @@ const localHumor = require("../humor.json")
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
+
+const WCard = (props) => (
+  <Card
+      style={styles.card}
+      header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
+      footer={<Footer byline={itemize(item.parsely?.meta?.creator?.map(name => name.toUpperCase()))} section={item.parsely?.meta?.articleSection}/>}
+      {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
+  >
+      <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
+  </Card>
+)
 
 // TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
 
@@ -30,7 +46,7 @@ export default function Home({ navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
+    const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 18
 
     const homeMember = (article, section) => {
@@ -144,7 +160,13 @@ export default function Home({ navigation }) {
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
             <View>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-                {group.map((item, index) =>  <Wildcard item={item} index={index * (outerIndex + 1)} key={item.id.toString()} navigation={navigation} verbose />)}
+                {group.map((item, index) =>  (
+                              <Image
+                              source={{ uri: `${item["jetpack_featured_media_url"]}?w=${width*pixelRatio/(deviceType === DeviceType.PHONE ? 1 : 2)}` }}
+                              style={{ flex: 1, height: 192 }}
+                          />
+
+                ))}
               </View>
               {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>

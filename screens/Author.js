@@ -6,7 +6,7 @@ import Model from "../Model"
 import { decode } from "html-entities"
 import { formatDate, stringMode } from "../helpers/format"
 import { ThemeContext } from "../theme-context"
-import * as Device from "expo-device"
+import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -19,7 +19,7 @@ export default function Author({ route, navigation }) {
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const { deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3
+    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3
 
     const Header = ({ uri }) => (
         // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
