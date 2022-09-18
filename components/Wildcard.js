@@ -44,7 +44,7 @@ export default function Wildcard(props) {
     return (
         <Card
             style={styles.card}
-            header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
+            header={<Header verbose={verbose} title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
             footer={<Footer byline={itemize(item.parsely?.meta?.creator?.map(name => name.toUpperCase()))} section={item.parsely?.meta?.articleSection}/>}
             {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
         >

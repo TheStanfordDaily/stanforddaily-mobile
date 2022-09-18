@@ -11,6 +11,11 @@ import { DeviceType } from "expo-device"
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
+const Header = ({ uri }) => (
+    // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
+    <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/2}` }} style={{ height: 140 }} />
+)
+
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
     const [pageNumber, setPageNumber] = useState(1)
@@ -19,12 +24,7 @@ export default function Author({ route, navigation }) {
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const { deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3
-
-    const Header = ({ uri }) => (
-        // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
-        <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/groupSize}` }} style={{ height: 140 }} />
-    )
+    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3    
 
     useEffect(() => {
         setArticlesLoading(true)
@@ -45,7 +45,8 @@ export default function Author({ route, navigation }) {
         
         setArticlesLoading(false)
 
-        // FIXME: Not all of the asynchronous tasks are being canceled, so there needs to be a cleanup function to avoid a memory leak.
+        // FIXME: Add clean-up function.
+        // Not all of the asynchronous tasks are being canceled, leadinfg to memory leaks.
     }, [pageNumber])
 
     

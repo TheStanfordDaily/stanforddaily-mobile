@@ -15,6 +15,8 @@ import { ThemeContext } from "../theme-context"
 import { Freeze } from "react-freeze"
 import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
+import { async } from "@firebase/util"
+import RSVP from "rsvp"
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
@@ -99,24 +101,20 @@ export default function Home({ navigation }) {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
 
-        // Retrieve second batch.
-        const batch = Model.posts().perPage(batchSize).page(2).get()
-        const extra = Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
-        const promises = [batch, extra]
         
-        // If an infrequent section is empty after initial call, retrieve more for those categories.
-        if (articles[Sections.OPINIONS.slug]?.length >= 3*groupSize) {
-          promises.pop()
-        }
+        console.log(articles[Sections.OPINIONS.slug]?.length)
+        RSVP.hash({
+          posts: Model.posts().perPage(batchSize).page(2),
+          opinions: Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize)
+        }).then(results => {
+          categorizePosts(results.posts, true)
+          setArticles(articles => ({...articles, [Sections.OPINIONS.slug]: results.opinions}))
+        })
 
-        Promise.all(promises).then(([posts, opinions]) => {
-          categorizePosts(posts, true)
-          // TODO: Use `LayoutAnimation.Presets.spring`.
-          setArticles(articles => ({
-            ...articles,
-            [Sections.OPINIONS.slug]: [...articles[Sections.OPINIONS.slug], ...opinions]
-          }))
-        })        
+
+ 
+
+        
       }
 
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
@@ -160,10 +158,7 @@ export default function Home({ navigation }) {
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
             <View>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-                {group.map((item, index) =>  (
-                          <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />
-
-                ))}
+                {group.map((item, index) =>   <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
               {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
