@@ -161,10 +161,7 @@ export default function Home({ navigation }) {
             <View>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) =>  (
-                              <Image
-                              source={{ uri: `${item["jetpack_featured_media_url"]}?w=${width*pixelRatio/(deviceType === DeviceType.PHONE ? 1 : 2)}` }}
-                              style={{ flex: 1, height: 192 }}
-                          />
+                          <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />
 
                 ))}
               </View>
