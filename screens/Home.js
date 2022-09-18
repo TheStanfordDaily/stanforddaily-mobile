@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal, Image, PixelRatio, Dimensions } from "react-native"
+import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
 import { Card, Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
