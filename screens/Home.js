@@ -12,8 +12,6 @@ import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
-import { BlurView } from "expo-blur"
-import Section from "./Section"
 
 // There are too few recent opinions at time of writing.
 const localOpinions = require("../opinions.json")
@@ -97,26 +95,22 @@ export default function Home({ navigation }) {
         }).catch(error => {
           console.trace(error)
         }).finally(() => {
+          // TODO: If an infrequent section is empty after initial call, retrieve more for those categories.
+          // set articles opinions(await Model)
+          if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
+            setArticles(async articles => ({
+              ...articles,
+              [Sections.OPINIONS.slug]: await Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
+            }))
+          }
           setLayoutLoaded(true)
         })
 
         // Retrieve second batch.
-        Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))
-        
-        
-
-        // TODO: If humor or opinions are empty, retrieve more posts specific to those sections.
-
-        
+        Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))        
       }
 
       console.log(navigation.options)
-
-      Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
-        let intermediate = [...articles[Sections.OPINIONS.slug], ...posts]
-              setArticles(articles => ({...articles, "opinions": posts}))
-
-      })
 
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
@@ -129,10 +123,18 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     
+    /* if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
+      Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
+        setArticles(articles => ({...articles, "opinions": posts}))
+      })
+      // LayoutAnimatioins spring and now show opinions Shelf
+    }*/
+
+
+    
     return layoutLoaded && (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
-          <Text>{JSON.stringify(articles["opinions"])}</Text>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
