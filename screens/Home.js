@@ -105,11 +105,15 @@ export default function Home({ navigation }) {
 
         // Retrieve second batch.
         const batch = Model.posts().perPage(batchSize).page(2).get()
-        // const extra = new Promise()
-        const promises = [batch]
-        if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {}
         const leftovers = Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
-        Promise.all([batch, leftovers]).then(([posts, opinions]) => {
+        // const extra = new Promise()
+        const promises = [batch, leftovers]
+        
+        
+        if (articles[Sections.OPINIONS.slug]?.length >= 3*groupSize) {
+          promises.pop()
+        }
+        Promise.all(promises).then(([posts, opinions]) => {
           // console.log(opinions)
           categorizePosts(posts, true)
           setArticles(articles => ({
