@@ -118,10 +118,12 @@ export default function Home({ navigation }) {
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          <Collapsible collapsed={articles[Sections.OPINIONS.slug].length < 3*groupSize} duration={400}>
-            <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-            <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
-          </Collapsible>
+          {articles[Sections.OPINIONS.slug]?.length >= 3*groupSize && (
+            <React.Fragment>
+              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+            </React.Fragment>
+          )}
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
