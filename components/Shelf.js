@@ -1,24 +1,27 @@
-import React, { useState } from "react"
-import { Dimensions, View, StyleSheet, Image, PixelRatio } from "react-native"
+import React, { useContext, useState } from "react"
+import { Dimensions, View, StyleSheet, Image, PixelRatio, LayoutAnimation } from "react-native"
 import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
 import { formatDate, itemize } from "../helpers/format"
-import * as Device from "expo-device"
-import { deviceType } from "../App"
+import { DeviceType } from "expo-device"
+import { ThemeContext } from "../theme-context"
+import { Spacing } from "../constants"
 
 const pixelRatio = PixelRatio.get()
+const fontScale = PixelRatio.getFontScale()
 const { width, height } = Dimensions.get("window")
 
 export default function Shelf(props) {
     const theme = useTheme()
     const inactiveColor = theme[props.alternate ? "color-primary-600" : "background-color-basic-2"]
-    const groupSize = deviceType() === Device.DeviceType.PHONE ? 1 : 2
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
 
-    var opinionsArticles = props.articles
-    while (opinionsArticles.length % 3 != 0) {
-        opinionsArticles.pop()
+    var shelfArticles = props.articles
+    while (shelfArticles.length % (3*groupSize) != 0) {
+        shelfArticles.pop()
     }
     
     const Accessory = (props) => (
@@ -26,8 +29,8 @@ export default function Shelf(props) {
     )
 
     return (
-        <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
-            {_.chunk(opinionsArticles, 3 * groupSize).map((triplet, index) => (
+        <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} scrollEnabled={shelfArticles?.length > 3*groupSize} overdrag>
+            {_.chunk(shelfArticles, 3*groupSize).map((triplet, index) => (
                 <View style={{ flex: 1, flexDirection: "row" }}>
                     {_.chunk(triplet, 3).map((group, outerIndex) => (<View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>
                     {group.map((item) => (
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         minHeight: 300,
-        paddingHorizontal: 8,
+        paddingHorizontal: Spacing.medium,
         padddingVertical: 4
     },
     image: {

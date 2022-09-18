@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from 'react-native';
-import { Card, Layout, List, Tab, TabBar, Text } from '@ui-kitten/components';
-import { Margins, Spacing } from '../constants';
-import Model from "../Model";
-import { decode } from "html-entities";
-import { formatDate, stringMode } from "../helpers/format";
-import * as Device from "expo-device";
-import { deviceType } from '../App';
+import React, { useContext, useEffect, useState } from "react"
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from "react-native"
+import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components"
+import { Margins, Spacing } from "../constants"
+import Model from "../Model"
+import { decode } from "html-entities"
+import { formatDate, stringMode } from "../helpers/format"
+import { ThemeContext } from "../theme-context"
+import { DeviceType } from "expo-device"
 
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
+
+const Header = ({ uri }) => (
+    // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
+    <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/2}` }} style={{ height: 140 }} />
+)
 
 export default function Author({ route, navigation }) {
     const { name, id } = route.params
@@ -18,12 +23,8 @@ export default function Author({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(true)
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-    const groupSize = deviceType() === Device.DeviceType.PHONE ? 2 : 3
-
-    const Header = ({ uri }) => (
-        // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
-        <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/groupSize}` }} style={{ height: 140 }} />
-    )
+    const { deviceType } = useContext(ThemeContext)
+    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3    
 
     useEffect(() => {
         setArticlesLoading(true)
@@ -44,9 +45,11 @@ export default function Author({ route, navigation }) {
         
         setArticlesLoading(false)
 
-        // FIXME: Not all of the asynchronous tasks are being canceled, so there needs to be a cleanup function to avoid a memory leak.
+        // FIXME: Add clean-up function.
+        // Not all of the asynchronous tasks are being canceled, leadinfg to memory leaks.
     }, [pageNumber])
 
+    
     return (
         <Layout style={styles.container}>
             <List

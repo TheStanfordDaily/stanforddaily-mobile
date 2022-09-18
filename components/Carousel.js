@@ -6,18 +6,17 @@ import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
 import { itemize } from "../helpers/format"
-import { Sections } from "../constants"
+import { Spacing } from "../constants"
 import { ThemeContext } from "../theme-context"
-import * as Device from "expo-device"
-import { deviceType } from "../App"
+import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Carousel(props) {
-    const theme = useTheme()
     const { navigation, articles } = props
-    const themeContext = useContext(ThemeContext)
+    const { theme, deviceType } = useContext(ThemeContext)
+    const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350
     
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
@@ -46,17 +45,17 @@ export default function Carousel(props) {
     )
 
     return (
-        <PagerView style={styles.container} initialPage={0} overdrag>
+        <PagerView style={{...styles.container, height: carouselHeight}} initialPage={0} overdrag>
             {articles.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card
-                          style={{ flex: 1, height: 300, marginHorizontal: 5, borderColor: themeContext.theme == "light" ? theme["color-basic-default"] : "transparent" }}
+                          style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: theme === "light" ? "#E7EBF3" : "transparent" }}
                           header={<Header source={item["jetpack_featured_media_url"]} />}
                           footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                           <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
-                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: theme["color-primary-600"] }} category="s2">
+                          <Text style={{ marginHorizontal: -10, marginBottom: -5, color: useTheme()["color-primary-600"] }} category="s2">
                             {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
                           </Text>
                       </Card>
@@ -70,9 +69,9 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       height: 300,
-      paddingHorizontal: 8,
+      paddingHorizontal: Spacing.medium,
       paddingVertical: 4,
-      marginTop: 8
+      marginTop: Spacing.medium
     },
     tab: {
         height: 192,
