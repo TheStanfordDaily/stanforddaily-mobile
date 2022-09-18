@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Dimensions, View, StyleSheet, Image, PixelRatio } from "react-native"
+import { Dimensions, View, StyleSheet, Image, PixelRatio, LayoutAnimation } from "react-native"
 import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
@@ -10,6 +10,7 @@ import { ThemeContext } from "../theme-context"
 import { Spacing } from "../constants"
 
 const pixelRatio = PixelRatio.get()
+const fontScale = PixelRatio.getFontScale()
 const { width, height } = Dimensions.get("window")
 
 export default function Shelf(props) {
@@ -28,7 +29,7 @@ export default function Shelf(props) {
     )
 
     return (
-        <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} overdrag>
+        <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} scrollEnabled={shelfArticles?.length > 3*groupSize} overdrag>
             {_.chunk(shelfArticles, 3*groupSize).map((triplet, index) => (
                 <View style={{ flex: 1, flexDirection: "row" }}>
                     {_.chunk(triplet, 3).map((group, outerIndex) => (<View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>

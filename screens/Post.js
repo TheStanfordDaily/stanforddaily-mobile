@@ -17,6 +17,7 @@ import * as Device from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
+const fontScale = PixelRatio.getFontScale()
 const systemFonts = [
     ...Object.keys(minion).map(key => String(key)),
     ...defaultSystemFonts
@@ -111,7 +112,7 @@ export default function Post({ route, navigation }) {
               customHTMLElementModels={customHTMLElementModels}
               systemFonts={systemFonts}
               contentWidth={width}
-              baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }} // TODO: Replace with PixelRatio.
+              baseStyle={{ fontFamily: "MinionProRegular", fontSize: 20*fontScale, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
               tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }} // The font color is slightly off in Dark Mode.
               renderers={renderers}
               WebView={WebView}

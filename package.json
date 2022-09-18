@@ -41,6 +41,7 @@
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
     "react-native-circle-slider": "^2.9.0",
+    "react-native-collapsible": "^1.6.0",
     "react-native-dotenv": "^3.3.1",
     "react-native-floating-action": "^1.22.0",
     "react-native-gesture-handler": "~2.2.1",

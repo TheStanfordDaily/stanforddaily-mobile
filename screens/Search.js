@@ -59,7 +59,7 @@ export default function Search({ route, navigation }) {
             setSearching(true)
             performSearch()
           }}>
-            {tag.name.toUpperCase()}
+            <Text category="label">{tag.name.toUpperCase()}</Text>
           </TouchableOpacity>
           ))}
         </Layout>
@@ -81,7 +81,7 @@ export default function Search({ route, navigation }) {
               renderItem={({ item, index }) => (
                   <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
               )}
-              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
     )

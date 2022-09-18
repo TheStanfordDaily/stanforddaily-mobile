@@ -13,8 +13,7 @@ import _ from "lodash"
 import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
 import RSVP from "rsvp"
-const { width, height } = Dimensions.get("window")
-const pixelRatio = PixelRatio.get()
+import Collapsible from "react-native-collapsible"
 
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json")
@@ -119,12 +118,10 @@ export default function Home({ navigation }) {
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles[Sections.OPINIONS.slug].length >= 3*groupSize && (
-            <React.Fragment>
-              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
-            </React.Fragment>
-          )}
+          <Collapsible collapsed={articles[Sections.OPINIONS.slug].length < 3*groupSize} duration={400}>
+            <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+            <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+          </Collapsible>
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
