@@ -109,12 +109,9 @@ export default function Home({ navigation }) {
         }).then(results => {
           categorizePosts(results.posts, true)
           setArticles(articles => ({...articles, [Sections.OPINIONS.slug]: results.opinions}))
+        }).catch(error => {
+          console.trace(error)
         })
-
-
- 
-
-        
       }
 
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
