@@ -6,6 +6,7 @@ import Wlidcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
+import { Spacing } from "../constants"
 
 export default function Section({ route, navigation }) {
     const { category, seed } = route.params
@@ -54,7 +55,7 @@ export default function Section({ route, navigation }) {
                 renderItem={({ item, index }) => (
                     <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
                 )}
-                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             />
         </Layout>
       ) : (
@@ -73,7 +74,7 @@ export default function Section({ route, navigation }) {
                 renderItem={({ item, index }) => (
                     <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
                 )}
-                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator />}
+                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             />
         </View>
       )

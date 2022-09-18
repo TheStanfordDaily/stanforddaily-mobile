@@ -146,7 +146,7 @@ export default function Home({ navigation }) {
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) =>  <Wildcard item={item} index={index * (outerIndex + 1)} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
-              {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator />}
+              {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
           ))}
         </ScrollView>
