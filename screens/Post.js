@@ -54,7 +54,7 @@ export default function Post({ route, navigation }) {
     const Foreground = () => (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <Text category={deviceType === Device.DeviceType.PHONE ? "h4" : "h2"} style={{...styles.hoveringText, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60}}>{decode(article.title.rendered)}</Text>
-        {article["wps_subtitle"]?.length > 0 && <Text category="s1" style={{ ...styles.hoveringText, fontFamily: "MinionProBoldIt", marginTop: 10, paddingHorizontal: 10 }}>{article["wps_subtitle"]}</Text>}
+        {article["wps_subtitle"]?.length > 0 && <Text category="s1" style={{ ...styles.hoveringText, fontFamily: "MinionProBoldIt", marginTop: 10, paddingHorizontal: deviceType === Device.DeviceType.PHONE ? 20 : 60 }}>{article["wps_subtitle"]}</Text>}
       </View>
     )
 
@@ -112,7 +112,7 @@ export default function Post({ route, navigation }) {
               systemFonts={systemFonts}
               contentWidth={width}
               baseStyle={{ fontFamily: "MinionProRegular", fontSize: deviceType === Device.DeviceType.PHONE ? 18 : 22, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }} // TODO: Replace with PixelRatio.
-              tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
+              tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }} // The font color is slightly off in Dark Mode.
               renderers={renderers}
               WebView={WebView}
               backgroundColor={theme["background-color-basic-2"]}

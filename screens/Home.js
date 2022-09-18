@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal } from "react-native"
 import { Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
@@ -12,9 +12,6 @@ import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import * as Device from "expo-device"
 import { ThemeContext } from "../theme-context"
-
-// There are too few recent opinions at time of writing.
-const localOpinions = require("../opinions.json")
 
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json")
@@ -31,12 +28,10 @@ export default function Home({ navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
-    const opinions = localOpinions.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === Device.DeviceType.PHONE ? 1 : 2
     const batchSize = 18
-    const [dynamicOpinions, setDynamicOpinions] = useState([])
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -71,21 +66,11 @@ export default function Home({ navigation }) {
       }
       
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
-      const opinionsMembers = posts.filter(items => items.categories.includes(Sections.OPINIONS.id))
-      
-      // if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
-      //   setArticles(articles => ({
-      //     ...articles,
-      //     [Sections.OPINIONS.slug]: Sections.OPINIONS.slug in articles ? [...articles[Sections.OPINIONS.slug], ...opinionsMembers] : opinionsMembers
-      //   }))
-      // }
-      
+
       setArticles(articles => ({
         ...articles,
         "culture": ("culture" in articles) ? [...articles["culture"], ...cultureMembers] : cultureMembers
       }))
-
-      
     }
 
     useEffect(() => {
@@ -96,48 +81,27 @@ export default function Home({ navigation }) {
           categorizePosts(posts)
         }).catch(error => {
           console.trace(error)
-        }).finally(() => {
-          // TODO: If an infrequent section is empty after initial call, retrieve more for those categories.
-          // set articles opinions(await Model)
-          
-          setLayoutLoaded(true)
-        })
+        }).finally(() => setLayoutLoaded(true))
 
         // Retrieve second batch.
         const batch = Model.posts().perPage(batchSize).page(2).get()
-        const leftovers = Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
-        // const extra = new Promise()
-        const promises = [batch, leftovers]
+        const extra = Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
+        const promises = [batch, extra]
         
-        
+        // If an infrequent section is empty after initial call, retrieve more for those categories.
         if (articles[Sections.OPINIONS.slug]?.length >= 3*groupSize) {
           promises.pop()
         }
+
         Promise.all(promises).then(([posts, opinions]) => {
-          // console.log(opinions)
           categorizePosts(posts, true)
+          // TODO: Use `LayoutAnimation.Presets.spring`.
           setArticles(articles => ({
             ...articles,
-            [Sections.OPINIONS.slug]: opinions
+            [Sections.OPINIONS.slug]: [...articles[Sections.OPINIONS.slug], ...opinions]
           }))
-        })
-        // Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true)).then(() => {
-        //   if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
-        //     Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
-        //       console.log("posts: ", posts)
-        //       setArticles(articles => ({
-        //         ...articles,
-        //         [Sections.OPINIONS.slug]: posts
-        //       }))
-        //     })
-            
-        //   }
-        // }) 
-        
-        
+        })        
       }
-
-      console.log(navigation.options)
 
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
@@ -150,15 +114,6 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     
-    /* if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
-      Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
-        setArticles(articles => ({...articles, "opinions": posts}))
-      })
-      // LayoutAnimatioins spring and now show opinions Shelf
-    }*/
-
-
-    
     return layoutLoaded && (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
@@ -166,8 +121,12 @@ export default function Home({ navigation }) {
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+          {articles[Sections.OPINIONS.slug].length >= 3*groupSize && (
+            <React.Fragment>
+              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+            </React.Fragment>
+          )}
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
