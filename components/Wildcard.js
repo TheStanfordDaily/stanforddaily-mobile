@@ -7,12 +7,9 @@ import { decode } from "html-entities"
 import { ThemeContext } from "../theme-context"
 import { formatDate, itemize } from "../helpers/format"
 import { Spacing } from "../constants"
-import { DeviceType } from "expo-device"
-import { Freeze } from "react-freeze"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
-var hasLoaded = false
 
 const Header = (props) => (
     <React.Fragment>
@@ -20,13 +17,7 @@ const Header = (props) => (
             <Text style={styles.header} category="h6">{props.title}</Text>
             {props.verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
         </View>
-        <Freeze freeze={hasLoaded}>
-        <Image
-                source={{ uri: `${props.uri}?w=${width*pixelRatio}` }}
-                style={{ flex: 1, height: 192 }}
-            />
-        </Freeze>
-
+        <Image source={{ uri: `${props.uri}?w=${width*pixelRatio}` }} style={{ flex: 1, height: 192 }} />
     </React.Fragment>
 )
 
@@ -40,7 +31,6 @@ const Footer = (props) => (
 export default function Wildcard(props) {
     const { navigation, articles, random, verbose, title, item, index } = props
 
-    
     return (
         <Card
             style={styles.card}

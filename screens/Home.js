@@ -12,10 +12,6 @@ import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
-import { Freeze } from "react-freeze"
-import { decode } from "html-entities"
-import { itemize } from "../helpers/format"
-import { async } from "@firebase/util"
 import RSVP from "rsvp"
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -26,17 +22,6 @@ const localHumor = require("../humor.json")
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
-
-const WCard = (props) => (
-  <Card
-      style={styles.card}
-      header={<Header title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
-      footer={<Footer byline={itemize(item.parsely?.meta?.creator?.map(name => name.toUpperCase()))} section={item.parsely?.meta?.articleSection}/>}
-      {...{...props, onPress: () => navigation.push("Post", { article: item, sourceName: title })}}
-  >
-      <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
-  </Card>
-)
 
 // TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
 
@@ -95,14 +80,16 @@ export default function Home({ navigation }) {
       setArticlesLoading(true)
       if (pageNumber == 1) {
         // Retrieve only the posts that would be immediately visible.
+
         Model.posts().perPage(batchSize).get().then(posts => {
           categorizePosts(posts)
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
 
-        
-        console.log(articles[Sections.OPINIONS.slug]?.length)
+        // Retrieve second batch.
+        // If an infrequent section is empty after initial call, retrieve more for those categories.
+
         RSVP.hash({
           posts: Model.posts().perPage(batchSize).page(2),
           opinions: Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize)
