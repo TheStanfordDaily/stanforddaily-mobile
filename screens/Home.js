@@ -84,6 +84,8 @@ export default function Home({ navigation }) {
         ...articles,
         "culture": ("culture" in articles) ? [...articles["culture"], ...cultureMembers] : cultureMembers
       }))
+
+      
     }
 
     useEffect(() => {
@@ -97,17 +99,38 @@ export default function Home({ navigation }) {
         }).finally(() => {
           // TODO: If an infrequent section is empty after initial call, retrieve more for those categories.
           // set articles opinions(await Model)
-          if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
-            setArticles(async articles => ({
-              ...articles,
-              [Sections.OPINIONS.slug]: await Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
-            }))
-          }
+          
           setLayoutLoaded(true)
         })
 
         // Retrieve second batch.
-        Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true))        
+        const batch = Model.posts().perPage(batchSize).page(2).get()
+        // const extra = new Promise()
+        const promises = [batch]
+        if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {}
+        const leftovers = Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get()
+        Promise.all([batch, leftovers]).then(([posts, opinions]) => {
+          // console.log(opinions)
+          categorizePosts(posts, true)
+          setArticles(articles => ({
+            ...articles,
+            [Sections.OPINIONS.slug]: opinions
+          }))
+        })
+        // Model.posts().perPage(batchSize).page(2).get().then(posts => categorizePosts(posts, true)).then(() => {
+        //   if (articles[Sections.OPINIONS.slug]?.length < 3*groupSize) {
+        //     Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize).get().then(posts => {
+        //       console.log("posts: ", posts)
+        //       setArticles(articles => ({
+        //         ...articles,
+        //         [Sections.OPINIONS.slug]: posts
+        //       }))
+        //     })
+            
+        //   }
+        // }) 
+        
+        
       }
 
       console.log(navigation.options)
