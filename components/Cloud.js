@@ -1,16 +1,19 @@
 import React from "react"
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native"
-import { Button } from "@ui-kitten/components"
+import { Text } from "@ui-kitten/components"
 import { Spacing } from "../constants"
+import { decode } from "html-entities"
 
 export default function Cloud({ navigation, tags }) {
   return (
     <View style={styles.container}>
       {tags.map((tag, index) => (
-        <React.Fragment>
-          <Button onPress={() => console.log("go to search and fill search bar")} style={{ borderRadius: 100, marginTop: Spacing.small, flexGrow: 1/2 }}>{tag.name}</Button>
-          <View style={{ width: Spacing.small }}></View>
-        </React.Fragment>
+        <View style={{ paddingHorizontal: 1 }}>
+          <TouchableOpacity key={index} onPress={() => console.log(`go to search and fill search bar with "${tag.name}"`)} style={{ marginTop: Spacing.small, }}>
+              <Text category="label" status="primary">{decode(tag.name).toUpperCase()}</Text>
+          </TouchableOpacity>
+        </View>
+        
       ))}
     </View>
   )
@@ -20,9 +23,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     flexWrap: "wrap",
-    marginRight: -Spacing.small,
-    marginTop: Spacing.large
+    marginTop: Spacing.large,
+    marginHorizontal: Spacing.large
   }
 })
