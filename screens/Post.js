@@ -78,18 +78,8 @@ export default function Post({ route, navigation }) {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      // const promises = article.tags.map(tag => ({ [tag]: Model.tags().id(tag) }))
-      // const promises = { ...(article.tags.map(tag => ({[tag]: "dfs"}))) }
-      // console.log("promises", promises)
-      // Model.tags().id(article.tags?.[0]).get().then(response => console.log(response))
-      const prs = Object.assign({}, ...article.tags.map(tag => ({[tag]: Model.tags().id(tag).get()})))
-      // console.log(prs)
-      RSVP.hash(prs).then(async results => {
-        // for (let value of Object.values(await results)) {
-        //   console.log(value.name)
-        // }
-        setTags(Object.values(await results))
-      })
+      const tagRequests = Object.assign({}, ...article.tags.map(tag => ({[tag]: Model.tags().id(tag).get()})))
+      RSVP.hash(tagRequests).then(async results => setTags(Object.values(await results)))
       
       
       return () => {
