@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
-import { Icon, Text, useTheme } from "@ui-kitten/components"
+import { Divider, Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
 import Content, { defaultSystemFonts } from "react-native-render-html"
@@ -14,6 +14,8 @@ import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { useHeaderHeight } from "@react-navigation/elements"
 import * as Device from "expo-device"
+import Cloud from "../components/Cloud"
+import RSVP from "rsvp"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -39,6 +41,7 @@ export default function Post({ route, navigation }) {
     const { deviceType } = useContext(ThemeContext)
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
+    const [tags, setTags] = useState([])
 
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
@@ -73,6 +76,19 @@ export default function Post({ route, navigation }) {
       Model.media().id(article["featured_media"]).get().then(media => {
         setCaption(decode(media.caption?.rendered).slice(3, -5))
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      })
+
+      // const promises = article.tags.map(tag => ({ [tag]: Model.tags().id(tag) }))
+      // const promises = { ...(article.tags.map(tag => ({[tag]: "dfs"}))) }
+      // console.log("promises", promises)
+      // Model.tags().id(article.tags?.[0]).get().then(response => console.log(response))
+      const prs = Object.assign({}, ...article.tags.map(tag => ({[tag]: Model.tags().id(tag).get()})))
+      // console.log(prs)
+      RSVP.hash(prs).then(async results => {
+        // for (let value of Object.values(await results)) {
+        //   console.log(value.name)
+        // }
+        setTags(Object.values(await results))
       })
       
       
@@ -119,6 +135,8 @@ export default function Post({ route, navigation }) {
               backgroundColor={theme["background-color-basic-2"]}
               enableExperimentalMarginCollapsing
             />
+            <Divider />
+            <Cloud tags={tags} />
           </View>
         </ImageHeaderScrollView>
       </React.Fragment>
