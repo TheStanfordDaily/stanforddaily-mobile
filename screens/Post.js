@@ -78,7 +78,7 @@ export default function Post({ route, navigation }) {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      const tagRequests = Object.assign({}, ...article.tags.map(tag => ({[tag]: Model.tags().id(tag).get()})))
+      const tagRequests = Object.assign({}, ...article.tags.map(tag => ({ [tag]: Model.tags().id(tag).get() })))
       RSVP.hash(tagRequests).then(async results => setTags(Object.values(await results)))
       
       
