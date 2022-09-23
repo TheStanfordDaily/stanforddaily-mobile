@@ -12,7 +12,7 @@ export const navigationRef = createNavigationContainerRef()
 navigationRef.addListener('state', async e => {
   const eventState = e.data.state
   const screenName = eventState?.routes[eventState?.index].name
-  await Analtyics.logEvent("screen_view", { screenName } )
+  // await Analtyics.logEvent("screen_view", { screenName } )
 })
 
 export function navigate(name, params) {
