@@ -14,6 +14,7 @@ import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
 import RSVP from "rsvp"
 import Collapsible from "react-native-collapsible"
+import * as Analytics from "expo-firebase-analytics"
 
 // There are too few recent humor articles at time of writing.
 const localHumor = require("../humor.json")

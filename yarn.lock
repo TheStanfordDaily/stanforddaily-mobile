@@ -3039,6 +3039,16 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
+ajv@^8.11.0:
+  version "8.11.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-8.11.0.tgz#977e91dd96ca669f54a11e23e378e33b884a565f"
+  integrity sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==
+  dependencies:
+    fast-deep-equal "^3.1.1"
+    json-schema-traverse "^1.0.0"
+    require-from-string "^2.0.2"
+    uri-js "^4.2.2"
+
 anser@^1.4.9:
   version "1.4.10"
   resolved "https://registry.yarnpkg.com/anser/-/anser-1.4.10.tgz#befa3eddf282684bd03b63dcda3927aef8c2e35b"
@@ -4535,6 +4545,15 @@ expo-blur@~11.1.0:
   resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-11.1.0.tgz#21f9f0d28da1c326646c459813c9343b6da5e20f"
   integrity sha512-7ClB+fIYoFXaTyY4jAMBmJmgs3Dz0EWNbpgFCC4v/sSxldg5jSbMUXLXUttnRhKRmIzPB2gufcgoOWfNwA3q7g==
 
+expo-build-properties@~0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.2.0.tgz#604514bb133f6a5d082af35f80ca706446902caa"
+  integrity sha512-9GcZ+lReZf5mjtdu1Vn7anSMMCRzoktiJ9S4DcXEJ6as36QFPsYbpEI3xrH7VrfR6i/pdysCNgYbme+IaeEIaQ==
+  dependencies:
+    "@expo/config-plugins" "~4.1.4"
+    ajv "^8.11.0"
+    semver "^7.3.5"
+
 expo-constants@~13.1.0, expo-constants@~13.1.1:
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.1.1.tgz#78c26c760cc63cd5608bc4b51bd159d7339d8054"
@@ -4608,6 +4627,20 @@ expo-file-system@~14.0.0:
   dependencies:
     "@expo/config-plugins" "^4.0.14"
     uuid "^3.4.0"
+
+expo-firebase-analytics@~7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/expo-firebase-analytics/-/expo-firebase-analytics-7.0.0.tgz#ca8b07fa27a60215364865dc1339c195a646d388"
+  integrity sha512-bDM+d6P0RbQbgAJQ2+Az/VHtMIbtKObdeR7UIsiB/m6HjGxqz8lO5/A6gkNbC1f24B0mQj5QEhR6Vwcdrbv9/w==
+  dependencies:
+    expo-firebase-core "~5.0.0"
+
+expo-firebase-core@~5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/expo-firebase-core/-/expo-firebase-core-5.0.0.tgz#0cdea28eafa8a4c45a30790d45354ef07522a755"
+  integrity sha512-OQ4oIuv+FyJ+tXc/bNulm7gAwYfEvt5yVVtr2ia6aqln+tsnVsNooyAMI+aJZ3y264rNXUocLGRN1TwV11DRsQ==
+  dependencies:
+    expo-constants "~13.1.0"
 
 expo-font@~10.1.0:
   version "10.1.0"
@@ -4798,7 +4831,7 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-fast-deep-equal@^3.1.3:
+fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==
@@ -6105,6 +6138,11 @@ json-schema-deref-sync@^0.13.0:
     memory-cache "~0.2.0"
     traverse "~0.6.6"
     valid-url "~1.0.9"
+
+json-schema-traverse@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/json-schema-traverse/-/json-schema-traverse-1.0.0.tgz#ae7bcb3656ab77a73ba5c49bf654f38e6b6860e2"
+  integrity sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==
 
 json5@^0.5.1:
   version "0.5.1"
@@ -7514,6 +7552,11 @@ pump@^3.0.0:
   dependencies:
     end-of-stream "^1.1.0"
     once "^1.3.1"
+
+punycode@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
+  integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
 qrcode-terminal@0.11.0:
   version "0.11.0"
@@ -9086,6 +9129,13 @@ unset-value@^1.0.0:
   dependencies:
     has-value "^0.3.1"
     isobject "^3.0.0"
+
+uri-js@^4.2.2:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/uri-js/-/uri-js-4.4.1.tgz#9b1a52595225859e55f669d928f88c6c57f2a77e"
+  integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
+  dependencies:
+    punycode "^2.1.0"
 
 urijs@^1.19.6:
   version "1.19.7"

@@ -5,7 +5,7 @@ import { navigate, logoAssets, statusBarStyles } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app" 
+import { initializeApp } from "firebase/app"
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
@@ -26,6 +26,7 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
+import { navigationRef } from "./navigation/index"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -141,7 +142,7 @@ export default function App() {
       if (Object.keys(firebaseConfig).length > 0) {
         const app = initializeApp(firebaseConfig)
         const db = getDatabase(app)
-        var matches = expoPushToken.match(/\[(.*?)\]/)
+        var matches = token?.match(/\[(.*?)\]/)
         if (matches) {
           var submatch = matches[1]
           const auth = getAuth(app)
@@ -184,7 +185,7 @@ export default function App() {
 
   
       return fontsLoaded && (
-        <NavigationContainer theme={navigatorTheme[theme]}>
+        <NavigationContainer ref={navigationRef} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
