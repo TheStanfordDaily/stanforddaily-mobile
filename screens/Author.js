@@ -46,7 +46,7 @@ export default function Author({ route, navigation }) {
         setArticlesLoading(false)
 
         // FIXME: Add clean-up function.
-        // Not all of the asynchronous tasks are being canceled, leadinfg to memory leaks.
+        // Not all of the asynchronous tasks are being canceled, leading to memory leaks.
     }, [pageNumber])
 
     
