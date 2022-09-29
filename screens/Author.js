@@ -24,7 +24,7 @@ export default function Author({ route, navigation }) {
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const { deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3    
+    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3
 
     useEffect(() => {
         setArticlesLoading(true)
