@@ -46,7 +46,15 @@ export default function Post({ route, navigation }) {
       const preSlug = pruned.split("/")
       const slug = (preSlug[preSlug.length - 1])
       if (url.includes("stanforddaily.com")) {
-        console.log(slug)
+        // console.log(slug)
+        // Hopefully this doesn't take too long to load. Might have to preload.
+        Model.posts().slug(slug).embed().then(result => {
+          if (result.length > 0) {
+            navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" })
+          }
+        }).catch(error => console.trace(error))
+      } else {
+        Linking.openURL(url)
       }
       
       // console.log(recirculation[slug[slug.length - 1]])
@@ -54,9 +62,7 @@ export default function Post({ route, navigation }) {
       // const arr = [...article.content.rendered.matchAll(regexp)]
 
       // const pruned = matches[1]?.replace("/", "")
-      Model.posts().slug(pruned).embed().then((result) => {
-        console.log(result)
-      }).catch(error => console.trace(error))
+      
       
     }
 
