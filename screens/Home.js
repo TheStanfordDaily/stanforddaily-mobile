@@ -64,7 +64,7 @@ export default function Home({ navigation }) {
         setSeeds(articles => ({
           ...articles,
           [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
-        }))      
+        }))
       }
       
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager, Linking } from "react-native"
 import { Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
@@ -40,6 +40,34 @@ export default function Post({ route, navigation }) {
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
 
+    const openArticleIfPresent = (url) => {
+      console.log(url)
+      if ("stanforddaily.com" in url.toLowerCase()) {
+        /*if (url[-1] === "/") {
+          url = url.slice(0, -1)
+        }*/
+        url = url[-1] === "/" ? url.slice(0, -1) : url
+        const slug = url.split("/")[-1]
+
+        if (article) {
+          Model.posts().slug(slug).embed().then((result) => {
+            navigate("Post", { item: result })
+          })
+        } else {
+          Linking.openURL(url)
+        }
+      } else {
+        Linking.openURL(url)
+      }
+    }
+
+    
+
+    const tokenize = () => {
+      // Preloads all Daily URLs that could potentially be tapped.
+      
+    }
+
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
       // iframe: IframeRenderer,
@@ -74,7 +102,19 @@ export default function Post({ route, navigation }) {
         setCaption(decode(media.caption?.rendered).slice(3, -5))
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
+
+      /*let tokens = article?.content?.rendered .match(/(https?:\/\/)?stanforddaily.com\/\d\/\d\/\d\/[\w-]+/)
+      for (let match of tokens) {
+        console.log(match)
+      }*/
+
+      // console.log(article.content.rendered.match(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/))
+      // console.log(article.content.rendered.matchAll(/stanforddaily.com\/(.*)/g))
+      // console.log("stanforddaily.com\nstanforddaily.com".match(/stanforddaily.com/))
       
+      const regexp = /stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)"/g // /(stanforddaily.com)/g;
+      const arr = [...article.content.rendered.matchAll(regexp)]
+      console.log(arr);
       
       return () => {
         if (colorScheme === "light") {
@@ -115,6 +155,7 @@ export default function Post({ route, navigation }) {
               baseStyle={{ fontFamily: "MinionProRegular", fontSize: 20*fontScale, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
               tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }} // The font color is slightly off in Dark Mode.
               renderers={renderers}
+              renderersProps={{ a: { onPress: (e, href) => openArticleIfPresent(href) } }}
               WebView={WebView}
               backgroundColor={theme["background-color-basic-2"]}
               enableExperimentalMarginCollapsing

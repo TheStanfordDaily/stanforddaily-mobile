@@ -169,8 +169,9 @@ export default function App() {
       setNotification(notification)
     })
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
+    // This listener is fired whenever a user taps on or interacts with a notification.
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      // Works when app is foregrounded, backgrounded or killed.
       Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then((result) => {
         navigate(Strings.post, { item: result })
       })
