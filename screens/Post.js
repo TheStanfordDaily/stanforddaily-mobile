@@ -41,13 +41,13 @@ export default function Post({ route, navigation }) {
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
 
     const openArticleIfPresent = (url) => {
-
       const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url
       const preSlug = pruned.split("/")
       const slug = (preSlug[preSlug.length - 1])
-      if (url.includes("stanforddaily.com")) {
-        // console.log(slug)
-        // Hopefully this doesn't take too long to load. Might have to preload.
+      
+      // Hopefully this doesn't take too long to load. Might have to preload.
+
+      if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {        
         Model.posts().slug(slug).embed().then(result => {
           if (result.length > 0) {
             navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" })
@@ -55,22 +55,7 @@ export default function Post({ route, navigation }) {
         }).catch(error => console.trace(error))
       } else {
         Linking.openURL(url)
-      }
-      
-      // console.log(recirculation[slug[slug.length - 1]])
-      // const regexp = /stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)"/g // /(stanforddaily.com)/g;
-      // const arr = [...article.content.rendered.matchAll(regexp)]
-
-      // const pruned = matches[1]?.replace("/", "")
-      
-      
-    }
-
-    
-
-    const tokenize = () => {
-      // Preloads all Daily URLs that could potentially be tapped.
-      
+      }      
     }
 
     const renderers = {
@@ -108,15 +93,7 @@ export default function Post({ route, navigation }) {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
 
-      /*let tokens = article?.content?.rendered .match(/(https?:\/\/)?stanforddaily.com\/\d\/\d\/\d\/[\w-]+/)
-      for (let match of tokens) {
-        console.log(match)
-      }*/
 
-      // console.log(article.content.rendered.match(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/))
-      // console.log(article.content.rendered.matchAll(/stanforddaily.com\/(.*)/g))
-      // console.log("stanforddaily.com\nstanforddaily.com".match(/stanforddaily.com/))
-      
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
