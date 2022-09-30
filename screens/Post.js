@@ -41,24 +41,23 @@ export default function Post({ route, navigation }) {
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
 
     const openArticleIfPresent = (url) => {
-      console.log(url)
-      if ("stanforddaily.com" in url.toLowerCase()) {
-        /*if (url[-1] === "/") {
-          url = url.slice(0, -1)
-        }*/
-        url = url[-1] === "/" ? url.slice(0, -1) : url
-        const slug = url.split("/")[-1]
 
-        if (article) {
-          Model.posts().slug(slug).embed().then((result) => {
-            navigate("Post", { item: result })
-          })
-        } else {
-          Linking.openURL(url)
-        }
-      } else {
-        Linking.openURL(url)
+      const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url
+      const preSlug = pruned.split("/")
+      const slug = (preSlug[preSlug.length - 1])
+      if (url.includes("stanforddaily.com")) {
+        console.log(slug)
       }
+      
+      // console.log(recirculation[slug[slug.length - 1]])
+      // const regexp = /stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)"/g // /(stanforddaily.com)/g;
+      // const arr = [...article.content.rendered.matchAll(regexp)]
+
+      // const pruned = matches[1]?.replace("/", "")
+      Model.posts().slug(pruned).embed().then((result) => {
+        console.log(result)
+      }).catch(error => console.trace(error))
+      
     }
 
     
@@ -111,10 +110,6 @@ export default function Post({ route, navigation }) {
       // console.log(article.content.rendered.match(/<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/))
       // console.log(article.content.rendered.matchAll(/stanforddaily.com\/(.*)/g))
       // console.log("stanforddaily.com\nstanforddaily.com".match(/stanforddaily.com/))
-      
-      const regexp = /stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)"/g // /(stanforddaily.com)/g;
-      const arr = [...article.content.rendered.matchAll(regexp)]
-      console.log(arr);
       
       return () => {
         if (colorScheme === "light") {
