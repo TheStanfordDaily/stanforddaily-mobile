@@ -193,13 +193,8 @@ export default function App() {
             const name = getActiveRouteName(e)
             if (!(name in seen)) {
               analytics.hit(new PageHit(name))
-              .then(() => {
-                
-                setSeen(seen.add(name))
-                console.log("success")
-                console.log(seen)
-              })
-              .catch(e => console.log(e.message))
+                .then(() => setSeen(seen.add(name)))
+                .catch(e => console.log(e.message))
             }
           }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
