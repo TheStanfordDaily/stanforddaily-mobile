@@ -26,6 +26,7 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
+import { Analytics, PageHit } from "expo-analytics"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -58,6 +59,8 @@ export default function App() {
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
+  const [seen, setSeen] = useState(new Set())
+  const analytics = new Analytics("G-YF0HWWY9P3")
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -136,12 +139,13 @@ export default function App() {
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-      if (Object.keys(firebaseConfig).length > 0) {
+    if (Object.keys(firebaseConfig).length > 0) {
         const app = initializeApp(firebaseConfig)
+        registerForPushNotificationsAsync().then(token => {
+        setExpoPushToken(token)
         const db = getDatabase(app)
-        var matches = expoPushToken.match(/\[(.*?)\]/)
+        
+        var matches = expoPushToken?.match(/\[(.*?)\]/)
         if (matches) {
           var submatch = matches[1]
           const auth = getAuth(app)
@@ -152,8 +156,8 @@ export default function App() {
             console.log("Could not sign in: ", error)
           })
         }
-      }
-    })
+      })
+    }
 
     Device.getDeviceTypeAsync().then(setDeviceType)
 
@@ -185,7 +189,19 @@ export default function App() {
 
   
       return fontsLoaded && (
-        <NavigationContainer theme={navigatorTheme[theme]}>
+        <NavigationContainer onStateChange={e => {
+            const name = getActiveRouteName(e)
+            if (!(name in seen)) {
+              analytics.hit(new PageHit(name))
+              .then(() => {
+                
+                setSeen(seen.add(name))
+                console.log("success")
+                console.log(seen)
+              })
+              .catch(e => console.log(e.message))
+            }
+          }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
@@ -253,4 +269,24 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
+}
+
+function getActiveRouteName(navigationState) {
+  if (!navigationState) return null;
+  const route = navigationState.routes[navigationState.index];
+  // Traverse the nested navigators.
+  if (route.routes) return getActiveRouteName(route)
+  var out = route.key + "-"
+  if (route.params?.id) {
+    out += route.params?.id
+  } else if (route.params?.article?.id) {
+    out += route.params?.article?.id
+  } else if (route.params?.category?.id) {
+out += route.params?.category?.id
+  } else if (route.params?.name) {
+    out += route.params?.name
+  } else {
+    out = route.key
+  }
+  return out
 }
