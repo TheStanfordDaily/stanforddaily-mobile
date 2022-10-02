@@ -151,7 +151,7 @@ export default function Home({ navigation }) {
       </Layout>
     ) : (
       <Layout style={styles.loading}>
-        <ActivityIndicator  />
+        <ActivityIndicator />
       </Layout>
     )
 }
