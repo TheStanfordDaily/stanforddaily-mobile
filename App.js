@@ -26,7 +26,6 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
-import { Analytics, PageHit } from "expo-analytics"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -60,7 +59,6 @@ export default function App() {
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
-  const analytics = new Analytics("G-YF0HWWY9P3")
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -192,9 +190,9 @@ export default function App() {
         <NavigationContainer onStateChange={e => {
             const name = getActiveRouteName(e)
             if (!(name in seen)) {
-              analytics.hit(new PageHit(name))
-                .then(() => setSeen(seen.add(name)))
-                .catch(e => console.log(e.message))
+              // add change to Firebase database
+                // .then(() => setSeen(seen.add(name)))
+                // .catch(e => console.log(e.message))
             }
           }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
@@ -271,17 +269,19 @@ function getActiveRouteName(navigationState) {
   const route = navigationState.routes[navigationState.index];
   // Traverse the nested navigators.
   if (route.routes) return getActiveRouteName(route)
+  
   var out = route.key + "-"
   if (route.params?.id) {
     out += route.params?.id
   } else if (route.params?.article?.id) {
     out += route.params?.article?.id
   } else if (route.params?.category?.id) {
-out += route.params?.category?.id
+    out += route.params?.category?.id
   } else if (route.params?.name) {
     out += route.params?.name
   } else {
     out = route.key
   }
+  
   return out
 }

@@ -139,7 +139,7 @@ export default function Home({ navigation }) {
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
-            <View>
+            <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) =>   <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
