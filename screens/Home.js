@@ -153,7 +153,6 @@ export default function Home({ navigation }) {
       <Layout style={styles.loading}>
         <ActivityIndicator  />
       </Layout>
-
     )
 }
   

@@ -146,31 +146,37 @@ export default function App() {
     headerTintColor: bread[theme]["color-primary-500"]
   }
 
+  var events = []
+  let app
+  let auth
+  let db
+  if (Object.keys(firebaseConfig).length > 0) {
+    app = initializeApp(firebaseConfig)
+    auth = getAuth(app)
+    db = getDatabase(app)
+  }
+
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
 
     if (Object.keys(firebaseConfig).length > 0) {
-        const app = initializeApp(firebaseConfig)
         
         // console.log(app)
         //alert(JSON.stringify(app))
         registerForPushNotificationsAsync().then(token => {
         setExpoPushToken(token)
-        const db = getDatabase(app)
         var matches = token?.match(/\[(.*?)\]/)
 
       if (matches) {
         alert(JSON.stringify(matches[1]))
           var submatch = matches[1]
-          const auth = getAuth(app)
+          
           
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
             alert("successfully logged in ")
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
-            const analyticsRef = ref(db, "Analytics/" + submatch, userCredential)
-            set(tokenRef, tokenRef["value"] + 1)
-            set(analyticsRef, Date())
+            set(tokenRef, Date())
           })
         }
       })
@@ -209,10 +215,15 @@ export default function App() {
         <NavigationContainer onStateChange={e => {
             const name = getActiveRouteName(e)
             if (!(name in seen)) {
-              // add change to Firebase database
-                // .then(() => setSeen(seen.add(name)))
-                // .catch(e => console.log(e.message))
+              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+                alert("successfully logged in ")
+                const analyticsRef = ref(db, "Analytics/", userCredential).collection("PageViews")
+                push(analyticsRef, e)
+                //push(analyticsRef, e)
+              })
+              events.push(e)
             }
+            console.log(events)
           }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
