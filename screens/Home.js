@@ -112,7 +112,7 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     
-    return layoutLoaded && (
+    return layoutLoaded ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
@@ -149,11 +149,21 @@ export default function Home({ navigation }) {
           ))}
         </ScrollView>
       </Layout>
+    ) : (
+      <Layout style={styles.loading}>
+        <ActivityIndicator  />
+      </Layout>
+
     )
 }
   
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   }
 })

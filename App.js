@@ -26,7 +26,6 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
-import { Analytics, PageHit } from 'expo-analytics';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
