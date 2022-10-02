@@ -161,20 +161,13 @@ export default function App() {
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
 
     if (Object.keys(firebaseConfig).length > 0) {
-        
-        // console.log(app)
-        //alert(JSON.stringify(app))
         registerForPushNotificationsAsync().then(token => {
         setExpoPushToken(token)
         var matches = token?.match(/\[(.*?)\]/)
 
       if (matches) {
-        alert(JSON.stringify(matches[1]))
           var submatch = matches[1]
-          
-          
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
-            alert("successfully logged in ")
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
           })
@@ -216,10 +209,8 @@ export default function App() {
             const name = getActiveRouteName(e)
             if (!(name in seen)) {
               signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
-                alert("successfully logged in ")
-                const analyticsRef = ref(db, "Analytics/", userCredential).collection("PageViews")
-                push(analyticsRef, e)
-                //push(analyticsRef, e)
+                const analyticsRef = ref(db, "Analytics/", userCredential)
+                push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
               })
               events.push(e)
             }
