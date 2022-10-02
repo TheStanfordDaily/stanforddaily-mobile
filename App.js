@@ -7,7 +7,7 @@ import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import { initializeApp } from "firebase/app" 
 import { getDatabase, ref, push, set } from "firebase/database"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { getAuth, signInWithCredential, signInWithEmailAndPassword } from "firebase/auth"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva"
@@ -26,6 +26,7 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
+import { Analytics, PageHit } from 'expo-analytics';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -149,21 +150,28 @@ export default function App() {
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
+
     if (Object.keys(firebaseConfig).length > 0) {
         const app = initializeApp(firebaseConfig)
+        
+        // console.log(app)
+        //alert(JSON.stringify(app))
         registerForPushNotificationsAsync().then(token => {
         setExpoPushToken(token)
         const db = getDatabase(app)
-        
-        var matches = expoPushToken?.match(/\[(.*?)\]/)
-        if (matches) {
+        var matches = token?.match(/\[(.*?)\]/)
+
+      if (matches) {
+        alert(JSON.stringify(matches[1]))
           var submatch = matches[1]
           const auth = getAuth(app)
+          
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+            alert("successfully logged in ")
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
-            set(tokenRef, Date())
-          }).catch((error) => {
-            console.log("Could not sign in: ", error)
+            const analyticsRef = ref(db, "Analytics/" + submatch, userCredential)
+            set(tokenRef, tokenRef["value"] + 1)
+            set(analyticsRef, Date())
           })
         }
       })

@@ -88,6 +88,7 @@ export default function Home({ navigation }) {
 
         // Retrieve second batch.
         // If an infrequent section is empty after initial call, retrieve more for those categories.
+        // TODO: Add humor and logical conditions.
 
         RSVP.hash({
           posts: Model.posts().perPage(batchSize).page(2),
