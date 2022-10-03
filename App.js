@@ -214,7 +214,6 @@ export default function App() {
               })
               events.push(e)
             }
-            console.log(events)
           }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
