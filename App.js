@@ -92,18 +92,18 @@ export default function App() {
 
   const headerOptions = ({ navigation, route }) => {
     return {
-    headerTitle: () => (
-      <Image
-        style={{ width: 260, height: 30 }}
-        source={logoAssets[theme]}
-      />
-    ),
-    /*headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Search")}>
-          <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-      </TouchableOpacity>
-    )*/
-  }
+      headerTitle: () => (
+        <Image
+          style={{ width: 260, height: 30 }}
+          source={logoAssets[theme]}
+        />
+      ),
+      /*headerRight: () => (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Search")}>
+            <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+        </TouchableOpacity>
+      )*/
+    }
   }
 
   const detailHeaderOptions = ({ navigation, route }) => {
