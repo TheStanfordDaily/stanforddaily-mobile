@@ -24,7 +24,7 @@ export default function Author({ route, navigation }) {
     const [authorDetail, setAuthorDetail] = useState(null)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const { deviceType } = useContext(ThemeContext)
-    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3    
+    const groupSize = deviceType === DeviceType.PHONE ? 2 : 3
 
     useEffect(() => {
         setArticlesLoading(true)
@@ -46,7 +46,7 @@ export default function Author({ route, navigation }) {
         setArticlesLoading(false)
 
         // FIXME: Add clean-up function.
-        // Not all of the asynchronous tasks are being canceled, leadinfg to memory leaks.
+        // Not all of the asynchronous tasks are being canceled, leading to memory leaks.
     }, [pageNumber])
 
     

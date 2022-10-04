@@ -31,7 +31,7 @@ export default function Shelf(props) {
     return (
         <PagerView style={[styles.container, { backgroundColor: inactiveColor }]} initialPage={0} scrollEnabled={shelfArticles?.length > 3*groupSize} overdrag>
             {_.chunk(shelfArticles, 3*groupSize).map((triplet, index) => (
-                <View style={{ flex: 1, flexDirection: "row" }}>
+                <View key={index} style={{ flex: 1, flexDirection: "row" }}>
                     {_.chunk(triplet, 3).map((group, outerIndex) => (<View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>
                     {group.map((item) => (
                         <React.Fragment>

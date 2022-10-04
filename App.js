@@ -8,7 +8,6 @@ import * as Notifications from "expo-notifications"
 import { initializeApp } from "firebase/app" 
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
-import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -36,15 +35,15 @@ Notifications.setNotificationHandler({
 })
 
 const firebaseConfig = {
-  apiKey: APIKEY,
+  apiKey: process.env.APIKEY,
   authDomain: "daily-mobile-app-notifications.firebaseapp.com",
   databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
   projectId: "daily-mobile-app-notifications",
   storageBucket: "daily-mobile-app-notifications.appspot.com",
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
-  serviceAccountId: SERVICE_ACCOUNT_ID
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID,
+  serviceAccountId: process.env.SERVICE_ACCOUNT_ID
 }
 
 const Stack = createStackNavigator()
@@ -58,6 +57,7 @@ export default function App() {
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
+  const [seen, setSeen] = useState(new Set())
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -129,31 +129,50 @@ export default function App() {
     }
   }
 
+  const sectionOptions = ({ route }) => ({
+    headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>,
+    headerTitleStyle: { fontFamily: "MinionProBold" },
+    headerTintColor: bread[theme]["color-primary-500"]
+  })
+
+  const authorOptions = ({ route }) => ({
+    headerTitle: () => <Text category="h4">{route.params.name}</Text>,
+    headerTitleStyle: { fontFamily: "MinionProBold" },
+    headerTintColor: bread[theme]["color-primary-500"]
+  })
+
   const searchHeaderOptions = {
     headerTintColor: bread[theme]["color-primary-500"]
+  }
+
+  var events = []
+  let app
+  let auth
+  let db
+  if (Object.keys(firebaseConfig).length > 0) {
+    app = initializeApp(firebaseConfig)
+    auth = getAuth(app)
+    db = getDatabase(app)
   }
 
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
-    registerForPushNotificationsAsync().then(token => {
-      setExpoPushToken(token)
-      if (Object.keys(firebaseConfig).length > 0) {
-        const app = initializeApp(firebaseConfig)
-        const db = getDatabase(app)
-        var matches = expoPushToken.match(/\[(.*?)\]/)
-        if (matches) {
+
+    if (Object.keys(firebaseConfig).length > 0) {
+        registerForPushNotificationsAsync().then(token => {
+        setExpoPushToken(token)
+        var matches = token?.match(/\[(.*?)\]/)
+
+      if (matches) {
           var submatch = matches[1]
-          const auth = getAuth(app)
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
-          }).catch((error) => {
-            console.log("Could not sign in: ", error)
           })
         }
-      }
-    })
+      })
+    }
 
     Device.getDeviceTypeAsync().then(setDeviceType)
 
@@ -169,8 +188,9 @@ export default function App() {
       setNotification(notification)
     })
 
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded or killed).
+    // This listener is fired whenever a user taps on or interacts with a notification.
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      // Works when app is foregrounded, backgrounded or killed.
       Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then((result) => {
         navigate(Strings.post, { item: result })
       })
@@ -184,7 +204,16 @@ export default function App() {
 
   
       return fontsLoaded && (
-        <NavigationContainer theme={navigatorTheme[theme]}>
+        <NavigationContainer onStateChange={e => {
+            const name = getActiveRouteName(e)
+            if (!(name in seen)) {
+              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+                const analyticsRef = ref(db, "Analytics/", userCredential)
+                push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
+              })
+              events.push(e)
+            }
+          }} theme={navigatorTheme[theme]}>
           <IconRegistry icons={EvaIconsPack} />
           <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
             <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
@@ -204,12 +233,12 @@ export default function App() {
                   <Stack.Screen
                     name="Section"
                     component={Section}
-                    options={({ route }) => ({ headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
+                    options={sectionOptions}
                   />
                   <Stack.Screen
                     name="Author"
                     component={Author}
-                    options={({ route }) => ({ headerTitle: () => <Text category="h4">{route.params.name}</Text>, headerTitleStyle: { fontFamily: "MinionProBold" }, headerTintColor: bread[theme]["color-primary-500"] })}
+                    options={authorOptions}
                   />
                   <Stack.Screen
                     name="Search"
@@ -252,4 +281,26 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
+}
+
+function getActiveRouteName(navigationState) {
+  if (!navigationState) return null;
+  const route = navigationState.routes[navigationState.index];
+  // Traverse the nested navigators.
+  if (route.routes) return getActiveRouteName(route)
+  
+  var out = route.key + "-"
+  if (route.params?.id) {
+    out += route.params?.id
+  } else if (route.params?.article?.id) {
+    out += route.params?.article?.id
+  } else if (route.params?.category?.id) {
+    out += route.params?.category?.id
+  } else if (route.params?.name) {
+    out += route.params?.name
+  } else {
+    out = route.key
+  }
+  
+  return out
 }

@@ -44,6 +44,9 @@
     },
     "notification": {
       "icon": "./assets/images/icon.png"
-    }
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
   }
 }

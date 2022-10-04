@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager } from "react-native"
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager, Linking } from "react-native"
 import { Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
@@ -40,6 +40,24 @@ export default function Post({ route, navigation }) {
     const headerHeight = useHeaderHeight()
     const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56
 
+    const openArticleIfPresent = (url) => {
+      const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url
+      const preSlug = pruned.split("/")
+      const slug = (preSlug[preSlug.length - 1])
+      
+      // Hopefully this doesn't take too long to load. Might have to preload.
+
+      if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {        
+        Model.posts().slug(slug).embed().then(result => {
+          if (result.length > 0) {
+            navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" })
+          }
+        }).catch(error => console.trace(error))
+      } else {
+        Linking.openURL(url)
+      }      
+    }
+
     const renderers = {
       // Note: Chrome URL protocol causes a crash with the renderer below.
       // iframe: IframeRenderer,
@@ -74,8 +92,8 @@ export default function Post({ route, navigation }) {
         setCaption(decode(media.caption?.rendered).slice(3, -5))
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       })
-      
-      
+
+
       return () => {
         if (colorScheme === "light") {
           StatusBar.setBarStyle("dark-content", true)
@@ -115,6 +133,7 @@ export default function Post({ route, navigation }) {
               baseStyle={{ fontFamily: "MinionProRegular", fontSize: 20*fontScale, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
               tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }} // The font color is slightly off in Dark Mode.
               renderers={renderers}
+              renderersProps={{ a: { onPress: (e, href) => openArticleIfPresent(href) } }}
               WebView={WebView}
               backgroundColor={theme["background-color-basic-2"]}
               enableExperimentalMarginCollapsing

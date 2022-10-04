@@ -64,7 +64,7 @@ export default function Home({ navigation }) {
         setSeeds(articles => ({
           ...articles,
           [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
-        }))      
+        }))
       }
       
       const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
@@ -88,6 +88,7 @@ export default function Home({ navigation }) {
 
         // Retrieve second batch.
         // If an infrequent section is empty after initial call, retrieve more for those categories.
+        // TODO: Add humor and logical conditions.
 
         RSVP.hash({
           posts: Model.posts().perPage(batchSize).page(2),
@@ -111,7 +112,7 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
 
     
-    return layoutLoaded && (
+    return layoutLoaded ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
@@ -139,7 +140,7 @@ export default function Home({ navigation }) {
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
           {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
-            <View>
+            <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) =>   <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
@@ -148,11 +149,20 @@ export default function Home({ navigation }) {
           ))}
         </ScrollView>
       </Layout>
+    ) : (
+      <Layout style={styles.loading}>
+        <ActivityIndicator />
+      </Layout>
     )
 }
   
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   }
 })
