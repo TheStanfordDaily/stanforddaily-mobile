@@ -7,8 +7,7 @@ import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
 import { initializeApp } from "firebase/app" 
 import { getDatabase, ref, push, set } from "firebase/database"
-import { getAuth, signInWithCredential, signInWithEmailAndPassword } from "firebase/auth"
-import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, FIREBASE_PASSWORD, SERVICE_ACCOUNT_ID } from "@env"
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { Strings } from "./constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -36,15 +35,15 @@ Notifications.setNotificationHandler({
 })
 
 const firebaseConfig = {
-  apiKey: APIKEY,
+  apiKey: process.env.APIKEY,
   authDomain: "daily-mobile-app-notifications.firebaseapp.com",
   databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
   projectId: "daily-mobile-app-notifications",
   storageBucket: "daily-mobile-app-notifications.appspot.com",
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
-  serviceAccountId: SERVICE_ACCOUNT_ID
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID,
+  serviceAccountId: process.env.SERVICE_ACCOUNT_ID
 }
 
 const Stack = createStackNavigator()
@@ -167,7 +166,7 @@ export default function App() {
 
       if (matches) {
           var submatch = matches[1]
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
           })
@@ -208,7 +207,7 @@ export default function App() {
         <NavigationContainer onStateChange={e => {
             const name = getActiveRouteName(e)
             if (!(name in seen)) {
-              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", FIREBASE_PASSWORD).then((userCredential) => {
+              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
                 const analyticsRef = ref(db, "Analytics/", userCredential)
                 push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
               })
