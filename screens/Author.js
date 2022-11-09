@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from "react-native"
+import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet, View, Image } from "react-native"
 import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components"
 import { Margins, Spacing } from "../constants"
 import Model from "../Model"
@@ -7,13 +7,14 @@ import { decode } from "html-entities"
 import { formatDate, stringMode } from "../helpers/format"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
+import Profile from "../components/Profile"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 const Header = ({ uri }) => (
     // There might be a better way to do this: https://reactnative.dev/docs/pixelratio
-    <ImageBackground source={{ uri: `${uri}?w=${width*pixelRatio/2}` }} style={{ height: 140 }} />
+    <ImageBackground source={{ uri: `${uri}?w=${width * pixelRatio / 2}` }} style={{ height: 140 }} />
 )
 
 export default function Author({ route, navigation }) {
@@ -28,30 +29,38 @@ export default function Author({ route, navigation }) {
 
     useEffect(() => {
         setArticlesLoading(true)
-        
+
         if (!possiblyReachedEnd) {
             Model.posts().param("coauthors", id).page(pageNumber).param("_embed", pageNumber === 1).get().then(posts => {
                 setArticles([...articles, ...posts])
                 setArticlesLoading(false)
-                if (pageNumber === 1) {
-                    const descriptions = posts.map(post => post["_embedded"].author.map(a => a.description).reduce((p, q) => p + q))
-                    setAuthorDetail(stringMode(descriptions))
-                }
+                setAuthorDetail({
+                    "avatar_urls": posts[0]["_embedded"].author[0].avatar_urls,
+                    "description": posts[0]["_embedded"].author[0].description
+                })
+                // if (pageNumber === 1) {
+                //     const descriptions = posts.map(post => post["_embedded"].author.map(a => a.description).reduce((p, q) => p + q))
+                //     setAuthorDetail(stringMode(descriptions))
+                // }
             }).catch(error => {
                 console.log(error)
                 setPossiblyReachedEnd(true)
             })
         }
-        
+
         setArticlesLoading(false)
 
         // FIXME: Add clean-up function.
         // Not all of the asynchronous tasks are being canceled, leading to memory leaks.
     }, [pageNumber])
 
-    
+
     return (
         <Layout style={styles.container}>
+            {authorDetail && authorDetail.description ?
+                <Profile profile={authorDetail}/>
+                : <></>
+            }
             <List
                 data={articles}
                 numColumns={groupSize}
@@ -65,13 +74,15 @@ export default function Author({ route, navigation }) {
                     }
                 }}
                 renderItem={({ item }) => (
-                    <Card key={item.id} onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1/groupSize }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
+                    <Card key={item.id} onPress={() => navigation.navigate("Post", { article: item })} style={{ flex: 1 / groupSize }} header={() => <Header uri={item["jetpack_featured_media_url"]} />}>
                         <Text category="p1">{decode(item.title.rendered)}</Text>
                         <Text category="label">{formatDate(new Date(item.date), false)}</Text>
+
                     </Card>
                 )}
                 ListFooterComponent={() => !possiblyReachedEnd && <ActivityIndicator />}
             />
+            
         </Layout>
     )
 }
@@ -79,5 +90,12 @@ export default function Author({ route, navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    author: {
+        flexDirection: "row",
+        padding: 16,
+        justifyContent: "center",
+        alignContent: "center",
+        width: "80%",
     }
 })
