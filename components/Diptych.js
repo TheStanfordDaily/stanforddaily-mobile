@@ -21,7 +21,7 @@ export default function Diptych(props) {
     
     const Header = (props) => (
       <React.Fragment>
-        <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1, height: 192 }} />
+        <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1, height: 150 }} />
       </React.Fragment>
     )
 
