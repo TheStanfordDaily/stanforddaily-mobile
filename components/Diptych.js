@@ -21,7 +21,7 @@ export default function Diptych(props) {
     
     const Header = (props) => (
       <React.Fragment>
-        <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1, height: 150 }} />
+        <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1 }} />
       </React.Fragment>
     )
 
@@ -53,7 +53,7 @@ export default function Diptych(props) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      height: 300,
+      height: 275, // Maybe use PixelRatio here?
       paddingHorizontal: Spacing.medium,
       paddingVertical: 4
     },
@@ -64,9 +64,8 @@ const styles = StyleSheet.create({
     },
     card: {
       flex: 1,
-      height: 300,
+      height: 275, // Maybe use PixelRatio here?
       marginHorizontal: 5
-      // margin: 2
     },
     headerTextContainer: {
       paddingHorizontal: 20,
