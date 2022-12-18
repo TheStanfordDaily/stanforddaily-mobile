@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native"
+import { Appearance, Image, Platform, Share, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets, statusBarStyles } from "./navigation"
 import * as Font from "expo-font"
@@ -67,7 +67,6 @@ export default function App() {
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
-    StatusBar.setBarStyle((next === "light" ? "dark" : "light") + "-content")
   }
 
   const onShare = async (url, title) => {
@@ -126,15 +125,6 @@ export default function App() {
     }
   }
 
-  const detailHeaderListeners = {
-    focus: () => StatusBar.setBarStyle("light-content", true),
-    blur: () => {
-      if (theme === "light") {
-        StatusBar.setBarStyle("dark-content", true)
-      }
-    }
-  }
-
   const sectionOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
@@ -184,7 +174,6 @@ export default function App() {
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
-      StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
       setTheme(listener.colorScheme)
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
     })    
@@ -234,7 +223,6 @@ export default function App() {
                     name="Post"
                     component={Post}
                     options={detailHeaderOptions}
-                    listeners={detailHeaderListeners}
                   />
                   <Stack.Screen
                     name="Section"
