@@ -46,7 +46,7 @@ export default function Carousel(props) {
 
     return (
         <PagerView style={{...styles.container, height: carouselHeight}} initialPage={0} overdrag>
-            {articles.map((item, index) => {
+            {articles?.map((item, index) => {
                 return (
                   <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
                       <Card
