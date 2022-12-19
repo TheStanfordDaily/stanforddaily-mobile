@@ -153,6 +153,6 @@ const styles = StyleSheet.create({
       height: 1
     },
     textAlign: "center",
-    fontFamily: "MinionProBold",
+    fontFamily: "MinionProBold"
   }
 })
