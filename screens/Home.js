@@ -80,13 +80,32 @@ export default function Home({ navigation }) {
       if (pageNumber == 1) {
         // Retrieve only the posts that would be immediately visible.
 
-        Model.posts().perPage(batchSize).get().then(posts => {
-          categorizePosts(posts)
+        RSVP.hash({
+          featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
+          news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
+          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
+          sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
+          humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
+          theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
+          artsLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
+        }).then(results => {
+          for (let key in results) {
+            setArticles(articles => ({
+              ...articles,
+              [key]: results[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+            }))
+            setSeeds(articles => ({
+              ...articles,
+              [key]: results[key]
+            }))
+          }
+          setArticles(articles => ({...articles, "culture": _.shuffle(results.theGrind.concat(results.artsLife)).slice(0, 4) }))
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
       }
 
+      // Load another page.
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
           setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
