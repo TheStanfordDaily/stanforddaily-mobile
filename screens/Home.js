@@ -25,11 +25,10 @@ export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
-    const [articlesLoading, setArticlesLoading] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
-    const batchSize = 48
+    const batchSize = 12
     
     const checkBottom = (e) => {
       let paddingToBottom = 10
@@ -40,8 +39,6 @@ export default function Home({ navigation }) {
     }
 
     useEffect(() => {
-      setArticlesLoading(true)
-
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber == 1) {
         RSVP.hash({
@@ -74,49 +71,43 @@ export default function Home({ navigation }) {
 
       // Load another page.
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
-        if ("wildcard" in articles) {
-          setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
-        } else {
-          setArticles(articles => ({...articles, "wildcard": posts}))
-        }
+        setArticles(articles => ({
+          ...articles,
+          "wildcard": "wildcard" in articles ? [...articles["wildcard"], ...posts] : posts
+        }))
       })
-      setArticlesLoading(false)
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
     
     
-    return layoutLoaded ? (
+    return articles?.featured && articles?.news && articles?.opinions ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles[Sections.OPINIONS.slug]?.length >= 3*groupSize && (
-            <React.Fragment>
-              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
-            </React.Fragment>
-          )}
-          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
-          <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
+          <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+
+          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] || []} navigation={navigation} />
+          <Diptych articles={articles[Sections.SPORTS.slug] || []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {_.chunk(articles.culture, groupSize)?.map((group, outerIndex) => (
+          {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
               {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
             </View>
           ))}
           <Divider />
-          <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
+          <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
+          <Shelf articles={articles[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
           <Divider />
-          {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
-          <Divider />
-          {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
+          {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
+          {_.chunk(articles?.wildcard, groupSize)?.map((group, outerIndex) => (
             <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-                {group.map((item, index) =>   <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
+                {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
-              {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+              {outerIndex === articles?.wildcard?.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
           ))}
         </ScrollView>
