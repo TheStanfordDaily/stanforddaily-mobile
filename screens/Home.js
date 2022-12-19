@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
-import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
 import { Card, Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
@@ -15,9 +15,6 @@ import { ThemeContext } from "../theme-context"
 import RSVP from "rsvp"
 import Collapsible from "react-native-collapsible"
 
-// There are too few recent humor articles at time of writing.
-const localHumor = require("../humor.json")
-
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
@@ -30,7 +27,6 @@ export default function Home({ navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
-    const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 48
@@ -77,9 +73,9 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
       setArticlesLoading(true)
-      if (pageNumber == 1) {
-        // Retrieve only the posts that would be immediately visible.
 
+      // At first, retrieve only the posts that would be immediately visible.
+      if (pageNumber == 1) {
         RSVP.hash({
           featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
           news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
@@ -140,7 +136,7 @@ export default function Home({ navigation }) {
           ))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug]?.length >= 3*groupSize ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
+          <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />
           <Divider />
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />
