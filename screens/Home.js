@@ -84,18 +84,21 @@ export default function Home({ navigation }) {
           humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
           theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
           artsLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
-        }).then(results => {
-          for (let key in results) {
+        }).then(posts => {
+          for (let key in posts) {
             setArticles(articles => ({
               ...articles,
-              [key]: results[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+              [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
             }))
             setSeeds(articles => ({
               ...articles,
-              [key]: results[key]
+              [key]: posts[key]
             }))
           }
-          setArticles(articles => ({...articles, "culture": _.shuffle(results.theGrind.concat(results.artsLife)).slice(0, 4) }))
+          setArticles(articles => ({
+            ...articles,
+            "culture": _.shuffle(posts.theGrind.concat(posts.artsLife)).slice(0, 4)
+          }))
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
