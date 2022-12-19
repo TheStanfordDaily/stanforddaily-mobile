@@ -30,14 +30,6 @@ export default function Home({ navigation }) {
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 48
-
-    const homeMember = (article, section) => {
-      if (section.id === Sections.FEATURED.id) {
-        return article.categories.includes(Sections.FEATURED.id)
-      }
-    
-      return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
-    }
     
     const checkBottom = (e) => {
       let paddingToBottom = 10
@@ -45,30 +37,6 @@ export default function Home({ navigation }) {
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
         setPageNumber(pageNumber + 1)
       }
-    }
-
-    const categorizePosts = (posts, appendItems) => {
-      for (let value of Object.values(Sections)) {
-        const homeMembers = posts.filter(items => homeMember(items, value))
-        const homeSeeds = posts.filter(items => items.categories.includes(value.id))
-
-        setArticles(articles => ({
-          ...articles,
-          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeMembers] : homeMembers
-        }))
-        
-        setSeeds(articles => ({
-          ...articles,
-          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
-        }))
-      }
-      
-      const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
-
-      setArticles(articles => ({
-        ...articles,
-        "culture": ("culture" in articles) ? [...articles["culture"], ...cultureMembers] : cultureMembers
-      }))
     }
 
     useEffect(() => {
