@@ -33,7 +33,7 @@ export default function Home({ navigation }) {
     const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
-    const batchSize = 18
+    const batchSize = 48
 
     const homeMember = (article, section) => {
       if (section.id === Sections.FEATURED.id) {
@@ -80,27 +80,32 @@ export default function Home({ navigation }) {
       if (pageNumber == 1) {
         // Retrieve only the posts that would be immediately visible.
 
-        Model.posts().perPage(batchSize).get().then(posts => {
-          categorizePosts(posts)
+        RSVP.hash({
+          featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
+          news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
+          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
+          sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
+          humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
+          theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
+          artsLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
+        }).then(results => {
+          for (let key in results) {
+            setArticles(articles => ({
+              ...articles,
+              [key]: results[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+            }))
+            setSeeds(articles => ({
+              ...articles,
+              [key]: results[key]
+            }))
+          }
+          setArticles(articles => ({...articles, "culture": _.shuffle(results.theGrind.concat(results.artsLife)).slice(0, 4) }))
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
-
-        // Retrieve second batch.
-        // If an infrequent section is empty after initial call, retrieve more for those categories.
-        // TODO: Add humor and logical conditions.
-
-        RSVP.hash({
-          posts: Model.posts().perPage(batchSize).page(2),
-          opinions: Model.posts().categories(Sections.OPINIONS.id).perPage(3*groupSize)
-        }).then(results => {
-          categorizePosts(results.posts, true)
-          setArticles(articles => ({...articles, [Sections.OPINIONS.slug]: results.opinions}))
-        }).catch(error => {
-          console.trace(error)
-        })
       }
 
+      // Load another page.
       Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
         if ("wildcard" in articles) {
           setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
@@ -110,7 +115,7 @@ export default function Home({ navigation }) {
       })
       setArticlesLoading(false)
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
-
+    
     
     return layoutLoaded ? (
       <Layout style={styles.container}>
@@ -130,12 +135,12 @@ export default function Home({ navigation }) {
           <Divider marginTop={Spacing.medium} />
           {_.chunk(articles.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-              {group.map((item, index) =>  <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
+              {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
             </View>
           ))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug].length >= 3 ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
+          <Shelf articles={articles[Sections.HUMOR.slug]?.length >= 3*groupSize ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
           <Divider />
           {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
           <Divider />

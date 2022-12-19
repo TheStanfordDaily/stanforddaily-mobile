@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native"
+import { Appearance, Image, Platform, Share, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets, statusBarStyles } from "./navigation"
 import * as Font from "expo-font"
@@ -25,25 +25,26 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
+import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID } from "@env"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: false,
-    shouldSetBadge: false,
+    shouldSetBadge: false
   })
 })
 
 const firebaseConfig = {
-  apiKey: process.env.APIKEY,
+  apiKey: APIKEY,
   authDomain: "daily-mobile-app-notifications.firebaseapp.com",
   databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
   projectId: "daily-mobile-app-notifications",
   storageBucket: "daily-mobile-app-notifications.appspot.com",
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
-  serviceAccountId: process.env.SERVICE_ACCOUNT_ID
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
+  measurementId: MEASUREMENT_ID,
+  serviceAccountId: SERVICE_ACCOUNT_ID
 }
 
 const Stack = createStackNavigator()
@@ -58,11 +59,14 @@ export default function App() {
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
+
+  const validateConfig = (config) => {
+    return config.apiKey && config.messagingSenderId && config.appId && config.measurementId && config.serviceAccountId
+  }
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
-    StatusBar.setBarStyle((next === "light" ? "dark" : "light") + "-content")
   }
 
   const onShare = async (url, title) => {
@@ -71,6 +75,7 @@ export default function App() {
         url: url,
         message: title + " | The Stanford Daily"
       })
+      
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // Shared successfully with activity type of result.activityType.
@@ -120,15 +125,6 @@ export default function App() {
     }
   }
 
-  const detailHeaderListeners = {
-    focus: () => StatusBar.setBarStyle("light-content", true),
-    blur: () => {
-      if (theme === "light") {
-        StatusBar.setBarStyle("dark-content", true)
-      }
-    }
-  }
-
   const sectionOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
@@ -149,7 +145,7 @@ export default function App() {
   let app
   let auth
   let db
-  if (Object.keys(firebaseConfig).length > 0) {
+  if (validateConfig(firebaseConfig)) {
     app = initializeApp(firebaseConfig)
     auth = getAuth(app)
     db = getDatabase(app)
@@ -159,7 +155,7 @@ export default function App() {
     // Loads fonts from static resource.
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
 
-    if (Object.keys(firebaseConfig).length > 0) {
+    if (validateConfig(firebaseConfig)) {
         registerForPushNotificationsAsync().then(token => {
         setExpoPushToken(token)
         var matches = token?.match(/\[(.*?)\]/)
@@ -178,7 +174,6 @@ export default function App() {
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
-      StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
       setTheme(listener.colorScheme)
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
     })    
@@ -228,7 +223,6 @@ export default function App() {
                     name="Post"
                     component={Post}
                     options={detailHeaderOptions}
-                    listeners={detailHeaderListeners}
                   />
                   <Stack.Screen
                     name="Section"
