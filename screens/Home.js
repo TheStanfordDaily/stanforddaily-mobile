@@ -57,7 +57,7 @@ export default function Home({ navigation }) {
         RSVP.hash({
           featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
           news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
-          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
+          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get()
         }).then(posts => {
           categorizePosts(posts)
         }).catch(error => {
@@ -88,7 +88,7 @@ export default function Home({ navigation }) {
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
     
     
-    return articles?.featured && articles?.news && articles?.opinions ? (
+    return layoutLoaded ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
           <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
