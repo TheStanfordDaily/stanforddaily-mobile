@@ -59,7 +59,7 @@ export default function Home({ navigation }) {
             ...articles,
             [Sections.FEATURED.slug]: posts.filter(item => item.categories.includes(Sections.FEATURED.id)),
             [Sections.NEWS.slug]: posts.filter(item => item.categories.includes(Sections.NEWS.id) && !item.categories.includes(Sections.FEATURED.id)),
-            [Sections.OPINIONS.slug]: [...articles[Sections.OPINIONS.slug] || [], ...posts.filter(item => item.categories.includes(Sections.OPINIONS.id) && !item.categories.includes(Sections.FEATURED.id))]
+            [Sections.OPINIONS.slug]: articles[Sections.OPINIONS.slug] || posts.filter(item => item.categories.includes(Sections.OPINIONS.id) && !item.categories.includes(Sections.FEATURED.id))
           }))
         }).catch(error => {
           console.trace(error)
