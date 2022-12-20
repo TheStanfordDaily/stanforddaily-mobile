@@ -174,9 +174,7 @@ export default function App() {
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
-      if (listener.colorScheme !== theme) {
         setTheme(listener.colorScheme)
-      }
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
     })    
 
