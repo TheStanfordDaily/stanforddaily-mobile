@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
 import { Appearance, Image, Platform, Share, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { navigate, logoAssets, statusBarStyles } from "./navigation"
+import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app" 
+import { initializeApp } from "firebase/app"
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { Strings } from "./constants"
@@ -162,10 +162,10 @@ export default function App() {
 
       if (matches) {
           var submatch = matches[1]
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+          /*signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
-          })
+          })*/
         }
       })
     }
@@ -197,54 +197,55 @@ export default function App() {
     }
   }, [])
 
-  
-      return fontsLoaded && (
-        <NavigationContainer onStateChange={e => {
-            const name = getActiveRouteName(e)
-            if (!(name in seen)) {
-              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
-                const analyticsRef = ref(db, "Analytics/", userCredential)
-                push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
-              })
-              events.push(e)
-            }
-          }} theme={navigatorTheme[theme]}>
-          <IconRegistry icons={EvaIconsPack} />
-          <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
-            <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
-              <SafeAreaProvider>
-                <Stack.Navigator initialRouteName="Home">
-                  <Stack.Screen
-                    name="Home"
-                    component={Home}
-                    options={headerOptions}
-                  />
-                  <Stack.Screen
-                    name="Post"
-                    component={Post}
-                    options={detailHeaderOptions}
-                  />
-                  <Stack.Screen
-                    name="Section"
-                    component={Section}
-                    options={sectionOptions}
-                  />
-                  <Stack.Screen
-                    name="Author"
-                    component={Author}
-                    options={authorOptions}
-                  />
-                  <Stack.Screen
-                    name="Search"
-                    component={Search}
-                    options={searchHeaderOptions}
-                  />
-                </Stack.Navigator>
-              </SafeAreaProvider>
-            </ApplicationProvider>
-          </ThemeContext.Provider>
-        </NavigationContainer>
-      )
+
+  return fontsLoaded && (
+    <NavigationContainer onStateChange={e => {
+        const name = getActiveRouteName(e)
+        if (!seen.has(name)) {
+          /*signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+            const analyticsRef = ref(db, "Analytics/", userCredential)
+            push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
+          })*/
+          events.push(e)
+          setSeen(seen.add(name))
+        }
+      }} theme={navigatorTheme[theme]}>
+      <IconRegistry icons={EvaIconsPack} />
+      <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
+        <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
+          <SafeAreaProvider>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={headerOptions}
+              />
+              <Stack.Screen
+                name="Post"
+                component={Post}
+                options={detailHeaderOptions}
+              />
+              <Stack.Screen
+                name="Section"
+                component={Section}
+                options={sectionOptions}
+              />
+              <Stack.Screen
+                name="Author"
+                component={Author}
+                options={authorOptions}
+              />
+              <Stack.Screen
+                name="Search"
+                component={Search}
+                options={searchHeaderOptions}
+              />
+            </Stack.Navigator>
+          </SafeAreaProvider>
+        </ApplicationProvider>
+      </ThemeContext.Provider>
+    </NavigationContainer>
+  )
 }
 
 async function registerForPushNotificationsAsync() {

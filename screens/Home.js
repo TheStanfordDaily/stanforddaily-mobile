@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
-import { Card, Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
+import React, { useContext, useEffect, useState } from "react"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, Text, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
+import { Divider, Icon, Layout } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -54,17 +54,19 @@ export default function Home({ navigation }) {
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber == 1) {
-        RSVP.hash({
-          featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
-          news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
-          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get()
-        }).then(posts => {
-          categorizePosts(posts)
+        Model.posts().perPage(24).page(pageNumber).param("categories", `${Sections.FEATURED.id},${Sections.NEWS.id},${Sections.OPINIONS.id}`).get().then(posts => {
+          setArticles(articles => ({
+            ...articles,
+            [Sections.FEATURED.slug]: posts.filter(item => item.categories.includes(Sections.FEATURED.id)),
+            [Sections.NEWS.slug]: posts.filter(item => item.categories.includes(Sections.NEWS.id) && !item.categories.includes(Sections.FEATURED.id)),
+            [Sections.OPINIONS.slug]: [...articles[Sections.OPINIONS.slug] || [], ...posts.filter(item => item.categories.includes(Sections.OPINIONS.id) && !item.categories.includes(Sections.FEATURED.id))]
+          }))
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
 
         RSVP.hash({
+          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
           sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
           humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
           theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
@@ -96,7 +98,7 @@ export default function Home({ navigation }) {
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
+          <Shelf articles={articles[Sections.OPINIONS.slug] || []} navigation={navigation} />
 
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] || []} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug] || []} navigation={navigation} />
@@ -135,6 +137,6 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   }
 })
