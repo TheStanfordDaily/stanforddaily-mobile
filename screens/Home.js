@@ -38,6 +38,19 @@ export default function Home({ navigation }) {
       }
     }
 
+    const categorizePosts = (posts) => {
+      for (let key in posts) {
+        setArticles(articles => ({
+          ...articles,
+          [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+        }))
+        setSeeds(articles => ({
+          ...articles,
+          [key]: posts[key]
+        }))
+      }
+    }
+
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber == 1) {
@@ -45,28 +58,24 @@ export default function Home({ navigation }) {
           featured: Model.posts().perPage(3).page(pageNumber).categories(Sections.FEATURED.id).get(),
           news: Model.posts().perPage(8).page(pageNumber).categories(Sections.NEWS.id).get(),
           opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
+        }).then(posts => {
+          categorizePosts(posts)
+        }).catch(error => {
+          console.trace(error)
+        }).finally(() => setLayoutLoaded(true))
+
+        RSVP.hash({
           sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
           humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
           theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
           artsLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
         }).then(posts => {
-          for (let key in posts) {
-            setArticles(articles => ({
-              ...articles,
-              [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
-            }))
-            setSeeds(articles => ({
-              ...articles,
-              [key]: posts[key]
-            }))
-          }
+          categorizePosts(posts)
           setArticles(articles => ({
             ...articles,
             "culture": _.shuffle(posts.theGrind.concat(posts.artsLife)).slice(0, 4)
           }))
-        }).catch(error => {
-          console.trace(error)
-        }).finally(() => setLayoutLoaded(true))
+        }).catch(error => console.trace(error))
       }
 
       // Load another page.
