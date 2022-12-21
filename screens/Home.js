@@ -39,10 +39,11 @@ export default function Home({ navigation }) {
     }
 
     const collatePosts = (posts) => {
+      const featuredPosts = posts.filter(item => item.categories.includes(Sections.FEATURED.id))
       for (let key in Sections) {
         setArticles(articles => ({
           ...articles,
-          [Sections[key].slug]: Sections[key].slug === Sections.FEATURED.slug ? posts.filter(item => item.categories.includes(Sections.FEATURED.id)) : posts.filter(item => item.categories.includes(Sections[key].id) && !item.categories.includes(Sections.FEATURED.id))
+          [Sections[key].slug]: Sections[key].slug === Sections.FEATURED.slug ? featuredPosts : posts.filter(item => item.categories.includes(Sections[key].id) && !item.categories.includes(Sections.FEATURED.id))
         }))
         setSeeds(articles => ({
           ...articles,
@@ -53,8 +54,6 @@ export default function Home({ navigation }) {
 
     const categorizePosts = (posts) => {
       for (let key in posts) {
-        const filteredPosts = posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
-        const existingPosts = articles[key] || []
         setArticles(articles => ({
           ...articles,
           [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
