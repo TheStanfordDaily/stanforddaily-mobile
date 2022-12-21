@@ -38,8 +38,23 @@ export default function Home({ navigation }) {
       }
     }
 
+    const collatePosts = (posts) => {
+      for (let key in Sections) {
+        setArticles(articles => ({
+          ...articles,
+          [Sections[key].slug]: Sections[key].slug === Sections.FEATURED.slug ? posts.filter(item => item.categories.includes(Sections.FEATURED.id)) : posts.filter(item => item.categories.includes(Sections[key].id) && !item.categories.includes(Sections.FEATURED.id))
+        }))
+        setSeeds(articles => ({
+          ...articles,
+          [Sections[key].slug]: posts.filter(item => item.categories.includes(Sections[key].id))
+        }))
+      }
+    }
+
     const categorizePosts = (posts) => {
       for (let key in posts) {
+        const filteredPosts = posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+        const existingPosts = articles[key] || []
         setArticles(articles => ({
           ...articles,
           [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
@@ -54,17 +69,13 @@ export default function Home({ navigation }) {
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber == 1) {
-        Model.posts().perPage(24).page(pageNumber).param("categories", `${Sections.FEATURED.id},${Sections.NEWS.id},${Sections.OPINIONS.id}`).get().then(posts => {
-          setArticles(articles => ({
-            ...articles,
-            [Sections.FEATURED.slug]: posts.filter(item => item.categories.includes(Sections.FEATURED.id)),
-            [Sections.NEWS.slug]: posts.filter(item => item.categories.includes(Sections.NEWS.id) && !item.categories.includes(Sections.FEATURED.id)),
-            [Sections.OPINIONS.slug]: articles[Sections.OPINIONS.slug] || posts.filter(item => item.categories.includes(Sections.OPINIONS.id) && !item.categories.includes(Sections.FEATURED.id))
-          }))
+        Model.posts().perPage(24).page(pageNumber).get().then(posts => {
+          collatePosts(posts)
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
 
+        // Assuming that news and featured articles are in abundance.
         RSVP.hash({
           opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
           sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
@@ -93,8 +104,8 @@ export default function Home({ navigation }) {
     return layoutLoaded ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
-          <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
-          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
+          <Carousel articles={articles[Sections.FEATURED.slug] || []} navigation={navigation} />
+          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] || []} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
