@@ -80,12 +80,12 @@ export default function Home({ navigation }) {
           sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
           humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
           theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
-          artsLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
+          artsAndLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
         }).then(posts => {
           categorizePosts(posts)
           setArticles(articles => ({
             ...articles,
-            "culture": _.shuffle(posts.theGrind.concat(posts.artsLife)).slice(0, 4)
+            "culture": _.shuffle(posts.theGrind.concat(posts.artsAndLife)).slice(0, 4)
           }))
         }).catch(error => console.trace(error))
       }
