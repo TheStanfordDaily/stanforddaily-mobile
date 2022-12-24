@@ -108,7 +108,7 @@ export default function Home({ navigation }) {
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={articles[Sections.OPINIONS.slug] || []} navigation={navigation} />
+          {articles[Sections.OPINIONS.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />}
 
           <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] || []} navigation={navigation} />
           <Diptych articles={articles[Sections.SPORTS.slug] || []} navigation={navigation} />
@@ -120,7 +120,7 @@ export default function Home({ navigation }) {
           ))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
+          {articles[Sections.HUMOR.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />}
           <Divider />
           {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
           {_.chunk(articles?.wildcard, groupSize)?.map((group, outerIndex) => (

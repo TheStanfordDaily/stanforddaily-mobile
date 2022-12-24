@@ -39,7 +39,7 @@ export default function Diptych(props) {
                   <Card
                     style={styles.card}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
-                    footer={<Footer date={item["date_gmt"]}/>}
+                    footer={<Footer date={item["date"]}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>
                     <Text category={"p1"}>{decode(item.title.rendered)}</Text>
                   </Card>
