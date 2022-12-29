@@ -14,14 +14,14 @@ export const formatDate = (instance, verbose) => {
     let formattedDay = instance.getDate()
     let formattedYear = instance.getFullYear()
     let formattedHours = instance.getHours() % 12
-    if (formattedHours == 0) {
+    if (formattedHours === 0) {
       formattedHours = 12
     }
     let formattedMinutes = instance.getMinutes()
     if (formattedMinutes < 10) {
       formattedMinutes = `0${formattedMinutes}`
     }
-    let formattedMeridian = instance.getHours() < 11 ? "a.m." : "p.m."
+    let formattedMeridian = instance.getHours() < 12 ? "a.m." : "p.m."
     
     return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, Text, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
 import { Divider, Icon, Layout } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
@@ -30,7 +30,7 @@ export default function Home({ navigation }) {
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 12
     
-    const checkBottom = (e) => {
+    function checkBottom(e) {
       let paddingToBottom = 10
       paddingToBottom += e.nativeEvent.layoutMeasurement.height
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
       }
     }
 
-    const collatePosts = (posts) => {
+    function collatePosts(posts) {
       const featuredPosts = posts.filter(item => item.categories.includes(Sections.FEATURED.id))
       for (let key in Sections) {
         setArticles(articles => ({
@@ -52,7 +52,7 @@ export default function Home({ navigation }) {
       }
     }
 
-    const categorizePosts = (posts) => {
+    function categorizePosts(posts) {
       for (let key in posts) {
         setArticles(articles => ({
           ...articles,
@@ -67,8 +67,8 @@ export default function Home({ navigation }) {
 
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
-      if (pageNumber == 1) {
-        Model.posts().perPage(24).page(pageNumber).get().then(posts => {
+      if (pageNumber === 1) {
+        Model.posts().perPage(2*batchSize).page(pageNumber).get().then(posts => {
           collatePosts(posts)
         }).catch(error => {
           console.trace(error)

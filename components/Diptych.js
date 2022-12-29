@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Diptych(props) {
-    const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
+    const articles = props.articles.length % 2 === 0 ? props.articles : props.articles.slice(0, -1)
     const [selection, setSelection] = useState(0)
     const { deviceType } = useContext(ThemeContext)
     const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
