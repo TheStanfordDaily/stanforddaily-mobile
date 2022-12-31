@@ -139,7 +139,7 @@ export default function Post({ route, navigation }) {
     }
     const [statusBarStyle, setStatusBarStyle] = useState("light")
 
-    const openArticleIfPresent = (url) => {
+    function openArticleIfPresent(url) {
       const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url
       const preSlug = pruned.split("/")
       const slug = (preSlug[preSlug.length - 1])
