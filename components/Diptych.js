@@ -14,7 +14,7 @@ const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
 export default function Diptych(props) {
-    const articles = props.articles.length % 2 == 0 ? props.articles : props.articles.slice(0, -1)
+    const articles = props.articles.length % 2 === 0 ? props.articles : props.articles.slice(0, -1)
     const [selection, setSelection] = useState(0)
     const { deviceType } = useContext(ThemeContext)
     const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
@@ -39,7 +39,7 @@ export default function Diptych(props) {
                   <Card
                     style={styles.card}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
-                    footer={<Footer date={item["date_gmt"]}/>}
+                    footer={<Footer date={item["date"]}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>
                     <Text category={"p1"}>{decode(item.title.rendered)}</Text>
                   </Card>

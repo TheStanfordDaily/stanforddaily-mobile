@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StatusBar, StyleSheet, useColorScheme, View, UIManager, Linking } from "react-native"
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StyleSheet, useColorScheme, View, UIManager, Linking } from "react-native"
 import { Icon, Text, useTheme } from "@ui-kitten/components"
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view"
 import { Spacing } from "../constants"
@@ -17,6 +17,7 @@ import * as Device from "expo-device"
 import CircleSlider from "react-native-circle-slider"
 import { FloatingAction } from "react-native-floating-action"
 import { Audio, InterruptionModeIOS, InterruptionModeAndroid } from "expo-av"
+import { StatusBar } from "expo-status-bar"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
@@ -136,6 +137,7 @@ export default function Post({ route, navigation }) {
       console.log("rewinding")
       // playbackStatus.positionMillis -= 15000
     }
+    const [statusBarStyle, setStatusBarStyle] = useState("light")
 
     const openArticleIfPresent = (url) => {
       const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url
@@ -189,6 +191,14 @@ export default function Post({ route, navigation }) {
         setDisplayCategory(resolvedCategory)
       })
 
+      navigation.addListener("focus", () => {
+        setStatusBarStyle("light")
+      })
+
+      navigation.addListener("blur", () => {
+        setStatusBarStyle(undefined)
+      })
+
       // Maybe we can get the captions in the initial home screen API call in the future.
       // Hoping there is a better way than using the `_embed` query parameter.
       // That would vastly increase loading time when so many posts are being fetched at once,
@@ -224,15 +234,10 @@ export default function Post({ route, navigation }) {
       }
     }, [article])
 
-    Appearance.addChangeListener(listener => {
-      if (listener.colorScheme === "light") {
-        StatusBar.setBarStyle("light-content", true)
-      }
-    })
-
 
     return (
       <React.Fragment>
+        <StatusBar style={statusBarStyle} />
         <ImageHeaderScrollView
           headerImage={{ uri: featuredMedia }}
           renderForeground={Foreground}
@@ -295,6 +300,6 @@ const styles = StyleSheet.create({
       height: 1
     },
     textAlign: "center",
-    fontFamily: "MinionProBold",
+    fontFamily: "MinionProBold"
   }
 })

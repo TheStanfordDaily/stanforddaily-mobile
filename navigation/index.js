@@ -19,14 +19,3 @@ export const logoAssets = {
   "light": require("../assets/media/DailyLogoCardinal.png"),
   "dark": require("../assets/media/DailyLogoWhite.png")
 }
-
-export const statusBarStyles = {
-  ios: {
-    light: "light-content",
-    dark: "dark-content"
-  },
-  android: {
-    light: "dark-content",
-    dark: "light-content"
-  }
-}

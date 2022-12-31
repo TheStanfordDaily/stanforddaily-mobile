@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
-import { ActivityIndicator, Text, LayoutAnimation, ScrollView, StyleSheet, TouchableOpacity, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
-import { Card, Divider, Icon, Layout, useTheme } from "@ui-kitten/components"
+import React, { useContext, useEffect, useState } from "react"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
+import { Divider, Icon, Layout } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -15,9 +15,6 @@ import { ThemeContext } from "../theme-context"
 import RSVP from "rsvp"
 import Collapsible from "react-native-collapsible"
 
-// There are too few recent humor articles at time of writing.
-const localHumor = require("../humor.json")
-
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
 }
@@ -28,22 +25,12 @@ export default function Home({ navigation }) {
     const [articles, setArticles] = useState({})
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
-    const [articlesLoading, setArticlesLoading] = useState(false)
     const [layoutLoaded, setLayoutLoaded] = useState(false)
-    const humor = localHumor.filter(item => !item.categories.includes(Sections.FEATURED.id))
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
-    const batchSize = 48
-
-    const homeMember = (article, section) => {
-      if (section.id === Sections.FEATURED.id) {
-        return article.categories.includes(Sections.FEATURED.id)
-      }
+    const batchSize = 12
     
-      return article.categories.includes(section.id) && !article.categories.includes(Sections.FEATURED.id)
-    }
-    
-    const checkBottom = (e) => {
+    function checkBottom(e) {
       let paddingToBottom = 10
       paddingToBottom += e.nativeEvent.layoutMeasurement.height
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
@@ -51,86 +38,101 @@ export default function Home({ navigation }) {
       }
     }
 
-    const categorizePosts = (posts, appendItems) => {
-      for (let value of Object.values(Sections)) {
-        const homeMembers = posts.filter(items => homeMember(items, value))
-        const homeSeeds = posts.filter(items => items.categories.includes(value.id))
-
+    function collatePosts(posts) {
+      const featuredPosts = posts.filter(item => item.categories.includes(Sections.FEATURED.id))
+      for (let key in Sections) {
         setArticles(articles => ({
           ...articles,
-          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeMembers] : homeMembers
+          [Sections[key].slug]: Sections[key].slug === Sections.FEATURED.slug ? featuredPosts : posts.filter(item => item.categories.includes(Sections[key].id) && !item.categories.includes(Sections.FEATURED.id))
         }))
-        
         setSeeds(articles => ({
           ...articles,
-          [value.slug]: (value.slug in articles && appendItems) ? [...articles[value.slug], ...homeSeeds] : homeSeeds
+          [Sections[key].slug]: posts.filter(item => item.categories.includes(Sections[key].id))
         }))
       }
-      
-      const cultureMembers = _.shuffle(posts.filter(items => items.categories.includes(Sections.THE_GRIND.id) || items.categories.includes(Sections.ARTS_LIFE.id))).slice(0, 4)
+    }
 
-      setArticles(articles => ({
-        ...articles,
-        "culture": ("culture" in articles) ? [...articles["culture"], ...cultureMembers] : cultureMembers
-      }))
+    function categorizePosts(posts) {
+      for (let key in posts) {
+        setArticles(articles => ({
+          ...articles,
+          [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
+        }))
+        setSeeds(articles => ({
+          ...articles,
+          [key]: posts[key]
+        }))
+      }
+    }
+
+    function fetchWildcardPosts() {
+      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
+        setArticles(articles => ({
+          ...articles,
+          "wildcard": "wildcard" in articles ? [...articles["wildcard"], ...posts] : posts
+        }))
+      })
     }
 
     useEffect(() => {
-      setArticlesLoading(true)
-      if (pageNumber == 1) {
-        // Retrieve only the posts that would be immediately visible.
-
-        Model.posts().perPage(batchSize).get().then(posts => {
-          categorizePosts(posts)
+      // At first, retrieve only the posts that would be immediately visible.
+      if (pageNumber === 1) {
+        Model.posts().perPage(2*batchSize).page(pageNumber).get().then(posts => {
+          collatePosts(posts)
         }).catch(error => {
           console.trace(error)
         }).finally(() => setLayoutLoaded(true))
+
+        // Assuming that news and featured articles are in abundance.
+        RSVP.hash({
+          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
+          sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
+          humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
+          theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
+          artsAndLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
+        }).then(posts => {
+          categorizePosts(posts)
+          setArticles(articles => ({
+            ...articles,
+            "culture": _.shuffle(posts.theGrind.concat(posts.artsAndLife)).slice(0, 4)
+          }))
+        }).catch(error => console.trace(error))
       }
 
-      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
-        if ("wildcard" in articles) {
-          setArticles(articles => ({...articles, "wildcard": [...articles["wildcard"], ...posts]}))
-        } else {
-          setArticles(articles => ({...articles, "wildcard": posts}))
-        }
-      })
-      setArticlesLoading(false)
+      // Load another page.
+      fetchWildcardPosts()
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
     
     
     return layoutLoaded ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
-          <Carousel articles={articles[Sections.FEATURED.slug]} navigation={navigation} />
-          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug]} navigation={navigation} />
+          <Carousel articles={articles[Sections.FEATURED.slug] || []} navigation={navigation} />
+          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] || []} navigation={navigation} />
           <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {articles[Sections.OPINIONS.slug]?.length >= 3*groupSize && (
-            <React.Fragment>
-              <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-              <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />
-            </React.Fragment>
-          )}
-          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug]} navigation={navigation} />
-          <Diptych articles={articles[Sections.SPORTS.slug]} navigation={navigation} />
+          <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
+          {articles[Sections.OPINIONS.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />}
+
+          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] || []} navigation={navigation} />
+          <Diptych articles={articles[Sections.SPORTS.slug] || []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          {_.chunk(articles.culture, groupSize)?.map((group, outerIndex) => (
+          {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
               {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
             </View>
           ))}
           <Divider />
-          <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug]} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug]?.length >= 3*groupSize ? articles[Sections.HUMOR.slug] : humor} alternate navigation={navigation} />
+          <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
+          {articles[Sections.HUMOR.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />}
           <Divider />
-          {/* <Canvas articles={articles[Sections.CARTOONS.slug]} /> */}
-          <Divider />
-          {_.chunk(articles.wildcard, groupSize)?.map((group, outerIndex) => (
+          {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
+          {_.chunk(articles?.wildcard, groupSize)?.map((group, outerIndex) => (
             <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-                {group.map((item, index) =>   <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
+                {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
-              {outerIndex === articles.wildcard.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+              {outerIndex === articles?.wildcard?.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
           ))}
         </ScrollView>
@@ -149,6 +151,6 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   }
 })

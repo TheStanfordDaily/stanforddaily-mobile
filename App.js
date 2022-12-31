@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Platform, Share, StatusBar, TouchableOpacity } from "react-native"
+import { Appearance, Image, Platform, Share, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
-import { navigate, logoAssets, statusBarStyles } from "./navigation"
+import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app" 
+import { initializeApp } from "firebase/app"
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { Strings } from "./constants"
@@ -60,14 +60,15 @@ export default function App() {
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
 
-  const validateConfig = (config) => {
-    return config.apiKey && config.messagingSenderId && config.appId && config.measurementId && config.serviceAccountId
+  function validateConfig(config) {
+    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
   }
+
+  const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
-    StatusBar.setBarStyle((next === "light" ? "dark" : "light") + "-content")
   }
 
   const onShare = async (url, title) => {
@@ -126,15 +127,6 @@ export default function App() {
     }
   }
 
-  const detailHeaderListeners = {
-    focus: () => StatusBar.setBarStyle("light-content", true),
-    blur: () => {
-      if (theme === "light") {
-        StatusBar.setBarStyle("dark-content", true)
-      }
-    }
-  }
-
   const sectionOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
@@ -166,15 +158,18 @@ export default function App() {
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
 
     if (validateConfig(firebaseConfig)) {
-        registerForPushNotificationsAsync().then(token => {
-        setExpoPushToken(token)
-        var matches = token?.match(/\[(.*?)\]/)
+      registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(token)
+      var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches) {
+      if (matches && validConfig) {
           var submatch = matches[1]
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
+          }).catch(error => {
+            console.trace(error)
+            setValidConfig(false)
           })
         }
       })
@@ -184,8 +179,7 @@ export default function App() {
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
-      StatusBar.setBarStyle(listener.colorScheme === "dark" ? "light-content" : "dark-content", true)
-      setTheme(listener.colorScheme)
+        setTheme(listener.colorScheme)
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
     })    
 
@@ -208,55 +202,55 @@ export default function App() {
     }
   }, [])
 
-  
-      return fontsLoaded && (
-        <NavigationContainer onStateChange={e => {
-            const name = getActiveRouteName(e)
-            if (!(name in seen)) {
-              signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
-                const analyticsRef = ref(db, "Analytics/", userCredential)
-                push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
-              })
-              events.push(e)
-            }
-          }} theme={navigatorTheme[theme]}>
-          <IconRegistry icons={EvaIconsPack} />
-          <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
-            <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
-              <SafeAreaProvider>
-                <Stack.Navigator initialRouteName="Home">
-                  <Stack.Screen
-                    name="Home"
-                    component={Home}
-                    options={headerOptions}
-                  />
-                  <Stack.Screen
-                    name="Post"
-                    component={Post}
-                    options={detailHeaderOptions}
-                    listeners={detailHeaderListeners}
-                  />
-                  <Stack.Screen
-                    name="Section"
-                    component={Section}
-                    options={sectionOptions}
-                  />
-                  <Stack.Screen
-                    name="Author"
-                    component={Author}
-                    options={authorOptions}
-                  />
-                  <Stack.Screen
-                    name="Search"
-                    component={Search}
-                    options={searchHeaderOptions}
-                  />
-                </Stack.Navigator>
-              </SafeAreaProvider>
-            </ApplicationProvider>
-          </ThemeContext.Provider>
-        </NavigationContainer>
-      )
+
+  return fontsLoaded && (
+    <NavigationContainer onStateChange={e => {
+        const name = getActiveRouteName(e)
+        if (!seen.has(name)) {
+          /*signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+            const analyticsRef = ref(db, "Analytics/", userCredential)
+            push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
+          })*/
+          events.push(e)
+          setSeen(seen.add(name))
+        }
+      }} theme={navigatorTheme[theme]}>
+      <IconRegistry icons={EvaIconsPack} />
+      <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
+        <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
+          <SafeAreaProvider>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={headerOptions}
+              />
+              <Stack.Screen
+                name="Post"
+                component={Post}
+                options={detailHeaderOptions}
+              />
+              <Stack.Screen
+                name="Section"
+                component={Section}
+                options={sectionOptions}
+              />
+              <Stack.Screen
+                name="Author"
+                component={Author}
+                options={authorOptions}
+              />
+              <Stack.Screen
+                name="Search"
+                component={Search}
+                options={searchHeaderOptions}
+              />
+            </Stack.Navigator>
+          </SafeAreaProvider>
+        </ApplicationProvider>
+      </ThemeContext.Provider>
+    </NavigationContainer>
+  )
 }
 
 async function registerForPushNotificationsAsync() {
