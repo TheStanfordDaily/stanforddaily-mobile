@@ -65,6 +65,15 @@ export default function Home({ navigation }) {
       }
     }
 
+    function fetchWildcardPosts() {
+      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
+        setArticles(articles => ({
+          ...articles,
+          "wildcard": "wildcard" in articles ? [...articles["wildcard"], ...posts] : posts
+        }))
+      })
+    }
+
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber === 1) {
@@ -91,12 +100,7 @@ export default function Home({ navigation }) {
       }
 
       // Load another page.
-      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
-        setArticles(articles => ({
-          ...articles,
-          "wildcard": "wildcard" in articles ? [...articles["wildcard"], ...posts] : posts
-        }))
-      })
+      fetchWildcardPosts()
     }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
     
     

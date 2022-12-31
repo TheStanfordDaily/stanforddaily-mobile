@@ -60,9 +60,11 @@ export default function App() {
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
 
-  const validateConfig = (config) => {
-    return config.apiKey && config.messagingSenderId && config.appId && config.measurementId && config.serviceAccountId
+  function validateConfig(config) {
+    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
   }
+
+  const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
   
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -156,16 +158,19 @@ export default function App() {
     Font.loadAsync(minion).then(() => setFontsLoaded(true))
 
     if (validateConfig(firebaseConfig)) {
-        registerForPushNotificationsAsync().then(token => {
-        setExpoPushToken(token)
-        var matches = token?.match(/\[(.*?)\]/)
+      registerForPushNotificationsAsync().then(token => {
+      setExpoPushToken(token)
+      var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches) {
+      if (matches && validConfig) {
           var submatch = matches[1]
-          /*signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, Date())
-          })*/
+          }).catch(error => {
+            console.trace(error)
+            setValidConfig(false)
+          })
         }
       })
     }
