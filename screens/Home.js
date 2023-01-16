@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Modal, Image, PixelRatio, Dimensions, UIManager } from "react-native"
-import { Divider, Icon, Layout } from "@ui-kitten/components"
+import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Text, Modal, Image, PixelRatio, Platform, Dimensions, UIManager } from "react-native"
+import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
 import Carousel from "../components/Carousel"
 import Diptych from "../components/Diptych"
@@ -14,6 +14,8 @@ import { DeviceType } from "expo-device"
 import { ThemeContext } from "../theme-context"
 import RSVP from "rsvp"
 import Collapsible from "react-native-collapsible"
+import SearchBar from "../components/SearchBar"
+import { withoutDuplicates } from "../helpers/format"
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -21,7 +23,7 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 
 // TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
 
-export default function Home({ navigation }) {
+export default function Home({ navigation, route }) {
     const [articles, setArticles] = useState({})
     const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
@@ -30,7 +32,7 @@ export default function Home({ navigation }) {
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 12
     
-    function checkBottom(e) {
+    function peekBelow(e) {
       let paddingToBottom = 10
       paddingToBottom += e.nativeEvent.layoutMeasurement.height
       if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
@@ -40,14 +42,14 @@ export default function Home({ navigation }) {
 
     function collatePosts(posts) {
       const featuredPosts = posts.filter(item => item.categories.includes(Sections.FEATURED.id))
-      for (let key in Sections) {
+      for (let value of Sections) {
         setArticles(articles => ({
           ...articles,
-          [Sections[key].slug]: Sections[key].slug === Sections.FEATURED.slug ? featuredPosts : posts.filter(item => item.categories.includes(Sections[key].id) && !item.categories.includes(Sections.FEATURED.id))
+          [value.slug]: value.slug === Sections.FEATURED.slug ? featuredPosts : posts.filter(item => item.categories.includes(value.id) && !item.categories.includes(Sections.FEATURED.id))
         }))
         setSeeds(articles => ({
           ...articles,
-          [Sections[key].slug]: posts.filter(item => item.categories.includes(Sections[key].id))
+          [value.slug]: posts.filter(item => item.categories.includes(value.id))
         }))
       }
     }
@@ -85,6 +87,8 @@ export default function Home({ navigation }) {
 
         // Assuming that news and featured articles are in abundance.
         RSVP.hash({
+          featured: Model.posts().perPage(4).page(pageNumber).categories(Sections.FEATURED.id).get(),
+          news: Model.posts().perPage(4).page(pageNumber).categories(Sections.NEWS.id).get(),
           opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
           sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
           humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
@@ -96,7 +100,7 @@ export default function Home({ navigation }) {
             ...articles,
             "culture": _.shuffle(posts.theGrind.concat(posts.artsAndLife)).slice(0, 4)
           }))
-        }).catch(error => console.trace(error))
+        }).catch(error => console.log(error))
       }
 
       // Load another page.
@@ -106,16 +110,17 @@ export default function Home({ navigation }) {
     
     return layoutLoaded ? (
       <Layout style={styles.container}>
-        <ScrollView onScroll={checkBottom} scrollEventThrottle={0}>
-          <Carousel articles={articles[Sections.FEATURED.slug] || []} navigation={navigation} />
-          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] || []} navigation={navigation} />
-          <Diptych articles={articles[Sections.NEWS.slug]} navigation={navigation} />
+        <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={[0]}>
+          {route.params?.isSearching && <SearchBar navigation={navigation} /> }
+          <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] ?? []} navigation={navigation} />
+          <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
           {articles[Sections.OPINIONS.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />}
 
-          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] || []} navigation={navigation} />
-          <Diptych articles={articles[Sections.SPORTS.slug] || []} navigation={navigation} />
+          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+          <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>

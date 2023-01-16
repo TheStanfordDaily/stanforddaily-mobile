@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Platform, Share, TouchableOpacity } from "react-native"
+import { Appearance, Image, Linking, Platform, Share, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
@@ -25,7 +25,8 @@ import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
 import Search from "./screens/Search"
-import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID } from "@env"
+import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
+import { getActiveRouteName } from "./helpers/format"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -59,6 +60,7 @@ export default function App() {
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
+  const [isSearching, setIsSearching] = useState(false)
 
   function validateConfig(config) {
     return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
@@ -105,11 +107,11 @@ export default function App() {
           source={logoAssets[theme]}
         />
       ),
-      /*headerRight: () => (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Search")}>
-            <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+      headerRight: () => (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.setParams({ isSearching: true })}>
+            <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
-      )*/
+      )
     }
   }
 
@@ -164,9 +166,9 @@ export default function App() {
 
       if (matches && validConfig) {
           var submatch = matches[1]
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
-            set(tokenRef, Date())
+            set(tokenRef, new Date().toISOString()).catch(error => console.log(error))
           }).catch(error => {
             console.trace(error)
             setValidConfig(false)
@@ -196,6 +198,19 @@ export default function App() {
       })
     })
 
+    // Listener for when app is opened from web browser.
+    Linking.addEventListener("url", response => {
+      if (response.url) {
+        const url = response.url
+        const slug = url.split("/").pop()
+        if (slug?.length > 0) {
+          Model.posts().slug(slug).embed().then(result => {
+            navigate(Strings.post, { item: result })
+          })
+        }
+      }
+    })
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
       Notifications.removeNotificationSubscription(responseListener.current)
@@ -205,14 +220,16 @@ export default function App() {
 
   return fontsLoaded && (
     <NavigationContainer onStateChange={e => {
+        events.push(e)
         const name = getActiveRouteName(e)
         if (!seen.has(name)) {
-          /*signInWithEmailAndPassword(auth, "tech@stanforddaily.com", process.env.FIREBASE_PASSWORD).then((userCredential) => {
+          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const analyticsRef = ref(db, "Analytics/", userCredential)
-            push(analyticsRef, JSON.stringify(e)) // Still figuring out how to format as an object in Firebase.
-          })*/
-          events.push(e)
-          setSeen(seen.add(name))
+            push(analyticsRef, name + new Date().toISOString()).then(() => console.log("added to analytics")).catch(error => console.log(error))
+          })
+          .then(() => setSeen(new Set([...seen, name])))
+          .catch(error => console.trace(error))
+          
         }
       }} theme={navigatorTheme[theme]}>
       <IconRegistry icons={EvaIconsPack} />
@@ -224,6 +241,7 @@ export default function App() {
                 name="Home"
                 component={Home}
                 options={headerOptions}
+                isSearching={isSearching}
               />
               <Stack.Screen
                 name="Post"
@@ -281,26 +299,4 @@ async function registerForPushNotificationsAsync() {
   }
 
   return token
-}
-
-function getActiveRouteName(navigationState) {
-  if (!navigationState) return null;
-  const route = navigationState.routes[navigationState.index];
-  // Traverse the nested navigators.
-  if (route.routes) return getActiveRouteName(route)
-  
-  var out = route.key + "-"
-  if (route.params?.id) {
-    out += route.params?.id
-  } else if (route.params?.article?.id) {
-    out += route.params?.article?.id
-  } else if (route.params?.category?.id) {
-    out += route.params?.category?.id
-  } else if (route.params?.name) {
-    out += route.params?.name
-  } else {
-    out = route.key
-  }
-  
-  return out
 }
