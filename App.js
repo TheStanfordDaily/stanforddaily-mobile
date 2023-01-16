@@ -16,17 +16,14 @@ import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import Post from "./screens/Post"
-import Home from "./screens/Home"
-import Section from "./screens/Section"
 import { ThemeContext } from "./theme-context"
-import Author from "./screens/Author"
 import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./Model"
-import Search from "./screens/Search"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
-import { getActiveRouteName } from "./helpers/format"
+import { getActiveRouteInfo } from "./helpers/format"
+import { registerForPushNotificationsAsync } from "./helpers/user"
+import { Author, Home, Post, Section, Search } from "./screens"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -198,7 +195,7 @@ export default function App() {
       })
     })
 
-    // Listener for when app is opened from web browser.
+    // FIXME: Listener for when app is opened from web browser.
     Linking.addEventListener("url", response => {
       if (response.url) {
         const url = response.url
@@ -221,13 +218,13 @@ export default function App() {
   return fontsLoaded && (
     <NavigationContainer onStateChange={e => {
         events.push(e)
-        const name = getActiveRouteName(e)
-        if (!seen.has(name)) {
+        const name = getActiveRouteInfo(e)
+        if (!(seen.has(name.key) || seen.has(name?.id))) {
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const analyticsRef = ref(db, "Analytics/", userCredential)
-            push(analyticsRef, name + new Date().toISOString()).then(() => console.log("added to analytics")).catch(error => console.log(error))
+            push(analyticsRef, name).catch(error => console.log(error))
           })
-          .then(() => setSeen(new Set([...seen, name])))
+          .then(() => setSeen(new Set([...seen, name.key, name?.id ?? ""])))
           .catch(error => console.trace(error))
           
         }
@@ -269,34 +266,4 @@ export default function App() {
       </ThemeContext.Provider>
     </NavigationContainer>
   )
-}
-
-async function registerForPushNotificationsAsync() {
-  let token
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync()
-      finalStatus = status
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get token for push notification.")
-      return
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data
-  } else {
-    alert("Must use physical device for Push Notifications.")
-  }
-
-  if (Platform.OS === "android") {
-    Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C"
-    })
-  }
-
-  return token
 }

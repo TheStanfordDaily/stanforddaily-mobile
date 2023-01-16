@@ -110,8 +110,8 @@ export default function Home({ navigation, route }) {
     
     return layoutLoaded ? (
       <Layout style={styles.container}>
-        <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={[0]}>
-          {route.params?.isSearching && <SearchBar navigation={navigation} /> }
+        <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={route.params?.isSearching ? [0] : undefined}>
+          {route.params?.isSearching && <SearchBar navigation={navigation} />}
           <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] ?? []} navigation={navigation} />
           <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />

@@ -47,16 +47,21 @@ export const generateSlug = (s) => {
   return s.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-')
 }
 
-export function getActiveRouteName(navigationState) {
+export function getActiveRouteInfo(navigationState) {
   if (!navigationState) return null
   const route = navigationState.routes[navigationState.index]
   // Traverse the nested navigators.
-  if (route.routes) return getActiveRouteName(route)
+  if (route.routes) return getActiveRouteInfo(route)
   
-  var out = route.name + "_" // route.key + "-"
-  out += route.params?.article?.id ?? ""
+  var out = {
+    name: route.name,
+    datetime: new Date().toISOString()
+  }
+  if (route.params?.article?.id) {
+    out["id"] = route.params?.article?.id
+  }
   
-  return out + "_"
+  return out
 }
 
 export function withoutDuplicates(posts) {
