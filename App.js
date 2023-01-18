@@ -62,15 +62,13 @@ export default function App() {
   function validateConfig(config) {
     return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
   }
-
-  const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
   
-  const toggleTheme = () => {
+  function toggleTheme() {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
   }
 
-  const onShare = async (url, title) => {
+  async function onShare(url, title) {
     try {
       const result = await Share.share({
         url: url,
@@ -90,6 +88,8 @@ export default function App() {
       alert(error.message)
     }
   }
+
+  const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
 
   const navigatorTheme = {
     light: DefaultTheme,
@@ -140,6 +140,22 @@ export default function App() {
 
   const searchHeaderOptions = {
     headerTintColor: bread[theme]["color-primary-500"]
+  }
+
+  function logNavigationState(e) {
+    events.push(e)
+    const info = getActiveRouteInfo(e)
+
+    // TODO: Check whether this condition is actually doing what we want it to do.
+    if (!(seen.has(info.key) || seen.has(info?.id))) {
+      signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
+        const analyticsRef = ref(db, "Analytics/", userCredential)
+        push(analyticsRef, info).catch(error => console.log(error))
+      })
+      .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
+      .catch(error => console.trace(error))
+      
+    }
   }
 
   var events = []
@@ -216,19 +232,7 @@ export default function App() {
 
 
   return fontsLoaded && (
-    <NavigationContainer onStateChange={e => {
-        events.push(e)
-        const name = getActiveRouteInfo(e)
-        if (!(seen.has(name.key) || seen.has(name?.id))) {
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-            const analyticsRef = ref(db, "Analytics/", userCredential)
-            push(analyticsRef, name).catch(error => console.log(error))
-          })
-          .then(() => setSeen(new Set([...seen, name.key, name?.id ?? ""])))
-          .catch(error => console.trace(error))
-          
-        }
-      }} theme={navigatorTheme[theme]}>
+    <NavigationContainer onStateChange={logNavigationState} theme={navigatorTheme[theme]}>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
         <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
