@@ -59,16 +59,14 @@ export default function App() {
   const [seen, setSeen] = useState(new Set())
   const [isSearching, setIsSearching] = useState(false)
 
-  function validateConfig(config) {
-    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
-  }
-  
-  function toggleTheme() {
-    const next = theme === "light" ? "dark" : "light"
-    setTheme(next)
+  let app, auth, db
+  if (validateConfig(firebaseConfig)) {
+    app = initializeApp(firebaseConfig)
+    auth = getAuth(app)
+    db = getDatabase(app)
   }
 
-  async function onShare(url, title) {
+  const onShare = async (url, title) => {
     try {
       const result = await Share.share({
         url: url,
@@ -89,7 +87,16 @@ export default function App() {
     }
   }
 
-  const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
+  function toggleTheme() {
+    const next = theme === "light" ? "dark" : "light"
+    setTheme(next)
+  }
+
+  function validateConfig(config) {
+    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
+  }
+  
+  const [configValidated, setConfigValidated] = useState(validateConfig(firebaseConfig))
 
   const navigatorTheme = {
     light: DefaultTheme,
@@ -143,7 +150,6 @@ export default function App() {
   }
 
   function logNavigationState(e) {
-    events.push(e)
     const info = getActiveRouteInfo(e)
 
     // TODO: Check whether this condition is actually doing what we want it to do.
@@ -154,18 +160,7 @@ export default function App() {
       })
       .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
       .catch(error => console.trace(error))
-      
     }
-  }
-
-  var events = []
-  let app
-  let auth
-  let db
-  if (validateConfig(firebaseConfig)) {
-    app = initializeApp(firebaseConfig)
-    auth = getAuth(app)
-    db = getDatabase(app)
   }
 
   useEffect(() => {
@@ -177,26 +172,26 @@ export default function App() {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches && validConfig) {
+      if (matches && configValidated) {
           var submatch = matches[1]
           signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, new Date().toISOString()).catch(error => console.log(error))
           }).catch(error => {
             console.trace(error)
-            setValidConfig(false)
+            setConfigValidated(false)
           })
         }
       })
     }
 
-    Device.getDeviceTypeAsync().then(setDeviceType)
+    Device.getDeviceTypeAsync().then(type => setDeviceType(type))
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
       setTheme(listener.colorScheme)
       // TODO: Add return function for removing listener when user opts out of automatic theme changes.
-    })    
+    })
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -238,32 +233,11 @@ export default function App() {
         <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
           <SafeAreaProvider>
             <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen
-                name="Home"
-                component={Home}
-                options={headerOptions}
-                isSearching={isSearching}
-              />
-              <Stack.Screen
-                name="Post"
-                component={Post}
-                options={detailHeaderOptions}
-              />
-              <Stack.Screen
-                name="Section"
-                component={Section}
-                options={sectionOptions}
-              />
-              <Stack.Screen
-                name="Author"
-                component={Author}
-                options={authorOptions}
-              />
-              <Stack.Screen
-                name="Search"
-                component={Search}
-                options={searchHeaderOptions}
-              />
+              <Stack.Screen name="Home" component={Home} options={headerOptions} isSearching={isSearching} />
+              <Stack.Screen name="Post" component={Post} options={detailHeaderOptions} />
+              <Stack.Screen name="Section" component={Section} options={sectionOptions} />
+              <Stack.Screen name="Author" component={Author} options={authorOptions} />
+              <Stack.Screen name="Search" component={Search} options={searchHeaderOptions} />
             </Stack.Navigator>
           </SafeAreaProvider>
         </ApplicationProvider>
