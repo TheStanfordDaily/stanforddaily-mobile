@@ -3,6 +3,7 @@ import { Button, Dimensions, Image, StyleSheet, Text, View } from "react-native"
 import Carousel from "react-native-snap-carousel"
 
 const { width, height } = Dimensions.get("window")
+// This file imports vanilla React Native Text.
 
 export default function Canvas({ navigation, articles }) {
     // No recent cartoons at the moment.

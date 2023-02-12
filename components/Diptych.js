@@ -12,6 +12,7 @@ import * as Device from "expo-device"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
+// This file imports UI Kitten Text.
 
 export default function Diptych(props) {
     const articles = props.articles.length % 2 === 0 ? props.articles : props.articles.slice(0, -1)
