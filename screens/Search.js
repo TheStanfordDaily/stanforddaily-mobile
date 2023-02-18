@@ -43,9 +43,8 @@ export default function Search({ route, navigation }) {
             value={searchText}
             onSubmitEditing={performSearch}
             placeholder="Search"
-            // accessoryRight={ <Icon height={20} width={20} name='close-circle' fill={"grey here"} />}
             onChangeText={setSearchText}
-            style={{ marginBottom: Spacing.medium, width: width - 2*Spacing.extraLarge }}
+            style={{ width: width - 3.2*Spacing.extraLarge }}
           />
         )
     })
