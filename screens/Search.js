@@ -24,17 +24,25 @@ export default function Search({ route, navigation }) {
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
 
-    const performSearch = () => {
-      setSearching(true)
-      Model.posts().perPage(perPageNumber).search(searchText).get().then((posts) => {
-        setArticles(posts)
-        // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
-        // console.log(fuse.search("dragon"))
+    const loadArticles = () => {
+      Model.posts().perPage(perPageNumber).page(pageNumber).search(searchText).get().then((posts) => {
+        setArticles([...articles, ...posts])
       }).finally(() => {
-        
+        setArticlesLoading(false)
         setSearching(false)
       })
     }
+
+    const performSearch = () => {
+      setSearching(true)
+      setArticles([])
+      setPageNumber(1)
+      loadArticles()
+    }
+
+    useEffect(() => {
+      if(pageNumber !== 1) loadArticles()
+    }, [pageNumber])
 
     navigation.setOptions({
         headerBackTitleVisible: false,
@@ -60,7 +68,7 @@ export default function Search({ route, navigation }) {
         </Layout>
       )
     }
-    
+
     return articles.length === 0 ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
           {tags.map((tag, index) => (
@@ -85,13 +93,14 @@ export default function Search({ route, navigation }) {
               onEndReachedThreshold={1}
               onEndReached={() => {
                   if (!articlesLoading) {
-                      setPageNumber(pageNumber + 1)
+                    setArticlesLoading(true)
+                    setPageNumber(pageNumber + 1)
                   }
               }}
               renderItem={({ item, index }) => (
                   <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
               )}
-              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
+              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginTop: Spacing.extraLarge, marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
     )
