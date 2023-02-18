@@ -61,7 +61,7 @@ export default function App() {
   const [seen, setSeen] = useState(new Set())
 
   function validateConfig(config) {
-    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
+    return Object.values(config).every(value => value !== undefined && value !== "" && value !== null)
   }
 
   const [validConfig, setValidConfig] = useState(validateConfig(firebaseConfig))
