@@ -1,21 +1,18 @@
-import { useTheme } from "@react-navigation/native"
-import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
+import { Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity } from "react-native"
-import Wlidcard from "../components/Wildcard"
+import { ActivityIndicator, Dimensions, TouchableOpacity } from "react-native"
+import Wildcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../constants"
-import Fuse from "fuse.js"
 
-const { width, height } = Dimensions.get("window")
+const { width } = Dimensions.get("window")
 
-export default function Search({ route, navigation }) {
-
+export default function Search({ navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [articles, setArticles] = useState([])
-    const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
+    const { deviceType } = useContext(ThemeContext)
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 50
@@ -24,16 +21,31 @@ export default function Search({ route, navigation }) {
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
 
-    const performSearch = () => {
-      Model.posts().perPage(perPageNumber).search(searchText).get().then((posts) => {
-        setArticles(posts)
-        // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
-        // console.log(fuse.search("dragon"))
+    const loadArticles = () => {
+      Model.posts().perPage(perPageNumber).page(pageNumber).search(searchText).get().then((posts) => {
+        setArticles([...articles, ...posts])
+      }).catch(error => {
+        if(error.code === 'rest_post_invalid_page_number') setPossiblyReachedEnd(true)
       }).finally(() => {
-        
+        setArticlesLoading(false)
         setSearching(false)
       })
     }
+
+    const performSearch = () => {
+      setSearching(true)
+      setPossiblyReachedEnd(false)
+      setArticles([])
+      setPageNumber(1)
+    }
+
+    useEffect(() => {
+      if(!articles.length && searching) loadArticles()
+    }, [searching, articles]);
+
+    useEffect(() => {
+      if(pageNumber !== 1) loadArticles()
+    }, [pageNumber])
 
     navigation.setOptions({
         headerBackTitleVisible: false,
@@ -42,16 +54,25 @@ export default function Search({ route, navigation }) {
             value={searchText}
             onSubmitEditing={performSearch}
             placeholder="Search"
-            // accessoryRight={ <Icon height={20} width={20} name='close-circle' fill={"grey here"} />}
             onChangeText={setSearchText}
-            style={{ marginBottom: Spacing.medium, width: width - 2*Spacing.extraLarge }}
+            style={{ width: width - 3.2*Spacing.extraLarge }}
           />
         )
     })
     
-    Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
-    
-    return articles.length === 0 || searching ? (
+    useEffect(() => {
+      Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
+    }, [])
+
+    if(searching) {
+      return (
+        <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
+          <ActivityIndicator />
+        </Layout>
+      )
+    }
+
+    return articles.length === 0 ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
           {tags.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
@@ -74,14 +95,15 @@ export default function Search({ route, navigation }) {
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
               onEndReached={() => {
-                  if (!articlesLoading) {
-                      setPageNumber(pageNumber + 1)
+                  if (!articlesLoading && !possiblyReachedEnd) {
+                    setArticlesLoading(true)
+                    setPageNumber(pageNumber + 1)
                   }
               }}
               renderItem={({ item, index }) => (
-                  <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+                  <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
               )}
-              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
+              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginTop: Spacing.extraLarge, marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
     )
