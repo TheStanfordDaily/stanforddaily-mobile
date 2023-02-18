@@ -30,6 +30,7 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 
 export default function Post({ route, navigation }) {
     const { article, sourceName } = route.params
+    const articleImage = article["jetpack_featured_media_url"]
     const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio*width}`
     const colorScheme = useColorScheme()
     const theme = useTheme()
@@ -98,10 +99,14 @@ export default function Post({ route, navigation }) {
       // That would vastly increase loading time when so many posts are being fetched at once,
       // most of which are not going to be tapped on anyway.
 
-      Model.media().id(article["featured_media"]).get().then(media => {
-        setCaption(decode(media.caption?.rendered).slice(3, -5))
+      if(article["featuredMedia"]) {
+        Model.media().id(article["featured_media"]).get().then(media => {
+          setCaption(decode(media.caption?.rendered).slice(3, -5))
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        })
+      } else {
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      })
+      }
     }, [article])
 
 
@@ -109,7 +114,7 @@ export default function Post({ route, navigation }) {
       <React.Fragment>
         <StatusBar style={statusBarStyle} />
         <ImageHeaderScrollView
-          headerImage={{ uri: featuredMedia }}
+          headerImage={articleImage ? { uri: featuredMedia } : ''}
           renderForeground={Foreground}
           maxOverlayOpacity={0.75}
           minOverlayOpacity={0.6}

@@ -17,7 +17,7 @@ const Header = (props) => (
             <Text style={styles.header} category="h6">{props.title}</Text>
             {props.verbose && (<Text category="p2" style={styles.date}>{formatDate(new Date(props.date))}</Text>)}
         </View>
-        <Image source={{ uri: `${props.uri}?w=${width*pixelRatio}` }} style={{ flex: 1, height: 192 }} />
+        { props.uri ? <Image source={{ uri: `${props.uri}?w=${width*pixelRatio}` }} style={{ flex: 1, height: 192 }} /> : null }
     </React.Fragment>
 )
 
