@@ -27,6 +27,8 @@ export default function Search({ route, navigation }) {
     const loadArticles = () => {
       Model.posts().perPage(perPageNumber).page(pageNumber).search(searchText).get().then((posts) => {
         setArticles([...articles, ...posts])
+      }).catch(error => {
+        if(error.code === 'rest_post_invalid_page_number') setPossiblyReachedEnd(true)
       }).finally(() => {
         setArticlesLoading(false)
         setSearching(false)
@@ -35,6 +37,7 @@ export default function Search({ route, navigation }) {
 
     const performSearch = () => {
       setSearching(true)
+      setPossiblyReachedEnd(false)
       setArticles([])
       setPageNumber(1)
       loadArticles()
@@ -92,7 +95,7 @@ export default function Search({ route, navigation }) {
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
               onEndReached={() => {
-                  if (!articlesLoading) {
+                  if (!articlesLoading && !possiblyReachedEnd) {
                     setArticlesLoading(true)
                     setPageNumber(pageNumber + 1)
                   }
