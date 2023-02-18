@@ -2,7 +2,7 @@ import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity } from "react-native"
-import Wlidcard from "../components/Wildcard"
+import Wildcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
@@ -49,8 +49,10 @@ export default function Search({ route, navigation }) {
         )
     })
     
-    Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
-    
+    useEffect(() => {
+      Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
+    }, [])
+
     if(searching) {
       return (
         <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
@@ -58,8 +60,8 @@ export default function Search({ route, navigation }) {
         </Layout>
       )
     }
-
-    return articles.length === 0 || searching ? (
+    
+    return articles.length === 0 ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
           {tags.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
@@ -87,7 +89,7 @@ export default function Search({ route, navigation }) {
                   }
               }}
               renderItem={({ item, index }) => (
-                  <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+                  <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
               )}
               ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
           />
