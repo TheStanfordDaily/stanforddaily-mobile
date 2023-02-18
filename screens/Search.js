@@ -40,8 +40,11 @@ export default function Search({ route, navigation }) {
       setPossiblyReachedEnd(false)
       setArticles([])
       setPageNumber(1)
-      loadArticles()
     }
+
+    useEffect(() => {
+      if(!articles.length && searching) loadArticles()
+    }, [searching, articles]);
 
     useEffect(() => {
       if(pageNumber !== 1) loadArticles()
@@ -71,6 +74,8 @@ export default function Search({ route, navigation }) {
         </Layout>
       )
     }
+
+    console.log(articles)
 
     return articles.length === 0 ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
