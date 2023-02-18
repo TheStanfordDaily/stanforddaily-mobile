@@ -1,21 +1,18 @@
-import { useTheme } from "@react-navigation/native"
-import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
+import { Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity } from "react-native"
+import { ActivityIndicator, Dimensions, TouchableOpacity } from "react-native"
 import Wildcard from "../components/Wildcard"
 import Model from "../Model"
 import { ThemeContext } from "../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../constants"
-import Fuse from "fuse.js"
 
-const { width, height } = Dimensions.get("window")
+const { width } = Dimensions.get("window")
 
-export default function Search({ route, navigation }) {
-
+export default function Search({ navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [articles, setArticles] = useState([])
-    const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
+    const { deviceType } = useContext(ThemeContext)
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 50
@@ -74,8 +71,6 @@ export default function Search({ route, navigation }) {
         </Layout>
       )
     }
-
-    console.log(articles)
 
     return articles.length === 0 ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
