@@ -105,11 +105,11 @@ export default function App() {
           source={logoAssets[theme]}
         />
       ),
-      /*headerRight: () => (
+      headerRight: () => (
         <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate("Search")}>
             <Icon name={ "search-outline"} width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
-      )*/
+      )
     }
   }
 

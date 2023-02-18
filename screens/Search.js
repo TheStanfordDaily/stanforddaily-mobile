@@ -25,6 +25,7 @@ export default function Search({ route, navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
 
     const performSearch = () => {
+      setSearching(true)
       Model.posts().perPage(perPageNumber).search(searchText).get().then((posts) => {
         setArticles(posts)
         // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
@@ -51,6 +52,14 @@ export default function Search({ route, navigation }) {
     
     Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
     
+    if(searching) {
+      return (
+        <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center"}}>
+          <ActivityIndicator />
+        </Layout>
+      )
+    }
+
     return articles.length === 0 || searching ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
           {tags.map((tag, index) => (
