@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useCallback, useContext, useEffect, useState } from "react"
 import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, ImageBackground, Text, Modal, Image, PixelRatio, Platform, Dimensions, UIManager } from "react-native"
 import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
 import Canvas from "../components/Canvas"
@@ -7,7 +7,7 @@ import Diptych from "../components/Diptych"
 import Mark from "../components/Mark"
 import Shelf from "../components/Shelf"
 import Wildcard from "../components/Wildcard"
-import Model from "../Model"
+import Model, { useWordPress } from "../Model"
 import { Sections, Spacing } from "../constants"
 import _ from "lodash"
 import { DeviceType } from "expo-device"
@@ -76,6 +76,10 @@ export default function Home({ navigation, route }) {
       })
     }
 
+    // const examplePosts = useWordPress(pageNumber, batchSize)
+    // console.log(examplePosts)
+    const fetchedCategories = useWordPress(1)
+
     useEffect(() => {
       // At first, retrieve only the posts that would be immediately visible.
       if (pageNumber === 1) {
@@ -112,6 +116,7 @@ export default function Home({ navigation, route }) {
       <Layout style={styles.container}>
         <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={route.params?.isSearching ? [0] : undefined}>
           {route.params?.isSearching && <SearchBar navigation={navigation} />}
+          <Text>{JSON.stringify(fetchedCategories)}</Text>
           <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] ?? []} navigation={navigation} />
           <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
