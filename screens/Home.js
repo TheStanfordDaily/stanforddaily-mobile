@@ -24,10 +24,9 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 // TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
 
 export default function Home({ navigation, route }) {
-    const [articles, setArticles] = useState({})
-    const [seeds, setSeeds] = useState({})
     const [pageNumber, setPageNumber] = useState(1)
-    const [layoutLoaded, setLayoutLoaded] = useState(false)
+    const { data, error, loading } = useWordPress(pageNumber)
+    const [articles, setArticles] = useState(data)
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 12
@@ -78,54 +77,22 @@ export default function Home({ navigation, route }) {
 
     // const examplePosts = useWordPress(pageNumber, batchSize)
     // console.log(examplePosts)
-    const fetchedCategories = useWordPress(1)
-
-    useEffect(() => {
-      // At first, retrieve only the posts that would be immediately visible.
-      if (pageNumber === 1) {
-        Model.posts().perPage(2*batchSize).page(pageNumber).get().then(posts => {
-          collatePosts(posts)
-        }).catch(error => {
-          console.trace(error)
-        }).finally(() => setLayoutLoaded(true))
-
-        // Assuming that news and featured articles are in abundance.
-        RSVP.hash({
-          featured: Model.posts().perPage(4).page(pageNumber).categories(Sections.FEATURED.id).get(),
-          news: Model.posts().perPage(4).page(pageNumber).categories(Sections.NEWS.id).get(),
-          opinions: Model.posts().perPage(6).page(pageNumber).categories(Sections.OPINIONS.id).get(),
-          sports: Model.posts().perPage(8).page(pageNumber).categories(Sections.SPORTS.id).get(),
-          humor: Model.posts().perPage(6).page(pageNumber).categories(Sections.HUMOR.id).get(),
-          theGrind: Model.posts().perPage(4).page(pageNumber).categories(Sections.THE_GRIND.id).get(),
-          artsAndLife: Model.posts().perPage(4).page(pageNumber).categories(Sections.ARTS_LIFE.id).get()
-        }).then(posts => {
-          categorizePosts(posts)
-          setArticles(articles => ({
-            ...articles,
-            "culture": _.shuffle(posts.theGrind.concat(posts.artsAndLife)).slice(0, 4)
-          }))
-        }).catch(error => console.log(error))
-      }
-
-      // Load another page.
-      fetchWildcardPosts()
-    }, [pageNumber]) // Runs once at the beginning, and anytime pageNumber changes thereafter.
+    // const fetchedCategories = useWordPress(1)
     
     
-    return layoutLoaded ? (
+    return data ? (
       <Layout style={styles.container}>
         <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={route.params?.isSearching ? [0] : undefined}>
           {route.params?.isSearching && <SearchBar navigation={navigation} />}
-          <Text>{JSON.stringify(fetchedCategories)}</Text>
-          <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
-          <Mark category={Sections.NEWS} seed={seeds[Sections.NEWS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
+          <Carousel articles={data[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+          <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
+          <Diptych articles={withoutDuplicates(data[Sections.NEWS.slug]) ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
-          <Mark category={Sections.OPINIONS} seed={seeds[Sections.OPINIONS.slug]} navigation={navigation} />
-          {articles[Sections.OPINIONS.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.OPINIONS.slug]} navigation={navigation} />}
+          <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
+          <Shelf articles={data[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
 
-          <Mark category={Sections.SPORTS} seed={seeds[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+          <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+          <Diptych articles={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
@@ -133,11 +100,11 @@ export default function Home({ navigation, route }) {
             </View>
           ))}
           <Divider />
-          <Mark category={Sections.HUMOR} seed={seeds[Sections.HUMOR.slug] || []} alternate navigation={navigation} />
-          {articles[Sections.HUMOR.slug]?.length > 3*groupSize && <Shelf articles={articles[Sections.HUMOR.slug]} alternate navigation={navigation} />}
+          <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
+          <Shelf articles={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
           <Divider />
           {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
-          {_.chunk(articles?.wildcard, groupSize)?.map((group, outerIndex) => (
+          {_.chunk(data?.wildcard, groupSize)?.map((group, outerIndex) => (
             <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
