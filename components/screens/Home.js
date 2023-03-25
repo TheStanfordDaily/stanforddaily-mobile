@@ -3,7 +3,7 @@ import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, Text,
 import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
 import { Canvas, Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
-import { Sections, Spacing } from "../../constants"
+import { Sections, Spacing } from "../../utils/constants"
 import _ from "lodash"
 import { DeviceType } from "expo-device"
 import { ThemeContext } from "../../theme-context"
