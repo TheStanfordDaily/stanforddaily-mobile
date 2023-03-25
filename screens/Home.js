@@ -16,6 +16,7 @@ import RSVP from "rsvp"
 import Collapsible from "react-native-collapsible"
 import SearchBar from "../components/SearchBar"
 import { withoutDuplicates } from "../helpers/format"
+import { FlatList } from "react-native-gesture-handler"
 
 if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -37,67 +38,44 @@ export default function Home({ navigation, route }) {
         setPageNumber(pageNumber + 1)
       }
     }
-
-    function collatePosts(posts) {
-      const featuredPosts = posts.filter(item => item.categories.includes(Sections.FEATURED.id))
-      for (let value of Sections) {
-        setArticles(articles => ({
-          ...articles,
-          [value.slug]: value.slug === Sections.FEATURED.slug ? featuredPosts : posts.filter(item => item.categories.includes(value.id) && !item.categories.includes(Sections.FEATURED.id))
-        }))
-        setSeeds(articles => ({
-          ...articles,
-          [value.slug]: posts.filter(item => item.categories.includes(value.id))
-        }))
-      }
-    }
-
-    function categorizePosts(posts) {
-      for (let key in posts) {
-        setArticles(articles => ({
-          ...articles,
-          [key]: posts[key].filter(item => !item.categories.includes(Sections.FEATURED.id) || key === Sections.FEATURED.slug)
-        }))
-        setSeeds(articles => ({
-          ...articles,
-          [key]: posts[key]
-        }))
-      }
-    }
-
-    function fetchWildcardPosts() {
-      Model.posts().perPage(batchSize).page(pageNumber + 2).get().then(posts => {
-        setArticles(articles => ({
-          ...articles,
-          "wildcard": "wildcard" in articles ? [...articles["wildcard"], ...posts] : posts
-        }))
-      })
-    }
     
     
     return articles ? (
       <Layout style={styles.container}>
-        <ScrollView onScroll={peekBelow} scrollEventThrottle={0}>
-          <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
-          <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
-          <Divider marginTop={Spacing.medium} />
-          <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
+        <FlatList
+          ListHeaderComponent={() => (
+            <React.Fragment>
+              <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+              <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
+              <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
+              <Divider marginTop={Spacing.medium} />
+              <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
+              <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
 
-          <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-          <Divider marginTop={Spacing.medium} />
-          {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
-            <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
-              {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
-            </View>
-          ))}
-          <Divider />
-          <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
-          <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
-          <Divider />
-          {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
+              <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+              <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+              <Divider marginTop={Spacing.medium} />
+              {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
+                <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
+                  {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
+                </View>
+              ))}
+              <Divider />
+              <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
+              <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
+              <Divider />
+              {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
+            </React.Fragment>
+          )}
+          data={data?.wildcard ?? []}
+          renderItem={(post, index) =>  <Wildcard item={post.item} index={index} key={post.item.id.toString()} navigation={navigation} verbose />}
+          onScroll={peekBelow}
+          onEndReachedThreshold={0.5}
+          keyExtractor={(item, index) => index.toString()}
+          // ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+        />
+        {/* <ScrollView onScroll={peekBelow} scrollEventThrottle={0}>
+          
           {_.chunk(data?.wildcard, groupSize)?.map((group, outerIndex) => (
             <View key={outerIndex}>
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
@@ -106,7 +84,7 @@ export default function Home({ navigation, route }) {
               {outerIndex === data?.wildcard?.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
           ))}
-        </ScrollView>
+        </ScrollView> */}
       </Layout>
     ) : (
       <Layout style={styles.loading}>
