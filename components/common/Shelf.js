@@ -4,10 +4,10 @@ import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
-import { formatDate, itemize } from "../helpers/format"
+import { formatDate, itemize } from "../../utils/format"
 import { DeviceType } from "expo-device"
-import { ThemeContext } from "../theme-context"
-import { Spacing } from "../constants"
+import { ThemeContext } from "../../theme-context"
+import { Spacing } from "../../utils/constants"
 
 const pixelRatio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()

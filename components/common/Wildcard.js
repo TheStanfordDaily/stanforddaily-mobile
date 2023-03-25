@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from "react"
+import React from "react"
 import { Dimensions, StyleSheet, PixelRatio, View } from "react-native"
 import { Button, Card, Text } from "@ui-kitten/components"
 import { Image } from "react-native"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { ThemeContext } from "../theme-context"
-import { formatDate, itemize } from "../helpers/format"
-import { Spacing } from "../constants"
+import { formatDate, itemize } from "../../utils/format"
+import { Spacing } from "../../utils/constants"
 
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()

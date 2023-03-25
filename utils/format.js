@@ -1,3 +1,7 @@
+import { Share } from "react-native"
+import * as Notifications from "expo-notifications"
+import * as Device from "expo-device"
+
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
 export const itemize = (elements) => {
@@ -64,13 +68,6 @@ export function getActiveRouteInfo(navigationState) {
   return out
 }
 
-export function withoutDuplicates(posts) {
-  const ids = new Set()
-  return posts?.filter(post => {
-    if (!ids.has(post.id)) {
-      ids.add(post.id)
-      return true
-    }
-    return false
-  })
+export function validateConfig(config) {
+  return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
 }

@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useState } from "react"
 import { Card, Text } from "@ui-kitten/components"
-import { Dimensions, Image, View, StyleSheet, Platform, PixelRatio } from "react-native"
+import { Dimensions, Image, View, StyleSheet, PixelRatio } from "react-native"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { Spacing } from "../constants"
-import { ref } from "firebase/database"
-import { ThemeContext } from "../theme-context"
+import { Spacing } from "../../utils/constants"
+import { ThemeContext } from "../../theme-context"
 import * as Device from "expo-device"
 
 const { width, height } = Dimensions.get("window")

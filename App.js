@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Linking, Platform, Share, TextInput, TouchableOpacity } from "react-native"
+import { Appearance, Image, Linking, Platform, TextInput, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
@@ -19,11 +19,11 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { ThemeContext } from "./theme-context"
 import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
-import Model from "./Model"
+import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
-import { getActiveRouteInfo } from "./helpers/format"
-import { registerForPushNotificationsAsync } from "./helpers/user"
-import { Author, Home, Post, Section, Search } from "./screens"
+import { Author, Home, Post, Section, Search } from "./components/screens"
+import { getActiveRouteInfo, validateConfig } from "./utils/format"
+import { onShare, registerForPushNotificationsAsync } from "./utils/action"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -68,34 +68,9 @@ export default function App() {
     db = getDatabase(app)
   }
 
-  const onShare = async (url, title) => {
-    try {
-      const result = await Share.share({
-        url: url,
-        message: title + " | The Stanford Daily"
-      })
-      
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // Shared successfully with activity type of result.activityType.
-        } else {
-          // Shared successfully.
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // Dismissed.
-      }
-    } catch (error) {
-      alert(error.message)
-    }
-  }
-
   function toggleTheme() {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
-  }
-
-  function validateConfig(config) {
-    return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
   }
   
   const [configValidated, setConfigValidated] = useState(validateConfig(firebaseConfig))

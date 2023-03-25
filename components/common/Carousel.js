@@ -5,9 +5,9 @@ import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { itemize } from "../helpers/format"
-import { Spacing } from "../constants"
-import { ThemeContext } from "../theme-context"
+import { itemize } from "../../utils/format"
+import { Spacing } from "../../utils/constants"
+import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
