@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Linking, Platform, Share, TouchableOpacity } from "react-native"
+import { Appearance, Image, Linking, Platform, Share, TextInput, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
@@ -58,6 +58,8 @@ export default function App() {
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
   const [isSearching, setIsSearching] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [searchVisible, setSearchVisible] = useState(false)
 
   let app, auth, db
   if (validateConfig(firebaseConfig)) {
@@ -103,16 +105,34 @@ export default function App() {
     dark: DarkTheme
   }
 
+  const handleSearch = () => {
+    setSearchVisible(true);
+  };
+
+  const handleSearchSubmit = () => {
+    setSearchVisible(false);
+  };
+
+  const handleSearchCancel = () => {
+    setSearchVisible(false);
+    setSearchQuery("");
+  };
+
   const headerOptions = ({ navigation, route }) => {
     return {
-      headerTitle: () => (
+      headerTitle: () => searchVisible ? (
+        <TextInput autoFocus style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onSubmitEditing={handleSearchSubmit} onBlur={handleSearchCancel} />
+      ) : (
         <Image
           style={{ width: 260, height: 30 }}
           source={logoAssets[theme]}
         />
       ),
       headerRight: () => (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.setParams({ isSearching: true })}>
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => {
+            navigation.setParams({ isSearching: true, searchQuery })
+            setSearchVisible(true)
+          }}>
             <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       )

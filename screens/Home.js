@@ -25,8 +25,7 @@ if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental
 
 export default function Home({ navigation, route }) {
     const [pageNumber, setPageNumber] = useState(1)
-    const { data, error, loading } = useWordPress(pageNumber)
-    const [articles, setArticles] = useState(data)
+    const { data, articles, error, loading } = useWordPress(pageNumber)
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     const batchSize = 12
@@ -74,25 +73,20 @@ export default function Home({ navigation, route }) {
         }))
       })
     }
-
-    // const examplePosts = useWordPress(pageNumber, batchSize)
-    // console.log(examplePosts)
-    // const fetchedCategories = useWordPress(1)
     
     
-    return data ? (
+    return articles ? (
       <Layout style={styles.container}>
-        <ScrollView onScroll={peekBelow} scrollEventThrottle={0} stickyHeaderIndices={route.params?.isSearching ? [0] : undefined}>
-          {route.params?.isSearching && <SearchBar navigation={navigation} />}
-          <Carousel articles={data[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+        <ScrollView onScroll={peekBelow} scrollEventThrottle={0}>
+          <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
           <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={withoutDuplicates(data[Sections.NEWS.slug]) ?? []} navigation={navigation} />
+          <Diptych articles={withoutDuplicates(articles[Sections.NEWS.slug]) ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
-          <Shelf articles={data[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
+          <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
 
           <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-          <Diptych articles={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+          <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
           <Divider marginTop={Spacing.medium} />
           {_.chunk(articles?.culture, groupSize)?.map((group, outerIndex) => (
             <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
@@ -101,7 +95,7 @@ export default function Home({ navigation, route }) {
           ))}
           <Divider />
           <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
-          <Shelf articles={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
+          <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
           <Divider />
           {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
           {_.chunk(data?.wildcard, groupSize)?.map((group, outerIndex) => (
@@ -109,7 +103,7 @@ export default function Home({ navigation, route }) {
               <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
                 {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} verbose />)}
               </View>
-              {outerIndex === articles?.wildcard?.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+              {outerIndex === data?.wildcard?.length - 1 && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
             </View>
           ))}
         </ScrollView>
