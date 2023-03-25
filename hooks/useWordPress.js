@@ -3,7 +3,9 @@ import { Sections } from "../utils/constants"
 import Model from "../utils/model"
 import _ from "lodash"
 
-const BATCH_SIZE = 12
+const BATCH_SIZE = 6
+const PAGE_SIZE = 12
+const homeCount = BATCH_SIZE * Object.keys(Sections).length
 
 export const useWordPress = (pageNumber = 1) => {
     const [data, setData] = useState({})
@@ -17,7 +19,7 @@ export const useWordPress = (pageNumber = 1) => {
   
       Object.values(Sections).forEach(async category => {
         try {
-          const response = await Model.posts().categories(category.id).perPage(6).page(pageNumber).get()
+          const response = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(pageNumber).get()
           setData((prevState) => ({
             ...prevState,
             [category.slug]: [...(category.slug in prevState ? prevState[category.slug] : []), ...response]
@@ -43,7 +45,7 @@ export const useWordPress = (pageNumber = 1) => {
         }
       })
 
-      Model.posts().perPage(Object.keys(articles)?.length ?? BATCH_SIZE).page(pageNumber + 1).get().then(posts => {
+      Model.posts().perPage(PAGE_SIZE).page(pageNumber + Math.ceil(homeCount / PAGE_SIZE) + 1).get().then(posts => {
         setData((prevState) => ({
           ...prevState,
           wildcard: [

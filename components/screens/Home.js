@@ -59,7 +59,7 @@ export default function Home({ navigation, route }) {
             </React.Fragment>
           )}
           data={data?.wildcard ?? []}
-          renderItem={(post, index) =>  <Wildcard item={post.item} index={index} key={post.item.id.toString()} navigation={navigation} verbose />}
+          renderItem={(post, index) => <Wildcard item={post.item} index={index} key={post.item.id.toString()} navigation={navigation} verbose />}
           onScroll={peekBelow}
           onEndReachedThreshold={0.5}
           keyExtractor={(item, index) => index.toString()}
