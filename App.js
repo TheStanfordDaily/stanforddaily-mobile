@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, useMemo } from "react"
 import { Appearance, Image, LayoutAnimation, Linking, TextInput, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
@@ -23,6 +23,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo, validateConfig } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
+import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -53,28 +54,22 @@ export default function App() {
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
-  const textInput = useRef()
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
   const [searchQuery, setSearchQuery] = useState("")
   const [searchVisible, setSearchVisible] = useState(false)
+  const [activeRouteInfo, setActiveRouteInfo] = useState({})
+  const useActiveRouteInfo = useMemo(() => getActiveRouteInfo, [])
 
-  let app, auth, db
-  if (validateConfig(firebaseConfig)) {
-    app = initializeApp(firebaseConfig)
-    auth = getAuth(app)
-    db = getDatabase(app)
-  }
+  const firebase = useFirebase(firebaseConfig)
 
   function toggleTheme() {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
   }
   
-  const [configValidated, setConfigValidated] = useState(validateConfig(firebaseConfig))
-
   const navigatorTheme = {
     light: DefaultTheme,
     dark: DarkTheme
@@ -94,8 +89,7 @@ export default function App() {
   const headerOptions = ({ navigation, route }) => {
     return {
       headerTitle: () => searchVisible ? (
-        <TextInput autoFocus ref={textInput} style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onBlur={closeSearch} onSubmitEditing={() => {
-          if (textInput.current) textInput.current.blur()
+        <TextInput autoFocus style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onBlur={closeSearch} onSubmitEditing={() => {
           LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
           setSearchVisible(false)
           navigation.navigate("Section", { category: { name: Strings.search }, seed: [], query: searchQuery })
@@ -145,32 +139,36 @@ export default function App() {
   }
 
   function logNavigationState(e) {
-    const info = getActiveRouteInfo(e)
-
-    // TODO: Check whether this condition is actually doing what we want it to do.
-    if (!(seen.has(info.key) || seen.has(info?.id))) {
-      signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-        const analyticsRef = ref(db, "Analytics/", userCredential)
-        push(analyticsRef, info).catch(error => console.log(error))
-      })
-      .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
-      .catch(error => console.trace(error))
+    const info = useActiveRouteInfo(e);
+  
+    // Check whether this condition is actually doing what we want it to do.
+    if (firebase?.error === null && !(seen.has(info.key) || seen.has(info?.id))) {
+      setActiveRouteInfo(info); // Set the active route info state.
+      signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD)
+        .then((userCredential) => {
+          const analyticsRef = ref(firebase.db, "Analytics/", userCredential);
+          push(analyticsRef, info).catch((error) => console.log(error));
+        })
+        .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
+        .catch((error) => console.trace(error));
     }
   }
+  
+  
 
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true))
 
-    if (validateConfig(firebaseConfig)) {
+    if (firebase?.error === null) {
       registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches && configValidated) {
+      if (matches && firebase?.error === null) {
           var submatch = matches[1]
-          signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-            const tokenRef = ref(db, "ExpoPushTokens/" + submatch, userCredential)
+          signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
+            const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, new Date().toISOString()).catch(error => console.log(error))
           }).catch(error => {
             console.trace(error)

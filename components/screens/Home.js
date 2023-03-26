@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from "react"
 import { ActivityIndicator, StyleSheet, View, Modal, PixelRatio, Dimensions } from "react-native"
-import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
+import { Divider, Icon, Layout, Input, Text } from "@ui-kitten/components"
 import { Canvas, Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
 import { Sections, Spacing } from "../../utils/constants"
@@ -43,7 +43,7 @@ export default function Home({ navigation, route }) {
               <Divider />
               <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
               <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
-              <Divider />
+              <Mark category={Sections.CARTOONS} seed={data[Sections.CARTOONS.slug] ?? []} />
               <Canvas articles={articles[Sections.CARTOONS.slug]} />
               <Divider />
             </React.Fragment>
@@ -58,7 +58,7 @@ export default function Home({ navigation, route }) {
       </Layout>
     ) : (
       <Layout style={styles.loading}>
-        <ActivityIndicator />
+        {loading ? <ActivityIndicator /> : <Text>Something went wrong.{`\n${JSON.stringify(error)}`}</Text>}
       </Layout>
     )
 }

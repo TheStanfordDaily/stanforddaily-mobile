@@ -1,6 +1,7 @@
 import { Share } from "react-native"
 import * as Notifications from "expo-notifications"
 import * as Device from "expo-device"
+import { memoize } from "lodash"
 
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
@@ -52,20 +53,20 @@ export const generateSlug = (s) => {
 }
 
 export function getActiveRouteInfo(navigationState) {
-  if (!navigationState) return null
-  const route = navigationState.routes[navigationState.index]
+  if (!navigationState) return null;
+  const route = navigationState.routes[navigationState.index];
   // Traverse the nested navigators.
-  if (route.routes) return getActiveRouteInfo(route)
-  
+  if (route.routes) return getActiveRouteInfo(route);
+
   var out = {
     name: route.name,
-    datetime: new Date().toISOString()
-  }
+    datetime: new Date().toISOString(),
+  };
   if (route.params?.article?.id) {
-    out["id"] = route.params?.article?.id
+    out["id"] = route.params?.article?.id;
   }
-  
-  return out
+
+  return out;
 }
 
 export function validateConfig(config) {

@@ -8,25 +8,24 @@ import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../../utils/constants"
 
+const BATCH_SIZE = 16
+
 export default function Section({ route, navigation }) {
     const { category, seed, query } = route.params
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [selection, setSelection] = useState(0)
     const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2)
-    const themeContext = useContext(ThemeContext)
     const [articles, setArticles] = useState(seed)
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-    const perPageNumber = 16
-    const basePageCount = Math.max(0, Math.floor(seed.length/perPageNumber) - 1)
-    const { deviceType } = useContext(ThemeContext)
+    const basePageCount = Math.max(0, Math.floor(seed.length/BATCH_SIZE) - 1)
+    const { theme, deviceType } = useContext(ThemeContext)
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     useEffect(() => {
-      // use fuse.js to sort articles by relevance
       if (query) {
         console.log("Searching for " + query)
-        Model.posts().search(query).orderby("relevance").perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
+        Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get().then(posts => {
           setArticles([...articles, ...posts])
         }).catch(error => {
           console.log(error)
@@ -35,7 +34,7 @@ export default function Section({ route, navigation }) {
           }
         })
       } else {
-        Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
+        Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get().then(posts => {
           setArticles([...articles, ...posts])
         }).catch(error => {
           console.log(error)
@@ -47,49 +46,29 @@ export default function Section({ route, navigation }) {
       setLayoutLoaded(true)
       setArticlesLoading(false)
     }, [pageNumber])
+    const Display = theme === "dark" ? Layout : View
 
 
     return (
-      themeContext.theme === "dark" ? (
-        <Layout style={{ flex: 1 }}>
-            <List
-                data={articles}
-                style={{ backgroundColor: "transparent" }}
-                numColumns={columnCount}
-                key={columnCount}
-                scrollEventThrottle={perPageNumber}
-                showsVerticalScrollIndicator={false}
-                onEndReachedThreshold={1}
-                onEndReached={() => {
-                    if (!articlesLoading) {
-                        setPageNumber(pageNumber + 1)
-                    }
-                }}
-                renderItem={({ item, index }) => (
-                    <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-                )}
-                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
-            />
-        </Layout>
-      ) : (
-        <View style={{ flex: 1 }}>
-            <List
-                data={articles}
-                scrollEventThrottle={perPageNumber}
-                numColumns={columnCount}
-                key={columnCount}
-                onEndReachedThreshold={1}
-                onEndReached={() => {
-                    if (!articlesLoading) {
-                        setPageNumber(pageNumber + 1)
-                    }
-                }}
-                renderItem={({ item, index }) => (
-                    <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-                )}
-                ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
-            />
-        </View>
-      )
+      <Display style={{ flex: 1 }}>
+          <List
+              data={articles}
+              style={{ backgroundColor: "transparent" }}
+              numColumns={columnCount}
+              key={columnCount}
+              scrollEventThrottle={BATCH_SIZE}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold={1}
+              onEndReached={() => {
+                  if (!articlesLoading) {
+                      setPageNumber(pageNumber + 1)
+                  }
+              }}
+              renderItem={({ item, index }) => (
+                  <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+              )}
+              ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+          />
+      </Display>
     )
 }
