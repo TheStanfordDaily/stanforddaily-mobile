@@ -5,8 +5,6 @@ import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { ref, push, set } from "firebase/database"
-import { signInWithEmailAndPassword } from "firebase/auth"
 import { Strings, Fonts } from "./utils/constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -22,7 +20,6 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
-import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -63,7 +60,7 @@ export default function App() {
   const useActiveRouteInfo = useMemo(() => getActiveRouteInfo, [])
   const [configValidated, setConfigValidated] = useState(false)
 
-  const firebase = useFirebase(firebaseConfig)
+  const firebase = useState(null)
 
   function toggleTheme() {
     const next = theme === "light" ? "dark" : "light"
@@ -97,7 +94,7 @@ export default function App() {
           onBlur={closeSearch}
           onSubmitEditing={() => {
             closeSearch()
-            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
+            navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
           }}
         />
       ) : (
