@@ -5,16 +5,15 @@ import { getDatabase } from "firebase/database"
 import { getAuth } from "firebase/auth"
 
 export const useFirebase = (config) => {
-    const [error, setError] = useState(null)
-    const [app, setApp] = useState(null)
+    const [firebase, setFirebase] = useState({})
     useEffect(() => {
         if (validateConfig(config)) {
-            setApp(initializeApp(config))
+            const app = initializeApp(config)
+            setFirebase({ app, auth: getAuth(app), db: getDatabase(app) })
         } else {
             console.error("Invalid Firebase configuration.")
-            setError("Invalid Firebase configuration.")
         }
-    }, [config])
-    
-    return app && { app, auth: getAuth(app), db: getDatabase(app), error }
+    }, [])
+
+    return firebase
 }

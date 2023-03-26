@@ -5,9 +5,8 @@ import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-import { initializeApp } from "firebase/app"
-import { getDatabase, ref, push, set } from "firebase/database"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { ref, push, set } from "firebase/database"
+import { signInWithEmailAndPassword } from "firebase/auth"
 import { Strings, Fonts } from "./utils/constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -21,7 +20,7 @@ import { decode } from "html-entities"
 import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
 import { Author, Home, Post, Section, Search } from "./components/screens"
-import { getActiveRouteInfo, validateConfig } from "./utils/format"
+import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
 import { useFirebase } from "./hooks/useFirebase"
 
@@ -46,7 +45,7 @@ const firebaseConfig = {
 }
 
 const Stack = createStackNavigator()
-enableAnimationExperimental()
+// enableAnimationExperimental()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -62,6 +61,7 @@ export default function App() {
   const [searchVisible, setSearchVisible] = useState(false)
   const [activeRouteInfo, setActiveRouteInfo] = useState({})
   const useActiveRouteInfo = useMemo(() => getActiveRouteInfo, [])
+  const [configValidated, setConfigValidated] = useState(false)
 
   const firebase = useFirebase(firebaseConfig)
 
@@ -76,12 +76,12 @@ export default function App() {
   }
 
   const openSearch = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setSearchVisible(true)
   }
 
   const closeSearch = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setSearchVisible(false)
     setSearchQuery("")
   }
@@ -89,11 +89,17 @@ export default function App() {
   const headerOptions = ({ navigation, route }) => {
     return {
       headerTitle: () => searchVisible ? (
-        <TextInput autoFocus style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onBlur={closeSearch} onSubmitEditing={() => {
-          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-          setSearchVisible(false)
-          navigation.navigate("Section", { category: { name: Strings.search }, seed: [], query: searchQuery })
-        }} />
+        <TextInput
+          autoFocus
+          style={{ width: "100%" }}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onBlur={closeSearch}
+          onSubmitEditing={() => {
+            closeSearch()
+            navigation.navigate("Section", { category: { name: Strings.search }, seed: [], query: searchQuery })
+          }}
+        />
       ) : (
         <Image
           style={{ width: 260, height: 30 }}
@@ -142,7 +148,7 @@ export default function App() {
     const info = useActiveRouteInfo(e);
   
     // Check whether this condition is actually doing what we want it to do.
-    if (firebase?.error === null && !(seen.has(info.key) || seen.has(info?.id))) {
+    /*if (firebase) {
       setActiveRouteInfo(info); // Set the active route info state.
       signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD)
         .then((userCredential) => {
@@ -152,6 +158,7 @@ export default function App() {
         .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
         .catch((error) => console.trace(error));
     }
+  }*/
   }
   
   
@@ -160,12 +167,12 @@ export default function App() {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true))
 
-    if (firebase?.error === null) {
+    if (firebase) {
       registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches && firebase?.error === null) {
+      if (matches) {
           var submatch = matches[1]
           signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential)

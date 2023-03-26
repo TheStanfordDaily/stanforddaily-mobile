@@ -57,7 +57,7 @@ export default function Home({ navigation, route }) {
         />
       </Layout>
     ) : (
-      <Layout style={styles.loading}>
+      <Layout style={styles.empty}>
         {loading ? <ActivityIndicator /> : <Text>Something went wrong.{`\n${JSON.stringify(error)}`}</Text>}
       </Layout>
     )
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  loading: {
+  empty: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
