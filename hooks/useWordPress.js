@@ -14,7 +14,6 @@ export const useWordPress = (pageNumber = 1) => {
     const [error, setError] = useState(null)
   
     useEffect(() => {
-      // Set initial loading state.
       setLoading(true)
   
       Object.values(Sections).forEach(async category => {

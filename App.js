@@ -76,12 +76,12 @@ export default function App() {
   }
 
   const openSearch = () => {
-    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setSearchVisible(true)
   }
 
   const closeSearch = () => {
-    //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setSearchVisible(false)
     setSearchQuery("")
   }

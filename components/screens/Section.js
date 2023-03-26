@@ -27,7 +27,6 @@ export default function Section({ route, navigation }) {
         let posts
     
         if (query) {
-          console.log("Searching for " + query)
           posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
         } else {
           posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
@@ -45,7 +44,7 @@ export default function Section({ route, navigation }) {
       }
     }
 
-    const Display = theme === "dark" ? Layout : View
+    const Container = theme === "dark" ? Layout : View
     
     useEffect(() => {
       fetchResults()
@@ -53,11 +52,11 @@ export default function Section({ route, navigation }) {
 
 
     return layoutLoaded && query && articles?.length === 0 ? (
-      <Display style={styles.empty}>
+      <Container style={styles.empty}>
         <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${query}.\u2019`}</Text>
-      </Display>
+      </Container>
     ) : (
-      <Display style={styles.container}>
+      <Container style={styles.container}>
         <List
           data={articles}
           style={{ backgroundColor: "transparent" }}
@@ -76,7 +75,7 @@ export default function Section({ route, navigation }) {
           )}
           ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         />
-      </Display>
+      </Container>
     )
 }
 
