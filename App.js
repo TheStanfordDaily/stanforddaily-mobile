@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"
-import { Appearance, Image, LayoutAnimation, Linking, Platform, TextInput, TouchableOpacity, UIManager } from "react-native"
+import { Appearance, Image, LayoutAnimation, Linking, Platform, TextInput, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
+// import { ref, push, set } from "firebase/database"
+// import { signInWithEmailAndPassword } from "firebase/auth"
 import { Strings, Fonts } from "./utils/constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
@@ -20,6 +22,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
+// import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

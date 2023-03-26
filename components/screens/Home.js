@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react"
 import { ActivityIndicator, StyleSheet, View, Modal, PixelRatio } from "react-native"
 import { Divider, Icon, Layout, Input, Text } from "@ui-kitten/components"
-import { Canvas, Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
+import { Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
 import { Sections, Spacing } from "../../utils/constants"
 import _ from "lodash"
@@ -43,12 +43,6 @@ export default function Home({ navigation, route }) {
               <Divider />
               <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
               <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
-              {data[Sections.CARTOONS.slug]?.length > 0 && (
-                <React.Fragment>
-                  <Mark category={Sections.CARTOONS} seed={[]} />
-                  <Canvas articles={data[Sections.CARTOONS.slug]} />
-                </React.Fragment>
-              )}
               <Divider />
             </React.Fragment>
           )}
