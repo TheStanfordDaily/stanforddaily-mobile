@@ -51,7 +51,9 @@ export default function Section({ route, navigation }) {
       }
     }
 
-    useEffect(fetchResults, [pageNumber])
+    useEffect(() => {
+      fetchResults()
+    }, [pageNumber])
     const Display = theme === "dark" ? Layout : View
 
 
