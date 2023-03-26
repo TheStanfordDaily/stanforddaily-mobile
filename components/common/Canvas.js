@@ -10,7 +10,7 @@ export default function Canvas({ navigation, articles }) {
         <View style={{ height: width }}>
             <Carousel
               data={articles}
-              renderItem={({ item, index }) => <Image style={{ flex: 1 }} source={{ uri: `${item["jetpack_featured_media_url"]}?w=${pixelRatio*width}` }} />}
+              renderItem={({ item, index }) => <Image style={{ flex: 1 }} source={{ uri: item["jetpack_featured_media_url"]}} />}
               sliderWidth={width}
               itemWidth={width}
               layout="tinder"

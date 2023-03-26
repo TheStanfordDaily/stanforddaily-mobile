@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from "react"
-import { Appearance, Image, LayoutAnimation, Linking, TextInput, TouchableOpacity } from "react-native"
+import { Appearance, Image, LayoutAnimation, Linking, Platform, TextInput, TouchableOpacity, UIManager } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
@@ -45,7 +45,7 @@ const firebaseConfig = {
 }
 
 const Stack = createStackNavigator()
-// enableAnimationExperimental()
+enableAnimationExperimental()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -97,7 +97,7 @@ export default function App() {
           onBlur={closeSearch}
           onSubmitEditing={() => {
             closeSearch()
-            navigation.navigate("Section", { category: { name: Strings.search }, seed: [], query: searchQuery })
+            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
           }}
         />
       ) : (

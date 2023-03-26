@@ -209,6 +209,7 @@ export const Strings = {
     headlines: "headlines",
     placeholder: "placeholder",
     post: "Post",
+    section: "Section",
     posts: "posts",
     category: "Category",
     hashed: "hashed",
