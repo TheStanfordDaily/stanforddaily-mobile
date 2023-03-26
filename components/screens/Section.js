@@ -22,12 +22,6 @@ export default function Section({ route, navigation }) {
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
-    function handleStatus(error) {
-      if (error.data?.status === 400) {
-        setPossiblyReachedEnd(true)
-      }
-    }
-
     const fetchResults = async () => {
       try {
         let posts
@@ -51,10 +45,11 @@ export default function Section({ route, navigation }) {
       }
     }
 
+    const Display = theme === "dark" ? Layout : View
+    
     useEffect(() => {
       fetchResults()
     }, [pageNumber])
-    const Display = theme === "dark" ? Layout : View
 
 
     return layoutLoaded && query && articles?.length === 0 ? (
