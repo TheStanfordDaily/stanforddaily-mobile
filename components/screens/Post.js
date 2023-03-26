@@ -9,7 +9,7 @@ import { decode } from "html-entities"
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin"
 import { formatDate, generateSlug } from "../../utils/format"
 import Byline from "../common/Byline"
-import { minion } from "../../custom-fonts"
+import { Fonts } from "../../utils/constants"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
 import { useHeaderHeight } from "@react-navigation/elements"
@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
 const systemFonts = [
-    ...Object.keys(minion).map(key => String(key)),
+    ...Object.keys(Fonts.minion).map(key => String(key)),
     ...defaultSystemFonts
 ]
 

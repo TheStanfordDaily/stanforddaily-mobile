@@ -8,7 +8,7 @@ import * as Notifications from "expo-notifications"
 import { initializeApp } from "firebase/app"
 import { getDatabase, ref, push, set } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
-import { Strings } from "./utils/constants"
+import { Strings, Fonts } from "./utils/constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
 import { EvaIconsPack } from "@ui-kitten/eva-icons"
@@ -17,7 +17,6 @@ import { default as mapping } from "./mapping.json"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
 import { ThemeContext } from "./theme-context"
-import { minion } from "./custom-fonts"
 import { decode } from "html-entities"
 import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
@@ -59,7 +58,6 @@ export default function App() {
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
   const [seen, setSeen] = useState(new Set())
-  const [isSearching, setIsSearching] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [searchVisible, setSearchVisible] = useState(false)
 
@@ -109,10 +107,7 @@ export default function App() {
         />
       ),
       headerRight: () => (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => {
-            navigation.setParams({ isSearching: true, searchQuery })
-            openSearch()
-          }}>
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={openSearch}>
             <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       )
@@ -165,7 +160,7 @@ export default function App() {
 
   useEffect(() => {
     // Loads fonts from static resource.
-    Font.loadAsync(minion).then(() => setFontsLoaded(true))
+    Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true))
 
     if (validateConfig(firebaseConfig)) {
       registerForPushNotificationsAsync().then(token => {
@@ -233,7 +228,7 @@ export default function App() {
         <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
           <SafeAreaProvider>
             <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen name="Home" component={Home} options={headerOptions} isSearching={isSearching} />
+              <Stack.Screen name="Home" component={Home} options={headerOptions} />
               <Stack.Screen name="Post" component={Post} options={detailHeaderOptions} />
               <Stack.Screen name="Section" component={Section} options={sectionOptions} />
               <Stack.Screen name="Author" component={Author} options={authorOptions} />

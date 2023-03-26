@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react"
-import { ActivityIndicator, StyleSheet, View, Text, Modal, Image, PixelRatio, Platform, Dimensions, Appearance } from "react-native"
+import { ActivityIndicator, StyleSheet, View, Modal, PixelRatio, Dimensions } from "react-native"
 import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
 import { Canvas, Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
@@ -18,16 +18,7 @@ export default function Home({ navigation, route }) {
     const { data, articles, error, loading } = useWordPress(pageNumber)
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
-    
-    function peekBelow(e) {
-      let paddingToBottom = 10
-      paddingToBottom += e.nativeEvent.layoutMeasurement.height
-      if (e.nativeEvent.contentOffset.y >= e.nativeEvent.contentSize.height - paddingToBottom) {
-        setPageNumber(pageNumber + 1)
-      }
-    }
-    
-    
+
     return articles ? (
       <Layout style={styles.container}>
         <StatusBar style={theme === "dark" ? "light" : "dark"} />
@@ -53,15 +44,16 @@ export default function Home({ navigation, route }) {
               <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
               <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
               <Divider />
-              {/*  <Canvas articles={articles[Sections.CARTOONS.slug]} /> <Divider /> */}
+              <Canvas articles={articles[Sections.CARTOONS.slug]} />
+              <Divider />
             </React.Fragment>
           )}
           data={data?.wildcard ?? []}
           renderItem={(post, index) => <Wildcard item={post.item} index={index} key={post.item.id.toString()} navigation={navigation} verbose />}
-          onScroll={peekBelow}
-          onEndReachedThreshold={0.5}
+          onEndReached={() => setPageNumber(pageNumber + 1)}
+          onEndReachedThreshold={0.25}
           keyExtractor={(item, index) => index.toString()}
-          // ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+          ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         />
       </Layout>
     ) : (

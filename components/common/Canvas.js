@@ -1,8 +1,9 @@
 import React from "react"
-import { Button, Dimensions, Image, StyleSheet, Text, View } from "react-native"
+import { Dimensions, Image, PixelRatio, StyleSheet, Text, View } from "react-native"
 import Carousel from "react-native-snap-carousel"
 
 const { width, height } = Dimensions.get("window")
+const pixelRatio = PixelRatio.get()
 
 export default function Canvas({ navigation, articles }) {
     // No recent cartoons at the moment.
@@ -15,8 +16,8 @@ export default function Canvas({ navigation, articles }) {
     return (
         <View style={{ height: width }}>
             <Carousel
-              data={staticCartoons}
-              renderItem={({ item, index }) => <Image style={{ flex: 1 }} source={{ uri: item }} />}
+              data={articles}
+              renderItem={({ item, index }) => <Image style={{ flex: 1 }} source={{ uri: `${item["jetpack_featured_media_url"]}?w=${pixelRatio*width}` }} />}
               sliderWidth={width}
               itemWidth={width}
               layout="tinder"
