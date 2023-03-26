@@ -9,7 +9,7 @@ import { DeviceType } from "expo-device"
 import { Spacing } from "../../utils/constants"
 
 export default function Section({ route, navigation }) {
-    const { category, seed } = route.params
+    const { category, seed, query } = route.params
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [selection, setSelection] = useState(0)
     const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2)
@@ -23,14 +23,27 @@ export default function Section({ route, navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     useEffect(() => {
-      Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
-        setArticles([...articles, ...posts])
-      }).catch(error => {
-        console.log(error)
-        if (error.data?.status === 400) {
-          setPossiblyReachedEnd(true)
-        }
-      })
+      // use fuse.js to sort articles by relevance
+      if (query) {
+        console.log("Searching for " + query)
+        Model.posts().search(query).orderby("relevance").perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
+          setArticles([...articles, ...posts])
+        }).catch(error => {
+          console.log(error)
+          if (error.data?.status === 400) {
+            setPossiblyReachedEnd(true)
+          }
+        })
+      } else {
+        Model.posts().categories(category.id).perPage(perPageNumber).page(basePageCount + pageNumber).get().then(posts => {
+          setArticles([...articles, ...posts])
+        }).catch(error => {
+          console.log(error)
+          if (error.data?.status === 400) {
+            setPossiblyReachedEnd(true)
+          }
+        })
+      }
       setLayoutLoaded(true)
       setArticlesLoading(false)
     }, [pageNumber])

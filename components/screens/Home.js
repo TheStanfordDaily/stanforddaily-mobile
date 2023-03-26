@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useState } from "react"
-import { ActivityIndicator, LayoutAnimation, ScrollView, StyleSheet, View, Text, Modal, Image, PixelRatio, Platform, Dimensions, UIManager } from "react-native"
+import { ActivityIndicator, StyleSheet, View, Text, Modal, Image, PixelRatio, Platform, Dimensions, Appearance } from "react-native"
 import { Divider, Icon, Layout, Input } from "@ui-kitten/components"
 import { Canvas, Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
@@ -9,17 +9,14 @@ import { DeviceType } from "expo-device"
 import { ThemeContext } from "../../theme-context"
 import Collapsible from "react-native-collapsible"
 import { FlatList } from "react-native-gesture-handler"
+import { StatusBar } from "expo-status-bar"
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true)
-}
-
-// TODO: Use `LayoutAnimation` so that loading new cards does not seem so abrupt.
+// TODO: Implement skeleton loading.
 
 export default function Home({ navigation, route }) {
     const [pageNumber, setPageNumber] = useState(1)
     const { data, articles, error, loading } = useWordPress(pageNumber)
-    const { deviceType } = useContext(ThemeContext)
+    const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
     
     function peekBelow(e) {
@@ -33,6 +30,7 @@ export default function Home({ navigation, route }) {
     
     return articles ? (
       <Layout style={styles.container}>
+        <StatusBar style={theme === "dark" ? "light" : "dark"} />
         <FlatList
           ListHeaderComponent={() => (
             <React.Fragment>

@@ -1,4 +1,4 @@
-import { Share } from "react-native"
+import { Platform, Share, UIManager } from "react-native"
 import * as Notifications from "expo-notifications"
 import * as Device from "expo-device"
 
@@ -51,4 +51,10 @@ export async function registerForPushNotificationsAsync() {
     }
   
     return token
+}
+
+export function enableAnimationExperimental() {
+  if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true)
+  }
 }

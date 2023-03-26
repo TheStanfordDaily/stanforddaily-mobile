@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { Appearance, Image, Linking, Platform, TextInput, TouchableOpacity } from "react-native"
+import { Appearance, Image, LayoutAnimation, Linking, TextInput, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
@@ -23,7 +23,7 @@ import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo, validateConfig } from "./utils/format"
-import { onShare, registerForPushNotificationsAsync } from "./utils/action"
+import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -46,6 +46,7 @@ const firebaseConfig = {
 }
 
 const Stack = createStackNavigator()
+enableAnimationExperimental()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -53,6 +54,7 @@ export default function App() {
   const [notification, setNotification] = useState(false)
   const notificationListener = useRef()
   const responseListener = useRef()
+  const textInput = useRef()
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
@@ -80,23 +82,26 @@ export default function App() {
     dark: DarkTheme
   }
 
-  const handleSearch = () => {
-    setSearchVisible(true);
-  };
+  const openSearch = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setSearchVisible(true)
+  }
 
-  const handleSearchSubmit = () => {
-    setSearchVisible(false);
-  };
-
-  const handleSearchCancel = () => {
-    setSearchVisible(false);
-    setSearchQuery("");
-  };
+  const closeSearch = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    setSearchVisible(false)
+    setSearchQuery("")
+  }
 
   const headerOptions = ({ navigation, route }) => {
     return {
       headerTitle: () => searchVisible ? (
-        <TextInput autoFocus style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onSubmitEditing={handleSearchSubmit} onBlur={handleSearchCancel} />
+        <TextInput autoFocus ref={textInput} style={{ width: "100%" }} value={searchQuery} onChangeText={setSearchQuery} onBlur={closeSearch} onSubmitEditing={() => {
+          if (textInput.current) textInput.current.blur()
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+          setSearchVisible(false)
+          navigation.navigate("Section", { category: { name: Strings.search }, seed: [], query: searchQuery })
+        }} />
       ) : (
         <Image
           style={{ width: 260, height: 30 }}
@@ -106,7 +111,7 @@ export default function App() {
       headerRight: () => (
         <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => {
             navigation.setParams({ isSearching: true, searchQuery })
-            setSearchVisible(true)
+            openSearch()
           }}>
             <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
