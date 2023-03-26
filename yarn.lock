@@ -8765,6 +8765,11 @@ react-shallow-renderer@16.15.0:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0 || ^18.0.0"
 
+react-snap-carousel@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-snap-carousel/-/react-snap-carousel-0.3.1.tgz#b01ac3e6d8537c5d77c2497e60cb1fda92338417"
+  integrity sha512-vRrwBV4sC3IP5JQukqAVwELDgOrJ2fZ7WT1aZY7HVDiSTDGXAl6ykvn5BV++O4f+cQ2Vmad1Vp996ytz1QQ03w==
+
 react@18.0.0:
   version "18.0.0"
   resolved "https://registry.yarnpkg.com/react/-/react-18.0.0.tgz#b468736d1f4a5891f38585ba8e8fb29f91c3cb96"
