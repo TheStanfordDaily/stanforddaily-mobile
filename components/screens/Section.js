@@ -73,7 +73,7 @@ export default function Section({ route, navigation }) {
           renderItem={({ item, index }) => (
               <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
           )}
-          // ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+          ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         />
       </Container>
     )
