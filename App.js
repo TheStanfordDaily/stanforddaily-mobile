@@ -22,6 +22,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
+import SearchBar from "./components/common/SearchBar"
 // import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
@@ -93,24 +94,13 @@ export default function App() {
   const headerOptions = ({ navigation, route }) => {
     return {
       headerTitle: () => searchVisible ? (
-        <Input
-          autoFocus
-          style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, alignSelf: "center" }}
-          value={searchQuery}
+        <SearchBar
+          searchQuery={searchQuery}
           onChangeText={setSearchQuery}
-          onSubmitEditing={() => {
+          onSearch={() => {
             Keyboard.dismiss()
             navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
-          }}
-          placeholderTextColor={theme === "dark" ? "white" : "black"}
-          placeholder="Search for articles or topics"
-          clearButtonMode="always"
-          returnKeyType="search"
-          accessoryRight={() => (
-            <TouchableOpacity onPress={closeSearch}>
-              <Icon name="close-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-            </TouchableOpacity>
-          )}
+          }} onClose={closeSearch}
         />
       ) : (
         <Image

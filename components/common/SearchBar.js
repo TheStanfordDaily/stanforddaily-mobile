@@ -1,15 +1,30 @@
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native'
 import { Icon, Input, useTheme } from '@ui-kitten/components'
-import { Spacing } from '../constants'
+import { Spacing } from '../../utils/constants'
 
-export default function SearchBar({ navigation, value, onChangeText, onSearch }) {
+const { width } = Dimensions.get("window")
+
+export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose }) {
     const theme = useTheme()
     
     return (
-        <View style={{...styles.searchBar, backgroundColor: theme["background-basic-color-1"]}}>
-            <Input placeholder="Search" accessoryRight={<Icon style={styles.icon} name="close-circle" fill={theme["text-hint-color"]} />} value={value} onChangeText={onChangeText} onSubmitEditing={onSearch} />
-        </View>
+        <Input
+        autoFocus
+        style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, alignSelf: "center" }}
+        value={searchQuery}
+        onChangeText={onChangeText}
+        onSubmitEditing={onSearch}
+        placeholderTextColor={theme === "dark" ? "white" : "black"}
+        placeholder="Search for articles or topics"
+        clearButtonMode="always"
+        returnKeyType="search"
+        accessoryRight={() => (
+          <TouchableOpacity onPress={onClose}>
+            <Icon name="close-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+          </TouchableOpacity>
+        )}
+      />
     )
 }
 
