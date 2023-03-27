@@ -1,31 +1,45 @@
-import React from 'react'
-import { StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native'
-import { Icon, Input, useTheme } from '@ui-kitten/components'
-import { Spacing } from '../../utils/constants'
+import React from 'react';
+import { StyleSheet, Dimensions, TouchableOpacity, View } from 'react-native';
+import { Icon, Input, Button, useTheme } from '@ui-kitten/components';
+import { Spacing } from '../../utils/constants';
+import { ThemeContext } from '../../theme-context';
 
-const { width } = Dimensions.get("window")
+const { width } = Dimensions.get("window");
 
 export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose }) {
-    const theme = useTheme()
+    const theme = useTheme();
     
     return (
-        <Input
-        autoFocus
-        style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, alignSelf: "center" }}
-        value={searchQuery}
-        onChangeText={onChangeText}
-        onSubmitEditing={onSearch}
-        placeholderTextColor={theme === "dark" ? "white" : "black"}
-        placeholder="Search for articles or topics"
-        clearButtonMode="always"
-        returnKeyType="search"
-        accessoryRight={() => (
-          <TouchableOpacity onPress={onClose}>
-            <Icon name="close-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-          </TouchableOpacity>
-        )}
-      />
-    )
+        <View style={{
+            flex: 1,
+            width,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            backgroundColor: theme === "dark" ? "#1E1E1E" : "white",
+            paddingRight: Spacing.medium,
+        }}>
+            <Input
+                autoFocus
+                style={{
+                    flex: 1,
+                    backgroundColor: "white",
+                    borderRadius: 5,
+                    // paddingHorizontal: Spacing.medium,
+                    // marginRight: Spacing.medium,
+                }}
+                value={searchQuery}
+                onChangeText={onChangeText}
+                onSubmitEditing={onSearch}
+                placeholderTextColor={theme === "dark" ? "white" : "black"}
+                placeholder="Search for articles or topics"
+                returnKeyType="search"
+                onTouchCancel={onClose}
+                clearButtonMode="while-editing"
+            />
+            <Button onPress={onClose} appearance="ghost">Cancel</Button>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -36,5 +50,5 @@ const styles = StyleSheet.create({
     icon: {
         width: 32,
         height: 32,
-    }
-})
+    },
+});
