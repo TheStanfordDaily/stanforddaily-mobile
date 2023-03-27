@@ -174,7 +174,7 @@ export default function App() {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
 
-      if (matches) {
+      /*if (matches) {
           var submatch = matches[1]
           signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential)
@@ -183,7 +183,7 @@ export default function App() {
             console.trace(error)
             setConfigValidated(false)
           })
-        }
+        }*/
       })
     }
 
