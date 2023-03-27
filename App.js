@@ -95,7 +95,7 @@ export default function App() {
       headerTitle: () => searchVisible ? (
         <Input
           autoFocus
-          style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, fontFamily: "MinionProRegular", alignSelf: "center" }}
+          style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, alignSelf: "center" }}
           value={searchQuery}
           onChangeText={setSearchQuery}
           onSubmitEditing={() => {
