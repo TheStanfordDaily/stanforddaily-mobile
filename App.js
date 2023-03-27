@@ -103,7 +103,7 @@ export default function App() {
             navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
           }}
           placeholderTextColor={theme === "dark" ? "white" : "black"}
-          //placeholder={Strings.search}
+          placeholder="Search for articles or topics"
           clearButtonMode="always"
           returnKeyType="search"
           accessoryRight={() => (
