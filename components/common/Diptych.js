@@ -34,9 +34,10 @@ export default function Diptych(props) {
         <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
             {_.chunk(articles, groupSize).map((couplet, index) => (
               <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
-                {couplet.map((item) => (
+                {couplet.map((item, _index) => (
                   <Card
                     style={styles.card}
+                    key={_index}
                     header={<Header source={item["jetpack_featured_media_url"]}/>}
                     footer={<Footer date={item["date"]}/>}
                     {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>

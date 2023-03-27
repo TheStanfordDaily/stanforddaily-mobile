@@ -36,7 +36,7 @@ export default function Home({ navigation, route }) {
               <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
               <Divider marginTop={Spacing.medium} />
               {_.chunk(articles?.culture?.slice(0, 4*groupSize), groupSize)?.map((group, outerIndex) => (
-                <View style={{ flex: 1/groupSize, flexDirection: "row" }}>
+                <View style={{ flex: 1/groupSize, flexDirection: "row" }} key={outerIndex}>
                   {group.map((item, index) => <Wildcard item={item} index={outerIndex*index + index} key={item.id.toString()} navigation={navigation} />)}
                 </View>
               ))}

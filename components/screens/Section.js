@@ -1,4 +1,4 @@
-import { useTheme } from "@react-navigation/native"
+import { useTheme, useFocusEffect } from "@react-navigation/native"
 import { Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, StyleSheet, View } from "react-native"
@@ -73,7 +73,7 @@ export default function Section({ route, navigation }) {
           renderItem={({ item, index }) => (
               <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
           )}
-          ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+          // ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         />
       </Container>
     )
