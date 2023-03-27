@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, View, Modal, PixelRatio } from "react-na
 import { Divider, Icon, Layout, Input, Text } from "@ui-kitten/components"
 import { Carousel, Diptych, Mark, Shelf, Wildcard } from "../"
 import { useWordPress } from "../../hooks/useWordPress"
-import { Sections, Spacing } from "../../utils/constants"
+import { Sections, Spacing, Strings } from "../../utils/constants"
 import _ from "lodash"
 import { DeviceType } from "expo-device"
 import { ThemeContext } from "../../theme-context"
@@ -19,9 +19,42 @@ export default function Home({ navigation, route }) {
     const { theme, deviceType } = useContext(ThemeContext)
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2
 
+    const SearchBar = ({ onSearch }) => {
+      const [searchQuery, setSearchQuery] = useState('');
+    
+      const renderSearchIcon = (props) => (
+        <Icon {...props} name='search' />
+      );
+    
+      const onSearchChange = (query) => {
+        setSearchQuery(query);
+      };
+  
+      const onSearchSubmit = (query) => {
+        if (onSearch) {
+          onSearch(query);
+        }
+      };
+    
+      return (
+        <Input
+          style={styles.searchBar}
+          value={searchQuery}
+          placeholder='Search'
+          accessoryLeft={renderSearchIcon}
+          onChangeText={onSearchChange}
+          onSubmitEditing={onSearchSubmit}
+          autoCapitalize="none"
+          autoCorrect={false}
+          returnKeyType="search"
+        />
+      );
+    };
+
     return articles ? (
       <Layout style={styles.container}>
         <StatusBar style={theme === "dark" ? "light" : "dark"} />
+        <SearchBar onSearch={(query) => navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })} />
         <FlatList
           ListHeaderComponent={() => (
             <React.Fragment>

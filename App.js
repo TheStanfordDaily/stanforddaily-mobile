@@ -22,7 +22,7 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
-import SearchBar from "./components/common/SearchBar"
+import { StyleSheet } from "react-native"
 // import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
@@ -67,6 +67,39 @@ export default function App() {
 
   const firebase = useState(null)
 
+
+  const SearchBar = ({ onSearch }) => {
+    const [searchQuery, setSearchQuery] = useState('');
+  
+    const renderSearchIcon = (props) => (
+      <Icon {...props} name='search' />
+    );
+  
+    const onSearchChange = (query) => {
+      setSearchQuery(query);
+    };
+
+    const onSearchSubmit = (query) => {
+      if (onSearch) {
+        onSearch(query);
+      }
+    };
+  
+    return (
+      <Input
+        style={styles.searchBar}
+        value={searchQuery}
+        placeholder='Search'
+        accessoryLeft={renderSearchIcon}
+        onChangeText={onSearchChange}
+        onSubmitEditing={onSearchSubmit}
+        autoCapitalize="none"
+        autoCorrect={false}
+        returnKeyType="search"
+      />
+    );
+  };
+
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
@@ -94,14 +127,7 @@ export default function App() {
   const headerOptions = ({ navigation, route }) => {
     return {
       headerTitle: () => searchVisible ? (
-        <SearchBar
-          searchQuery={searchQuery}
-          onChangeText={setSearchQuery}
-          onSearch={() => {
-            Keyboard.dismiss()
-            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
-          }} onClose={closeSearch}
-        />
+        <SearchBar onSearch={setSearchQuery} />
       ) : (
         <Image
           style={{ width: 260, height: 30 }}
@@ -247,3 +273,9 @@ export default function App() {
     </NavigationContainer>
   )
 }
+
+const styles = StyleSheet.create({
+  searchBar: {
+    width: '100%',
+  },
+});
