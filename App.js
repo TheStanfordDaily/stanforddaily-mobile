@@ -65,7 +65,7 @@ export default function App() {
 
   const firebase = useState(null)
 
-  function toggleTheme() {
+  const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
     setTheme(next)
   }
