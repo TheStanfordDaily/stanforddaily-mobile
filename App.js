@@ -77,10 +77,12 @@ export default function App() {
   }
 
   const openSearch = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setSearchVisible(true)
+    setSearchVisible(prevSearchVisible => !prevSearchVisible);
+    if (searchVisible) {
+      Keyboard.dismiss();
+    }
   }
-
+  
   const closeSearch = () => {
     Keyboard.dismiss()
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
@@ -93,17 +95,22 @@ export default function App() {
       headerTitle: () => searchVisible ? (
         <Input
           autoFocus
-          style={{ width: width - 2*Spacing.extraLarge, height: 30, backgroundColor: "white", borderRadius: 5, paddingRight: Spacing.extraLarge, fontFamily: "MinionProRegular" }}
+          style={{ width: width - Spacing.medium, height: 30, backgroundColor: "white", borderRadius: 5, paddingHorizontal: Spacing.medium, fontFamily: "MinionProRegular", alignSelf: "center" }}
           value={searchQuery}
           onChangeText={setSearchQuery}
           onSubmitEditing={() => {
+            Keyboard.dismiss()
             navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
           }}
-          // Clean up and avoid grey background on Android
           placeholderTextColor={theme === "dark" ? "white" : "black"}
-          placeholder={Strings.search}
+          //placeholder={Strings.search}
           clearButtonMode="always"
           returnKeyType="search"
+          accessoryRight={() => (
+            <TouchableOpacity onPress={closeSearch}>
+              <Icon name="close-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+            </TouchableOpacity>
+          )}
         />
       ) : (
         <Image
@@ -111,15 +118,14 @@ export default function App() {
           source={logoAssets[theme]}
         />
       ),
-      headerRight: () => (
+      headerRight: () => !searchVisible && (
         <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={openSearch}>
-            <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+          <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       )
     };
   };
-  
-
+    
   const detailHeaderOptions = ({ navigation, route }) => {
     return {
       headerTitle: "",
@@ -133,19 +139,19 @@ export default function App() {
       )
     }
   }
-
+    
   const sectionOptions = ({ route }) => ({
-    headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace('\'', '\u{2019}')}</Text>,
+    headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
     headerTintColor: bread[theme]["color-primary-500"]
   })
-
+  
   const authorOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{route.params.name}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
     headerTintColor: bread[theme]["color-primary-500"]
   })
-
+  
   const searchHeaderOptions = {
     headerTintColor: bread[theme]["color-primary-500"]
   }
