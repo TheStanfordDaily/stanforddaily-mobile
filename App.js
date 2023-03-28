@@ -23,6 +23,8 @@ import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
 import { StyleSheet } from "react-native"
+import { SearchBar } from "react-native-elements"
+import { SafeAreaView } from "react-native"
 // import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
@@ -68,37 +70,56 @@ export default function App() {
   const firebase = useState(null)
 
 
-  const SearchBar = ({ onSearch }) => {
-    const [searchQuery, setSearchQuery] = useState('');
-  
-    const renderSearchIcon = (props) => (
-      <Icon {...props} name='search' />
-    );
-  
     const onSearchChange = (query) => {
       setSearchQuery(query);
     };
+  // const SearchBar = ({ onSearch }) => {
+  //   const [searchQuery, setSearchQuery] = useState('');
+  
+  //   const renderSearchIcon = (props) => (
+  //     <Icon {...props} name='search' />
+  //   );
+  
+  //   const onSearchChange = (query) => {
+  //     setSearchQuery(query);
+  //   };
 
-    const onSearchSubmit = (query) => {
-      if (onSearch) {
-        onSearch(query);
-      }
-    };
+  //   const onSearchSubmit = (query) => {
+  //     if (onSearch) {
+  //       onSearch(query);
+  //     }
+  //   };
+  
+  //   return (
+  //     <Input
+  //       style={styles.searchBar}
+  //       value={searchQuery}
+  //       placeholder='Search'
+  //       accessoryLeft={renderSearchIcon}
+  //       onChangeText={onSearchChange}
+  //       onSubmitEditing={onSearchSubmit}
+  //       autoCapitalize="none"
+  //       autoCorrect={false}
+  //       returnKeyType="search"
+  //     />
+  //   );
+  // };
+
+  function CustomHeader({ navigation }) {
+    const [search, setSearch] = React.useState('');
   
     return (
-      <Input
-        style={styles.searchBar}
-        value={searchQuery}
-        placeholder='Search'
-        accessoryLeft={renderSearchIcon}
-        onChangeText={onSearchChange}
-        onSubmitEditing={onSearchSubmit}
-        autoCapitalize="none"
-        autoCorrect={false}
-        returnKeyType="search"
-      />
+      <SafeAreaView style={styles.header}>
+        <SearchBar
+          placeholder="Search"
+          onChangeText={setSearch}
+          value={search}
+          containerStyle={styles.searchContainer}
+          inputContainerStyle={styles.searchInputContainer}
+        />
+      </SafeAreaView>
     );
-  };
+  }
 
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -125,21 +146,31 @@ export default function App() {
   }
 
   const headerOptions = ({ navigation, route }) => {
-    return {
-      headerTitle: () => searchVisible ? (
-        <SearchBar onSearch={setSearchQuery} />
-      ) : (
-        <Image
-          style={{ width: 260, height: 30 }}
-          source={logoAssets[theme]}
-        />
-      ),
-      headerRight: () => !searchVisible && (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={openSearch}>
-          <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-        </TouchableOpacity>
-      )
-    };
+
+      return searchVisible ?  {
+        header: (props) => <CustomHeader {...props} />
+      } : {
+        headerTitle: () => searchVisible ? (
+          <SearchBar
+            searchQuery={searchQuery}
+            onChangeText={setSearchQuery}
+            onSearch={() => {
+              Keyboard.dismiss()
+              navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
+            }} onClose={closeSearch}
+          />
+        ) : (
+          <Image
+            style={{ width: 260, height: 30 }}
+            source={logoAssets[theme]}
+          />
+        ),
+        headerRight: () => (
+          <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={openSearch}>
+            <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+          </TouchableOpacity>
+        )
+      };
   };
     
   const detailHeaderOptions = ({ navigation, route }) => {
@@ -275,7 +306,24 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  searchBar: {
-    width: '100%',
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  header: {
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 0,
+  },
+  searchContainer: {
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    // paddingHorizontal: 0,
+    flexGrow: 1,
+  },
+  searchInputContainer: {
+    backgroundColor: '#e5e5e5',
+    borderRadius: 10,
   },
 });
