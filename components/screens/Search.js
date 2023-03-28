@@ -26,9 +26,10 @@ export default function Search({ route, navigation }) {
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
 
-    const performSearch = () => {
+    const performSearch = (query = searchText) => {
+      setSearching(true)
       //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
-      Model.posts().search(searchText).orderby("relevance").perPage(perPageNumber).get().then((posts) => {
+      Model.posts().search(query).orderby("relevance").perPage(perPageNumber).get().then((posts) => {
         setArticles(posts)
         // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
         // console.log(fuse.search("dragon"))
@@ -61,8 +62,7 @@ export default function Search({ route, navigation }) {
           {route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
             setSearchText(tag.name)
-            setSearching(true)
-            performSearch()
+            performSearch(tag.name)
           }}>
             <Text category="label">{tag.name.toUpperCase()}</Text>
           </TouchableOpacity>
