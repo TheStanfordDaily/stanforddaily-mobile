@@ -20,7 +20,7 @@ import { decode } from "html-entities"
 import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
 import { Author, Home, Post, Section, Search } from "./components/screens"
-import { getActiveRouteInfo } from "./utils/format"
+import { getActiveRouteInfo, getMostCommonTagsFromRecentPosts } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
 // import { useFirebase } from "./hooks/useFirebase"
 
@@ -63,6 +63,7 @@ export default function App() {
   const [activeRouteInfo, setActiveRouteInfo] = useState({})
   const useActiveRouteInfo = useMemo(() => getActiveRouteInfo, [])
   const [configValidated, setConfigValidated] = useState(false)
+  const [tags, setTags] = useState([])
 
   const firebase = useState(null)
 
@@ -178,6 +179,8 @@ export default function App() {
     }
 
     Device.getDeviceTypeAsync().then(type => setDeviceType(type))
+
+    getMostCommonTagsFromRecentPosts(100, 10).then((tags) => setTags(tags))
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {

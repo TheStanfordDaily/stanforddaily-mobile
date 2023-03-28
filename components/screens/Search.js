@@ -13,7 +13,6 @@ import SearchBar from "../common/SearchBar"
 const { width, height } = Dimensions.get("window")
 
 export default function Search({ route, navigation }) {
-
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [articles, setArticles] = useState([])
     const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
@@ -53,10 +52,9 @@ export default function Search({ route, navigation }) {
         )
     })
     
-    Model.tags().order("desc").orderby("count").get().then((tags) => setTags(tags))
     
     return articles.length === 0 || searching ? (
-        <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1, paddingVertical: Spacing.extraLarge }}>
+        <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
           {tags.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
             setSearchText(tag.name)
