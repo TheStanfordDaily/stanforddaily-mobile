@@ -39,7 +39,8 @@ export default function Search({ route, navigation }) {
       })
     }
 
-    navigation.setOptions({
+    useEffect(() => {
+      navigation.setOptions({
         headerBackTitleVisible: false,
         headerTitle: () =>  (
           <SearchBar
@@ -49,12 +50,13 @@ export default function Search({ route, navigation }) {
             onClear={() => {
               setSearchText("")
               setArticles([])
+              Keyboard.dismiss()
             }}
             onClose={() => Keyboard.dismiss()}
           />
         ),
         headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"],
-    })
+    })}, [])
     
     
     return articles.length === 0 || searching ? (
@@ -62,6 +64,7 @@ export default function Search({ route, navigation }) {
           {route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
             setSearchText(tag.name)
+            Keyboard.dismiss()
             performSearch(tag.name)
           }}>
             <Text category="label">{tag.name.toUpperCase()}</Text>
