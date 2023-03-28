@@ -6,7 +6,7 @@ import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
-import { Spacing } from "../../utils/constants"
+import { Spacing, Strings } from "../../utils/constants"
 
 const BATCH_SIZE = 16
 
@@ -26,7 +26,7 @@ export default function Section({ route, navigation }) {
       try {
         let posts
     
-        if (query) {
+        if (category.name === Strings.search) {
           posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
         } else {
           posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()

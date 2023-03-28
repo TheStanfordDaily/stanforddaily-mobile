@@ -116,6 +116,7 @@ export default function App() {
           value={search}
           containerStyle={styles.searchContainer}
           inputContainerStyle={styles.searchInputContainer}
+          returnKeyType="search"
         />
       </SafeAreaView>
     );
@@ -146,27 +147,18 @@ export default function App() {
   }
 
   const headerOptions = ({ navigation, route }) => {
-
-      return searchVisible ?  {
-        header: (props) => <CustomHeader {...props} />
-      } : {
-        headerTitle: () => searchVisible ? (
-          <SearchBar
-            searchQuery={searchQuery}
-            onChangeText={setSearchQuery}
-            onSearch={() => {
-              Keyboard.dismiss()
-              navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
-            }} onClose={closeSearch}
-          />
-        ) : (
+      return {
+        headerTitle: () => (
           <Image
             style={{ width: 260, height: 30 }}
             source={logoAssets[theme]}
           />
         ),
         headerRight: () => (
-          <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={openSearch}>
+          <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => {
+            setSearchVisible(true)
+            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
+          }}>
             <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
           </TouchableOpacity>
         )
@@ -187,11 +179,13 @@ export default function App() {
     }
   }
     
-  const sectionOptions = ({ route }) => ({
-    headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
-    headerTitleStyle: { fontFamily: "MinionProBold" },
-    headerTintColor: bread[theme]["color-primary-500"]
-  })
+  const sectionOptions = ({ route }) => {
+    return {
+      headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
+      headerTitleStyle: { fontFamily: "MinionProBold" },
+      headerTintColor: bread[theme]["color-primary-500"]
+    }
+  }
   
   const authorOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{route.params.name}</Text>,
