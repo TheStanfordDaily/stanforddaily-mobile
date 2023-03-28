@@ -12,7 +12,7 @@ export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose
     <View style={{...styles.container, backgroundColor: theme === "dark" ? "#1E1E1E" : "white"}}>
       <Input
         autoFocus
-        style={styles.searchBar}
+        style={{...styles.searchBar, backgroundColor: theme === "dark" ? "white" : "#1E1E1E"}}
         value={searchQuery}
         onChangeText={onChangeText}
         onSubmitEditing={onSearch}
@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flex: 1,
-    backgroundColor: "white",
     borderRadius: 5
   },
   inputText: {

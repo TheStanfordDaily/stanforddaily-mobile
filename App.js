@@ -23,8 +23,8 @@ import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
 import { StyleSheet } from "react-native"
-import { SearchBar } from "react-native-elements"
 import { SafeAreaView } from "react-native"
+import SearchBar from "./components/common/SearchBar"
 // import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
@@ -68,59 +68,6 @@ export default function App() {
   const [configValidated, setConfigValidated] = useState(false)
 
   const firebase = useState(null)
-
-
-    const onSearchChange = (query) => {
-      setSearchQuery(query);
-    };
-  // const SearchBar = ({ onSearch }) => {
-  //   const [searchQuery, setSearchQuery] = useState('');
-  
-  //   const renderSearchIcon = (props) => (
-  //     <Icon {...props} name='search' />
-  //   );
-  
-  //   const onSearchChange = (query) => {
-  //     setSearchQuery(query);
-  //   };
-
-  //   const onSearchSubmit = (query) => {
-  //     if (onSearch) {
-  //       onSearch(query);
-  //     }
-  //   };
-  
-  //   return (
-  //     <Input
-  //       style={styles.searchBar}
-  //       value={searchQuery}
-  //       placeholder='Search'
-  //       accessoryLeft={renderSearchIcon}
-  //       onChangeText={onSearchChange}
-  //       onSubmitEditing={onSearchSubmit}
-  //       autoCapitalize="none"
-  //       autoCorrect={false}
-  //       returnKeyType="search"
-  //     />
-  //   );
-  // };
-
-  function CustomHeader({ navigation, previous }) {
-    const [search, setSearch] = React.useState('');
-  
-    return (
-      <SafeAreaView style={styles.header}>
-        <SearchBar
-          placeholder="Search"
-          onChangeText={setSearch}
-          value={search}
-          containerStyle={styles.searchContainer}
-          inputContainerStyle={styles.searchInputContainer}
-          returnKeyType="search"
-        />
-      </SafeAreaView>
-    );
-  }
 
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -179,21 +126,21 @@ export default function App() {
     }
   }
     
-  const sectionOptions = ({ route }) => {
+  const sectionOptions = ({ navigation, route }) => {
     return {
-      headerTitle: () => searchVisible ? (
+      headerTitle: (props) => route.params.category.name === Strings.search ? (
         <SearchBar
-          placeholder="Search"
-          // onChangeText={setSearch}
-          // value={search}
-          containerStyle={styles.searchContainer}
-          inputContainerStyle={styles.searchInputContainer}
-          returnKeyType="search"
+          searchQuery={searchQuery}
+          onChangeText={setSearchQuery}
+          onSearch={() => {
+            Keyboard.dismiss()
+            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
+          }} onClose={closeSearch}
         />
       ) : <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
       headerTitleStyle: { fontFamily: "MinionProBold" },
       headerTintColor: bread[theme]["color-primary-500"],
-      headerBackTitleVisible: !searchVisible,
+      headerBackTitleVisible: route.params.category.name !== Strings.search
     }
   }
   
@@ -325,7 +272,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     // paddingHorizontal: 0,
     flexGrow: 1,
-    width: width - Spacing.medium,
+    width
   },
   searchInputContainer: {
     backgroundColor: '#e5e5e5',
