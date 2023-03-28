@@ -105,7 +105,7 @@ export default function App() {
   //   );
   // };
 
-  function CustomHeader({ navigation }) {
+  function CustomHeader({ navigation, previous }) {
     const [search, setSearch] = React.useState('');
   
     return (
@@ -181,9 +181,19 @@ export default function App() {
     
   const sectionOptions = ({ route }) => {
     return {
-      headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
+      headerTitle: () => searchVisible ? (
+        <SearchBar
+          placeholder="Search"
+          // onChangeText={setSearch}
+          // value={search}
+          containerStyle={styles.searchContainer}
+          inputContainerStyle={styles.searchInputContainer}
+          returnKeyType="search"
+        />
+      ) : <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
       headerTitleStyle: { fontFamily: "MinionProBold" },
-      headerTintColor: bread[theme]["color-primary-500"]
+      headerTintColor: bread[theme]["color-primary-500"],
+      headerBackTitleVisible: !searchVisible,
     }
   }
   
@@ -315,6 +325,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     // paddingHorizontal: 0,
     flexGrow: 1,
+    width: width - Spacing.medium,
   },
   searchInputContainer: {
     backgroundColor: '#e5e5e5',
