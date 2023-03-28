@@ -10,6 +10,7 @@ import { Spacing } from "../../utils/constants"
 import Fuse from "fuse.js"
 import SearchBar from "../common/SearchBar"
 import { Keyboard } from "react-native"
+import { DailyBread as bread } from "../../theme"
 
 const { width, height } = Dimensions.get("window")
 
@@ -50,7 +51,8 @@ export default function Search({ route, navigation }) {
             }}
             onClose={() => Keyboard.dismiss()}
           />
-        )
+        ),
+        headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"],
     })
     
     
