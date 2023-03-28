@@ -8,6 +8,7 @@ import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
 import { Spacing } from "../../utils/constants"
 import Fuse from "fuse.js"
+import SearchBar from "../common/SearchBar"
 
 const { width, height } = Dimensions.get("window")
 
@@ -25,7 +26,8 @@ export default function Search({ route, navigation }) {
     const [pageNumber, setPageNumber] = useState(1)
 
     const performSearch = () => {
-      Model.posts().perPage(perPageNumber).search(searchText).get().then((posts) => {
+      //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
+      Model.posts().search(searchText).orderby("relevance").perPage(perPageNumber).get().then((posts) => {
         setArticles(posts)
         // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
         // console.log(fuse.search("dragon"))
@@ -38,13 +40,15 @@ export default function Search({ route, navigation }) {
     navigation.setOptions({
         headerBackTitleVisible: false,
         headerTitle: () =>  (
-          <Input
-            value={searchText}
-            onSubmitEditing={performSearch}
-            placeholder="Search"
-            // accessoryRight={ <Icon height={20} width={20} name='close-circle' fill={"grey here"} />}
+          <SearchBar
+            searchQuery={searchText}
             onChangeText={setSearchText}
-            style={{ marginBottom: Spacing.medium, width: width - 2*Spacing.extraLarge }}
+            onSearch={performSearch}
+            onClear={() => {
+              setSearchText("")
+              setArticles([])
+            }}
+            onClose={() => navigation.goBack()}
           />
         )
     })

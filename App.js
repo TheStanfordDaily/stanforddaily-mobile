@@ -22,9 +22,6 @@ import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID
 import { Author, Home, Post, Section, Search } from "./components/screens"
 import { getActiveRouteInfo } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
-import { StyleSheet } from "react-native"
-import { SafeAreaView } from "react-native"
-import SearchBar from "./components/common/SearchBar"
 // import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
@@ -94,22 +91,19 @@ export default function App() {
   }
 
   const headerOptions = ({ navigation, route }) => {
-      return {
-        headerTitle: () => (
-          <Image
-            style={{ width: 260, height: 30 }}
-            source={logoAssets[theme]}
-          />
-        ),
-        headerRight: () => (
-          <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => {
-            setSearchVisible(true)
-            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
-          }}>
-            <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-          </TouchableOpacity>
-        )
-      };
+    return {
+      headerTitle: () => (
+        <Image
+          style={{ width: 260, height: 30 }}
+          source={logoAssets[theme]}
+        />
+      ),
+      headerRight: () => !searchVisible && (
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search)}>
+          <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+        </TouchableOpacity>
+      )
+    };
   };
     
   const detailHeaderOptions = ({ navigation, route }) => {
@@ -126,23 +120,11 @@ export default function App() {
     }
   }
     
-  const sectionOptions = ({ navigation, route }) => {
-    return {
-      headerTitle: (props) => route.params.category.name === Strings.search ? (
-        <SearchBar
-          searchQuery={searchQuery}
-          onChangeText={setSearchQuery}
-          onSearch={() => {
-            Keyboard.dismiss()
-            navigation.navigate(Strings.section, { category: { name: Strings.search }, seed: [], query: searchQuery })
-          }} onClose={closeSearch}
-        />
-      ) : <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
-      headerTitleStyle: { fontFamily: "MinionProBold" },
-      headerTintColor: bread[theme]["color-primary-500"],
-      headerBackTitleVisible: route.params.category.name !== Strings.search
-    }
-  }
+  const sectionOptions = ({ route }) => ({
+    headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
+    headerTitleStyle: { fontFamily: "MinionProBold" },
+    headerTintColor: bread[theme]["color-primary-500"]
+  })
   
   const authorOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{route.params.name}</Text>,
@@ -182,7 +164,7 @@ export default function App() {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
 
-      /*if (matches) {
+      if (matches) {
           var submatch = matches[1]
           signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential)
@@ -191,7 +173,7 @@ export default function App() {
             console.trace(error)
             setConfigValidated(false)
           })
-        }*/
+        }
       })
     }
 
@@ -255,27 +237,3 @@ export default function App() {
     </NavigationContainer>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  header: {
-    backgroundColor: '#f8f8f8',
-    borderBottomWidth: 0,
-  },
-  searchContainer: {
-    backgroundColor: 'transparent',
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    // paddingHorizontal: 0,
-    flexGrow: 1,
-    width
-  },
-  searchInputContainer: {
-    backgroundColor: '#e5e5e5',
-    borderRadius: 10,
-  },
-});

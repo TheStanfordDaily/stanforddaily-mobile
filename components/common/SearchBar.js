@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet, Dimensions, TextInput, View } from 'react-native';
 import { Icon, Input, Button, useTheme } from '@ui-kitten/components';
 import { Spacing } from '../../utils/constants';
 
@@ -9,10 +9,9 @@ export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose
   const theme = useTheme();
   
   return (
-    <View style={{...styles.container, backgroundColor: theme === "dark" ? "#1E1E1E" : "white"}}>
       <Input
         autoFocus
-        style={{...styles.searchBar, backgroundColor: theme === "dark" ? "white" : "#1E1E1E"}}
+        style={{...styles.container, flex: 0.9, backgroundColor: theme === "dark" ? "#1E1E1E" : "white"}}
         value={searchQuery}
         onChangeText={onChangeText}
         onSubmitEditing={onSearch}
@@ -23,19 +22,16 @@ export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose
         clearButtonMode="while-editing"
         textStyle={styles.inputText}
       />
-      <Button onPress={onClose} appearance="ghost">Cancel</Button>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingRight: Spacing.medium
+    // justifyContent: "flex-start",
+    // paddingRight: Spacing.medium
   },
   searchBar: {
     flex: 1,
