@@ -100,7 +100,7 @@ export default function App() {
         />
       ),
       headerRight: () => !searchVisible && (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search)}>
+        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search, { tags })}>
           <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
         </TouchableOpacity>
       )

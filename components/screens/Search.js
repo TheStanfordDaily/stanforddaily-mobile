@@ -9,6 +9,7 @@ import { DeviceType } from "expo-device"
 import { Spacing } from "../../utils/constants"
 import Fuse from "fuse.js"
 import SearchBar from "../common/SearchBar"
+import { Keyboard } from "react-native"
 
 const { width, height } = Dimensions.get("window")
 
@@ -47,7 +48,7 @@ export default function Search({ route, navigation }) {
               setSearchText("")
               setArticles([])
             }}
-            onClose={() => navigation.goBack()}
+            onClose={() => Keyboard.dismiss()}
           />
         )
     })
@@ -55,7 +56,7 @@ export default function Search({ route, navigation }) {
     
     return articles.length === 0 || searching ? (
         <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
-          {tags.map((tag, index) => (
+          {route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
             setSearchText(tag.name)
             setSearching(true)

@@ -1,3 +1,5 @@
+import Model from "./model"
+
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
 export const itemize = (elements) => {
