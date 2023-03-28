@@ -9,7 +9,7 @@ export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose
   const theme = useTheme();
   
   return (
-      <Input
+      <TextInput
         autoFocus
         style={{...styles.container, flex: 0.9, backgroundColor: theme === "dark" ? "#1E1E1E" : "white"}}
         value={searchQuery}
