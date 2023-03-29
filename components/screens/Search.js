@@ -74,9 +74,9 @@ export default function Search({ route, navigation }) {
     
     return emptyResults ? (
       <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
-    ) :  searching ? (
-      <Layout style={styles.topics}>
-      <ActivityIndicator />
+    ) : searching ? (
+      <Layout style={styles.empty}>
+        <ActivityIndicator />
       </Layout>
     ) : articles.length > 0 ? (
         <Layout style={styles.container}>
@@ -100,7 +100,7 @@ export default function Search({ route, navigation }) {
           />
         </Layout>
         ) : (
-          <Layout style={styles.topics}>
+          <Layout style={styles.empty}>
             {articles.length === 0 && route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
             setSearchQuery(tag.name)
@@ -117,9 +117,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  topics: {
+  empty: {
     alignItems: "center",
     justifyContent: "space-evenly",
-    flex: 1
+    flex: 1,
+    paddingBottom: Spacing.large
   }
 })
