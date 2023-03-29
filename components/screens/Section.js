@@ -22,6 +22,7 @@ export default function Section({ route, navigation }) {
     const [layoutLoaded, setLayoutLoaded] = useState(false)
 
     const fetchResults = async () => {
+      setArticlesLoading(true)
       try {
         const posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
         setArticles([...articles, ...posts])
@@ -54,12 +55,12 @@ export default function Section({ route, navigation }) {
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}
           onEndReached={() => {
-              if (!articlesLoading) {
-                  setPageNumber(pageNumber + 1)
-              }
+            if (!articlesLoading) {
+              setPageNumber(pageNumber + 1)
+            }
           }}
           renderItem={({ item, index }) => (
-              <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+            <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
           )}
           ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         />

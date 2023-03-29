@@ -6,7 +6,7 @@ import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
-import { Spacing, Strings } from "../../utils/constants"
+import { Spacing } from "../../utils/constants"
 import Fuse from "fuse.js"
 import { Keyboard } from "react-native"
 import { DailyBread as bread } from "../../theme"
@@ -39,7 +39,7 @@ export default function Search({ route, navigation }) {
     setArticlesLoading(!shouldClear)
     let posts
     try {
-      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? 1 : (pageNumber)).get()
+      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? pageNumber : pageNumber + 1).get()
       if (shouldClear) {
         setArticles(posts)
       } else {
@@ -51,9 +51,13 @@ export default function Search({ route, navigation }) {
         setPossiblyReachedEnd(true)
       }
     } finally {
-      if (posts.length === 0 && shouldClear) {
-        setEmptyResults(true)
+      if (shouldClear) {
+        setPageNumber(1)
+        if (posts.length === 0) {
+          setEmptyResults(true)
+        }
       }
+      setArticlesLoading(false)
       setSearching(false)
     }
   }
@@ -132,7 +136,7 @@ export default function Search({ route, navigation }) {
         onEndReachedThreshold={0.25}
         onEndReached={() => {
           if (possiblyReachedEnd && articlesLoading) {
-            setPageNumber(pageNumber + 1)
+            // setPageNumber(pageNumber + 1)
             handleSearch(searchQuery)
 
           }
