@@ -27,6 +27,8 @@ export default function Search({ route, navigation }) {
 
   async function handleSearch(query, shouldClear) {
     Keyboard.dismiss()
+    if (query.match(/^\s*$/)) return
+    
     setSearching(true)
     let posts
     try {
@@ -42,7 +44,7 @@ export default function Search({ route, navigation }) {
         setPossiblyReachedEnd(true)
       }
     } finally {
-      if (articles.length === 0 && posts.length === 0) {
+      if (posts.length === 0 && shouldClear) {
         setEmptyResults(true)
       }
       setSearching(false)
@@ -75,15 +77,20 @@ export default function Search({ route, navigation }) {
         />*/}
           <TextInput
             style={styles.searchInput}
-            onChangeText={handleSearch}
+            onChangeText={setSearchQuery}
             value={searchQuery}
-            placeholder="Search"
+            placeholder="Search for articles or topics"
             returnKeyType="search"
-            onSubmitEditing={Keyboard.dismiss}
+            onSubmitEditing={(e) => {
+              setPageNumber(1)
+              handleSearch(e.nativeEvent.text, true)
+            }}
+            autoCorrect={false}
+            autoFocus
           />
-          <Button onPress={handleCancel} style={styles.cancelButton} title="Cancel">
-            {/* <Text style={styles.cancelButtonText}>Cancel</Text> */}
-          </Button>
+          <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
+            <Text category="label" style={{ fontSize: 16, color: bread[theme]["color-primary-500"]}}>Cancel</Text>
+          </TouchableOpacity>
   </View>
       ),
       headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"]
@@ -147,22 +154,20 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    },
-    searchInput: {
+    paddingLeft: Spacing.medium,
+    paddingRight: Spacing.large,
+    width: width - Spacing.extraLarge,
+  },
+  searchInput: {
     flex: 1,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    paddingHorizontal: 10,
+    paddingHorizontal: Spacing.medium,
     paddingVertical: 5,
-    marginRight: 10,
-    },
-    cancelButton: {
-    paddingHorizontal: 10,
-    },
-    cancelButtonText: {
-    fontSize: 16,
-    color: '#007AFF',
-    },
+    marginRight: Spacing.medium,
+  },
+  cancelButton: {
+    paddingHorizontal: Spacing.medium,
+  }
 })
