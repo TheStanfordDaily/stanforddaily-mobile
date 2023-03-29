@@ -21,14 +21,14 @@ export default function Search({ route, navigation }) {
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
     const perPageNumber = 50
-    const [searchText, setSearchText] = useState("")
+    const [searchQuery, setSearchQuery] = useState("")
     const [searching, setSearching] = useState(false)
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [tagQuery, setTagQuery] = useState("")
 
     const performSearch = (query) => {
-      setSearchText(query)
+      setSearchQuery(query)
       Keyboard.dismiss()
       setSearching(true)
       //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
@@ -50,16 +50,16 @@ export default function Search({ route, navigation }) {
             style={{ width: width - 2*Spacing.extraLarge, height: 34, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
             placeholder="Search"
             placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
-            onChangeText={setSearchText}
+            onChangeText={setSearchQuery}
             onSubmitEditing={(e) => {
               performSearch(e.nativeEvent.text)
             }}
             returnKeyType="search"
-            value={searchText}
+            value={searchQuery}
           />
         ),
-        headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"],
-    })}, [searchText])
+        headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"]
+    })}, [searchQuery])
     
     
     return articles.length > 0 ? (
