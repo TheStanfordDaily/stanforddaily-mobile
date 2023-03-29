@@ -15,19 +15,21 @@ const BATCH_SIZE = 24
 const { width, height } = Dimensions.get("window")
 
 export default function Search({ route, navigation }) {
-  const [articlesLoading, setArticlesLoading] = useState(false)
-  const [articles, setArticles] = useState([])
+  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
+  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
+
   const { deviceType, theme } = useContext(ThemeContext)
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
+  
+  const [articlesLoading, setArticlesLoading] = useState(false)
+  const [articles, setArticles] = useState([])
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  const [incumbentQuery, setIncumbentQuery] = useState("")
   const [searching, setSearching] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [emptyResults, setEmptyResults] = useState(false)
-  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
-  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
   const [cancelVisible, setCancelVisible] = useState(false)
-  const [incumbentQuery, setIncumbentQuery] = useState("")
 
   async function handleSearch(query) {
     Keyboard.dismiss()
@@ -47,10 +49,8 @@ export default function Search({ route, navigation }) {
         setPossiblyReachedEnd(true)
       }
     } finally {
-        setPageNumber(1)
-        if (posts.length === 0) {
-          setEmptyResults(true)
-        }
+      setPageNumber(1)
+      setEmptyResults(posts.length === 0)
       setIncumbentQuery(query)
       setSearching(false)
     }
@@ -79,19 +79,6 @@ export default function Search({ route, navigation }) {
       headerBackTitleVisible: false,
       headerTitle: () =>  (
         <View style={styles.searchContainer}>
-                  {/*<TextInput
-          style={{ width: width - 2*Spacing.extraLarge, height: 34, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
-          placeholder={Strings.search}
-          placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
-          onChangeText={setSearchQuery}
-          onSubmitEditing={(e) => {
-            setPageNumber(1)
-            handleSearch(e.nativeEvent.text, true)
-          }}
-          returnKeyType="search"
-          value={searchQuery}
-          autoCorrect={false}
-        />*/}
           <TextInput
             style={{ ...styles.searchInput, color: textColor }}
             onChangeText={setSearchQuery}
@@ -116,7 +103,7 @@ export default function Search({ route, navigation }) {
           />
           {cancelVisible && (
             <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
-              <Text category="label" style={{ fontSize: 16, color: tintColor}}>Cancel</Text>
+              <Text category="label" style={{ fontSize: 16, color: tintColor }}>Cancel</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -156,7 +143,7 @@ export default function Search({ route, navigation }) {
         renderItem={({ item, index }) => (
           <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
         )}
-        ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
+        ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
       />
     </Layout>
   ) : (
