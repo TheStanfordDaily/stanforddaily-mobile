@@ -6,12 +6,12 @@ import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
-import { Spacing } from "../../utils/constants"
+import { Spacing, Strings } from "../../utils/constants"
 import Fuse from "fuse.js"
-import SearchBar from "../common/SearchBar"
 import { Keyboard } from "react-native"
 import { DailyBread as bread } from "../../theme"
 
+const BATCH_SIZE = 24
 const { width, height } = Dimensions.get("window")
 
 export default function Search({ route, navigation }) {
@@ -20,23 +20,23 @@ export default function Search({ route, navigation }) {
   const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-  const BATCH_SIZE = 24
   const [searchQuery, setSearchQuery] = useState("")
   const [searching, setSearching] = useState(false)
-  const [tags, setTags] = useState([])
   const [pageNumber, setPageNumber] = useState(1)
-  const [tagQuery, setTagQuery] = useState("")
   const [emptyResults, setEmptyResults] = useState(false)
 
   async function performSearch(query, clear) {
     
     Keyboard.dismiss()
     setSearching(true)
-    //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
     let posts
     try {
-      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(pageNumber).get()
-      if (clear) {setArticles(posts)} else {setArticles([...articles, ...posts])}
+      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(clear ? 1 : pageNumber).get()
+      if (clear) {
+        setArticles(posts)
+      } else {
+        setArticles([...articles, ...posts])
+      }
     } catch (error) {
       console.log(error)
       if (error.data?.status === 400) {
@@ -57,7 +57,7 @@ export default function Search({ route, navigation }) {
       headerTitle: () =>  (
         <TextInput
           style={{ width: width - 2*Spacing.extraLarge, height: 34, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
-          placeholder="Search"
+          placeholder={Strings.search}
           placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
           onChangeText={setSearchQuery}
           onSubmitEditing={(e) => {
@@ -66,14 +66,18 @@ export default function Search({ route, navigation }) {
           }}
           returnKeyType="search"
           value={searchQuery}
+          autoCorrect={false}
         />
       ),
       headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"]
-  })}, [searchQuery])
+    })
+  }, [searchQuery])
     
     
   return emptyResults ? (
-    <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
+    <Layout style={styles.empty}>
+      <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
+    </Layout>
   ) : searching ? (
     <Layout style={styles.empty}>
       <ActivityIndicator />
@@ -94,7 +98,7 @@ export default function Search({ route, navigation }) {
           }
         }}
         renderItem={({ item, index }) => (
-            <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+          <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
         )}
         ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
       />
