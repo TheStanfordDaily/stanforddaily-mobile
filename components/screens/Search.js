@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -59,7 +59,8 @@ export default function Search({ route, navigation }) {
     navigation.setOptions({
       headerBackTitleVisible: false,
       headerTitle: () =>  (
-        <TextInput
+        <View style={styles.searchContainer}>
+                  {/*<TextInput
           style={{ width: width - 2*Spacing.extraLarge, height: 34, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
           placeholder={Strings.search}
           placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
@@ -71,7 +72,19 @@ export default function Search({ route, navigation }) {
           returnKeyType="search"
           value={searchQuery}
           autoCorrect={false}
-        />
+        />*/}
+          <TextInput
+            style={styles.searchInput}
+            onChangeText={handleSearch}
+            value={searchQuery}
+            placeholder="Search"
+            returnKeyType="search"
+            onSubmitEditing={Keyboard.dismiss}
+          />
+          <Button onPress={handleCancel} style={styles.cancelButton} title="Cancel">
+            {/* <Text style={styles.cancelButtonText}>Cancel</Text> */}
+          </Button>
+  </View>
       ),
       headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"]
     })
@@ -130,5 +143,26 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     flex: 1,
     paddingBottom: Spacing.large
-  }
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    },
+    searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginRight: 10,
+    },
+    cancelButton: {
+    paddingHorizontal: 10,
+    },
+    cancelButtonText: {
+    fontSize: 16,
+    color: '#007AFF',
+    },
 })
