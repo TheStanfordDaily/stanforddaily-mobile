@@ -28,7 +28,7 @@ export default function Search({ route, navigation }) {
   const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
   const [cancelVisible, setCancelVisible] = useState(false)
 
-  async function handleSearch(query, shouldClear) {
+  async function handleSearch(query, page, shouldClear) {
     Keyboard.dismiss()
     if (query.match(/^\s*$/)) {
       setSearchQuery("")
@@ -39,10 +39,12 @@ export default function Search({ route, navigation }) {
     setArticlesLoading(!shouldClear)
     let posts
     try {
-      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? pageNumber : pageNumber + 1).get()
+      
       if (shouldClear) {
+        posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(1).get()
         setArticles(posts)
       } else {
+        posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(page).get()
         setArticles([...articles, ...posts])
       }
     } catch (error) {
@@ -60,11 +62,6 @@ export default function Search({ route, navigation }) {
       setArticlesLoading(false)
       setSearching(false)
     }
-  }
-
-  function handleCancel() {
-    setSearchQuery("")
-    Keyboard.dismiss()
   }
 
   useEffect(() => {
@@ -101,19 +98,27 @@ export default function Search({ route, navigation }) {
             clearButtonMode="while-editing"
             onFocus={() => {
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              setCancelVisible(true)}}
+              setCancelVisible(true)}
+            }
             onBlur={() => {
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              setCancelVisible(false)}}
+              setCancelVisible(false)}
+            }
           />
-          {cancelVisible && <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
-            <Text category="label" style={{ fontSize: 16, color: tintColor}}>Cancel</Text>
-          </TouchableOpacity>}
+          {cancelVisible && (
+            <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
+              <Text category="label" style={{ fontSize: 16, color: tintColor}}>Cancel</Text>
+            </TouchableOpacity>
+          )}
         </View>
       ),
       headerTintColor: tintColor
     })
   }, [searchQuery, cancelVisible])
+
+  useEffect(() => {
+    handleSearch(searchQuery, pageNumber, pageNumber === 1)
+  }, [pageNumber])
     
     
   return emptyResults ? (
@@ -135,10 +140,8 @@ export default function Search({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         onEndReachedThreshold={0.25}
         onEndReached={() => {
-          if (possiblyReachedEnd && articlesLoading) {
-            // setPageNumber(pageNumber + 1)
-            handleSearch(searchQuery)
-
+          if (!articlesLoading) {
+            handleSearch(searchQuery, pageNumber + 1).then(() => setPageNumber(pageNumber + 1))
           }
         }}
         renderItem={({ item, index }) => (
