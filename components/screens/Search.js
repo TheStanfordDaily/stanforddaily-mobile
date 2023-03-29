@@ -24,15 +24,21 @@ export default function Search({ route, navigation }) {
   const [searching, setSearching] = useState(false)
   const [pageNumber, setPageNumber] = useState(1)
   const [emptyResults, setEmptyResults] = useState(false)
+  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
+  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
 
   async function handleSearch(query, shouldClear) {
     Keyboard.dismiss()
-    if (query.match(/^\s*$/)) return
+    if (query.match(/^\s*$/)) {
+      setSearchQuery("")
+      return
+    }
     
-    setSearching(true)
+    setSearching(shouldClear)
+    setArticlesLoading(!shouldClear)
     let posts
     try {
-      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? 1 : pageNumber).get()
+      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? 1 : (pageNumber)).get()
       if (shouldClear) {
         setArticles(posts)
       } else {
@@ -76,7 +82,7 @@ export default function Search({ route, navigation }) {
           autoCorrect={false}
         />*/}
           <TextInput
-            style={styles.searchInput}
+            style={{ ...styles.searchInput, color: textColor }}
             onChangeText={setSearchQuery}
             value={searchQuery}
             placeholder="Search for articles or topics"
@@ -89,11 +95,11 @@ export default function Search({ route, navigation }) {
             autoFocus
           />
           <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
-            <Text category="label" style={{ fontSize: 16, color: bread[theme]["color-primary-500"]}}>Cancel</Text>
+            <Text category="label" style={{ fontSize: 16, color: tintColor}}>Cancel</Text>
           </TouchableOpacity>
   </View>
       ),
-      headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"]
+      headerTintColor: tintColor
     })
   }, [searchQuery])
     
@@ -115,10 +121,12 @@ export default function Search({ route, navigation }) {
         key={columnCount}
         scrollEventThrottle={BATCH_SIZE}
         showsVerticalScrollIndicator={false}
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.25}
         onEndReached={() => {
-          if (!articlesLoading) {
+          if (possiblyReachedEnd && articlesLoading) {
             setPageNumber(pageNumber + 1)
+            handleSearch(searchQuery)
+
           }
         }}
         renderItem={({ item, index }) => (
@@ -161,11 +169,11 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgba(0,0,0,0.1)',
     borderRadius: 5,
     paddingHorizontal: Spacing.medium,
     paddingVertical: 5,
-    marginRight: Spacing.medium,
+    marginRight: Spacing.medium
   },
   cancelButton: {
     paddingHorizontal: Spacing.medium,
