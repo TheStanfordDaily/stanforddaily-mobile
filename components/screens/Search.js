@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button, LayoutAnimation } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button, LayoutAnimation, Platform } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -15,12 +15,12 @@ const BATCH_SIZE = 24
 const { width, height } = Dimensions.get("window")
 
 export default function Search({ route, navigation }) {
-  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
-  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
-
   const { deviceType, theme } = useContext(ThemeContext)
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
   
+  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
+  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
+
   const [articlesLoading, setArticlesLoading] = useState(false)
   const [articles, setArticles] = useState([])
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
@@ -50,6 +50,7 @@ export default function Search({ route, navigation }) {
       }
     } finally {
       setPageNumber(1)
+      setPossiblyReachedEnd(false)
       setEmptyResults(posts.length === 0)
       setIncumbentQuery(query)
       setSearching(false)
@@ -57,6 +58,8 @@ export default function Search({ route, navigation }) {
   }
 
   async function loadPage(page) {
+    if (possiblyReachedEnd) return
+    
     setArticlesLoading(true)
     let posts
     try {
@@ -97,9 +100,10 @@ export default function Search({ route, navigation }) {
               setCancelVisible(true)}
             }
             onBlur={() => {
+              Keyboard.dismiss()
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              setCancelVisible(false)}
-            }
+              setCancelVisible(false)
+            }}
           />
           {cancelVisible && (
             <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
@@ -136,14 +140,14 @@ export default function Search({ route, navigation }) {
         showsVerticalScrollIndicator={false}
         onEndReachedThreshold={0.25}
         onEndReached={() => {
-          if (!articlesLoading) {
+          if (!articlesLoading && !possiblyReachedEnd) {
             setPageNumber(pageNumber + 1)
           }
         }}
         renderItem={({ item, index }) => (
           <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
         )}
-        ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+        ListFooterComponent={() => articlesLoading && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
       />
     </Layout>
   ) : (
@@ -175,7 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingLeft: Spacing.medium,
     paddingRight: Spacing.large,
-    width: width - Spacing.extraLarge,
+    width: width - (Platform.OS === "ios" ? 1 : 2.5)*Spacing.extraLarge
   },
   searchInput: {
     flex: 1,
@@ -187,6 +191,6 @@ const styles = StyleSheet.create({
     marginRight: Spacing.medium
   },
   cancelButton: {
-    paddingHorizontal: Spacing.medium,
+    paddingHorizontal: Spacing.medium
   }
 })
