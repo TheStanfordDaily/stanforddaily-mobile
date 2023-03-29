@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -26,7 +26,9 @@ export default function Search({ route, navigation }) {
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
 
-    const performSearch = (query = searchText) => {
+    const performSearch = (query) => {
+      setSearchText(query)
+      Keyboard.dismiss()
       setSearching(true)
       //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
       Model.posts().search(query).orderby("relevance").perPage(perPageNumber).get().then((posts) => {
@@ -45,13 +47,8 @@ export default function Search({ route, navigation }) {
         headerTitle: () =>  (
           <SearchBar
             searchQuery={searchText}
-            onChangeText={setSearchText}
-            onSearch={performSearch}
-            onClear={() => {
-              setSearchText("")
-              setArticles([])
-              Keyboard.dismiss()
-            }}
+            onChangeText={(text) => setSearchText(text)}
+            onSearch={() => performSearch(searchText)}
             onClose={() => Keyboard.dismiss()}
           />
         ),
@@ -59,20 +56,15 @@ export default function Search({ route, navigation }) {
     })}, [])
     
     
-    return articles.length === 0 || searching ? (
-        <Layout style={{ alignItems: "center", justifyContent: "space-evenly", flex: 1 }}>
-          {route.params?.tags?.map((tag, index) => (
+    return  (
+        <Layout style={styles.container}>
+          {articles.length === 0 && route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
-            setSearchText(tag.name)
-            Keyboard.dismiss()
             performSearch(tag.name)
           }}>
             <Text category="label">{tag.name.toUpperCase()}</Text>
           </TouchableOpacity>
           ))}
-        </Layout>
-    ) : (
-        <Layout style={{ flex: 1 }}>
           <List
               data={articles}
               style={{ backgroundColor: "transparent" }}
@@ -82,9 +74,9 @@ export default function Search({ route, navigation }) {
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
               onEndReached={() => {
-                  if (!articlesLoading) {
-                      setPageNumber(pageNumber + 1)
-                  }
+                if (!articlesLoading) {
+                    setPageNumber(pageNumber + 1)
+                }
               }}
               renderItem={({ item, index }) => (
                   <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
@@ -92,5 +84,16 @@ export default function Search({ route, navigation }) {
               ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
-    )
+    ) 
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  topics: {
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    flex: 1
+  }
+})
