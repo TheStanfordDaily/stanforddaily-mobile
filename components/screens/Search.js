@@ -25,6 +25,7 @@ export default function Search({ route, navigation }) {
     const [searching, setSearching] = useState(false)
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
+    const [tagQuery, setTagQuery] = useState("")
 
     const performSearch = (query) => {
       setSearchText(query)
@@ -46,30 +47,23 @@ export default function Search({ route, navigation }) {
         headerBackTitleVisible: false,
         headerTitle: () =>  (
           <TextInput
-            style={{ width: width - 2*Spacing.extraLarge, height: 40, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
+            style={{ width: width - 2*Spacing.extraLarge, height: 34, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
             placeholder="Search"
             placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
             onChangeText={setSearchText}
-            value={searchText}
-            onSubmitEditing={() => {
-              performSearch(searchText)
+            onSubmitEditing={(e) => {
+              performSearch(e.nativeEvent.text)
             }}
+            returnKeyType="search"
+            value={searchText}
           />
-
         ),
         headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"],
-    })}, [])
+    })}, [searchText])
     
     
-    return  (
+    return articles.length > 0 ? (
         <Layout style={styles.container}>
-          {articles.length === 0 && route.params?.tags?.map((tag, index) => (
-          <TouchableOpacity key={index} onPress={() => {
-            performSearch(tag.name)
-          }}>
-            <Text category="label">{tag.name.toUpperCase()}</Text>
-          </TouchableOpacity>
-          ))}
           <List
               data={articles}
               style={{ backgroundColor: "transparent" }}
@@ -89,7 +83,22 @@ export default function Search({ route, navigation }) {
               ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
-    ) 
+        ) : searching ? (
+          <Layout style={styles.topics}>
+          <ActivityIndicator />
+          </Layout>
+        ) : (
+          <Layout style={styles.topics}>
+            {articles.length === 0 && route.params?.tags?.map((tag, index) => (
+          <TouchableOpacity key={index} onPress={() => {
+            setTagQuery(tag.name)
+            performSearch(tag.name)
+          }}>
+            <Text category="label">{tag.name.toUpperCase()}</Text>
+          </TouchableOpacity>
+          ))}
+          </Layout>
+        )
 }
 
 const styles = StyleSheet.create({
