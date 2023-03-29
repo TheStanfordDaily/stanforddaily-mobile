@@ -27,42 +27,51 @@ export default function Search({ route, navigation }) {
   const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
   const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
   const [cancelVisible, setCancelVisible] = useState(false)
+  const [incumbentQuery, setIncumbentQuery] = useState("")
 
-  async function handleSearch(query, page, shouldClear) {
+  async function handleSearch(query) {
     Keyboard.dismiss()
     if (query.match(/^\s*$/)) {
       setSearchQuery("")
       return
     }
     
-    setSearching(shouldClear)
-    setArticlesLoading(!shouldClear)
+    setSearching(true)
     let posts
     try {
-      
-      if (shouldClear) {
         posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(1).get()
         setArticles(posts)
-      } else {
-        posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(page).get()
-        setArticles([...articles, ...posts])
-      }
     } catch (error) {
       console.log(error)
       if (error.data?.status === 400) {
         setPossiblyReachedEnd(true)
       }
     } finally {
-      if (shouldClear) {
         setPageNumber(1)
         if (posts.length === 0) {
           setEmptyResults(true)
         }
-      }
-      setArticlesLoading(false)
+      setIncumbentQuery(query)
       setSearching(false)
     }
   }
+
+  async function loadPage(page) {
+    setArticlesLoading(true)
+    let posts
+    try {
+      posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get()
+      setArticles([...articles, ...posts])
+    } catch (error) {
+      console.log(error)
+      if (error.data?.status === 400) {
+        setPossiblyReachedEnd(true)
+      }
+    } finally {
+      setArticlesLoading(false)
+    }
+  }
+
 
   useEffect(() => {
     setEmptyResults(false)
@@ -91,7 +100,7 @@ export default function Search({ route, navigation }) {
             returnKeyType="search"
             onSubmitEditing={(e) => {
               setPageNumber(1)
-              handleSearch(e.nativeEvent.text, true)
+              handleSearch(e.nativeEvent.text)
             }}
             autoCorrect={false}
             autoFocus
@@ -117,7 +126,7 @@ export default function Search({ route, navigation }) {
   }, [searchQuery, cancelVisible])
 
   useEffect(() => {
-    handleSearch(searchQuery, pageNumber, pageNumber === 1)
+    loadPage(pageNumber)
   }, [pageNumber])
     
     
@@ -141,7 +150,7 @@ export default function Search({ route, navigation }) {
         onEndReachedThreshold={0.25}
         onEndReached={() => {
           if (!articlesLoading) {
-            handleSearch(searchQuery, pageNumber + 1).then(() => setPageNumber(pageNumber + 1))
+            setPageNumber(pageNumber + 1)
           }
         }}
         renderItem={({ item, index }) => (
