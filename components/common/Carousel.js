@@ -22,11 +22,10 @@ export default function Carousel(props) {
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
     const Header = (props) => (
-        <Image
-          source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
-          style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
-        />
-
+      <Image
+        source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
+        style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
+      />
     )
       
     const Footer = (props) => (
