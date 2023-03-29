@@ -1,13 +1,14 @@
 import React, { useContext, useState } from "react"
 import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
-import { Dimensions, Image, View, StyleSheet, PixelRatio, Platform } from "react-native"
+import { Dimensions, View, StyleSheet, PixelRatio, Platform } from "react-native"
+import { Image } from "expo-image"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
 import { decode } from "html-entities"
-import { itemize } from "../helpers/format"
-import { Spacing } from "../constants"
-import { ThemeContext } from "../theme-context"
+import { itemize } from "../../utils/format"
+import { Spacing } from "../../utils/constants"
+import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
@@ -21,12 +22,10 @@ export default function Carousel(props) {
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
     const Header = (props) => (
-      <React.Fragment>
-        <Image
-          source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
-          style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
-        />
-      </React.Fragment>
+      <Image
+        source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
+        style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
+      />
     )
       
     const Footer = (props) => (
@@ -56,7 +55,7 @@ export default function Carousel(props) {
                           {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                           <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
                           <Text style={{ marginHorizontal: -10, marginBottom: -5, color: useTheme()["color-primary-600"] }} category="s2">
-                            {moment(new Date(item["date_gmt"])).fromNow().toUpperCase()}
+                            {moment(new Date(item["date"])).fromNow().toUpperCase()}
                           </Text>
                       </Card>
                   </View>

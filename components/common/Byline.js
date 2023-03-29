@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { TouchableOpacity, StyleSheet, View } from "react-native"
 import { Button, Text, Icon, useTheme } from "@ui-kitten/components"
-import { Spacing } from "../constants"
+import { Spacing } from "../../utils/constants"
 import { decode } from "html-entities"
 
 export default function Byline({ authors, section, sourceName, category, date, navigation }) {

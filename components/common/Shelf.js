@@ -4,10 +4,10 @@ import { Divider, ListItem, Text, useTheme } from "@ui-kitten/components"
 import PagerView from "react-native-pager-view"
 import { decode } from "html-entities"
 import _ from "lodash"
-import { formatDate, itemize } from "../helpers/format"
+import { formatDate, itemize } from "../../utils/format"
 import { DeviceType } from "expo-device"
-import { ThemeContext } from "../theme-context"
-import { Spacing } from "../constants"
+import { ThemeContext } from "../../theme-context"
+import { Spacing } from "../../utils/constants"
 
 const pixelRatio = PixelRatio.get()
 const fontScale = PixelRatio.getFontScale()
@@ -34,8 +34,8 @@ export default function Shelf(props) {
                 <View key={index} style={{ flex: 1, flexDirection: "row" }}>
                     {_.chunk(triplet, 3).map((group, outerIndex) => (
                         <View collapsable={false} style={{ flex: 1, flexDirection: "column" }} key={outerIndex}>
-                            {group.map((item) => (
-                                <React.Fragment>
+                            {group.map((item, innerIndex) => (
+                                <React.Fragment key={innerIndex}>
                                     <ListItem
                                         title={() => <Text numberOfLines={4} ellipsizeMode="tail" style={{ paddingHorizontal: 4, fontSize: 20*fontScale, color: props.alternate ? "white" : theme["text-basic-color"] }} allowFontScaling category={"p1"}>{decode(item.title.rendered)}</Text>}
                                         description={() => <Text style={{ paddingHorizontal: 4, fontSize: 18*fontScale, color: props.alternate ? "white" : theme["text-basic-color"] }} category={"p2"}>{itemize(item.parsely?.meta?.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}

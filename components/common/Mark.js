@@ -8,12 +8,12 @@ export default function Mark({ navigation, alternate, seed, category }) {
     return (
         <TouchableOpacity
             activeOpacity={alternate ? 0.8 : 0.5}
-            onPress={() => navigation.navigate("Section", { category: category, seed: seed })}
+            onPress={() => navigation?.navigate("Section", { category: category, seed: seed })}
             style={[styles.container, { backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"] }]}>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text style={{ opacity: 0 }}>{"  \u276f"}</Text>
                     <Text style={{ color: alternate ? "white" : theme["text-basic-color"] }} category={"h4"}>{category.name.toUpperCase()}</Text>
-                    <Text style={{ color: alternate ? "white" : theme["text-basic-color"] }}>{"  \u276f"}</Text>
+                    {navigation && <Text style={{ color: alternate ? "white" : theme["text-basic-color"] }}>{"  \u276f"}</Text>}
                 </View>
         </TouchableOpacity>
     )
