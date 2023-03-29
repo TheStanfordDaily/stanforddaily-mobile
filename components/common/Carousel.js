@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
 import { Card, Button, Layout, Text, useTheme } from "@ui-kitten/components"
-import { Dimensions, Image, View, StyleSheet, PixelRatio, Platform } from "react-native"
+import { Dimensions, View, StyleSheet, PixelRatio, Platform } from "react-native"
+import { Image } from "expo-image"
 import PagerView from "react-native-pager-view"
 import moment from "moment"
 import _ from "lodash"
@@ -21,12 +22,11 @@ export default function Carousel(props) {
     // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
     // Might have to do with the dynamic styling of the border below.
     const Header = (props) => (
-      <React.Fragment>
         <Image
           source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
           style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
         />
-      </React.Fragment>
+
     )
       
     const Footer = (props) => (

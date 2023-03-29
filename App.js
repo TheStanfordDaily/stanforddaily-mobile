@@ -57,7 +57,6 @@ export default function App() {
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
-  const [seen, setSeen] = useState(new Set())
   const [searchQuery, setSearchQuery] = useState("")
   const [searchVisible, setSearchVisible] = useState(false)
   const [activeRouteInfo, setActiveRouteInfo] = useState({})
