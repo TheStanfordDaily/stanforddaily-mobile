@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button, LayoutAnimation } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -26,6 +26,7 @@ export default function Search({ route, navigation }) {
   const [emptyResults, setEmptyResults] = useState(false)
   const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
   const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
+  const [cancelVisible, setCancelVisible] = useState(false)
 
   async function handleSearch(query, shouldClear) {
     Keyboard.dismiss()
@@ -93,15 +94,22 @@ export default function Search({ route, navigation }) {
             }}
             autoCorrect={false}
             autoFocus
+            clearButtonMode="while-editing"
+            onFocus={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              setCancelVisible(true)}}
+            onBlur={() => {
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+              setCancelVisible(false)}}
           />
-          <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
+          {cancelVisible && <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
             <Text category="label" style={{ fontSize: 16, color: tintColor}}>Cancel</Text>
-          </TouchableOpacity>
-  </View>
+          </TouchableOpacity>}
+        </View>
       ),
       headerTintColor: tintColor
     })
-  }, [searchQuery])
+  }, [searchQuery, cancelVisible])
     
     
   return emptyResults ? (

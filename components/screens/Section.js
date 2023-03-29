@@ -1,17 +1,16 @@
-import { useTheme, useFocusEffect } from "@react-navigation/native"
-import { Layout, List, Text } from "@ui-kitten/components"
+import { Layout, List } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, StyleSheet, View } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
-import { Spacing, Strings } from "../../utils/constants"
+import { Spacing } from "../../utils/constants"
 
 const BATCH_SIZE = 16
 
 export default function Section({ route, navigation }) {
-    const { category, seed, query } = route.params
+    const { category, seed } = route.params
     const [articlesLoading, setArticlesLoading] = useState(false)
     const [selection, setSelection] = useState(0)
     const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2)
@@ -24,14 +23,7 @@ export default function Section({ route, navigation }) {
 
     const fetchResults = async () => {
       try {
-        let posts
-    
-        if (category.name === Strings.search) {
-          posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
-        } else {
-          posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
-        }
-    
+        const posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
         setArticles([...articles, ...posts])
       } catch (error) {
         console.log(error)
@@ -51,11 +43,7 @@ export default function Section({ route, navigation }) {
     }, [pageNumber])
 
 
-    return layoutLoaded && query && articles?.length === 0 ? (
-      <Container style={styles.empty}>
-        <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${query}.\u2019`}</Text>
-      </Container>
-    ) : (
+    return (
       <Container style={styles.container}>
         <List
           data={articles}
