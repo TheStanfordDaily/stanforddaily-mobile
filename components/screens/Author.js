@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from "react"
 import { ActivityIndicator, Dimensions, ImageBackground, FlatList, PixelRatio, StatusBar, StyleSheet } from "react-native"
 import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components"
-import { Margins, Spacing } from "../constants"
-import Model from "../Model"
+import Model from "../../utils/model"
 import { decode } from "html-entities"
-import { formatDate, stringMode } from "../helpers/format"
-import { ThemeContext } from "../theme-context"
+import { formatDate, stringMode } from "../../utils/format"
+import { ThemeContext } from "../../theme-context"
 import { DeviceType } from "expo-device"
 
 const { width, height } = Dimensions.get("window")
@@ -77,7 +76,7 @@ export default function Author({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    }
+  container: {
+    flex: 1
+  }
 })

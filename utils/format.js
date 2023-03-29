@@ -1,3 +1,5 @@
+import Model from "./model"
+
 const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.", "Sept.", "Oct.", "Nov.", "Dec."]
 
 export const itemize = (elements) => {
@@ -46,3 +48,56 @@ export const generateSlug = (s) => {
 
   return s.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-')
 }
+
+export function getActiveRouteInfo(navigationState) {
+  if (!navigationState) return null
+  const route = navigationState.routes[navigationState.index]
+  // Traverse the nested navigators.
+  if (route.routes) return getActiveRouteInfo(route)
+
+  var out = {
+    name: route.name,
+    datetime: new Date().toISOString()
+  }
+  if (route.params?.article?.id) {
+    out["id"] = route.params?.article?.id
+  }
+
+  return out
+}
+
+export function validateConfig(config) {
+  return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null)
+}
+
+export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numTopTags = 10, excludedTags = [35626]) => {
+  try {
+    const recentPosts = await Model.posts().perPage(numRecentPosts).embed();
+
+    const tagCounts = {};
+
+    for (const post of recentPosts) {
+      const tags = post._embedded["wp:term"][1];
+
+      for (const tag of tags) {
+        if (excludedTags.includes(tag.id)) {
+          continue;
+        }
+        if (tagCounts[tag.id]) {
+          tagCounts[tag.id].count += 1;
+        } else {
+          tagCounts[tag.id] = { ...tag, count: 1 };
+        }
+      }
+    }
+
+    const sortedByCount = Object.values(tagCounts).sort((a, b) => b.count - a.count);
+
+    const mostCommonTags = sortedByCount.slice(0, numTopTags);
+
+    return mostCommonTags;
+  } catch (error) {
+    console.error('Error fetching tags from recent posts:', error);
+    return [];
+  }
+};
