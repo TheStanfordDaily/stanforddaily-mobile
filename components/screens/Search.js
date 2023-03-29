@@ -1,7 +1,7 @@
 import { useTheme } from "@react-navigation/native"
 import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -45,12 +45,17 @@ export default function Search({ route, navigation }) {
       navigation.setOptions({
         headerBackTitleVisible: false,
         headerTitle: () =>  (
-          <SearchBar
-            searchQuery={searchText}
-            onChangeText={(text) => setSearchText(text)}
-            onSearch={() => performSearch(searchText)}
-            onClose={() => Keyboard.dismiss()}
+          <TextInput
+            style={{ width: width - 2*Spacing.extraLarge, height: 40, backgroundColor: theme === "dark" ? bread[theme]["color-primary-800"] : bread[theme]["color-primary-100"], borderRadius: 10, paddingLeft: 10, color: theme === "dark" ? "white" : bread[theme]["color-primary-500"] }}
+            placeholder="Search"
+            placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
+            onChangeText={setSearchText}
+            value={searchText}
+            onSubmitEditing={() => {
+              performSearch(searchText)
+            }}
           />
+
         ),
         headerTintColor: theme === "dark" ? "white" : bread[theme]["color-primary-500"],
     })}, [])
