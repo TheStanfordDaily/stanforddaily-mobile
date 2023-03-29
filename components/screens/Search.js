@@ -20,29 +20,38 @@ export default function Search({ route, navigation }) {
     const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
     const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-    const perPageNumber = 50
+    const BATCH_SIZE = 24
     const [searchQuery, setSearchQuery] = useState("")
     const [searching, setSearching] = useState(false)
     const [tags, setTags] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [tagQuery, setTagQuery] = useState("")
+    const [emptyResults, setEmptyResults] = useState(false)
 
-    const performSearch = (query) => {
-      setSearchQuery(query)
+    async function performSearch(query, clear) {
+      
       Keyboard.dismiss()
       setSearching(true)
       //.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(basePageCount + pageNumber).get()
-      Model.posts().search(query).orderby("relevance").perPage(perPageNumber).get().then((posts) => {
-        setArticles(posts)
-        // const fuse = new Fuse(posts, { includeScore: true, findAllMatches: true, keys: ["content.rendered"] })
-        // console.log(fuse.search("dragon"))
-      }).finally(() => {
-        
+      let posts
+      try {
+        posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(pageNumber).get()
+        if (clear) {setArticles(posts)} else {setArticles([...articles, ...posts])}
+      } catch (error) {
+        console.log(error)
+        if (error.data?.status === 400) {
+          setPossiblyReachedEnd(true)
+        }
+      } finally {
+        if (articles.length === 0 && posts.length === 0) {
+          setEmptyResults(true)
+        }
         setSearching(false)
-      })
+      }
     }
 
     useEffect(() => {
+      setEmptyResults(false)
       navigation.setOptions({
         headerBackTitleVisible: false,
         headerTitle: () =>  (
@@ -52,7 +61,8 @@ export default function Search({ route, navigation }) {
             placeholderTextColor={theme === "dark" ? "white" : bread[theme]["color-primary-500"]}
             onChangeText={setSearchQuery}
             onSubmitEditing={(e) => {
-              performSearch(e.nativeEvent.text)
+              setPageNumber(1)
+              performSearch(e.nativeEvent.text, true)
             }}
             returnKeyType="search"
             value={searchQuery}
@@ -62,14 +72,20 @@ export default function Search({ route, navigation }) {
     })}, [searchQuery])
     
     
-    return articles.length > 0 ? (
+    return emptyResults ? (
+      <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
+    ) :  searching ? (
+      <Layout style={styles.topics}>
+      <ActivityIndicator />
+      </Layout>
+    ) : articles.length > 0 ? (
         <Layout style={styles.container}>
           <List
               data={articles}
               style={{ backgroundColor: "transparent" }}
               numColumns={columnCount}
               key={columnCount}
-              scrollEventThrottle={perPageNumber}
+              scrollEventThrottle={BATCH_SIZE}
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
               onEndReached={() => {
@@ -83,15 +99,11 @@ export default function Search({ route, navigation }) {
               ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.extraLarge }} />}
           />
         </Layout>
-        ) : searching ? (
-          <Layout style={styles.topics}>
-          <ActivityIndicator />
-          </Layout>
         ) : (
           <Layout style={styles.topics}>
             {articles.length === 0 && route.params?.tags?.map((tag, index) => (
           <TouchableOpacity key={index} onPress={() => {
-            setTagQuery(tag.name)
+            setSearchQuery(tag.name)
             performSearch(tag.name)
           }}>
             <Text category="label">{tag.name.toUpperCase()}</Text>
