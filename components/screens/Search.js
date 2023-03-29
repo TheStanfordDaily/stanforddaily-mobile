@@ -17,7 +17,7 @@ const { width, height } = Dimensions.get("window")
 export default function Search({ route, navigation }) {
   const [articlesLoading, setArticlesLoading] = useState(false)
   const [articles, setArticles] = useState([])
-  const { deviceType, toggleTheme, theme } = useContext(ThemeContext)
+  const { deviceType, theme } = useContext(ThemeContext)
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -25,14 +25,13 @@ export default function Search({ route, navigation }) {
   const [pageNumber, setPageNumber] = useState(1)
   const [emptyResults, setEmptyResults] = useState(false)
 
-  async function performSearch(query, clear) {
-    
+  async function handleSearch(query, shouldClear) {
     Keyboard.dismiss()
     setSearching(true)
     let posts
     try {
-      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(clear ? 1 : pageNumber).get()
-      if (clear) {
+      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(shouldClear ? 1 : pageNumber).get()
+      if (shouldClear) {
         setArticles(posts)
       } else {
         setArticles([...articles, ...posts])
@@ -50,6 +49,11 @@ export default function Search({ route, navigation }) {
     }
   }
 
+  function handleCancel() {
+    setSearchQuery("")
+    Keyboard.dismiss()
+  }
+
   useEffect(() => {
     setEmptyResults(false)
     navigation.setOptions({
@@ -62,7 +66,7 @@ export default function Search({ route, navigation }) {
           onChangeText={setSearchQuery}
           onSubmitEditing={(e) => {
             setPageNumber(1)
-            performSearch(e.nativeEvent.text, true)
+            handleSearch(e.nativeEvent.text, true)
           }}
           returnKeyType="search"
           value={searchQuery}
@@ -106,13 +110,13 @@ export default function Search({ route, navigation }) {
   ) : (
     <Layout style={styles.empty}>
       {articles.length === 0 && route.params?.tags?.map((tag, index) => (
-    <TouchableOpacity key={index} onPress={() => {
-      setSearchQuery(tag.name)
-      performSearch(tag.name)
-    }}>
-      <Text category="label">{tag.name.toUpperCase()}</Text>
-    </TouchableOpacity>
-    ))}
+        <TouchableOpacity key={index} onPress={() => {
+          setSearchQuery(tag.name)
+          handleSearch(tag.name)
+        }}>
+          <Text category="label">{tag.name.toUpperCase()}</Text>
+        </TouchableOpacity>
+      ))}
     </Layout>
   )
 }
