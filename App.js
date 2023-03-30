@@ -5,8 +5,8 @@ import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-// import { ref, push, set } from "firebase/database"
-// import { signInWithEmailAndPassword } from "firebase/auth"
+import { ref, push, set } from "firebase/database"
+import { signInWithEmailAndPassword } from "firebase/auth"
 import { Strings, Fonts, Spacing } from "./utils/constants"
 import * as eva from "@eva-design/eva"
 import { ApplicationProvider, Icon, IconRegistry, Input, Text } from "@ui-kitten/components"
@@ -18,11 +18,15 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { ThemeContext } from "./theme-context"
 import { decode } from "html-entities"
 import Model from "./utils/model"
-import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
+import { TECH_PASSWORD } from "@env"
 import { Author, Home, Post, Section, Search } from "./components/screens"
-import { getActiveRouteInfo, getMostCommonTagsFromRecentPosts } from "./utils/format"
+import { getActiveRouteInfo, getMostCommonTagsFromRecentPosts, validateConfig } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
+import { logNavigationEvent, onStateChange } from "./utils/analytics"
+// import { v4 as uuidv4 } from "uuid"
 // import { useFirebase } from "./hooks/useFirebase"
+
+const SESSION_ID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -31,18 +35,6 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false
   })
 })
-
-const firebaseConfig = {
-  apiKey: APIKEY,
-  authDomain: "daily-mobile-app-notifications.firebaseapp.com",
-  databaseURL: "https://daily-mobile-app-notifications-default-rtdb.firebaseio.com",
-  projectId: "daily-mobile-app-notifications",
-  storageBucket: "daily-mobile-app-notifications.appspot.com",
-  messagingSenderId: MESSAGING_SENDER_ID,
-  appId: APP_ID,
-  measurementId: MEASUREMENT_ID,
-  serviceAccountId: SERVICE_ACCOUNT_ID
-}
 
 const { width, height } = Dimensions.get("window")
 const Stack = createStackNavigator()
@@ -136,24 +128,11 @@ export default function App() {
     headerTintColor: bread[theme]["color-primary-500"]
   }
 
-  function logNavigationState(e) {
-    const info = useActiveRouteInfo(e);
-  
-    // Check whether this condition is actually doing what we want it to do.
-    /*if (firebase) {
-      setActiveRouteInfo(info); // Set the active route info state.
-      signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD)
-        .then((userCredential) => {
-          const analyticsRef = ref(firebase.db, "Analytics/", userCredential);
-          push(analyticsRef, info).catch((error) => console.log(error));
-        })
-        .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
-        .catch((error) => console.trace(error));
-    }
-  }*/
+  const logNavigationChange = (state) => {
+    const route = state.routes[state.index]
+    logNavigationEvent(route.name, SESSION_ID)
   }
-  
-  
+
 
   useEffect(() => {
     // Loads fonts from static resource.
@@ -221,7 +200,7 @@ export default function App() {
 
 
   return fontsLoaded && (
-    <NavigationContainer onStateChange={logNavigationState} theme={navigatorTheme[theme]}>
+    <NavigationContainer onStateChange={onStateChange} theme={navigatorTheme[theme]}>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
         <ApplicationProvider {...eva} theme={{ ...eva[theme], ...bread[theme] }} customMapping={mapping}>

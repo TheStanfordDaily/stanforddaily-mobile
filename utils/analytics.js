@@ -1,6 +1,6 @@
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
 import { initializeApp } from "firebase/app" 
-import { getDatabase, ref, child, update } from "firebase/database"
+import { getDatabase, ref, get, child, update } from "firebase/database"
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
 import { validateConfig } from "./format"
 import { useNavigation } from "@react-navigation/native"
@@ -25,27 +25,36 @@ const db = getDatabase(firebase)
 const auth = getAuth(firebase)
 
 var currentScreen;
-export const onStateChange = (state) => {
+export const onStateChange = async (state) => {
     console.log(TODAY)
     const previousScreen = currentScreen;
     const currentRouteName = state.routes[state.index].name;
     const currentId = state.routes[state.index].params?.article?.id
 
-    if (previousScreen !== currentRouteName) {
-        // Update the current screen in the Firebase Realtime Database
-        signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-            const sessionRef = ref(db, `${TODAY}/${currentRouteName}/${currentId}`)
-            update(sessionRef, { count: (currentScreen === currentRouteName && currentValue ? currentValue + 1 : 1) })
-            // Update the current screen variable
-            currentScreen = currentRouteName;
-            currentValue = 1
-        }).catch(error => console.trace("eedeee", error));
-    } else {
-        // Update the current screen counter in the Firebase Realtime Database
-        const sessionRef = ref(db, `${TODAY}/${currentRouteName}/${currentId}`)
-        const currentValue = child(sessionRef, 'count')
-        update(sessionRef, { count: currentValue ? currentValue + 1 : 1 })
-    }
+    try {
+        const email = 'tech@stanforddaily.com'
+        await signInWithEmailAndPassword(auth, email, TECH_PASSWORD)
+    
+        const valueRef = ref(db, `${TODAY}/${currentRouteName}`)
+    
+        const snapshot = await get(valueRef)
+        if (snapshot.exists()) {
+          // If the value exists, update it by adding 1
+          const existingIntValue = snapshot.val()[currentId]
+          const newValue = snapshot + 1
+          await update(valueRef, { [currentId]: existingIntValue + 1 })
+        } else {
+          // If the value doesn't exist, set it to 1
+          await update(valueRef, { [currentId]: 1 })
+        }
+    
+        // Return a success message
+        return `Value for ID ${0} updated successfully`
+      } catch (error) {
+        // Handle any errors
+        console.error(error)
+        return `Error updating value for ID`
+      }
 }
 
 
