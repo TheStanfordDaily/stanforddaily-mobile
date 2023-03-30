@@ -18,37 +18,30 @@ const firebaseConfig = {
 }
 
 const SESSION_ID = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+const TODAY = new Date().toISOString().split("T")[0]
 
 const firebase = initializeApp(firebaseConfig)
 const db = getDatabase(firebase)
 const auth = getAuth(firebase)
 
-export function logNavigationEvent(screenName, session) {
-  if (!validateConfig(firebaseConfig)) return;
-  signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-    const sessionRef = ref(db, `navigationEvents/${session}`, userCredential);
-    console.log("sessionRef", sessionRef, userCredential)
-    
-    /*sessionRef.once("value", (snapshot) => {
-      const visitedScreens = snapshot.val() || {};
-      if (!visitedScreens[screenName]) {
-        visitedScreens[screenName] = true;
-        sessionRef.set(visitedScreens);
-      }
-    });*/
-  }).catch(error => console.trace("eedeee", error));
-};
-var currentScreen = null;
+var currentScreen;
 export const onStateChange = (state) => {
+    console.log(TODAY)
     const previousScreen = currentScreen;
     const currentRouteName = state.routes[state.index].name;
     const currentId = state.routes[state.index].params?.article?.id
     if (previousScreen !== currentRouteName) {
       // Update the current screen in the Firebase Realtime Database
       signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-      const sessionRef = ref(db, `sessions/${SESSION_ID}`);
-      update(child(sessionRef, `visited/${currentRouteName}`), { visited: true });
-  
+        const dataPath = `${TODAY}/${currentRouteName}`
+        const sessionRef = ref(db, dataPath);
+        const currentValue = child(sessionRef, `visited/${currentRouteName}/${currentId}`)
+      console.log("v", currentValue)
+      if (currentValue) {
+        update(child(sessionRef, dataPath), { [currentId]: currentValue + 1 });
+      } else {
+        update(child(sessionRef, dataPath), { [currentId]: 1 });
+      }
       // Update the current screen variable
       currentScreen = currentRouteName;
     }).catch(error => console.trace("eedeee", error));
