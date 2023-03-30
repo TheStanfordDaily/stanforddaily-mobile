@@ -224,7 +224,7 @@ export default function App() {
     <NavigationContainer onStateChange={logNavigationState} theme={navigatorTheme[theme]}>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
-        <ApplicationProvider {...eva} theme={{...eva[theme], ...bread[theme]}} customMapping={mapping}>
+        <ApplicationProvider {...eva} theme={{ ...eva[theme], ...bread[theme] }} customMapping={mapping}>
           <SafeAreaProvider>
             <Stack.Navigator initialRouteName="Home">
               <Stack.Screen name="Home" component={Home} options={headerOptions} />
