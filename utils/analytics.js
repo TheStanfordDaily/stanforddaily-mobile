@@ -30,22 +30,22 @@ export const onStateChange = (state) => {
     const previousScreen = currentScreen;
     const currentRouteName = state.routes[state.index].name;
     const currentId = state.routes[state.index].params?.article?.id
+
     if (previousScreen !== currentRouteName) {
-      // Update the current screen in the Firebase Realtime Database
-      signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-        const dataPath = `${TODAY}/${currentRouteName}`
-        const sessionRef = ref(db, dataPath);
-        const currentValue = child(sessionRef, `visited/${currentRouteName}/${currentId}`)
-      console.log("v", currentValue)
-      if (currentValue) {
-        update(child(sessionRef, dataPath), { [currentId]: currentValue + 1 });
-      } else {
-        update(child(sessionRef, dataPath), { [currentId]: 1 });
-      }
-      // Update the current screen variable
-      currentScreen = currentRouteName;
-    }).catch(error => console.trace("eedeee", error));
-  }
+        // Update the current screen in the Firebase Realtime Database
+        signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
+            const sessionRef = ref(db, `${TODAY}/${currentRouteName}/${currentId}`)
+            update(sessionRef, { count: (currentScreen === currentRouteName && currentValue ? currentValue + 1 : 1) })
+            // Update the current screen variable
+            currentScreen = currentRouteName;
+            currentValue = 1
+        }).catch(error => console.trace("eedeee", error));
+    } else {
+        // Update the current screen counter in the Firebase Realtime Database
+        const sessionRef = ref(db, `${TODAY}/${currentRouteName}/${currentId}`)
+        const currentValue = child(sessionRef, 'count')
+        update(sessionRef, { count: currentValue ? currentValue + 1 : 1 })
+    }
 }
 
 
