@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef, useMemo } from "react"
-import { Appearance, Dimensions, Image, Keyboard, LayoutAnimation, Linking, Platform, TextInput, TouchableOpacity } from "react-native"
+import React, { useState, useEffect, useRef } from "react"
+import { Appearance, Image, Linking, TouchableOpacity } from "react-native"
 import { SafeAreaProvider } from "react-native-safe-area-context"
 import { navigate, logoAssets } from "./navigation"
 import * as Font from "expo-font"
 import * as Device from "expo-device"
 import * as Notifications from "expo-notifications"
-// import { ref, push, set } from "firebase/database"
-// import { signInWithEmailAndPassword } from "firebase/auth"
-import { Strings, Fonts, Spacing } from "./utils/constants"
+import { Strings, Fonts } from "./utils/constants"
 import * as eva from "@eva-design/eva"
-import { ApplicationProvider, Icon, IconRegistry, Input, Text } from "@ui-kitten/components"
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components"
 import { EvaIconsPack } from "@ui-kitten/eva-icons"
 import { DailyBread as bread } from "./theme"
 import { default as mapping } from "./mapping.json"
@@ -20,9 +18,8 @@ import { decode } from "html-entities"
 import Model from "./utils/model"
 import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env"
 import { Author, Home, Post, Section, Search } from "./components/screens"
-import { getActiveRouteInfo, getMostCommonTagsFromRecentPosts } from "./utils/format"
+import { getMostCommonTagsFromRecentPosts } from "./utils/format"
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action"
-// import { useFirebase } from "./hooks/useFirebase"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -44,7 +41,6 @@ const firebaseConfig = {
   serviceAccountId: SERVICE_ACCOUNT_ID
 }
 
-const { width, height } = Dimensions.get("window")
 const Stack = createStackNavigator()
 enableAnimationExperimental()
 
@@ -57,14 +53,9 @@ export default function App() {
   const colorScheme = Appearance.getColorScheme()
   const [theme, setTheme] = useState(colorScheme)
   const [deviceType, setDeviceType] = useState(Device.DeviceType.PHONE)
-  const [searchQuery, setSearchQuery] = useState("")
   const [searchVisible, setSearchVisible] = useState(false)
-  const [activeRouteInfo, setActiveRouteInfo] = useState({})
-  const useActiveRouteInfo = useMemo(() => getActiveRouteInfo, [])
   const [configValidated, setConfigValidated] = useState(false)
   const [tags, setTags] = useState([])
-
-  const firebase = useState(null)
 
   const toggleTheme = () => {
     const next = theme === "light" ? "dark" : "light"
@@ -74,20 +65,6 @@ export default function App() {
   const navigatorTheme = {
     light: DefaultTheme,
     dark: DarkTheme
-  }
-
-  const openSearch = () => {
-    setSearchVisible(prevSearchVisible => !prevSearchVisible);
-    if (searchVisible) {
-      Keyboard.dismiss();
-    }
-  }
-  
-  const closeSearch = () => {
-    Keyboard.dismiss()
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setSearchVisible(false)
-    setSearchQuery("")
   }
 
   const headerOptions = ({ navigation, route }) => {
@@ -134,26 +111,7 @@ export default function App() {
   
   const searchHeaderOptions = {
     headerTintColor: bread[theme]["color-primary-500"]
-  }
-
-  function logNavigationState(e) {
-    const info = useActiveRouteInfo(e);
-  
-    // Check whether this condition is actually doing what we want it to do.
-    /*if (firebase) {
-      setActiveRouteInfo(info); // Set the active route info state.
-      signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD)
-        .then((userCredential) => {
-          const analyticsRef = ref(firebase.db, "Analytics/", userCredential);
-          push(analyticsRef, info).catch((error) => console.log(error));
-        })
-        .then(() => setSeen(new Set([...seen, info.key, info?.id ?? ""])))
-        .catch((error) => console.trace(error));
-    }
-  }*/
-  }
-  
-  
+  }  
 
   useEffect(() => {
     // Loads fonts from static resource.
