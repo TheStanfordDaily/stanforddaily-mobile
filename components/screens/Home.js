@@ -1,16 +1,6 @@
-import React, { useCallback, useContext, useState, useMemo } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  PixelRatio,
-  FlatList,
-} from "react-native";
-import {
-  Divider,
-  Layout,
-  Text,
-} from "@ui-kitten/components";
+import React, { useContext, useState, useMemo } from "react";
+import { ActivityIndicator, StyleSheet, View, PixelRatio, FlatList } from "react-native";
+import { Divider, Layout, Text } from "@ui-kitten/components";
 import { Carousel, Diptych, Mark, Shelf, Wildcard } from "../";
 import { useWordPress } from "../../hooks/useWordPress";
 import { Sections, Spacing } from "../../utils/constants";
@@ -19,7 +9,6 @@ import { DeviceType } from "expo-device";
 import { ThemeContext } from "../../theme-context";
 import { StatusBar } from "expo-status-bar";
 
-// FirstPage Component
 const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
@@ -109,49 +98,40 @@ export default function Home({ navigation, route }) {
   }, [articles, data, navigation, deviceType]);
 
   return articles ? (
-  <Layout style={styles.container}>
-  <StatusBar style={theme === "dark" ? "light" : "dark"} />
-  <FlatList
-  ListHeaderComponent={firstPageComponent}
-  data={data?.wildcard ?? []}
-  renderItem={(post, index) => (
-  <Wildcard
-           item={post.item}
-           index={index}
-           key={post.item.id.toString()}
-           navigation={navigation}
-           verbose
-         />
-  )}
-  onEndReached={() => setPageNumber(pageNumber + 1)}
-  onEndReachedThreshold={0.25}
-  keyExtractor={(item, index) => index.toString()}
-  ListFooterComponent={() => (
-  <ActivityIndicator style={{ marginBottom: Spacing.large }} />
-  )}
-  />
-  </Layout>
+    <Layout style={styles.container}>
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
+      <FlatList
+        ListHeaderComponent={firstPageComponent}
+        data={data?.wildcard ?? []}
+        renderItem={(post, index) => (
+          <Wildcard
+            item={post.item}
+            index={index}
+            key={post.item.id.toString()}
+            navigation={navigation}
+            verbose
+          />
+        )}
+        onEndReached={() => setPageNumber(pageNumber + 1)}
+        onEndReachedThreshold={0.25}
+        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+      />
+    </Layout>
   ) : (
-  <Layout style={styles.empty}>
-  {loading ? (
-  <ActivityIndicator />
-  ) : (
-  <Text>
-  Something went wrong.
-  {`\n${JSON.stringify(error)}`}
-  </Text>
-  )}
-  </Layout>
+    <Layout style={styles.empty}>
+      {loading ? <ActivityIndicator /> : (<Text>Something went wrong.{`\n${JSON.stringify(error)}`}</Text>)}
+    </Layout>
   );
-  }
+}
   
-  const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-  flex: 1,
+    flex: 1,
   },
   empty: {
-  flex: 1,
-  justifyContent: "center",
-  alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  });
+});
