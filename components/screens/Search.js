@@ -1,7 +1,6 @@
-import { useTheme } from "@react-navigation/native"
-import { Icon, Input, Layout, List, Text } from "@ui-kitten/components"
+import { Button, Layout, List, Text } from "@ui-kitten/components"
 import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Button, LayoutAnimation, Platform } from "react-native"
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, LayoutAnimation, Platform } from "react-native"
 import Wlidcard from "../common/Wildcard"
 import Model from "../../utils/model"
 import { ThemeContext } from "../../theme-context"
@@ -20,6 +19,7 @@ export default function Search({ route, navigation }) {
   
   const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
   const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
+  const buttonStatus = theme === "dark" ? "control" : "primary"
 
   const [articlesLoading, setArticlesLoading] = useState(false)
   const [articles, setArticles] = useState([])
@@ -74,7 +74,6 @@ export default function Search({ route, navigation }) {
       setArticlesLoading(false)
     }
   }
-
 
   useEffect(() => {
     setEmptyResults(false)
@@ -153,12 +152,14 @@ export default function Search({ route, navigation }) {
   ) : (
     <Layout style={styles.empty}>
       {articles.length === 0 && route.params?.tags?.map((tag, index) => (
-        <TouchableOpacity key={index} onPress={() => {
+        <Button key={index} onPress={() => {
           setSearchQuery(tag.name)
           handleSearch(tag.name)
-        }}>
-          <Text category="label">{tag.name.toUpperCase()}</Text>
-        </TouchableOpacity>
+        }}
+        appearance="ghost" status={buttonStatus}
+        style={{ marginBottom: Spacing.medium }}>
+          {tag.name.toUpperCase()}
+        </Button>
       ))}
     </Layout>
   )

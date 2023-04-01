@@ -16,59 +16,57 @@ export const useWordPress = (pageNumber = 1) => {
   useEffect(() => {
     setLoading(true);
 
-    const fetchData = async () => {
+    const fetchCategoryData = async (category) => {
       try {
-        const categoryPromises = Object.values(Sections).map(async (category) => {
-          const response = await Model.posts()
-            .categories(category.id)
-            .perPage(BATCH_SIZE)
-            .page(pageNumber)
-            .get();
+        const response = await Model.posts()
+          .categories(category.id)
+          .perPage(BATCH_SIZE)
+          .page(pageNumber)
+          .get();
+        setData((prevState) => ({
+          ...prevState,
+          [category.slug]: [
+            ...(category.slug in prevState ? prevState[category.slug] : []),
+            ...response,
+          ],
+        }));
 
-          return { category, response };
-        });
-
-        const responses = await Promise.all(categoryPromises);
-
-        responses.forEach(({ category, response }) => {
-          setData((prevState) => ({
+        if (pageNumber === 1) {
+          setArticles((prevState) => ({
             ...prevState,
-            [category.slug]: [
-              ...(category.slug in prevState ? prevState[category.slug] : []),
-              ...response,
-            ],
+            [category.slug]: response.filter(
+              (item) =>
+                !item.categories.includes(Sections.FEATURED.id) ||
+                category.slug === Sections.FEATURED.slug
+            ),
           }));
 
-          if (pageNumber === 1) {
+          if (
+            category.slug === Sections.ARTS_LIFE.slug ||
+            category.slug === Sections.THE_GRIND.slug
+          ) {
             setArticles((prevState) => ({
               ...prevState,
-              [category.slug]: response.filter(
-                (item) =>
-                  !item.categories.includes(Sections.FEATURED.id) ||
-                  category.slug === Sections.FEATURED.slug
-              ),
+              culture: [...(prevState?.culture ?? []), ..._.shuffle(response)],
             }));
-
-            if (
-              category.slug === Sections.ARTS_LIFE.slug ||
-              category.slug === Sections.THE_GRIND.slug
-            ) {
-              setArticles((prevState) => ({
-                ...prevState,
-                culture: [
-                  ...(prevState?.culture ?? []),
-                  ..._.shuffle(response),
-                ],
-              }));
-            }
           }
-        });
+        }
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        const posts = await Model.posts()
-          .perPage(PAGE_SIZE)
-          .page(pageNumber + Math.ceil(homeCount / PAGE_SIZE) + 1)
-          .get();
+    Promise.all(
+      Object.values(Sections).map((category) => fetchCategoryData(category))
+    );
 
+    Model.posts()
+      .perPage(PAGE_SIZE)
+      .page(pageNumber + Math.ceil(homeCount / PAGE_SIZE) + 1)
+      .get()
+      .then((posts) => {
         setData((prevState) => ({
           ...prevState,
           wildcard: [
@@ -80,14 +78,7 @@ export const useWordPress = (pageNumber = 1) => {
             ),
           ],
         }));
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+      });
   }, [pageNumber]);
 
   return { data, articles, loading, error };

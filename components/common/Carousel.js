@@ -14,19 +14,22 @@ import { DeviceType } from "expo-device"
 const { width } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
-export default function Carousel(props) {
+function Carousel(props) {
   const { navigation, articles } = props
   const { theme, deviceType } = useContext(ThemeContext)
   const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350
+  const accentColor = useTheme()["color-primary-600"]
   
   // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
   // Might have to do with the dynamic styling of the border below.
-  const Header = (props) => (
-    <Image
-      source={{ uri: `${props.source}?w=${width*pixelRatio}` }}
-      style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
-    />
-  )
+  const Header = ({ source }) => {
+    return (
+      <Image
+        source={{ uri: `${source}?w=${width*pixelRatio}` }}
+        style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
+      />
+    )
+  }
     
   const Footer = (props) => (
     <View style={styles.footer}>
@@ -45,7 +48,7 @@ export default function Carousel(props) {
                 footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
                 {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
                 <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
-                <Text style={{ marginHorizontal: -10, marginBottom: -5, color: useTheme()["color-primary-600"] }} category="s2">
+                <Text style={{ marginHorizontal: -10, marginBottom: -5, color: accentColor }} category="s2">
                   {moment(new Date(item["date"])).fromNow().toUpperCase()}
                 </Text>
               </Card>
@@ -97,3 +100,5 @@ const styles = StyleSheet.create({
         paddingVertical: 5
       }
 })
+
+export default React.memo(Carousel)
