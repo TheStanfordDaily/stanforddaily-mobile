@@ -14,68 +14,30 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
 
   return (
     <React.Fragment>
-      <Carousel
-        articles={articles[Sections.FEATURED.slug] ?? []}
-        navigation={navigation}
-      />
-      <Mark
-        category={Sections.NEWS}
-        seed={data[Sections.NEWS.slug] ?? []}
-        navigation={navigation}
-      />
-      <Diptych
-        articles={articles[Sections.NEWS.slug] ?? []}
-        navigation={navigation}
-      />
+      <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+      <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
+      <Diptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
       <Divider marginTop={Spacing.medium} />
-      <Mark
-        category={Sections.OPINIONS}
-        seed={data[Sections.OPINIONS.slug]}
-        navigation={navigation}
-      />
-      <Shelf
-        articles={articles[Sections.OPINIONS.slug] ?? []}
-        navigation={navigation}
-      />
-      <Mark
-        category={Sections.SPORTS}
-        seed={data[Sections.SPORTS.slug] ?? []}
-        navigation={navigation}
-      />
-      <Diptych
-        articles={articles[Sections.SPORTS.slug] ?? []}
-        navigation={navigation}
-      />
+      <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
+      <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
+      <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+      <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
       <Divider marginTop={Spacing.medium} />
-      {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map(
-        (group, outerIndex) => (
-          <View
-            style={{ flex: 1 / groupSize, flexDirection: "row" }}
-            key={outerIndex}
-          >
-            {group.map((item, index) => (
-              <Wildcard
-                item={item}
-                index={outerIndex * index + index}
-                key={item.id.toString()}
-                navigation={navigation}
-              />
-            ))}
-          </View>
-        )
-      )}
+      {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map((group, outerIndex) => (
+        <View style={{ flex: 1 / groupSize, flexDirection: "row" }} key={outerIndex}>
+          {group.map((item, index) => (
+            <Wildcard
+              item={item}
+              index={outerIndex * index + index}
+              key={item.id.toString()}
+              navigation={navigation}
+            />
+          ))}
+        </View>
+      ))}
       <Divider />
-      <Mark
-        category={Sections.HUMOR}
-        seed={data[Sections.HUMOR.slug] ?? []}
-        alternate
-        navigation={navigation}
-      />
-      <Shelf
-        articles={articles[Sections.HUMOR.slug] ?? []}
-        alternate
-        navigation={navigation}
-      />
+      <Mark category={Sections.HUMOR} seed={data[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
+      <Shelf articles={articles[Sections.HUMOR.slug] ?? []} alternate navigation={navigation} />
       <Divider />
     </React.Fragment>
   );
@@ -86,7 +48,7 @@ export default function Home({ navigation, route }) {
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
 
-  const firstPageComponent = useMemo(() => {
+  const Header = useMemo(() => {
     return (
       <FirstPage
         articles={articles}
@@ -101,7 +63,7 @@ export default function Home({ navigation, route }) {
     <Layout style={styles.container}>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <FlatList
-        ListHeaderComponent={firstPageComponent}
+        ListHeaderComponent={Header}
         data={data?.wildcard ?? []}
         renderItem={(post, index) => (
           <Wildcard
@@ -114,13 +76,13 @@ export default function Home({ navigation, route }) {
         )}
         onEndReached={() => setPageNumber(pageNumber + 1)}
         onEndReachedThreshold={0.25}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={item => item.id.toString()}
         ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
       />
     </Layout>
   ) : (
     <Layout style={styles.empty}>
-      {loading ? <ActivityIndicator /> : (<Text>Something went wrong.{`\n${JSON.stringify(error)}`}</Text>)}
+      {loading ? <ActivityIndicator /> : <Text>Something went wrong.{`\n${JSON.stringify(error)}`}</Text>}
     </Layout>
   );
 }
