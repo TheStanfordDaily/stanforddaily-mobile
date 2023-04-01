@@ -117,7 +117,7 @@ export default function App() {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true))
 
-    if (firebase) {
+    /*if (firebase) {
       registerForPushNotificationsAsync().then(token => {
       setExpoPushToken(token)
       var matches = token?.match(/\[(.*?)\]/)
@@ -127,17 +127,14 @@ export default function App() {
           signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
             const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential)
             set(tokenRef, new Date().toISOString()).catch(error => console.log(error))
-          }).catch(error => {
-            console.trace(error)
-            setConfigValidated(false)
-          })
+          }).catch(error => console.trace(error))
         }
       })
-    }
+    }*/
 
     Device.getDeviceTypeAsync().then(type => setDeviceType(type))
 
-    getMostCommonTagsFromRecentPosts(100, 10).then((tags) => setTags(tags))
+    getMostCommonTagsFromRecentPosts(100, 10).then(tags => setTags(tags))
 
     // Handles any event in which appearance preferences change.
     Appearance.addChangeListener(listener => {
@@ -153,7 +150,7 @@ export default function App() {
     // This listener is fired whenever a user taps on or interacts with a notification.
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       // Works when app is foregrounded, backgrounded or killed.
-      Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then((result) => {
+      Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then(result => {
         navigate(Strings.post, { item: result })
       })
     })
@@ -179,7 +176,7 @@ export default function App() {
 
 
   return fontsLoaded && (
-    <NavigationContainer onStateChange={logNavigationState} theme={navigatorTheme[theme]}>
+    <NavigationContainer theme={navigatorTheme[theme]}>
       <IconRegistry icons={EvaIconsPack} />
       <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
         <ApplicationProvider {...eva} theme={{ ...eva[theme], ...bread[theme] }} customMapping={mapping}>
