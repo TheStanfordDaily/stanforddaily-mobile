@@ -47,6 +47,8 @@ export default function Home({ navigation, route }) {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
+  // Ensure that there no culture posts simultaneously appear in wildcard.
+  const wildcard = data?.wildcard?.filter(item => !articles?.culture?.find(article => article.id === item.id))
 
   const Header = useMemo(() => {
     return (
@@ -64,7 +66,7 @@ export default function Home({ navigation, route }) {
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <FlatList
         ListHeaderComponent={Header}
-        data={data?.wildcard ?? []}
+        data={wildcard}
         renderItem={(post, index) => (
           <Wildcard
             item={post.item}

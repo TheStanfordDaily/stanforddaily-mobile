@@ -12,27 +12,27 @@ import * as Device from "expo-device"
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
-export default function Diptych(props) {
-  const articles = props.articles.length % 2 === 0 ? props.articles : props.articles.slice(0, -1)
+export default function Diptych({ articles, navigation }) {
+  const adjustedArticles = articles.length % 2 === 0 ? articles : articles.slice(0, -1)
   const [selection, setSelection] = useState(0)
   const { deviceType } = useContext(ThemeContext)
   const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
   
-  const Header = (props) => (
+  const Header = ({ source }) => (
     <React.Fragment>
-      <Image source={{ uri: `${props.source}?w=${pixelRatio*width/2}` }} style={{ flex: 1 }} />
+      <Image source={{ uri: `${source}?w=${pixelRatio*width/2}` }} style={{ flex: 1 }} />
     </React.Fragment>
   )
 
-  const Footer = (props) => (
+  const Footer = ({ date }) => (
     <View style={styles.headerTextContainer}>
-      <Text category="label">{moment(new Date(props.date)).fromNow().toUpperCase()}</Text>
+      <Text category="label">{moment(new Date(date)).fromNow().toUpperCase()}</Text>
     </View>
   )
 
   return (
     <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
-      {_.chunk(articles, groupSize).map((couplet, index) => (
+      {_.chunk(adjustedArticles, groupSize).map((couplet, index) => (
         <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
           {couplet.map((item, _index) => (
             <Card
@@ -40,7 +40,7 @@ export default function Diptych(props) {
               key={_index}
               header={<Header source={item["jetpack_featured_media_url"]}/>}
               footer={<Footer date={item["date"]}/>}
-              {...{...props, onPress: () => props.navigation.navigate("Post", { article: item })}}>
+              onPress={() => navigation.navigate("Post", { article: item })}>
               <Text category="p1">{decode(item.title.rendered)}</Text>
             </Card>
           ))}

@@ -14,27 +14,22 @@ import { DeviceType } from "expo-device"
 const { width } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
-function Carousel(props) {
-  const { navigation, articles } = props
+function Carousel({ navigation, articles }) {
   const { theme, deviceType } = useContext(ThemeContext)
   const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350
   const accentColor = useTheme()["color-primary-600"]
   
-  // Seems like the card suddenly stopped rounding off the top corners of the image automatically.
-  // Might have to do with the dynamic styling of the border below.
-  const Header = ({ source }) => {
-    return (
-      <Image
-        source={{ uri: `${source}?w=${width*pixelRatio}` }}
-        style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
-      />
-    )
-  }
+  const Header = ({ source }) =>  (
+    <Image
+      source={{ uri: `${source}?w=${width*pixelRatio}` }}
+      style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
+    />
+  )
     
-  const Footer = (props) => (
+  const Footer = ({ authors, section }) => (
     <View style={styles.footer}>
-      <Text style={{ flex: 0.95 }} category="label">{itemize(Object.keys(props.authors).map(name => name.toUpperCase()))}</Text>
-      <Button size="tiny" status="basic">{decode(props.section)}</Button>
+      <Text style={{ flex: 0.95 }} category="label">{itemize(Object.keys(authors).map(name => name.toUpperCase()))}</Text>
+      <Button size="tiny" status="basic">{decode(section)}</Button>
     </View>
   )
 
@@ -46,7 +41,7 @@ function Carousel(props) {
                 style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: theme === "light" ? "#E7EBF3" : "transparent" }}
                 header={<Header source={item["jetpack_featured_media_url"]} />}
                 footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({...object, [name]: item.coauthors[index]}), {})} section={item.parsely?.meta?.articleSection} />}                            
-                {...{...props, onPress: () => navigation.navigate("Post", { article: item })}}>
+                onPress={() => navigation.navigate("Post", { article: item })}>
                 <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace('\'', '\u{2019}')}</Text>
                 <Text style={{ marginHorizontal: -10, marginBottom: -5, color: accentColor }} category="s2">
                   {moment(new Date(item["date"])).fromNow().toUpperCase()}

@@ -21,8 +21,8 @@ export default function Byline({ authors, section, sourceName, category, date, n
     <View style={styles.byline}>
       <View style={{ flex: 0.95 }}>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {entries[0][1] != 16735 && (<Text category="label" style={{ fontSize: bylineFontSize }}>By </Text>)}
-          {entries.map((entry, index) => <Name detail={entry} key={index} />).reduce((p, q, index) => [p, <Text category="label" style={{ fontSize: bylineFontSize }}>{index < entries.length - 1 ? ", " : " and "}</Text>, q])}
+          {entries[0][1] != 16735 && <Text category="label" style={{ fontSize: bylineFontSize }}>By </Text>}
+          {entries.map((entry, index) => <Name detail={entry} key={entry[1]} />).reduce((p, q, index) => [p, <Text key={index} category="label" style={{ fontSize: bylineFontSize }}>{index < entries.length - 1 ? ", " : " and "}</Text>, q])}
         </View>
       <Text category="label">{date}</Text>
 
