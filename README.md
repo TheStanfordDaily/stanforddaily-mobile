@@ -21,7 +21,7 @@ Official mobile app of the independent, student-run newspaper of Stanford Univer
 
 - Install packages by running the `yarn` terminal command from the project directory.
   - If you have native iOS code run `npx pod-install`.
-- Run `expo start` to start the bundler.
+- Run `npx expo start` to start the bundler.
 - When prompted by the command line interface, type `i` or `a` to try it on a [valid simulator](https://reactnative.dev/docs/environment-setup).
 - Alternatively, scan the QR code and open the project in a React runtime on a physical device:
   - iOS: [Client iOS](https://itunes.apple.com/app/apple-store/id982107779)
