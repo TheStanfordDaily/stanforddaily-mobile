@@ -127,7 +127,7 @@ This project can be run from a web browser or the Expo client app. You may find 
 
 - Run `yarn eject` to create the native projects.
 - You can still run your project in the web browser or Expo client after this step. You will not, however, be able to access any new Node modules.
-- For future reference, consider reading the new [Expo Modules](https://docs.expo.dev/modules/module-api/) API documentation to learn more about how to use native modules in your project without going to such lengths.
+- For future reference, consider reading the latest [Expo Modules](https://docs.expo.dev/modules/module-api/) API documentation to learn more about how to use native modules in your project without going to such lengths.
 
 ## Release
 
