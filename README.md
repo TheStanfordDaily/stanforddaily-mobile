@@ -40,7 +40,7 @@ npx expo start
   - Android: [Client Android](https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=blankexample)
 - If you have native iOS code run `npx pod-install` and restart the bundler.
 
-## Setup Details
+## Installation Details
 
 If you encounter any errors, it is possible that your system does not meet the prerequisites for running this project, in which case some additional setup may be required as described below.
 
