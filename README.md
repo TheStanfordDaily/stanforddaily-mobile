@@ -19,13 +19,107 @@ Official mobile app of the independent, student-run newspaper of Stanford Univer
 
 ## Getting Started
 
-- Install packages by running the `yarn` terminal command from the project directory.
-  - If you have native iOS code run `npx pod-install`.
-- Run `npx expo start` to start the bundler.
+Clone the Stanford Daily mobile app repository from GitHub:
+```bash
+git clone https://github.com/TheStanfordDaily/stanforddaily-mobile.git
+```
+Navigate to the project directory:
+```bash
+cd stanforddaily-mobile
+```
+
+Install packages by running the `yarn` terminal command from the project directory, and then start the bundler:
+```bash
+yarn
+npx expo start
+```
+
 - When prompted by the command line interface, type `i` or `a` to try it on a [valid simulator](https://reactnative.dev/docs/environment-setup).
 - Alternatively, scan the QR code and open the project in a React runtime on a physical device:
   - iOS: [Client iOS](https://itunes.apple.com/app/apple-store/id982107779)
   - Android: [Client Android](https://play.google.com/store/apps/details?id=host.exp.exponent&referrer=blankexample)
+- If you have native iOS code run `npx pod-install` and restart the bundler.
+
+## Installation Details
+
+If you encounter any errors, it is possible that your system does not meet the prerequisites for running this project, in which case some additional setup may be required as described below.
+
+### macOS
+
+1. Install Homebrew:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+2. Install Node.js:
+```bash
+brew install node
+```
+3. Install Node Version Manager (NVM):
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+```
+4. Install Node package manager (NPM):
+```bash
+nvm install node
+```
+5. Globally install Expo CLI:
+```bash
+npm install -g expo-cli
+```
+6. Use NPM to globally install the Yarn package manager:
+```bash
+npm install -g yarn
+```
+
+### Windows
+
+1. Install Chocolatey with Windows Package Manager (or package manager of your choice):
+```bash
+winget install -e --id=chocolatey.chocolatey
+```
+2. Install Node.js:
+```bash
+choco install nodejs
+```
+3. Install Node Package Manager (NPM):
+```bash
+choco install npm
+```
+4. Globally install Expo CLI:
+```bash
+npm install -g expo-cli
+```
+5. Globally install Yarn:
+```bash
+npm install -g yarn
+```
+
+### Linux
+
+1. Install Node.js:
+```bash
+pacman -S nodejs
+```
+2. Install Node Version Manager (NVM):
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+```
+3. Install Node Package Manager (NPM):
+```bash
+nvm install node
+```
+4. Globally install Expo CLI:
+```bash
+npm install -g expo-cli
+```
+6. Globally install Yarn:
+```bash
+npm install -g yarn
+```
+
+## Troubleshooting
+
+If you encounter any issues during the installation process or elsewhere, please reach out to the Chief Technology Officer at [tech@stanforddaily.com](mailto:tech@stanforddaily.com) or [open an issue](https://github.com/TheStanfordDaily/stanforddaily-mobile/issues) on GitHub.
 
 ## Adding Native Code
 
@@ -33,6 +127,7 @@ This project can be run from a web browser or the Expo client app. You may find 
 
 - Run `yarn eject` to create the native projects.
 - You can still run your project in the web browser or Expo client after this step. You will not, however, be able to access any new Node modules.
+- For future reference, consider reading the latest [Expo Modules](https://docs.expo.dev/modules/module-api/) API documentation to learn more about how to use native modules in your project without going to such lengths.
 
 ## Release
 
