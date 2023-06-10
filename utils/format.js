@@ -6,8 +6,7 @@ export const itemize = (elements) => {
   switch (elements.length) {
     case 0: return ""
     case 1: return elements[0]
-    default:
-      return elements.slice(0, -1).join(", ") + " and " + elements[elements.length - 1]
+    default: return elements.slice(0, -1).join(", ") + " and " + elements.at(-1)
   }
 }
 

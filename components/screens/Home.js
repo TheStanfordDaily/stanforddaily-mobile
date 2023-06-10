@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo } from "react";
 import { ActivityIndicator, StyleSheet, View, PixelRatio, FlatList } from "react-native";
 import { Divider, Layout, Text } from "@ui-kitten/components";
-import { Carousel, Diptych, Mark, Shelf, Wildcard } from "../";
+import { Carousel, Polyptych, Mark, Shelf, Wildcard } from "../";
 import { useWordPress } from "../../hooks/useWordPress";
 import { Sections, Spacing } from "../../utils/constants";
 import _ from "lodash";
@@ -16,12 +16,12 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
     <React.Fragment>
       <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
       <Mark category={Sections.NEWS} seed={data[Sections.NEWS.slug] ?? []} navigation={navigation} />
-      <Diptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
+      <Polyptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
       <Divider marginTop={Spacing.medium} />
       <Mark category={Sections.OPINIONS} seed={data[Sections.OPINIONS.slug]} navigation={navigation} />
       <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
       <Mark category={Sections.SPORTS} seed={data[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-      <Diptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+      <Polyptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
       <Divider marginTop={Spacing.medium} />
       {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map((group, outerIndex) => (
         <View style={{ flex: 1 / groupSize, flexDirection: "row" }} key={outerIndex}>
@@ -47,7 +47,7 @@ export default function Home({ navigation, route }) {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
-  // Ensure that there no culture posts simultaneously appear in wildcard.
+  // Ensure that no culture posts simultaneously appear in wildcard.
   const wildcard = data?.wildcard?.filter(item => !articles?.culture?.find(article => article.id === item.id))
 
   const Header = useMemo(() => {

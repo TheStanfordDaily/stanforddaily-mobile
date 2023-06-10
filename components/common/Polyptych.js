@@ -12,8 +12,8 @@ import * as Device from "expo-device"
 const { width, height } = Dimensions.get("window")
 const pixelRatio = PixelRatio.get()
 
-export default function Diptych({ articles, navigation }) {
-  const adjustedArticles = articles.length % 2 === 0 ? articles : articles.slice(0, -1)
+export default function Polyptych({ articles, navigation }) {
+  const flushArticles = articles.length % 2 === 0 ? articles : articles.slice(0, -1)
   const [selection, setSelection] = useState(0)
   const { deviceType } = useContext(ThemeContext)
   const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
@@ -32,7 +32,7 @@ export default function Diptych({ articles, navigation }) {
 
   return (
     <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
-      {_.chunk(adjustedArticles, groupSize).map((couplet, index) => (
+      {_.chunk(flushArticles, groupSize).map((couplet, index) => (
         <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
           {couplet.map((item, _index) => (
             <Card
