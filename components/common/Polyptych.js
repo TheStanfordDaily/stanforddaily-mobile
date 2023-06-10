@@ -16,7 +16,7 @@ export default function Polyptych({ articles, navigation }) {
   const flushArticles = articles.length % 2 === 0 ? articles : articles.slice(0, -1)
   const [selection, setSelection] = useState(0)
   const { deviceType } = useContext(ThemeContext)
-  const groupSize  = deviceType === Device.DeviceType.PHONE ? 2 : 3
+  const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3
   
   const Header = ({ source }) => (
     <React.Fragment>
@@ -31,13 +31,13 @@ export default function Polyptych({ articles, navigation }) {
   )
 
   return (
-    <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={e => setSelection(e.nativeEvent.position)} overdrag>
-      {_.chunk(flushArticles, groupSize).map((couplet, index) => (
-        <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
-          {couplet.map((item, _index) => (
+    <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={(e) => setSelection(e.nativeEvent.position)} overdrag>
+      {_.chunk(flushArticles, groupSize).map((group, outerIndex) => (
+        <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={outerIndex}>
+          {group.map((item, innerIndex) => (
             <Card
               style={styles.card}
-              key={_index}
+              key={innerIndex}
               header={<Header source={item["jetpack_featured_media_url"]}/>}
               footer={<Footer date={item["date"]}/>}
               onPress={() => navigation.navigate("Post", { article: item })}>
