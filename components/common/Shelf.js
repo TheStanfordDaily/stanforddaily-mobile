@@ -40,7 +40,7 @@ export default function Shelf({ articles, alternate, navigation }) {
                     title={() => <Text adjustsFontSizeToFit numberOfLines={4} ellipsizeMode="tail" style={{ ...styles.title, color: alternate ? "white" : theme["text-basic-color"]}} allowFontScaling category="p1">{decode(item.title.rendered)}</Text>}
                     description={() => <Text style={{ paddingHorizontal: 4, fontSize: 18*fontScale, color: alternate ? "white" : theme["text-basic-color"] }} category="p2">{itemize(item.parsely?.meta?.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
                     accessoryRight={<Accessory uri={item["jetpack_featured_media_url"]} />}
-                    style={{ ...styles.item, justifyContent: "space-between", backgroundColor: theme[alternate ? "color-primary-600" : "background-basic-color-1"] }}
+                    style={{ ...styles.item, backgroundColor: theme[alternate ? "color-primary-600" : "background-basic-color-1"] }}
                     activeOpacity={0.8}
                     onPress={() => navigation.navigate(Strings.post, { article: item })}
                   />
@@ -58,7 +58,7 @@ export default function Shelf({ articles, alternate, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    minHeight: 350,
+    minHeight: 300,
     paddingHorizontal: Spacing.medium,
     padddingVertical: 4
   },
@@ -69,10 +69,11 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginLeft: 4
   },
+  // TODO: Improve spacing so that cells do not look smushed and can accommodate longer titles.
   item: {
     flex: 1/3,
     paddingHorizontal: 10,
-    addingVertical: 10,
+    paddingVertical: 10,
   },
   title: {
     paddingHorizontal: 4,
