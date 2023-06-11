@@ -34,10 +34,10 @@ export default function Polyptych({ articles, navigation }) {
     <PagerView peekEnabled style={styles.container} initialPage={0} onPageSelected={(e) => setSelection(e.nativeEvent.position)} overdrag>
       {_.chunk(flushArticles, groupSize).map((group, outerIndex) => (
         <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={outerIndex}>
-          {group.map((item, innerIndex) => (
+          {group.map((item, index) => (
             <Card
               style={styles.card}
-              key={innerIndex}
+              key={index}
               header={<Header source={item["jetpack_featured_media_url"]}/>}
               footer={<Footer date={item["date"]}/>}
               onPress={() => navigation.navigate("Post", { article: item })}>
