@@ -48,7 +48,7 @@ export default function Home({ navigation, route }) {
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
   // Ensure that no culture posts simultaneously appear in wildcard.
-  const wildcard = data?.wildcard?.filter(item => !articles?.culture?.find(article => article.id === item.id))
+  const wildcard = data?.wildcard?.filter(item => !articles?.culture?.find(article => article.id === item.id));
 
   const Header = useMemo(() => {
     return (
