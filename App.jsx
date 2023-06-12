@@ -151,15 +151,12 @@ export default function App() {
     });
 
     // FIXME: Listener for when app is opened from web browser.
-    Linking.addEventListener("url", response => {
-      if (response.url) {
-        const url = response.url;
-        const slug = url.split("/").pop();
-        if (slug?.length > 0) {
-          Model.posts().slug(slug).embed().then(result => {
-            navigate(Strings.post, { item: result });
-          });
-        }
+    Linking.addEventListener("url", ({ url }) => {
+      const slug = url?.split("/")?.pop();
+      if (slug?.length > 0) {
+        Model.posts().slug(slug).embed().then(result => {
+          navigate(Strings.post, { item: result });
+        });
       }
     });
 
