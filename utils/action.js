@@ -5,10 +5,10 @@ import * as Device from "expo-device";
 export const onShare = async (url, title) => {
   try {
     const result = await Share.share({
-      url: url,
-      message: title + " | The Stanford Daily"
+      url,
+      message: `${title} | The Stanford Daily`,
     });
-    
+
     if (result.action === Share.sharedAction) {
       if (result.activityType) {
         // Shared successfully with activity type of result.activityType.
@@ -21,7 +21,7 @@ export const onShare = async (url, title) => {
   } catch (error) {
     alert(error.message);
   }
-}
+};
 
 export async function registerForPushNotificationsAsync() {
   let token;
