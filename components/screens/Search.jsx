@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Keyboard, LayoutAnimation, Platform } from "react-native";
+import { ActivityIndicator, Dimensions, Keyboard, LayoutAnimation, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { Button, Layout, List, Text } from "@ui-kitten/components";
 
 import Wlidcard from "../common/Wildcard";

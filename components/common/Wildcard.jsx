@@ -1,14 +1,12 @@
-import React from "react"
-import { Dimensions, StyleSheet, PixelRatio, View } from "react-native"
-import { Button, Card, Text } from "@ui-kitten/components"
-import { Image } from "react-native"
-import _ from "lodash"
-import { decode } from "html-entities"
-import { formatDate, itemize } from "../../utils/format"
-import { Spacing } from "../../utils/constants"
+import React from "react";
+import { Dimensions, Image, PixelRatio, StyleSheet, View } from "react-native";
+import { Button, Card, Text } from "@ui-kitten/components";
+import { decode } from "html-entities";
+import { formatDate, itemize } from "../../utils/format";
+import { Spacing } from "../../utils/constants";
 
-const { width, height } = Dimensions.get("window")
-const pixelRatio = PixelRatio.get()
+const { width, height } = Dimensions.get("window");
+const pixelRatio = PixelRatio.get();
 
 const Header = ({ title, verbose, date, uri }) => (
   <React.Fragment>
@@ -18,14 +16,14 @@ const Header = ({ title, verbose, date, uri }) => (
     </View>
     <Image source={{ uri: `${uri}?w=${width*pixelRatio}` }} style={{ flex: 1, height: 192 }} />
   </React.Fragment>
-)
+);
 
 const Footer = ({ byline, section }) => (
   <View style={styles.footer}>
     <Text style={{ textAlign: "left", flex: 0.95 }} category="label">{byline}</Text>
-    <Button size="tiny" status="basic">{decode(section).replace('\'', '\u{2019}')}</Button>
+    <Button size="tiny" status="basic">{decode(section).replace("'", "\u{2019}")}</Button>
   </View>
-)
+);
 
 export default function Wildcard({ navigation, articles, random, verbose, title, item, index }) {
   return (
@@ -37,7 +35,7 @@ export default function Wildcard({ navigation, articles, random, verbose, title,
     >
       <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
     </Card>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -71,4 +69,4 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.medium,
     paddingVertical: 4
   }
-})
+});

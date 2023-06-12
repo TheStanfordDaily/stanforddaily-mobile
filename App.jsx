@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Appearance, Image, Linking, TouchableOpacity } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import * as Font from "expo-font";
@@ -7,18 +7,18 @@ import * as Notifications from "expo-notifications";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { decode } from "html-entities";
-import { APIKEY, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env";
+import { APIKEY, APP_ID, MEASUREMENT_ID, MESSAGING_SENDER_ID, SERVICE_ACCOUNT_ID, TECH_PASSWORD } from "@env";
 
 import { DailyBread as bread } from "./theme";
 import mapping from "./mapping.json";
 import { ThemeContext } from "./theme-context";
 import Model from "./utils/model";
-import { Strings, Fonts } from "./utils/constants";
-import { navigate, logoAssets } from "./navigation";
-import { Author, Home, Post, Section, Search } from "./components/screens";
+import { Fonts, Strings } from "./utils/constants";
+import { logoAssets, navigate } from "./navigation";
+import { Author, Home, Post, Search, Section } from "./components/screens";
 import { getMostCommonTagsFromRecentPosts } from "./utils/format";
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
 

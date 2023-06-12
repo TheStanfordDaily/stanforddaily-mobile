@@ -4,10 +4,7 @@ import * as Device from "expo-device";
 
 export const onShare = async (url, title) => {
   try {
-    const result = await Share.share({
-      url,
-      message: `${title} | The Stanford Daily`,
-    });
+    const result = await Share.share({ url, message: `${title} | The Stanford Daily` });
 
     if (result.action === Share.sharedAction) {
       if (result.activityType) {

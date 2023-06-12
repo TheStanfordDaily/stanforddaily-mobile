@@ -1,11 +1,11 @@
-import React, { useContext, useState, useMemo } from "react";
-import { ActivityIndicator, StyleSheet, View, PixelRatio, FlatList } from "react-native";
+import React, { useContext, useMemo, useState } from "react";
+import { ActivityIndicator, FlatList, PixelRatio, StyleSheet, View } from "react-native";
 import { Divider, Layout, Text } from "@ui-kitten/components";
 import _ from "lodash";
 import { DeviceType } from "expo-device";
 import { StatusBar } from "expo-status-bar";
 
-import { Carousel, Polyptych, Mark, Shelf, Wildcard } from "..";
+import { Carousel, Mark, Polyptych, Shelf, Wildcard } from "..";
 import { useWordPress } from "../../hooks/useWordPress";
 import { Sections, Spacing } from "../../utils/constants";
 import { ThemeContext } from "../../theme-context";
