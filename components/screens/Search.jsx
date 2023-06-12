@@ -1,82 +1,82 @@
-import { Button, Layout, List, Text } from "@ui-kitten/components"
-import React, { useContext, useEffect, useState } from "react"
-import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, LayoutAnimation, Platform } from "react-native"
-import Wlidcard from "../common/Wildcard"
-import Model from "../../utils/model"
-import { ThemeContext } from "../../theme-context"
-import { DeviceType } from "expo-device"
-import { Spacing } from "../../utils/constants"
-import Fuse from "fuse.js"
-import { Keyboard } from "react-native"
-import { DailyBread as bread } from "../../theme"
+import React, { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, Dimensions, View, StatusBar, TouchableOpacity, StyleSheet, TextInput, Keyboard, LayoutAnimation, Platform } from "react-native";
+import { Button, Layout, List, Text } from "@ui-kitten/components";
 
-const BATCH_SIZE = 24
-const { width, height } = Dimensions.get("window")
+import Wlidcard from "../common/Wildcard";
+import Model from "../../utils/model";
+import { ThemeContext } from "../../theme-context";
+import { DeviceType } from "expo-device";
+import { Spacing } from "../../utils/constants";
+import Fuse from "fuse.js";
+import { DailyBread as bread } from "../../theme";
+
+const BATCH_SIZE = 24;
+const { width, height } = Dimensions.get("window");
 
 export default function Search({ route, navigation }) {
-  const { deviceType, theme } = useContext(ThemeContext)
-  const columnCount = deviceType === DeviceType.PHONE ? 1 : 2
+  const { deviceType, theme } = useContext(ThemeContext);
+  const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
   
-  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"]
-  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"]
-  const buttonStatus = theme === "dark" ? "control" : "primary"
+  const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"];
+  const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"];
+  const buttonStatus = theme === "dark" ? "control" : "primary";
 
-  const [articlesLoading, setArticlesLoading] = useState(false)
-  const [articles, setArticles] = useState([])
-  const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [incumbentQuery, setIncumbentQuery] = useState("")
-  const [searching, setSearching] = useState(false)
-  const [pageNumber, setPageNumber] = useState(1)
-  const [emptyResults, setEmptyResults] = useState(false)
-  const [cancelVisible, setCancelVisible] = useState(false)
+  const [articlesLoading, setArticlesLoading] = useState(false);
+  const [articles, setArticles] = useState([]);
+  const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [incumbentQuery, setIncumbentQuery] = useState("");
+  const [searching, setSearching] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [emptyResults, setEmptyResults] = useState(false);
+  const [cancelVisible, setCancelVisible] = useState(false);
 
   async function handleSearch(query) {
-    Keyboard.dismiss()
+    Keyboard.dismiss();
     if (query.match(/^\s*$/)) {
-      setSearchQuery("")
-      return
+      setSearchQuery("");
+      return;
     }
     
-    setSearching(true)
-    let posts
+    setSearching(true);
+    let posts;
     try {
-        posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(1).get()
-        setArticles(posts)
+      posts = await Model.posts().search(query).orderby("relevance").perPage(BATCH_SIZE).page(1).get();
+      setArticles(posts);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error.data?.status === 400) {
-        setPossiblyReachedEnd(true)
+        setPossiblyReachedEnd(true);
       }
     } finally {
-      setPageNumber(1)
-      setPossiblyReachedEnd(false)
-      setEmptyResults(posts.length === 0)
-      setIncumbentQuery(query)
-      setSearching(false)
+      setPageNumber(1);
+      setPossiblyReachedEnd(false);
+      setEmptyResults(posts.length === 0);
+      setIncumbentQuery(query);
+      setSearching(false);
     }
   }
 
   async function loadPage(page) {
-    if (possiblyReachedEnd) return
+    if (possiblyReachedEnd) return;
     
-    setArticlesLoading(true)
-    let posts
+    setArticlesLoading(true);
+    let posts;
     try {
-      posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get()
-      setArticles([...articles, ...posts])
+      posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get();
+      setArticles([...articles, ...posts]);
     } catch (error) {
-      console.log(error)
+      console.log(error);
       if (error.data?.status === 400) {
-        setPossiblyReachedEnd(true)
+        setPossiblyReachedEnd(true);
       }
     } finally {
-      setArticlesLoading(false)
+      setArticlesLoading(false);
     }
   }
 
   useEffect(() => {
-    setEmptyResults(false)
+    setEmptyResults(false);
     navigation.setOptions({
       headerBackTitleVisible: false,
       headerTitle: () =>  (
@@ -88,20 +88,20 @@ export default function Search({ route, navigation }) {
             placeholder="Search for articles or topics"
             returnKeyType="search"
             onSubmitEditing={(e) => {
-              setPageNumber(1)
-              handleSearch(e.nativeEvent.text)
+              setPageNumber(1);
+              handleSearch(e.nativeEvent.text);
             }}
             autoCorrect={false}
             autoFocus
             clearButtonMode="while-editing"
             onFocus={() => {
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              setCancelVisible(true)}
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+              setCancelVisible(true);}
             }
             onBlur={() => {
-              Keyboard.dismiss()
-              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-              setCancelVisible(false)
+              Keyboard.dismiss();
+              LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+              setCancelVisible(false);
             }}
           />
           {cancelVisible && (
@@ -112,12 +112,12 @@ export default function Search({ route, navigation }) {
         </View>
       ),
       headerTintColor: tintColor
-    })
-  }, [searchQuery, cancelVisible])
+    });
+  }, [searchQuery, cancelVisible]);
 
   useEffect(() => {
-    loadPage(pageNumber)
-  }, [pageNumber])
+    loadPage(pageNumber);
+  }, [pageNumber]);
     
     
   return emptyResults ? (
@@ -140,7 +140,7 @@ export default function Search({ route, navigation }) {
         onEndReachedThreshold={0.25}
         onEndReached={() => {
           if (!articlesLoading && !possiblyReachedEnd) {
-            setPageNumber(pageNumber + 1)
+            setPageNumber(pageNumber + 1);
           }
         }}
         renderItem={({ item, index }) => (
@@ -153,8 +153,8 @@ export default function Search({ route, navigation }) {
     <Layout style={styles.empty}>
       {articles.length === 0 && route.params?.tags?.map((tag, index) => (
         <Button key={index} onPress={() => {
-          setSearchQuery(tag.name)
-          handleSearch(tag.name)
+          setSearchQuery(tag.name);
+          handleSearch(tag.name);
         }}
         appearance="ghost" status={buttonStatus}
         style={{ marginBottom: Spacing.medium }}>
@@ -162,7 +162,7 @@ export default function Search({ route, navigation }) {
         </Button>
       ))}
     </Layout>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -176,8 +176,8 @@ const styles = StyleSheet.create({
     paddingBottom: Spacing.large
   },
   searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingLeft: Spacing.medium,
     paddingRight: Spacing.large,
     width: width - (Platform.OS === "ios" ? 1 : 2.5)*Spacing.extraLarge
@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.1)',
+    borderColor: "rgba(0,0,0,0.1)",
     borderRadius: 5,
     paddingHorizontal: Spacing.medium,
     paddingVertical: 5,
@@ -194,4 +194,4 @@ const styles = StyleSheet.create({
   cancelButton: {
     paddingHorizontal: Spacing.medium
   }
-})
+});

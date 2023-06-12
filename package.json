@@ -63,7 +63,9 @@
     "wpapi": "^1.2.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3"
+    "@babel/core": "^7.19.3",
+    "eslint": "^8.42.0",
+    "eslint-plugin-react": "^7.32.2"
   },
   "greenkeeper": {
     "ignore": [

@@ -68,35 +68,26 @@ export default function App() {
     dark: DarkTheme
   };
 
-  const headerOptions = ({ navigation, route }) => {
-    return {
-      headerTitle: () => (
-        <Image
-          style={{ width: 260, height: 30 }}
-          source={logoAssets[theme]}
-        />
-      ),
-      headerRight: () => !searchVisible && (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search, { tags })}>
-          <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
-        </TouchableOpacity>
-      )
-    };
-  };
-    
-  const detailHeaderOptions = ({ navigation, route }) => {
-    return {
-      headerTitle: "",
-      headerTransparent: true,
-      headerTintColor: "white",
-      headerBackTitleVisible: false,
-      headerRight: () => (
-        <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
-          <Icon name="share-outline" width={24} height={24} fill="white" />
-        </TouchableOpacity>
-      )
-    };
-  };
+  const headerOptions = ({ navigation, route }) => ({
+    headerTitle: () => <Image style={{ width: 260, height: 30 }} source={logoAssets[theme]} />,
+    headerRight: () => !searchVisible && (
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search, { tags })}>
+        <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
+      </TouchableOpacity>
+    )
+  });
+
+  const detailHeaderOptions = ({ navigation, route }) => ({
+    headerTitle: "",
+    headerTransparent: true,
+    headerTintColor: "white",
+    headerBackTitleVisible: false,
+    headerRight: () => (
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
+        <Icon name="share-outline" width={24} height={24} fill="white" />
+      </TouchableOpacity>
+    )
+  });
     
   const sectionOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
@@ -140,9 +131,10 @@ export default function App() {
     getMostCommonTagsFromRecentPosts(100, 10).then(tags => setTags(tags));
 
     // Handles any event in which appearance preferences change.
-    Appearance.addChangeListener(listener => {
-      setTheme(listener.colorScheme);
-      // TODO: Add return function for removing listener when user opts out of automatic theme changes.
+    const themeListener = Appearance.addChangeListener(listener => {
+      if (theme !== listener.colorScheme) {
+        setTheme(listener.colorScheme);
+      }
     });
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
@@ -172,6 +164,7 @@ export default function App() {
     });
 
     return () => {
+      themeListener.remove();
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
