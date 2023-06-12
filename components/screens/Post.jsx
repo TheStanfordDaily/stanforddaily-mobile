@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, PixelRatio, Platform, StyleSheet, useColorScheme, View, UIManager, Linking } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
-import { Spacing } from "../../utils/constants";
 import Content, { defaultSystemFonts } from "react-native-render-html";
 import WebView from "react-native-webview";
 import { decode } from "html-entities";
@@ -11,9 +10,10 @@ import * as Device from "expo-device";
 import { StatusBar } from "expo-status-bar";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 
-import { formatDate, generateSlug } from "../../utils/format";
 import Byline from "../common/Byline";
-import { Fonts } from "../../utils/constants";
+import { formatDate, generateSlug } from "../../utils/format";
+import { enableAnimationExperimental } from "../../utils/action";
+import { Fonts, Spacing } from "../../utils/constants";
 import Model from "../../utils/model";
 import { ThemeContext } from "../../theme-context";
 
@@ -25,9 +25,7 @@ const systemFonts = [
   ...defaultSystemFonts
 ];
 
-if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+enableAnimationExperimental();
 
 export default function Post({ route, navigation }) {
   const { article, sourceName } = route.params;
@@ -49,7 +47,7 @@ export default function Post({ route, navigation }) {
       
     // Hopefully this doesn't take too long to load. Might have to preload.
 
-    if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {        
+    if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {
       Model.posts().slug(slug).embed().then(result => {
         if (result.length > 0) {
           navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" });
