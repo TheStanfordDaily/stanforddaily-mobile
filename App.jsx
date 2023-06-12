@@ -165,7 +165,7 @@ export default function App() {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);
+  }, [theme]);
 
   return fontsLoaded && (
     <NavigationContainer theme={navigatorTheme[theme]}>
