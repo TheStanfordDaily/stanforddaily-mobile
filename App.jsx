@@ -109,8 +109,10 @@ export default function App() {
         // Add to impressions
         const now = new Date();
         let currentViewPath = `Analytics/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}/${currentView}`;
+        let viewIdentifier = currentView;
         if (currentView == Strings.post) {
           currentViewPath += `/${currentRouteParams.article.id}`;
+          viewIdentifier += `/${currentRouteParams.article.id}`;
         }
         const impressionsRef = ref(database, `${currentViewPath}/impressions`);
         runTransaction(impressionsRef, (impressions) => {
@@ -118,7 +120,7 @@ export default function App() {
         });
 
         // Add to sessions
-        if (!sessionViews[currentView]) {
+        if (!sessionViews[viewIdentifier]) {
           const sessionsRef = ref(database, `${currentViewPath}/sessions`);
           runTransaction(sessionsRef, (sessions) => {
             return (sessions || 0) + 1;
@@ -126,7 +128,7 @@ export default function App() {
 
           // Update sessionViews
           setSessionViews(prevSessionViews => {
-            return { ...prevSessionViews, [currentView]: true };
+            return { ...prevSessionViews, [viewIdentifier]: true };
           });
         }
       } catch (error) {
@@ -134,6 +136,7 @@ export default function App() {
       }
     }
   };
+
 
 
   useEffect(() => {
