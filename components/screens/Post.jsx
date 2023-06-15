@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, Linking, PixelRatio, Platform, StyleSheet, UIManager, View, useColorScheme } from "react-native";
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, Linking, PixelRatio, Platform, StyleSheet, View, useColorScheme } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import Content, { defaultSystemFonts } from "react-native-render-html";
