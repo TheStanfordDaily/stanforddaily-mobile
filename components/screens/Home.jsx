@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, PixelRatio, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { Divider, Layout, Text } from "@ui-kitten/components";
 import _ from "lodash";
 import { DeviceType } from "expo-device";
@@ -44,7 +44,7 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
   );
 });
 
-export default function Home({ navigation, route }) {
+export default function Home({ navigation }) {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);

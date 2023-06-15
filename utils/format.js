@@ -26,12 +26,12 @@ export const formatDate = (instance, verbose) => {
     formattedMinutes = `0${formattedMinutes}`;
   }
   let formattedMeridian = instance.getHours() < 12 ? "a.m." : "p.m.";
-    
+
   return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`;
 };
 
 export const stringMode = (strings) => {
-  return strings.sort((a,b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
+  return strings.sort((a, b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
 };
 
 // Modified from https://gist.github.com/codeguy/6684588 to keep dashes instead of collapsing them.
@@ -42,9 +42,9 @@ export const generateSlug = (s) => {
   s = s.replace(/^\s+|\s+$/g, "");
   s = s.toLowerCase();
 
-  var source = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;\u2018\u2019";
-  var destination   = "aaaaeeeeiiiioooouuuunc----------";
-  for (var i = 0, l = source.length; i < l; i++) {
+  let source = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;\u2018\u2019";
+  let destination = "aaaaeeeeiiiioooouuuunc----------";
+  for (let i = 0, l = source.length; i < l; i++) {
     s = s.replace(new RegExp(source.charAt(i), "g"), destination.charAt(i));
   }
 
@@ -52,15 +52,20 @@ export const generateSlug = (s) => {
 };
 
 export function getActiveRouteInfo(navigationState) {
-  if (!navigationState) return null;
+  if (!navigationState) {
+    return null;
+  }
   const route = navigationState.routes[navigationState.index];
   // Traverse the nested navigators.
-  if (route.routes) return getActiveRouteInfo(route);
+  if (route.routes) {
+    return getActiveRouteInfo(route);
+  }
 
-  var out = {
+  let out = {
     name: route.name,
     datetime: new Date().toISOString()
   };
+
   if (route.params?.article?.id) {
     out["id"] = route.params?.article?.id;
   }
@@ -75,7 +80,6 @@ export function validateConfig(config) {
 export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numTopTags = 10, excludedTags = [35626]) => {
   try {
     const recentPosts = await Model.posts().perPage(numRecentPosts).embed();
-
     const tagCounts = {};
 
     for (const post of recentPosts) {
@@ -94,7 +98,6 @@ export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numT
     }
 
     const sortedByCount = Object.values(tagCounts).sort((a, b) => b.count - a.count);
-
     const mostCommonTags = sortedByCount.slice(0, numTopTags);
 
     return mostCommonTags;

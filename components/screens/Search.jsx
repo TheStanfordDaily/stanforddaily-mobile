@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, Keyboard, LayoutAnimation, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { Button, Layout, List, Text } from "@ui-kitten/components";
 
@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get("window");
 export default function Search({ route, navigation }) {
   const { deviceType, theme } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
-  
+
   const tintColor = theme === "dark" ? "white" : bread[theme]["color-primary-500"];
   const textColor = theme === "dark" ? "white" : bread[theme]["text-basic-color"];
   const buttonStatus = theme === "dark" ? "control" : "primary";
@@ -37,7 +37,7 @@ export default function Search({ route, navigation }) {
       setSearchQuery("");
       return;
     }
-    
+
     setSearching(true);
     let posts;
     try {
@@ -57,9 +57,11 @@ export default function Search({ route, navigation }) {
     }
   }
 
-  async function loadPage(page) {
-    if (possiblyReachedEnd) return;
-    
+  const loadPage = useCallback(async page => {
+    if (possiblyReachedEnd) {
+      return;
+    }
+
     setArticlesLoading(true);
     let posts;
     try {
@@ -73,13 +75,13 @@ export default function Search({ route, navigation }) {
     } finally {
       setArticlesLoading(false);
     }
-  }
+  }, [articles, incumbentQuery, possiblyReachedEnd]);
 
   useEffect(() => {
     setEmptyResults(false);
     navigation.setOptions({
       headerBackTitleVisible: false,
-      headerTitle: () =>  (
+      headerTitle: () => (
         <View style={styles.searchContainer}>
           <TextInput
             style={{ ...styles.searchInput, color: textColor }}
@@ -96,8 +98,8 @@ export default function Search({ route, navigation }) {
             clearButtonMode="while-editing"
             onFocus={() => {
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-              setCancelVisible(true);}
-            }
+              setCancelVisible(true);
+            }}
             onBlur={() => {
               Keyboard.dismiss();
               LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -113,13 +115,12 @@ export default function Search({ route, navigation }) {
       ),
       headerTintColor: tintColor
     });
-  }, [searchQuery, cancelVisible]);
+  }, [cancelVisible, navigation, textColor, tintColor, searchQuery]);
 
   useEffect(() => {
     loadPage(pageNumber);
-  }, [pageNumber]);
-    
-    
+  }, [loadPage, pageNumber]);
+
   return emptyResults ? (
     <Layout style={styles.empty}>
       <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
@@ -143,21 +144,23 @@ export default function Search({ route, navigation }) {
             setPageNumber(pageNumber + 1);
           }
         }}
-        renderItem={({ item, index }) => (
-          <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-        )}
+        renderItem={({ item, index }) => <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />}
         ListFooterComponent={() => articlesLoading && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
       />
     </Layout>
   ) : (
     <Layout style={styles.empty}>
       {articles.length === 0 && route.params?.tags?.map((tag, index) => (
-        <Button key={index} onPress={() => {
-          setSearchQuery(tag.name);
-          handleSearch(tag.name);
-        }}
-        appearance="ghost" status={buttonStatus}
-        style={{ marginBottom: Spacing.medium }}>
+        <Button
+          key={index}
+          onPress={() => {
+            setSearchQuery(tag.name);
+            handleSearch(tag.name);
+          }}
+          appearance="ghost"
+          status={buttonStatus}
+          style={{ marginBottom: Spacing.medium }}
+        >
           {tag.name.toUpperCase()}
         </Button>
       ))}
@@ -180,7 +183,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: Spacing.medium,
     paddingRight: Spacing.large,
-    width: width - (Platform.OS === "ios" ? 1 : 2.5)*Spacing.extraLarge
+    width: width - (Platform.OS === "ios" ? 1 : 2.5) * Spacing.extraLarge
   },
   searchInput: {
     flex: 1,
