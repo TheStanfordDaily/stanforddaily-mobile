@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, Linking, PixelRatio, Platform, StyleSheet, View, useColorScheme } from "react-native";
+import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
 import { Icon, Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import Content, { defaultSystemFonts } from "react-native-render-html";
@@ -17,7 +17,7 @@ import { Fonts, Spacing } from "../../utils/constants";
 import Model from "../../utils/model";
 import { ThemeContext } from "../../theme-context";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
 const systemFonts = [
