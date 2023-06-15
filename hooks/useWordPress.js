@@ -12,10 +12,10 @@ export const useWordPress = (pageNumber = 1) => {
   const [articles, setArticles] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   useEffect(() => {
     setLoading(true);
-  
+
     Object.values(Sections).forEach(async category => {
       try {
         const response = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(pageNumber).get();
@@ -23,7 +23,7 @@ export const useWordPress = (pageNumber = 1) => {
           ...prevState,
           [category.slug]: [...(category.slug in prevState ? prevState[category.slug] : []), ...response]
         }));
-          
+
         if (pageNumber === 1) {
           setArticles((prevState) => ({
             ...prevState,
@@ -54,6 +54,6 @@ export const useWordPress = (pageNumber = 1) => {
       }));
     });
   }, [pageNumber]);
-  
+
   return { data, articles, loading, error };
 };

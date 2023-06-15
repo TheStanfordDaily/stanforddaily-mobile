@@ -10,7 +10,7 @@ export const Alignments = {
   center: "center",
   middle: "middle",
 };
-  
+
 export const Fonts = {
   century: "Century",
   PTSerif: "PT Serif",
@@ -89,7 +89,7 @@ export const PlatformPalette = Platform.select({
   },
   default: { label: "black" },
 });
-  
+
 
 export const Sections = {
   FEATURED: {
@@ -268,5 +268,6 @@ export const Strings = {
   reply: "Reply",
   tipsFormURL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   tipsFormURLPrefix: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
-  wordPressURL: "https://stanforddaily.com"
+  wordPressURL: "https://stanforddaily.com",
+  techEmailAddress: "tech@stanforddaily.com"
 };
