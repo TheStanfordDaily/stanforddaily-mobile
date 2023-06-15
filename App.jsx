@@ -97,39 +97,41 @@ export default function App() {
 
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
 
-  const handleNavigationChange = (state) => {
+  const handleNavigationChange = async (state) => {
     if (app) {
       const auth = getAuth(app);
+      try {
+        await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
 
-      signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD)
-        .then(() => {
-          const currentView = state.routes[state.index].name;
-          const currentRouteParams = state.routes[state.index].params;
+        const currentView = state.routes[state.index].name;
+        const currentRouteParams = state.routes[state.index].params;
 
-          // Add to impressions
-          const now = new Date();
-          const currentViewPath = `Analytics/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}/${currentView}`;
-          const impressionsRef = ref(database, `${currentViewPath}/impressions`);
-          runTransaction(impressionsRef, (impressions) => {
-            return (impressions || 0) + 1;
+        // Add to impressions
+        const now = new Date();
+        let currentViewPath = `Analytics/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}/${currentView}`;
+        if (currentView == Strings.post) {
+          currentViewPath += `/${currentRouteParams.article.id}`;
+        }
+        const impressionsRef = ref(database, `${currentViewPath}/impressions`);
+        runTransaction(impressionsRef, (impressions) => {
+          return (impressions || 0) + 1;
+        });
+
+        // Add to sessions
+        if (!sessionViews[currentView]) {
+          const sessionsRef = ref(database, `${currentViewPath}/sessions`);
+          runTransaction(sessionsRef, (sessions) => {
+            return (sessions || 0) + 1;
           });
 
-          // Add to sessions
-          if (!sessionViews[currentView]) {
-            const sessionsRef = ref(database, `${currentViewPath}/sessions`);
-            runTransaction(sessionsRef, (sessions) => {
-              return (sessions || 0) + 1;
-            });
-
-            // Update sessionViews
-            setSessionViews(prevSessionViews => {
-              return { ...prevSessionViews, [currentView]: true };
-            });
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+          // Update sessionViews
+          setSessionViews(prevSessionViews => {
+            return { ...prevSessionViews, [currentView]: true };
+          });
+        }
+      } catch (error) {
+        console.trace(error);
+      }
     }
   };
 
