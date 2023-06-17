@@ -114,10 +114,25 @@ export default function App() {
       const datetime = new Date();
       let currentViewPath = `Analytics/${datetime.getFullYear()}/${String(datetime.getMonth() + 1).padStart(2, "0")}/${String(datetime.getDate()).padStart(2, "0")}/${currentView}`;
       let viewIdentifier = currentView;
-      if (currentView == Strings.post) {
+
+      switch (currentView) {
+      case Strings.post:
         currentViewPath += `/${currentRouteParams.article.id}`;
         viewIdentifier += `/${currentRouteParams.article.id}`;
+        break;
+      case Strings.section:
+        currentViewPath += `/${currentRouteParams.category.id}`;
+        viewIdentifier += `/${currentRouteParams.category.id}`;
+        break;
+      case Strings.author:
+        currentViewPath += `/${currentRouteParams.id}`;
+        viewIdentifier += `/${currentRouteParams.id}`;
+        break;
+      // Thoughts on tracking search queries? Let's not for now.
+      default:
+        break;
       }
+
       const impressionsRef = ref(database, `${currentViewPath}/impressions`);
       runTransaction(impressionsRef, (impressions) => {
         return (impressions || 0) + 1;
