@@ -106,3 +106,13 @@ export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numT
     return [];
   }
 };
+
+export function parsePipedHeadline(headline) {
+  var splitHeadline = headline.split(/\s*\|\s*/);
+  if (splitHeadline.length > 1) {
+    return splitHeadline[1];
+  }
+
+  // Return the whole headline if there's no pipe character.
+  return headline;
+}

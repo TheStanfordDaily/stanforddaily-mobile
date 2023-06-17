@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { initializeApp } from "firebase/app";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, push, ref } from "firebase/database";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { validateConfig } from "../utils/format";
 import { Strings } from "../utils/constants";
@@ -24,7 +24,6 @@ export const useFirebase = (expoPushToken, password) => {
 
   useEffect(() => {
     if (validateConfig(FIREBASE_CONFIG)) {
-
       const app = initializeApp(FIREBASE_CONFIG);
 
       const auth = getAuth(app);
@@ -33,8 +32,8 @@ export const useFirebase = (expoPushToken, password) => {
       signInWithEmailAndPassword(auth, Strings.techEmailAddress, password)
         .then(() => {
         // Set the push token with current date
-          const tokenRef = ref(database, `ExpoPushTokens/${expoPushToken}`);
-          set(tokenRef, new Date().toISOString());
+          const tokensRef = ref(database, "ExpoPushTokens");
+          push(tokensRef, expoPushToken);
           setApp(app);
           setDatabase(database);
         })
@@ -42,7 +41,7 @@ export const useFirebase = (expoPushToken, password) => {
           console.error(error);
         });
     }
-  }, [expoPushToken, app, database, password]);
+  }, [expoPushToken, password]);
 
   return { app, database };
 };

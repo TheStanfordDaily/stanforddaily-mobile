@@ -23,7 +23,7 @@ import { getMostCommonTagsFromRecentPosts } from "./utils/format";
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
 import { useFirebase } from "./hooks/useFirebase";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getDatabase, ref, runTransaction } from "firebase/database";
+import { ref, runTransaction } from "firebase/database";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -98,73 +98,59 @@ export default function App() {
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
 
   const handleNavigationChange = async (state) => {
-    if (app) {
-      const auth = getAuth(app);
-      try {
-        await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
+    if (!app) {
+      return;
+    }
 
-        const currentView = state.routes[state.index].name;
-        const currentRouteParams = state.routes[state.index].params;
+    const auth = getAuth(app);
 
-        // Add to impressions
-        const now = new Date();
-        let currentViewPath = `Analytics/${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}/${currentView}`;
-        let viewIdentifier = currentView;
-        if (currentView == Strings.post) {
-          currentViewPath += `/${currentRouteParams.article.id}`;
-          viewIdentifier += `/${currentRouteParams.article.id}`;
-        }
-        const impressionsRef = ref(database, `${currentViewPath}/impressions`);
-        runTransaction(impressionsRef, (impressions) => {
-          return (impressions || 0) + 1;
+    try {
+      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
+
+      const currentView = state.routes[state.index].name;
+      const currentRouteParams = state.routes[state.index].params;
+
+      // Add to impressions
+      const datetime = new Date();
+      let currentViewPath = `Analytics/${datetime.getFullYear()}/${String(datetime.getMonth() + 1).padStart(2, "0")}/${String(datetime.getDate()).padStart(2, "0")}/${currentView}`;
+      let viewIdentifier = currentView;
+      if (currentView == Strings.post) {
+        currentViewPath += `/${currentRouteParams.article.id}`;
+        viewIdentifier += `/${currentRouteParams.article.id}`;
+      }
+      const impressionsRef = ref(database, `${currentViewPath}/impressions`);
+      runTransaction(impressionsRef, (impressions) => {
+        return (impressions || 0) + 1;
+      });
+
+      // Add to sessions
+      if (!sessionViews[viewIdentifier]) {
+        const sessionsRef = ref(database, `${currentViewPath}/sessions`);
+        runTransaction(sessionsRef, (sessions) => {
+          return (sessions || 0) + 1;
         });
 
-        // Add to sessions
-        if (!sessionViews[viewIdentifier]) {
-          const sessionsRef = ref(database, `${currentViewPath}/sessions`);
-          runTransaction(sessionsRef, (sessions) => {
-            return (sessions || 0) + 1;
-          });
-
-          // Update sessionViews
-          setSessionViews(prevSessionViews => {
-            return { ...prevSessionViews, [viewIdentifier]: true };
-          });
-        }
-      } catch (error) {
-        console.trace(error);
+        // Update sessionViews
+        setSessionViews(prevSessionViews => {
+          return { ...prevSessionViews, [viewIdentifier]: true };
+        });
       }
+    } catch (error) {
+      console.trace(error);
     }
   };
-
-
 
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true));
 
-    if (app) {
-      registerForPushNotificationsAsync().then(token => {
-        var matches = token?.match(/\[(.*?)\]/);
-        if (matches) {
-          const submatch = matches[1];
-          setExpoPushToken(submatch);
-        }
-      });
-
-
-      /*
-
-        if (matches) {
-          var submatch = matches[1];
-          signInWithEmailAndPassword(firebase.auth, "tech@stanforddaily.com", TECH_PASSWORD).then((userCredential) => {
-            const tokenRef = ref(firebase.db, "ExpoPushTokens/" + submatch, userCredential);
-            set(tokenRef, new Date().toISOString()).catch(error => console.log(error));
-          }).catch(error => console.trace(error));
-        }
-      */
-    }
-
+    registerForPushNotificationsAsync().then(token => {
+      var matches = token?.match(/\[(.*?)\]/);
+      if (matches) {
+        const submatch = matches[1];
+        setExpoPushToken(submatch);
+      }
+    });
 
     Device.getDeviceTypeAsync().then(type => setDeviceType(type));
 
@@ -205,7 +191,7 @@ export default function App() {
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, [app, theme]);
+  }, [theme]);
 
   return fontsLoaded && (
     <NavigationContainer theme={navigatorTheme[theme]} onStateChange={handleNavigationChange}>

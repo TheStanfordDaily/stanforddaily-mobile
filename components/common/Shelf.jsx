@@ -20,7 +20,7 @@ export default function Shelf({ articles, alternate, navigation }) {
   const { deviceType } = useContext(ThemeContext);
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  const shelfArticles = articles;
+  let shelfArticles = articles;
   while (shelfArticles.length % (3 * groupSize) != 0) {
     shelfArticles.pop();
   }
