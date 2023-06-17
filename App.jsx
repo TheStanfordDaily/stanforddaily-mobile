@@ -98,54 +98,70 @@ export default function App() {
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
 
   const handleNavigationChange = async (state) => {
-    if (!app) {
+    if (!app || !state || !state.routes || typeof state.index !== "number") {
       return;
     }
 
     const auth = getAuth(app);
 
     try {
-      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
+      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD)
+        .catch(error => {
+          console.trace("Error signing in with email and password:", error);
+        });
 
-      const currentView = state.routes[state.index].name;
-      const currentRouteParams = state.routes[state.index].params;
+      const currentRoute = state.routes[state.index];
+      const currentView = currentRoute?.name;
+      const currentRouteParams = currentRoute?.params;
 
-      // Add to impressions
+      if (!currentView) {
+        return;
+      }
+
       const datetime = new Date();
       let currentViewPath = `Analytics/${datetime.getFullYear()}/${String(datetime.getMonth() + 1).padStart(2, "0")}/${String(datetime.getDate()).padStart(2, "0")}/${currentView}`;
-      let viewIdentifier = currentView;
+      let viewIdentifier;
+      let routeParamIdentifier;
 
       switch (currentView) {
       case Strings.post:
-        currentViewPath += `/${currentRouteParams.article.id}`;
-        viewIdentifier += `/${currentRouteParams.article.id}`;
+        routeParamIdentifier = currentRouteParams?.article?.id;
         break;
       case Strings.section:
-        currentViewPath += `/${currentRouteParams.category.id}`;
-        viewIdentifier += `/${currentRouteParams.category.id}`;
+        routeParamIdentifier = currentRouteParams?.category?.id;
         break;
       case Strings.author:
-        currentViewPath += `/${currentRouteParams.id}`;
-        viewIdentifier += `/${currentRouteParams.id}`;
+        routeParamIdentifier = currentRouteParams?.id;
         break;
-      // Thoughts on tracking search queries? Let's not for now.
       default:
-        break;
+        viewIdentifier = currentView;
       }
 
+      if (routeParamIdentifier) {
+        currentViewPath += `/${routeParamIdentifier}`;
+        viewIdentifier = `${currentView}/${routeParamIdentifier}`;
+      } else if (!viewIdentifier) {
+        viewIdentifier = currentView;
+      }
+
+      // Add to impressions.
       const impressionsRef = ref(database, `${currentViewPath}/impressions`);
       runTransaction(impressionsRef, (impressions) => {
         return (impressions || 0) + 1;
+      }).catch(error => {
+        console.trace("Error running transaction on impressions:", error);
       });
 
-      // Add to sessions
+      // Add to sessions.
       if (!sessionViews[viewIdentifier]) {
         const sessionsRef = ref(database, `${currentViewPath}/sessions`);
         runTransaction(sessionsRef, (sessions) => {
           return (sessions || 0) + 1;
+        }).catch(error => {
+          console.trace("Error running transaction on sessions:", error);
         });
 
-        // Update sessionViews
+        // Update view information for future reference.
         setSessionViews(prevSessionViews => {
           return { ...prevSessionViews, [viewIdentifier]: true };
         });
