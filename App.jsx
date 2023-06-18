@@ -98,17 +98,14 @@ export default function App() {
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
 
   const handleNavigationChange = async (state) => {
-    if (!app || !state || !state.routes || typeof state.index !== "number") {
+    if (!app || !state?.routes) {
       return;
     }
 
     const auth = getAuth(app);
 
     try {
-      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD)
-        .catch(error => {
-          console.trace("Error signing in with email and password:", error);
-        });
+      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
 
       const currentRoute = state.routes[state.index];
       const currentView = currentRoute?.name;
@@ -148,8 +145,6 @@ export default function App() {
       const impressionsRef = ref(database, `${currentViewPath}/impressions`);
       runTransaction(impressionsRef, (impressions) => {
         return (impressions || 0) + 1;
-      }).catch(error => {
-        console.trace("Error running transaction on impressions:", error);
       });
 
       // Add to sessions.
@@ -157,8 +152,6 @@ export default function App() {
         const sessionsRef = ref(database, `${currentViewPath}/sessions`);
         runTransaction(sessionsRef, (sessions) => {
           return (sessions || 0) + 1;
-        }).catch(error => {
-          console.trace("Error running transaction on sessions:", error);
         });
 
         // Update view information for future reference.

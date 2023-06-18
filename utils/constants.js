@@ -195,6 +195,7 @@ export const Spacing = {
   extraLarge: 24
 };
 
+// Might rename this to Labels.
 export const Strings = {
   all: "All",
   featuredHeadlines: "Featured Headlines",
