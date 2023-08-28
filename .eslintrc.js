@@ -5,4 +5,12 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["babel", "react"],
+  rules: {
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
+  },
 };
