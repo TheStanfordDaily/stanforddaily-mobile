@@ -13,6 +13,12 @@ import { DailyBread as bread } from "../../theme";
 const BATCH_SIZE = 24;
 const { width, height } = Dimensions.get("window");
 
+/**
+ * The Search screen is a React component that provides an interface for searching
+ * through Daily articles from across the years, in a similar fashion to the website.
+ * It uses similar heuristics to determine the most relevant articles to display, which
+ * means there is still plenty of room for imporvement.
+ */
 export default function Search({ route, navigation }) {
   const { deviceType, theme } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;

@@ -8,7 +8,7 @@ import { DeviceType } from "expo-device";
 
 import { formatDate, itemize } from "../../utils/format";
 import { ThemeContext } from "../../theme-context";
-import { Spacing, Strings } from "../../utils/constants";
+import { Spacing, Labels } from "../../utils/constants";
 
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
@@ -41,7 +41,7 @@ export default function Shelf({ articles, alternate, navigation }) {
                     accessoryRight={<Accessory uri={item.jetpack_featured_media_url} />}
                     activeOpacity={0.8}
                     description={() => <Text category="p2" style={{ paddingHorizontal: 4, fontSize: 18 * fontScale, color: alternate ? "white" : theme["text-basic-color"] }}>{itemize(item.parsely?.meta?.creator)} on {formatDate(new Date(item.date), false).split(",")[0]}</Text>}
-                    onPress={() => navigation.navigate(Strings.post, { article: item })}
+                    onPress={() => navigation.navigate(Labels.post, { article: item })}
                     style={{ ...styles.item, backgroundColor: theme[alternate ? "color-primary-600" : "background-basic-color-1"] }}
                     title={() => <Text adjustsFontSizeToFit allowFontScaling category="p1" ellipsizeMode="tail" numberOfLines={4} style={{ ...styles.title, color: alternate ? "white" : theme["text-basic-color"] }}>{decode(item.title.rendered)}</Text>}
                   />

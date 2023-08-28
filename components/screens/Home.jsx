@@ -10,6 +10,16 @@ import { useWordPress } from "../../hooks/useWordPress";
 import { Sections, Spacing } from "../../utils/constants";
 import { ThemeContext } from "../../theme-context";
 
+/**
+ * The FirstPage React component displays everything before the wildcard articles.
+ * It is memoized to prevent unnecessary re-renders.
+ *
+ * @param {Object} props.articles - The list of articles to display, grouped by category.
+ * @param {Object} props.data - Articles from same initial API call, but without any filters applied.
+ * @param {Object} props.navigation - The navigation object used by React Navigation.
+ * @param {string} props.deviceType - The type of device the app is running on. Used to determine layout.
+ * @returns {JSX.Element} The JSX Code for the FirstPage component.
+ */
 const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
@@ -44,6 +54,14 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
   );
 });
 
+/**
+ * The Home component is what you first see when opening the application.
+ * It fetches data from WordPress using a React hook, then passes it to the FirstPage component for rendering.
+ * It also contains pagination logic to fetch new data when the end of the list is reached.
+ *
+ * @param {Object} props.navigation - The navigation object used by React Navigation.
+ * @returns {JSX.Element} The JSX Code for the Home component.
+ */
 export default function Home({ navigation }) {
   const [pageNumber, setPageNumber] = useState(1);
   const { data, articles, error, loading } = useWordPress(pageNumber);

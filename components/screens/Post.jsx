@@ -27,6 +27,10 @@ const systemFonts = [
 
 enableAnimationExperimental();
 
+/**
+ * Displays a Stanford Daily article with rich text, recirculatory navigation and custom renderers.
+ * It also allows for opening URLs from the article in a web view.
+ */
 export default function Post({ route, navigation }) {
   const { article, sourceName } = route.params;
   const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio * width}`;
@@ -48,11 +52,13 @@ export default function Post({ route, navigation }) {
     // Hopefully this doesn't take too long to load. Might have to preload.
 
     if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {
-      Model.posts().slug(slug).embed().then(result => {
-        if (result.length > 0) {
-          navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" });
-        }
-      }).catch(error => console.trace(error));
+      Model.posts().slug(slug).embed()
+        .then(result => {
+          if (result.length > 0) {
+            navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" });
+          }
+        })
+        .catch(error => console.trace(error));
     } else {
       Linking.openURL(url);
     }
@@ -129,8 +135,7 @@ export default function Post({ route, navigation }) {
             systemFonts={systemFonts}
             contentWidth={width}
             baseStyle={{ fontFamily: "MinionProRegular", fontSize: 20 * fontScale, color: theme["text-basic-color"], backgroundColor: theme["background-basic-color-1"] }}
-            // The font color is slightly off in Dark Mode.
-            tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }}
+            tagsStyles={{ a: { color: theme["color-primary-500"], textDecorationLine: "none" } }} // The font color is slightly off in Dark Mode.
             renderers={renderers}
             renderersProps={{ a: { onPress: (e, href) => openArticleIfPresent(href) } }}
             WebView={WebView}

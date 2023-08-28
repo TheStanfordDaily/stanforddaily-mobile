@@ -9,6 +9,8 @@ import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/compon
 import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { ref, runTransaction } from "firebase/database";
 import { decode } from "html-entities";
 import { TECH_PASSWORD } from "@env";
 
@@ -16,14 +18,12 @@ import { DailyBread as bread } from "./theme";
 import mapping from "./mapping.json";
 import { ThemeContext } from "./theme-context";
 import Model from "./utils/model";
-import { Fonts, Strings } from "./utils/constants";
+import { Fonts, Labels } from "./utils/constants";
 import { logoAssets, navigate } from "./navigation";
 import { Author, Home, Post, Search, Section } from "./components/screens";
 import { getMostCommonTagsFromRecentPosts } from "./utils/format";
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
 import { useFirebase } from "./hooks/useFirebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { ref, runTransaction } from "firebase/database";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -34,7 +34,7 @@ Notifications.setNotificationHandler({
 });
 
 const Stack = createStackNavigator();
-enableAnimationExperimental();
+enableAnimationExperimental()
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -61,7 +61,7 @@ export default function App() {
   const headerOptions = ({ navigation }) => ({
     headerTitle: () => <Image style={{ width: 260, height: 30 }} source={logoAssets[theme]} />,
     headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Strings.search, { tags })}>
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Labels.search, { tags })}>
         <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
       </TouchableOpacity>
     )
@@ -97,15 +97,16 @@ export default function App() {
 
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
 
+  // Handles changes in the navigation state (as received from `NavigationContainer`) and logs them to a Firebase database.
   const handleNavigationChange = async (state) => {
-    if (!app || !state?.routes) {
+    if (!app || !state || !state.routes) {
       return;
     }
 
     const auth = getAuth(app);
 
     try {
-      await signInWithEmailAndPassword(auth, Strings.techEmailAddress, TECH_PASSWORD);
+      await signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD);
 
       const currentRoute = state.routes[state.index];
       const currentView = currentRoute?.name;
@@ -121,17 +122,17 @@ export default function App() {
       let routeParamIdentifier;
 
       switch (currentView) {
-      case Strings.post:
-        routeParamIdentifier = currentRouteParams?.article?.id;
-        break;
-      case Strings.section:
-        routeParamIdentifier = currentRouteParams?.category?.id;
-        break;
-      case Strings.author:
-        routeParamIdentifier = currentRouteParams?.id;
-        break;
-      default:
-        viewIdentifier = currentView;
+        case Labels.post:
+          routeParamIdentifier = currentRouteParams?.article?.id;
+          break;
+        case Labels.section:
+          routeParamIdentifier = currentRouteParams?.category?.id;
+          break;
+        case Labels.author:
+          routeParamIdentifier = currentRouteParams?.id;
+          break;
+        default:
+          viewIdentifier = currentView;
       }
 
       if (routeParamIdentifier) {
@@ -164,12 +165,22 @@ export default function App() {
     }
   };
 
+  // Triggered when the app is opened from a web browser. It extracts the slug from the URL and navigates to the corresponding post.
+  const handleOpenURL = async (event) => {
+    // FIXME: Listener for when app is opened from web browser.
+    const slug = event?.url?.split("/")?.pop();
+    if (slug?.length > 0) {
+      const result = await Model.posts().slug(slug).embed();
+      navigate(Labels.post, { item: result });
+    }
+  };
+
   useEffect(() => {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true));
 
     registerForPushNotificationsAsync().then(token => {
-      var matches = token?.match(/\[(.*?)\]/);
+      const matches = token?.match(/\[(.*?)\]/);
       if (matches) {
         const submatch = matches[1];
         setExpoPushToken(submatch);
@@ -196,24 +207,24 @@ export default function App() {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       // Works when app is foregrounded, backgrounded or killed.
       Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then(result => {
-        navigate(Strings.post, { item: result });
+        navigate(Labels.post, { item: result });
       });
     });
 
-    // FIXME: Listener for when app is opened from web browser.
-    Linking.addEventListener("url", ({ url }) => {
-      const slug = url?.split("/")?.pop();
-      if (slug?.length > 0) {
-        Model.posts().slug(slug).embed().then(result => {
-          navigate(Strings.post, { item: result });
-        });
+    // Perform initial URL check in case the app was closed when the user opened a URL.
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        handleOpenURL({ url });
       }
     });
+
+    Linking.addEventListener("url", handleOpenURL);
 
     return () => {
       themeListener.remove();
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
+      Linking.removeEventListener("url", handleOpenURL);
     };
   }, [theme]);
 

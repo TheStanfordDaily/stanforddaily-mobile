@@ -195,8 +195,7 @@ export const Spacing = {
   extraLarge: 24
 };
 
-// Might rename this to Labels.
-export const Strings = {
+export const Labels = {
   all: "All",
   featuredHeadlines: "Featured Headlines",
   news: "News",
@@ -269,6 +268,5 @@ export const Strings = {
   reply: "Reply",
   tipsFormURL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   tipsFormURLPrefix: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
-  wordPressURL: "https://stanforddaily.com",
-  techEmailAddress: "tech@stanforddaily.com"
+  wordPressURL: "https://stanforddaily.com"
 };
