@@ -4,19 +4,19 @@ const MONTHS = ["Jan.", "Feb.", "March", "April", "May", "June", "July", "Aug.",
 
 export const itemize = (elements) => {
   switch (elements.length) {
-  case 0:
-    return "";
-  case 1:
-    return elements[0];
-  default:
-    return elements.slice(0, -1).join(", ") + " and " + elements.at(-1);
+    case 0:
+      return "";
+    case 1:
+      return elements[0];
+    default:
+      return elements.slice(0, -1).join(", ") + " and " + elements.at(-1);
   }
 };
 
 export const formatDate = (instance, verbose) => {
-  let formattedMonth = MONTHS[instance.getMonth()];
-  let formattedDay = instance.getDate();
-  let formattedYear = instance.getFullYear();
+  const formattedMonth = MONTHS[instance.getMonth()];
+  const formattedDay = instance.getDate();
+  const formattedYear = instance.getFullYear();
   let formattedHours = instance.getHours() % 12;
   if (formattedHours === 0) {
     formattedHours = 12;
@@ -25,13 +25,15 @@ export const formatDate = (instance, verbose) => {
   if (formattedMinutes < 10) {
     formattedMinutes = `0${formattedMinutes}`;
   }
-  let formattedMeridian = instance.getHours() < 12 ? "a.m." : "p.m.";
+  const formattedMeridian = instance.getHours() < 12 ? "a.m." : "p.m.";
 
-  return `${formattedMonth} ${formattedDay}, ${formattedYear}${verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""}`;
+  return `${formattedMonth} ${formattedDay}, ${formattedYear}${
+    verbose ? ", " + formattedHours + ":" + formattedMinutes + " " + formattedMeridian : ""
+  }`;
 };
 
 export const stringMode = (strings) => {
-  return strings.sort((a, b) => strings.filter(v => v === a).length - strings.filter(v => v === b).length).pop();
+  return strings.sort((a, b) => strings.filter((v) => v === a).length - strings.filter((v) => v === b).length).pop();
 };
 
 // Modified from https://gist.github.com/codeguy/6684588 to keep dashes instead of collapsing them.
@@ -42,8 +44,8 @@ export const generateSlug = (s) => {
   s = s.replace(/^\s+|\s+$/g, "");
   s = s.toLowerCase();
 
-  let source = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;\u2018\u2019";
-  let destination = "aaaaeeeeiiiioooouuuunc----------";
+  const source = "àáäâèéëêìíïîòóöôùúüûñç·/_,:;\u2018\u2019";
+  const destination = "aaaaeeeeiiiioooouuuunc----------";
   for (let i = 0, l = source.length; i < l; i++) {
     s = s.replace(new RegExp(source.charAt(i), "g"), destination.charAt(i));
   }
@@ -61,9 +63,9 @@ export function getActiveRouteInfo(navigationState) {
     return getActiveRouteInfo(route);
   }
 
-  let out = {
+  const out = {
     name: route.name,
-    datetime: new Date().toISOString()
+    datetime: new Date().toISOString(),
   };
 
   if (route.params?.article?.id) {
@@ -74,10 +76,14 @@ export function getActiveRouteInfo(navigationState) {
 }
 
 export function validateConfig(config) {
-  return Object.keys(config).every(key => key !== undefined && key !== "" && key !== null);
+  return Object.keys(config).every((key) => key !== undefined && key !== "" && key !== null);
 }
 
-export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numTopTags = 10, excludedTags = [35626]) => {
+export const getMostCommonTagsFromRecentPosts = async (
+  numRecentPosts = 10,
+  numTopTags = 10,
+  excludedTags = [35626]
+) => {
   try {
     const recentPosts = await Model.posts().perPage(numRecentPosts).embed();
     const tagCounts = {};
@@ -108,7 +114,7 @@ export const getMostCommonTagsFromRecentPosts = async (numRecentPosts = 10, numT
 };
 
 export function parsePipedHeadline(headline) {
-  var splitHeadline = headline.split(/\s*\|\s*/);
+  const splitHeadline = headline.split(/\s*\|\s*/);
   if (splitHeadline.length > 1) {
     return splitHeadline[1];
   }

@@ -10,6 +10,7 @@ module.exports = {
       "error",
       {
         endOfLine: "auto",
+        printWidth: 120,
       },
     ],
   },

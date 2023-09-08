@@ -1,40 +1,40 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Appearance, Image, Linking, TouchableOpacity } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import * as Font from "expo-font";
-import * as Device from "expo-device";
-import * as Notifications from "expo-notifications";
+import { TECH_PASSWORD } from "@env";
 import * as eva from "@eva-design/eva";
-import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
-import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { ApplicationProvider, Icon, IconRegistry, Text } from "@ui-kitten/components";
+import { EvaIconsPack } from "@ui-kitten/eva-icons";
+import * as Device from "expo-device";
+import * as Font from "expo-font";
+import * as Notifications from "expo-notifications";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { ref, runTransaction } from "firebase/database";
 import { decode } from "html-entities";
-import { TECH_PASSWORD } from "@env";
+import React, { useEffect, useRef, useState } from "react";
+import { Appearance, Image, Linking, TouchableOpacity } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { DailyBread as bread } from "./theme";
-import mapping from "./mapping.json";
-import { ThemeContext } from "./theme-context";
-import Model from "./utils/model";
-import { Fonts, Labels } from "./utils/constants";
-import { logoAssets, navigate } from "./navigation";
 import { Author, Home, Post, Search, Section } from "./components/screens";
-import { getMostCommonTagsFromRecentPosts } from "./utils/format";
-import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
 import { useFirebase } from "./hooks/useFirebase";
+import mapping from "./mapping.json";
+import { logoAssets, navigate } from "./navigation";
+import { DailyBread as bread } from "./theme";
+import { ThemeContext } from "./theme-context";
+import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
+import { Fonts, Labels } from "./utils/constants";
+import { getMostCommonTagsFromRecentPosts } from "./utils/format";
+import Model from "./utils/model";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
     shouldPlaySound: false,
-    shouldSetBadge: false
-  })
+    shouldSetBadge: false,
+  }),
 });
 
 const Stack = createStackNavigator();
-enableAnimationExperimental()
+enableAnimationExperimental();
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -55,7 +55,7 @@ export default function App() {
 
   const navigatorTheme = {
     light: DefaultTheme,
-    dark: DarkTheme
+    dark: DarkTheme,
   };
 
   const headerOptions = ({ navigation }) => ({
@@ -64,7 +64,7 @@ export default function App() {
       <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Labels.search, { tags })}>
         <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
       </TouchableOpacity>
-    )
+    ),
   });
 
   const detailHeaderOptions = ({ route }) => ({
@@ -73,26 +73,29 @@ export default function App() {
     headerTintColor: "white",
     headerBackTitleVisible: false,
     headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}>
+      <TouchableOpacity
+        style={{ paddingHorizontal: 16 }}
+        onPress={() => onShare(route.params.article.link, decode(route.params.article.title.rendered))}
+      >
         <Icon name="share-outline" width={24} height={24} fill="white" />
       </TouchableOpacity>
-    )
+    ),
   });
 
   const sectionOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{decode(route.params.category.name).replace("'", "\u{2019}")}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
-    headerTintColor: bread[theme]["color-primary-500"]
+    headerTintColor: bread[theme]["color-primary-500"],
   });
 
   const authorOptions = ({ route }) => ({
     headerTitle: () => <Text category="h4">{route.params.name}</Text>,
     headerTitleStyle: { fontFamily: "MinionProBold" },
-    headerTintColor: bread[theme]["color-primary-500"]
+    headerTintColor: bread[theme]["color-primary-500"],
   });
 
   const searchHeaderOptions = {
-    headerTintColor: bread[theme]["color-primary-500"]
+    headerTintColor: bread[theme]["color-primary-500"],
   };
 
   const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
@@ -117,7 +120,11 @@ export default function App() {
       }
 
       const datetime = new Date();
-      let currentViewPath = `Analytics/${datetime.getFullYear()}/${String(datetime.getMonth() + 1).padStart(2, "0")}/${String(datetime.getDate()).padStart(2, "0")}/${currentView}`;
+      const year = datetime.getFullYear();
+      const month = String(datetime.getMonth() + 1).padStart(2, "0");
+      const day = String(datetime.getDate()).padStart(2, "0");
+
+      let currentViewPath = `Analytics/${year}/${month}/${day}/${currentView}`;
       let viewIdentifier;
       let routeParamIdentifier;
 
@@ -156,7 +163,7 @@ export default function App() {
         });
 
         // Update view information for future reference.
-        setSessionViews(prevSessionViews => {
+        setSessionViews((prevSessionViews) => {
           return { ...prevSessionViews, [viewIdentifier]: true };
         });
       }
@@ -179,7 +186,7 @@ export default function App() {
     // Loads fonts from static resource.
     Font.loadAsync(Fonts.minion).then(() => setFontsLoaded(true));
 
-    registerForPushNotificationsAsync().then(token => {
+    registerForPushNotificationsAsync().then((token) => {
       const matches = token?.match(/\[(.*?)\]/);
       if (matches) {
         const submatch = matches[1];
@@ -187,28 +194,31 @@ export default function App() {
       }
     });
 
-    Device.getDeviceTypeAsync().then(type => setDeviceType(type));
+    Device.getDeviceTypeAsync().then((type) => setDeviceType(type));
 
-    getMostCommonTagsFromRecentPosts(100, 10).then(tags => setTags(tags));
+    getMostCommonTagsFromRecentPosts(100, 10).then((tags) => setTags(tags));
 
     // Handles any event in which appearance preferences change.
-    const themeListener = Appearance.addChangeListener(listener => {
+    const themeListener = Appearance.addChangeListener((listener) => {
       if (theme !== listener.colorScheme) {
         setTheme(listener.colorScheme);
       }
     });
 
     // This listener is fired whenever a notification is received while the app is foregrounded.
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       setNotification(notification);
     });
 
     // This listener is fired whenever a user taps on or interacts with a notification.
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
       // Works when app is foregrounded, backgrounded or killed.
-      Model.posts().id(response.notification.request.trigger.payload.body.postID).embed().then(result => {
-        navigate(Labels.post, { item: result });
-      });
+      Model.posts()
+        .id(response.notification.request.trigger.payload.body.postID)
+        .embed()
+        .then((result) => {
+          navigate(Labels.post, { item: result });
+        });
     });
 
     // Perform initial URL check in case the app was closed when the user opened a URL.
@@ -228,22 +238,24 @@ export default function App() {
     };
   }, [theme]);
 
-  return fontsLoaded && (
-    <NavigationContainer theme={navigatorTheme[theme]} onStateChange={handleNavigationChange}>
-      <IconRegistry icons={EvaIconsPack} />
-      <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
-        <ApplicationProvider {...eva} customMapping={mapping} theme={{ ...eva[theme], ...bread[theme] }}>
-          <SafeAreaProvider>
-            <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen component={Home} name="Home" options={headerOptions} />
-              <Stack.Screen component={Post} name="Post" options={detailHeaderOptions} />
-              <Stack.Screen component={Section} name="Section" options={sectionOptions} />
-              <Stack.Screen component={Author} name="Author" options={authorOptions} />
-              <Stack.Screen component={Search} name="Search" options={searchHeaderOptions} />
-            </Stack.Navigator>
-          </SafeAreaProvider>
-        </ApplicationProvider>
-      </ThemeContext.Provider>
-    </NavigationContainer>
+  return (
+    fontsLoaded && (
+      <NavigationContainer theme={navigatorTheme[theme]} onStateChange={handleNavigationChange}>
+        <IconRegistry icons={EvaIconsPack} />
+        <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
+          <ApplicationProvider {...eva} customMapping={mapping} theme={{ ...eva[theme], ...bread[theme] }}>
+            <SafeAreaProvider>
+              <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen component={Home} name="Home" options={headerOptions} />
+                <Stack.Screen component={Post} name="Post" options={detailHeaderOptions} />
+                <Stack.Screen component={Section} name="Section" options={sectionOptions} />
+                <Stack.Screen component={Author} name="Author" options={authorOptions} />
+                <Stack.Screen component={Search} name="Search" options={searchHeaderOptions} />
+              </Stack.Navigator>
+            </SafeAreaProvider>
+          </ApplicationProvider>
+        </ThemeContext.Provider>
+      </NavigationContainer>
+    )
   );
 }
