@@ -102,10 +102,7 @@ export default function App() {
 
   // Handles changes in the navigation state (as received from `NavigationContainer`) and logs them to a Firebase database.
   const handleNavigationChange = async (state) => {
-    if (!app || !state || !state.routes) {
-      return;
-    }
-
+    if (!app || !state || !state.routes) return;
     const auth = getAuth(app);
 
     try {
@@ -115,9 +112,7 @@ export default function App() {
       const currentView = currentRoute?.name;
       const currentRouteParams = currentRoute?.params;
 
-      if (!currentView) {
-        return;
-      }
+      if (!currentView) return;
 
       const datetime = new Date();
       const year = datetime.getFullYear();
@@ -125,37 +120,38 @@ export default function App() {
       const day = String(datetime.getDate()).padStart(2, "0");
 
       let currentViewPath = `Analytics/${year}/${month}/${day}/${currentView}`;
-      let viewIdentifier;
+      let viewIdentifier; // Used to track unique views for each screen in the sessions map.
       let routeParamIdentifier;
 
+      // The switch statement leverages information about the current view to construct a unique identifier for use in Firebase.
       switch (currentView) {
         case Labels.post:
-          routeParamIdentifier = currentRouteParams?.article?.id;
+          routeParamIdentifier = currentRouteParams?.article?.id; // Unique to the post being presented in the detail view.
           break;
         case Labels.section:
-          routeParamIdentifier = currentRouteParams?.category?.id;
+          routeParamIdentifier = currentRouteParams?.category?.id; // Unique to the section being presented in the detail view.
           break;
         case Labels.author:
-          routeParamIdentifier = currentRouteParams?.id;
+          routeParamIdentifier = currentRouteParams?.id; // Unique to the author being presented in the detail view.
           break;
         default:
           viewIdentifier = currentView;
       }
 
       if (routeParamIdentifier) {
+        // After the switch, if there is a `routeParamIdentifier`, it appends that to the `currentViewPath` string.
         currentViewPath += `/${routeParamIdentifier}`;
         viewIdentifier = `${currentView}/${routeParamIdentifier}`;
       } else if (!viewIdentifier) {
+        // Otherwise, the default case must have been triggered, so it just uses the view identifier.
         viewIdentifier = currentView;
       }
 
-      // Add to impressions.
       const impressionsRef = ref(database, `${currentViewPath}/impressions`);
       runTransaction(impressionsRef, (impressions) => {
         return (impressions || 0) + 1;
       });
 
-      // Add to sessions.
       if (!sessionViews[viewIdentifier]) {
         const sessionsRef = ref(database, `${currentViewPath}/sessions`);
         runTransaction(sessionsRef, (sessions) => {
