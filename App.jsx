@@ -123,7 +123,7 @@ export default function App() {
       let viewIdentifier; // Used to track unique views for each screen in the sessions map.
       let routeParamIdentifier;
 
-      // The switch statement leverages information about the current view to construct a unique identifier for use in Firebase.
+      // Leverage information about the current view to construct a unique identifier for use in Firebase.
       switch (currentView) {
         case Labels.post:
           routeParamIdentifier = currentRouteParams?.article?.id; // Unique to the post being presented in the detail view.

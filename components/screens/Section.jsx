@@ -1,12 +1,12 @@
+import { Layout, List } from "@ui-kitten/components";
+import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { Layout, List } from "@ui-kitten/components";
 
-import Wlidcard from "../common/Wildcard";
-import Model from "../../utils/model";
 import { ThemeContext } from "../../theme-context";
-import { DeviceType } from "expo-device";
 import { Spacing } from "../../utils/constants";
+import Model from "../../utils/model";
+import Wlidcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
 
@@ -17,7 +17,7 @@ export default function Section({ route, navigation }) {
   const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2);
   const [articles, setArticles] = useState(seed);
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
-  const basePageCount = Math.max(0, Math.floor(seed.length/BATCH_SIZE) - 1);
+  const basePageCount = Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1);
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
   const [layoutLoaded, setLayoutLoaded] = useState(false);
@@ -25,7 +25,11 @@ export default function Section({ route, navigation }) {
   const fetchResults = async () => {
     setArticlesLoading(true);
     try {
-      const posts = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(basePageCount + pageNumber).get();
+      const posts = await Model.posts()
+        .categories(category.id)
+        .perPage(BATCH_SIZE)
+        .page(basePageCount + pageNumber)
+        .get();
       setArticles([...articles, ...posts]);
     } catch (error) {
       console.log(error);
@@ -39,11 +43,10 @@ export default function Section({ route, navigation }) {
   };
 
   const Container = theme === "dark" ? Layout : View;
-    
+
   useEffect(() => {
     fetchResults();
   }, [pageNumber]);
-
 
   return (
     <Container style={styles.container}>
@@ -71,11 +74,11 @@ export default function Section({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   empty: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

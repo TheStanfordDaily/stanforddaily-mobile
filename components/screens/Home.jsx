@@ -1,14 +1,14 @@
-import React, { useContext, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import { Divider, Layout, Text } from "@ui-kitten/components";
-import _ from "lodash";
 import { DeviceType } from "expo-device";
 import { StatusBar } from "expo-status-bar";
+import _ from "lodash";
+import React, { useContext, useMemo, useState } from "react";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 
 import { Carousel, Mark, Polyptych, Shelf, Wildcard } from "..";
 import { useWordPress } from "../../hooks/useWordPress";
-import { Sections, Spacing } from "../../utils/constants";
 import { ThemeContext } from "../../theme-context";
+import { Sections, Spacing } from "../../utils/constants";
 
 /**
  * The FirstPage React component displays everything before the wildcard articles.
@@ -37,12 +37,7 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
       {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map((group, outerIndex) => (
         <View key={outerIndex} style={{ flex: 1 / groupSize, flexDirection: "row" }}>
           {group.map((item, index) => (
-            <Wildcard
-              key={item.id.toString()}
-              index={outerIndex * index + index}
-              item={item}
-              navigation={navigation}
-            />
+            <Wildcard key={item.id.toString()} index={outerIndex * index + index} item={item} navigation={navigation} />
           ))}
         </View>
       ))}
@@ -67,7 +62,7 @@ export default function Home({ navigation }) {
   const { data, articles, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
   // Ensure that no culture posts simultaneously appear in wildcard.
-  const wildcard = data?.wildcard?.filter(item => !articles?.culture?.find(article => article.id === item.id));
+  const wildcard = data?.wildcard?.filter((item) => !articles?.culture?.find((article) => article.id === item.id));
 
   const Header = useMemo(() => (
     <FirstPage
@@ -83,19 +78,13 @@ export default function Home({ navigation }) {
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <FlatList
         data={wildcard}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         ListFooterComponent={() => <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
         ListHeaderComponent={Header}
         onEndReached={() => setPageNumber(pageNumber + 1)}
         onEndReachedThreshold={0.25}
         renderItem={(post, index) => (
-          <Wildcard
-            key={post.item.id.toString()}
-            index={index}
-            item={post.item}
-            navigation={navigation}
-            verbose
-          />
+          <Wildcard key={post.item.id.toString()} index={index} item={post.item} navigation={navigation} verbose />
         )}
       />
     </Layout>
@@ -108,11 +97,11 @@ export default function Home({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   empty: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });

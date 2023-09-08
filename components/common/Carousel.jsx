@@ -1,16 +1,15 @@
-import React, { useContext, useState } from "react";
 import { Button, Card, Layout, Text, useTheme } from "@ui-kitten/components";
-import { Dimensions, PixelRatio, Platform, StyleSheet, View } from "react-native";
-import { Image } from "expo-image";
 import { DeviceType } from "expo-device";
-import PagerView from "react-native-pager-view";
-import moment from "moment";
-import _ from "lodash";
+import { Image } from "expo-image";
 import { decode } from "html-entities";
+import moment from "moment";
+import React, { useContext, useState } from "react";
+import { Dimensions, PixelRatio, Platform, StyleSheet, View } from "react-native";
+import PagerView from "react-native-pager-view";
 
-import { itemize } from "../../utils/format";
-import { Spacing } from "../../utils/constants";
 import { ThemeContext } from "../../theme-context";
+import { Spacing } from "../../utils/constants";
+import { itemize } from "../../utils/format";
 
 const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
@@ -29,8 +28,12 @@ function Carousel({ navigation, articles }) {
 
   const Footer = ({ authors, section }) => (
     <View style={styles.footer}>
-      <Text style={{ flex: 0.95 }} category="label">{itemize(Object.keys(authors).map(name => name.toUpperCase()))}</Text>
-      <Button size="tiny" status="basic">{decode(section)}</Button>
+      <Text style={{ flex: 0.95 }} category="label">
+        {itemize(Object.keys(authors).map((name) => name.toUpperCase()))}
+      </Text>
+      <Button size="tiny" status="basic">
+        {decode(section)}
+      </Button>
     </View>
   );
 
@@ -60,41 +63,41 @@ const styles = StyleSheet.create({
     height: 300,
     paddingHorizontal: Spacing.medium,
     paddingVertical: 4,
-    marginTop: Spacing.medium
+    marginTop: Spacing.medium,
   },
   tab: {
     height: 192,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   card: {
     flex: 1,
-    margin: 2
+    margin: 2,
   },
   headerTextContainer: {
     paddingHorizontal: 20,
-    paddingVertical: 10
+    paddingVertical: 10,
   },
   headerImage: {
     width: 300,
-    height: 200
+    height: 200,
   },
   footerContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
     paddingHorizontal: 20,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   footerControl: {
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 10,
-    paddingVertical: 5
-  }
+    paddingVertical: 5,
+  },
 });
 
 export default React.memo(Carousel);
