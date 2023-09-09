@@ -14,7 +14,7 @@ export default function SearchBar({ searchQuery, onChangeText, onSearch, onClose
       autoFocus
       style={{
         ...styles.container,
-        backgroundColor: theme === "dark" ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.05)",
+        backgroundColor: theme === "dark" ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.05)",
       }}
       value={searchQuery}
       onChangeText={onChangeText}

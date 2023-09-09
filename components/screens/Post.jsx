@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Appearance, Dimensions, LayoutAnimation, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
-import { Icon, Text, useTheme } from "@ui-kitten/components";
+import { Dimensions, LayoutAnimation, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
+import { Text, useTheme } from "@ui-kitten/components";
 import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
 import Content, { defaultSystemFonts } from "react-native-render-html";
 import WebView from "react-native-webview";
@@ -20,10 +20,7 @@ import { ThemeContext } from "../../theme-context";
 const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
-const systemFonts = [
-  ...Object.keys(Fonts.minion).map(key => String(key)),
-  ...defaultSystemFonts
-];
+const systemFonts = [...Object.keys(Fonts.minion).map((key) => String(key)), ...defaultSystemFonts];
 
 enableAnimationExperimental();
 
@@ -104,12 +101,14 @@ export default function Post({ route, navigation }) {
       most of which are not going to be tapped on anyway.
     */
 
-    Model.media().id(article["featured_media"]).get().then(media => {
-      setCaption(decode(media.caption?.rendered).slice(3, -5));
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    });
+    Model.media()
+      .id(article["featured_media"])
+      .get()
+      .then((media) => {
+        setCaption(decode(media.caption?.rendered).slice(3, -5));
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      });
   }, [article, navigation]);
-
 
   return (
     <React.Fragment>
@@ -122,7 +121,8 @@ export default function Post({ route, navigation }) {
         minHeight={headerHeight}
         maxHeight={headerHeight + featuredMedia ? 270 : 0}
         fadeOutForeground
-        scrollViewBackgroundColor={theme["background-basic-color-1"]}>
+        scrollViewBackgroundColor={theme["background-basic-color-1"]}
+      >
         <View style={{ flex: 1, marginHorizontal: contentEdgeInset, paddingTop: deviceType === Device.DeviceType.PHONE ? undefined : Spacing.large, paddingBottom: Spacing.large }}>
           <TriggeringView>
             {caption !== "" && <Text style={{ paddingTop: Spacing.medium }} category="s1">{caption}</Text>}

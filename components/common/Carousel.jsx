@@ -45,8 +45,11 @@ function Carousel({ navigation, articles }) {
             style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: theme === "light" ? "#E7EBF3" : "transparent" }}
             header={<Header source={item["jetpack_featured_media_url"]} />}
             footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({ ...object, [name]: item.coauthors[index] }), {})} section={item.parsely?.meta?.articleSection} />}
-            onPress={() => navigation.navigate("Post", { article: item })}>
-            <Text style={{ marginHorizontal: -10, marginTop: -5 }} category={"h4"}>{decode(item.title.rendered).replace("'", "\u{2019}")}</Text>
+            onPress={() => navigation.navigate("Post", { article: item })}
+          >
+            <Text style={{ marginHorizontal: -10, marginTop: -5 }} category="h4">
+              {decode(item.title.rendered).replace("'", "\u{2019}")}
+            </Text>
             <Text style={{ marginHorizontal: -10, marginBottom: -5, color: accentColor }} category="s2">
               {moment(new Date(item["date"])).fromNow().toUpperCase()}
             </Text>

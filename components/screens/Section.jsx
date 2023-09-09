@@ -20,7 +20,6 @@ export default function Section({ route, navigation }) {
   const basePageCount = Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1);
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
-  const [layoutLoaded, setLayoutLoaded] = useState(false);
 
   const fetchResults = async () => {
     setArticlesLoading(true);
@@ -37,7 +36,6 @@ export default function Section({ route, navigation }) {
         setPossiblyReachedEnd(true);
       }
     } finally {
-      setLayoutLoaded(true);
       setArticlesLoading(false);
     }
   };
