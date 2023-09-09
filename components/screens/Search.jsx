@@ -1,14 +1,24 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, Keyboard, LayoutAnimation, Platform, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 import { Button, Layout, List, Text } from "@ui-kitten/components";
-
-import Wlidcard from "../common/Wildcard";
-import Model from "../../utils/model";
-import { ThemeContext } from "../../theme-context";
 import { DeviceType } from "expo-device";
-import { Spacing } from "../../utils/constants";
 import Fuse from "fuse.js";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Dimensions,
+  Keyboard,
+  LayoutAnimation,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+
 import { DailyBread as bread } from "../../theme";
+import { ThemeContext } from "../../theme-context";
+import { Spacing } from "../../utils/constants";
+import Model from "../../utils/model";
+import Wlidcard from "../common/Wildcard";
 
 const BATCH_SIZE = 24;
 const { width, height } = Dimensions.get("window");
@@ -63,25 +73,26 @@ export default function Search({ route, navigation }) {
     }
   }
 
-  const loadPage = useCallback(async page => {
-    if (possiblyReachedEnd) {
-      return;
-    }
+  const loadPage = useCallback(
+    async (page) => {
+      if (possiblyReachedEnd) return;
 
-    setArticlesLoading(true);
-    let posts;
-    try {
-      posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get();
-      setArticles([...articles, ...posts]);
-    } catch (error) {
-      console.log(error);
-      if (error.data?.status === 400) {
-        setPossiblyReachedEnd(true);
+      setArticlesLoading(true);
+      let posts;
+      try {
+        posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get();
+        setArticles([...articles, ...posts]);
+      } catch (error) {
+        console.log(error);
+        if (error.data?.status === 400) {
+          setPossiblyReachedEnd(true);
+        }
+      } finally {
+        setArticlesLoading(false);
       }
-    } finally {
-      setArticlesLoading(false);
-    }
-  }, [articles, incumbentQuery, possiblyReachedEnd]);
+    },
+    [articles, incumbentQuery, possiblyReachedEnd]
+  );
 
   useEffect(() => {
     setEmptyResults(false);
@@ -114,12 +125,14 @@ export default function Search({ route, navigation }) {
           />
           {cancelVisible && (
             <TouchableOpacity onPress={Keyboard.dismiss} style={styles.cancelButton} title="Cancel">
-              <Text category="label" style={{ fontSize: 16, color: tintColor }}>Cancel</Text>
+              <Text category="label" style={{ fontSize: 16, color: tintColor }}>
+                Cancel
+              </Text>
             </TouchableOpacity>
           )}
         </View>
       ),
-      headerTintColor: tintColor
+      headerTintColor: tintColor,
     });
   }, [cancelVisible, navigation, textColor, tintColor, searchQuery]);
 
@@ -129,7 +142,9 @@ export default function Search({ route, navigation }) {
 
   return emptyResults ? (
     <Layout style={styles.empty}>
-      <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>No results found for {`\u2018${searchQuery}.\u2019`}</Text>
+      <Text category="h6" style={{ color: theme === "dark" ? "white" : "black" }}>
+        No results found for {`\u2018${searchQuery}.\u2019`}
+      </Text>
     </Layout>
   ) : searching ? (
     <Layout style={styles.empty}>
@@ -150,26 +165,29 @@ export default function Search({ route, navigation }) {
             setPageNumber(pageNumber + 1);
           }
         }}
-        renderItem={({ item, index }) => <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />}
+        renderItem={({ item, index }) => (
+          <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+        )}
         ListFooterComponent={() => articlesLoading && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
       />
     </Layout>
   ) : (
     <Layout style={styles.empty}>
-      {articles.length === 0 && route.params?.tags?.map((tag, index) => (
-        <Button
-          key={index}
-          onPress={() => {
-            setSearchQuery(tag.name);
-            handleSearch(tag.name);
-          }}
-          appearance="ghost"
-          status={buttonStatus}
-          style={{ marginBottom: Spacing.medium }}
-        >
-          {tag.name.toUpperCase()}
-        </Button>
-      ))}
+      {articles.length === 0 &&
+        route.params?.tags?.map((tag, index) => (
+          <Button
+            key={index}
+            onPress={() => {
+              setSearchQuery(tag.name);
+              handleSearch(tag.name);
+            }}
+            appearance="ghost"
+            status={buttonStatus}
+            style={{ marginBottom: Spacing.medium }}
+          >
+            {tag.name.toUpperCase()}
+          </Button>
+        ))}
     </Layout>
   );
 }
@@ -182,14 +200,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     flex: 1,
-    paddingBottom: Spacing.large
+    paddingBottom: Spacing.large,
   },
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: Spacing.medium,
     paddingRight: Spacing.large,
-    width: width - (Platform.OS === "ios" ? 1 : 2.5) * Spacing.extraLarge
+    width: width - (Platform.OS === "ios" ? 1 : 2.5) * Spacing.extraLarge,
   },
   searchInput: {
     flex: 1,
@@ -198,9 +216,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: Spacing.medium,
     paddingVertical: 5,
-    marginRight: Spacing.medium
+    marginRight: Spacing.medium,
   },
   cancelButton: {
-    paddingHorizontal: Spacing.medium
-  }
+    paddingHorizontal: Spacing.medium,
+  },
 });

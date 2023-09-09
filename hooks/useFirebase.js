@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
-import { getDatabase, push, ref } from "firebase/database";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { APIKEY, APP_ID, MEASUREMENT_ID, MESSAGING_SENDER_ID, SERVICE_ACCOUNT_ID } from "@env";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, push, ref } from "firebase/database";
+import { useEffect, useState } from "react";
+
 import { validateConfig } from "../utils/format";
 
 const FIREBASE_CONFIG = {
@@ -14,7 +15,7 @@ const FIREBASE_CONFIG = {
   messagingSenderId: MESSAGING_SENDER_ID,
   appId: APP_ID,
   measurementId: MEASUREMENT_ID,
-  serviceAccountId: SERVICE_ACCOUNT_ID
+  serviceAccountId: SERVICE_ACCOUNT_ID,
 };
 
 /**

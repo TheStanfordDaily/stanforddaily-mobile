@@ -1,31 +1,27 @@
-
-import React from "react"
-import { StyleSheet, View } from "react-native"
-import { Avatar, Button, Divider, Layout, Text } from "@ui-kitten/components"
+import { Avatar, Layout, Text } from "@ui-kitten/components";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 export default function Profile({ profile }) {
-    return (profile &&
-        <Layout level="2">
-            <Layout style={styles.header} level="1">
-                <View style={styles.profileContainer}>
-                    {profile["avatar_urls"]?.["96"] && <Avatar
-                        style={styles.profileAvatar}
-                        size="large"
-                        source={{uri: profile["avatar_urls"]["96"]}} />}
-                    <View style={styles.profileDetailsContainer}>
-                        <Text category="h4">
-                        {profile.name}
-                        </Text>
-                        <Text
-                        appearance="hint"
-                        category="s1">
-                        {profile.description}
-                        </Text>
-                    </View>
-                </View>
-            </Layout>
+  return (
+    profile && (
+      <Layout level="2">
+        <Layout style={styles.header} level="1">
+          <View style={styles.profileContainer}>
+            {profile["avatar_urls"]?.["96"] && (
+              <Avatar style={styles.profileAvatar} size="large" source={{ uri: profile["avatar_urls"]["96"] }} />
+            )}
+            <View style={styles.profileDetailsContainer}>
+              <Text category="h4">{profile.name}</Text>
+              <Text appearance="hint" category="s1">
+                {profile.description}
+              </Text>
+            </View>
+          </View>
         </Layout>
+      </Layout>
     )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -78,5 +74,5 @@ const styles = StyleSheet.create({
   profileParameter: {
     flex: 1,
     marginHorizontal: 8,
-  }
-})
+  },
+});

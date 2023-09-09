@@ -29,8 +29,8 @@ export default function Wildcard({ navigation, articles, random, verbose, title,
   return (
     <Card
       style={styles.card}
-      header={<Header verbose={verbose} title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]}/>}
-      footer={<Footer byline={itemize(item.parsely?.meta?.creator?.map(name => name.toUpperCase()))} section={item.parsely?.meta?.articleSection}/>}
+      header={<Header verbose={verbose} title={decode(item.title.rendered)} date={item.date} uri={item["jetpack_featured_media_url"]} />}
+      footer={<Footer byline={itemize(item.parsely?.meta?.creator?.map(name => name.toUpperCase()))} section={item.parsely?.meta?.articleSection} />}
       onPress={() => navigation.push("Post", { article: item, sourceName: title })}
     >
       <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>

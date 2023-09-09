@@ -1,6 +1,6 @@
-import { Platform, Share, UIManager } from "react-native";
-import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { Platform, Share, UIManager } from "react-native";
 
 export const onShare = async (url, title) => {
   try {
@@ -8,7 +8,7 @@ export const onShare = async (url, title) => {
 
     if (result.action === Share.sharedAction) {
       if (result.activityType) {
-        // Shared successfully with activity type of result.activityType.
+        // Shared successfully with activity type of `result.activityType`.
       } else {
         // Shared successfully.
       }
@@ -43,7 +43,7 @@ export async function registerForPushNotificationsAsync() {
       name: "default",
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C"
+      lightColor: "#FF231F7C",
     });
   }
 

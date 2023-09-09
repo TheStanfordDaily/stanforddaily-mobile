@@ -1,10 +1,10 @@
-import { Button, Card, Layout, Text, useTheme } from "@ui-kitten/components";
+import { Button, Card, Text, useTheme } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import { Image } from "expo-image";
 import { decode } from "html-entities";
 import moment from "moment";
-import React, { useContext, useState } from "react";
-import { Dimensions, PixelRatio, Platform, StyleSheet, View } from "react-native";
+import React, { useContext } from "react";
+import { Dimensions, PixelRatio, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";

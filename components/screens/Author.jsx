@@ -2,15 +2,7 @@ import { Card, Layout, List, Tab, TabBar, Text } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import { decode } from "html-entities";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  ImageBackground,
-  FlatList,
-  PixelRatio,
-  StatusBar,
-  StyleSheet,
-} from "react-native";
+import { ActivityIndicator, Dimensions, ImageBackground, PixelRatio, StyleSheet } from "react-native";
 
 import { ThemeContext } from "../../theme-context";
 import { formatDate, stringMode } from "../../utils/format";
@@ -90,7 +82,7 @@ export default function Author({ route, navigation }) {
             <Text category="label">{formatDate(new Date(item.date), false)}</Text>
           </Card>
         )}
-        ListFooterComponent={() => !possiblyReachedEnd && <ActivityIndicator />}
+        ListFooterComponent={() => possiblyReachedEnd || <ActivityIndicator />}
       />
     </Layout>
   );
