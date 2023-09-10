@@ -15,26 +15,26 @@ const pixelRatio = PixelRatio.get();
 
 /**
  * Displays a set of articles in a paginated layout.
- * 
+ *
  * `Polyptych` groups the articles into pages and displays each page as a row of cards.
  * Each card represents an article and includes an image, the article's title, and the date it was published.
  * The image is displayed at the top of the card, the title is displayed in the middle, and the date is displayed at the bottom.
- * 
+ *
  * The number of cards in each row depends on the device type.
  * If the device is a phone, there are two cards per row.
  * If the device is a tablet or desktop, there are three cards per row.
- * 
+ *
  * The user can navigate between pages by swiping left or right.
  * The currently selected page is stored in the `selection` state variable but is not used for anything yet in particular.
- * 
+ *
  * When a card is pressed, the component navigates to the `Post` screen and passes the corresponding article as a parameter.
- * 
+ *
  * Canonically, a polyptych is an altarpiece of multiple panels that are joined by hinges. The name is a metaphor.
- * 
+ *
  * @component
  * @param {Array} props.articles - The array of article objects to display. Expected to be non-null.
  * @param {Object} props.navigation - The navigation object used for navigating between screens.
- * 
+ *
  * @example
  * <Polyptych articles={articles[Section.SPORTS.slug]} navigation={navigation} />
  */
