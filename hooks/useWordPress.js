@@ -9,8 +9,6 @@ const PAGE_SIZE = 12;
 const homeCount = BATCH_SIZE * Object.keys(Sections).length;
 
 /**
- * useWordPress Hook.
- *
  * This custom hook retrieves posts from a WordPress site via the provided Model function.
  * It fetches posts based on different categories and includes pagination. It returns an object
  * containing the retrieved data, articles, loading status, and any error occurred during the fetch.
@@ -68,7 +66,9 @@ export const useWordPress = (pageNumber = 1) => {
           ...prevState,
           wildcard: [
             ...(prevState?.wildcard ?? []),
-            ...posts.filter((post) => !Object.keys(articles).some((category) => articles[category].some((item) => item.id === post.id))),
+            ...posts.filter((post) => {
+              return !Object.keys(articles).some((category) => articles[category].some((item) => item.id === post.id));
+            }),
           ],
         }));
       });

@@ -26,8 +26,7 @@ const pixelRatio = PixelRatio.get();
  *
  * The user can navigate between pages by swiping left or right.
  * The currently selected page is stored in the `selection` state variable but is not used for anything yet in particular.
- *
- * When a card is pressed, the component navigates to the `Post` screen and passes the corresponding article as a parameter.
+ * When a card is tapped, the component navigates to the `Post` screen and passes the corresponding article as a parameter.
  *
  * Canonically, a polyptych is an altarpiece of multiple panels that are joined by hinges. The name is a metaphor.
  *
@@ -45,9 +44,7 @@ export default function Polyptych({ articles, navigation }) {
   const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3;
 
   const Header = ({ source }) => (
-    <React.Fragment>
-      <Image source={{ uri: `${source}?w=${(pixelRatio * width) / 2}` }} style={{ flex: 1 }} />
-    </React.Fragment>
+    <Image source={{ uri: `${source}?w=${(pixelRatio * width) / 2}` }} style={{ flex: 1 }} />
   );
 
   const Footer = ({ date }) => (
@@ -57,30 +54,32 @@ export default function Polyptych({ articles, navigation }) {
   );
 
   return (
-    <PagerView
-      peekEnabled
-      style={styles.container}
-      initialPage={0}
-      onPageSelected={(e) => setSelection(e.nativeEvent.position)}
-      overdrag
-    >
-      {_.chunk(flushArticles, groupSize).map((group, outerIndex) => (
-        <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={outerIndex}>
-          {group.map((item, index) => (
-            <Card
-              style={styles.card}
-              key={index}
-              // TODO: Perhaps consider a fallback option from `_embed` in the event that `jetpack_featured_media_url` malfunctions.
-              header={<Header source={item["jetpack_featured_media_url"]} />}
-              footer={<Footer date={item["date"]} />}
-              onPress={() => navigation.navigate("Post", { article: item })}
-            >
-              <Text category="p1">{decode(item.title.rendered)}</Text>
-            </Card>
-          ))}
-        </View>
-      ))}
-    </PagerView>
+    articles.length >= groupSize && (
+      <PagerView
+        peekEnabled
+        style={styles.container}
+        initialPage={0}
+        onPageSelected={(e) => setSelection(e.nativeEvent.position)}
+        overdrag
+      >
+        {_.chunk(flushArticles, groupSize).map((group, outerIndex) => (
+          <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={outerIndex}>
+            {group.map((item, index) => (
+              <Card
+                style={styles.card}
+                key={index}
+                // TODO: Perhaps consider a fallback option from `_embed` in the event that `jetpack_featured_media_url` malfunctions.
+                header={<Header source={item["jetpack_featured_media_url"]} />}
+                footer={<Footer date={item["date"]} />}
+                onPress={() => navigation.navigate("Post", { article: item })}
+              >
+                <Text category="p1">{decode(item.title.rendered)}</Text>
+              </Card>
+            ))}
+          </View>
+        ))}
+      </PagerView>
+    )
   );
 }
 

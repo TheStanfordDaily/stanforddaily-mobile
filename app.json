@@ -46,7 +46,7 @@
       "icon": "./assets/images/icon.png"
     },
     "plugins": [
-      "expo-build-properties",
+      ["expo-build-properties",
       {
         "android": {
           "compileSdkVersion": 31,
@@ -56,7 +56,7 @@
         "ios": {
           "deploymentTarget": "13.0"
         }
-      }
+      }]
     ],
     "extra": {
       "eas": {
