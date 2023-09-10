@@ -21,8 +21,8 @@ const BATCH_SIZE = 16;
  * - `possiblyReachedEnd`: A Boolean indicating whether all possible articles from the WordPress category have been fetched.
  *
  * @component
- * @param {object} props.route The route prop passed by the navigation. It includes the category and seed data.
- * @param {object} props.navigation From React Navigation.
+ * @param {Object} props.route The route prop passed by the navigation. It includes the category and seed data.
+ * @param {Object} props.navigation From React Navigation.
  */
 export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
