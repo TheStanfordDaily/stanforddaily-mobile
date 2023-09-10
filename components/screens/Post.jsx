@@ -11,7 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 
 import Byline from "../common/Byline";
-import { formatDate, generateSlug } from "../../utils/format";
+import { formatDate } from "../../utils/format";
 import { enableAnimationExperimental } from "../../utils/action";
 import { Fonts, Spacing } from "../../utils/constants";
 import Model from "../../utils/model";
@@ -27,6 +27,7 @@ enableAnimationExperimental();
 /**
  * Displays a Stanford Daily article with rich text, recirculatory navigation and custom renderers.
  * It also allows for opening URLs from the article in a web view.
+ * @component
  */
 export default function Post({ route, navigation }) {
   const { article, sourceName } = route.params;
@@ -50,12 +51,12 @@ export default function Post({ route, navigation }) {
 
     if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {
       Model.posts().slug(slug).embed()
-        .then(result => {
+        .then((result) => {
           if (result.length > 0) {
             navigation.push("Post", { article: result[0], sourceName: "Stanford Daily" });
           }
         })
-        .catch(error => console.trace(error));
+        .catch((error) => console.trace(error));
     } else {
       Linking.openURL(url);
     }

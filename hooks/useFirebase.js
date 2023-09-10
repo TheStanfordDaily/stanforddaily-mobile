@@ -19,8 +19,6 @@ const FIREBASE_CONFIG = {
 };
 
 /**
- * useFirebase Hook.
- *
  * This custom hook helps initialize a Firebase application and authenticate using email and password.
  * Once authenticated, it stores the Firebase app and database instances in its state and returns them.
  * It also pushes the provided Expo push token to the ExpoPushTokens node in the Firebase Realtime Database.

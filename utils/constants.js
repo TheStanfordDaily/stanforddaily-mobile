@@ -37,13 +37,13 @@ export const Fonts = {
     MinionProMediumDisp: require("../assets/fonts/Minion_Pro_Display/MinionPro-MediumDisp.ttf"),
     MinionProMediumItDisp: require("../assets/fonts/Minion_Pro_Display/MinionPro-MediumItDisp.ttf"),
     MinionProSemiboldDisp: require("../assets/fonts/Minion_Pro_Display/MinionPro-SemiboldDisp.ttf"),
-    MinionProSemiboldItDisp: require("../assets/fonts/Minion_Pro_Display/MinionPro-SemiboldItDisp.ttf")
+    MinionProSemiboldItDisp: require("../assets/fonts/Minion_Pro_Display/MinionPro-SemiboldItDisp.ttf"),
   },
   libre: {
     LibreFranklinRegular: require("../assets/fonts/Libre_Franklin/LibreFranklin-Regular.ttf"),
     LibreFranklinBold: require("../assets/fonts/Libre_Franklin/LibreFranklin-Bold.ttf"),
-    LibreFranklinItalic: require("../assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf")
-  }
+    LibreFranklinItalic: require("../assets/fonts/Libre_Franklin/LibreFranklin-Italic.ttf"),
+  },
 };
 
 export const FontSizes = {
@@ -90,12 +90,11 @@ export const PlatformPalette = Platform.select({
   default: { label: "black" },
 });
 
-
 export const Sections = {
   FEATURED: {
     name: "Featured",
     slug: "featured",
-    id: 1485
+    id: 1485,
   },
   NEWS: {
     name: "News",
@@ -105,44 +104,44 @@ export const Sections = {
       ACADEMICS: {
         name: "Academics",
         slug: "academics-news",
-        id: 4408
+        id: 4408,
       },
       SCITECH: {
         name: "Science & Technology",
         slug: "science-and-technology-news",
-        id: 16821
+        id: 16821,
       },
       CAMPUS_LIFE: {
         name: "Campus Life",
         slug: "campus-life-news",
-        id: 4423
+        id: 4423,
       },
       GRADUATE_STUDENTS: {
         name: "Graduate Students",
         slug: "graduate-students",
-        id: 75212
+        id: 75212,
       },
       UNIVERSITY: {
         name: "University",
         slug: "university-news",
-        id: 4424
-      }
-    }
+        id: 4424,
+      },
+    },
   },
   SPORTS: {
     name: "Sports",
     slug: "sports",
-    id: 23
+    id: 23,
   },
   OPINIONS: {
     name: "Opinions",
     slug: "opinions",
-    id: 24
+    id: 24,
   },
   THE_GRIND: {
     name: "The Grind",
     slug: "theGrind",
-    id: 32278
+    id: 32278,
   },
   ARTS_LIFE: {
     name: "Arts & Life",
@@ -164,27 +163,27 @@ export const Sections = {
       SCREEN: {
         name: "Screen",
         slug: "screen",
-      }
-    }
+      },
+    },
   },
   CARTOONS: {
     name: "Cartoons",
     slug: "cartoons",
-    id: 41527
+    id: 41527,
   },
   HUMOR: {
     name: "Humor",
     slug: "humor",
-    id: 55796
+    id: 55796,
   },
   PODCASTS: {
     name: "Podcasts",
-    slug: "podcasts"
+    slug: "podcasts",
   },
   MORE_FROM_DAILY: {
     name: "More from The Daily",
-    slug: "moreFromTheDaily"
-  }
+    slug: "moreFromTheDaily",
+  },
 };
 
 export const Spacing = {
@@ -192,7 +191,15 @@ export const Spacing = {
   small: 4,
   medium: 8,
   large: 16,
-  extraLarge: 24
+  extraLarge: 24,
+};
+
+export const Routing = {
+  home: "Home",
+  post: "Post",
+  section: "Section",
+  author: "Author",
+  search: "Search",
 };
 
 export const Labels = {
@@ -268,5 +275,5 @@ export const Labels = {
   reply: "Reply",
   tipsFormURL: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA/viewform?embedded=true",
   tipsFormURLPrefix: "https://docs.google.com/forms/d/e/1FAIpQLSfrUp-7TeCqe_Whw9LRCttG2It3unK8rJfxNLu9IXZdcbeDIA",
-  wordPressURL: "https://stanforddaily.com"
+  wordPressURL: "https://stanforddaily.com",
 };

@@ -21,7 +21,7 @@ import { logoAssets, navigate } from "./navigation";
 import { DailyBread as bread } from "./theme";
 import { ThemeContext } from "./theme-context";
 import { enableAnimationExperimental, onShare, registerForPushNotificationsAsync } from "./utils/action";
-import { Fonts, Labels } from "./utils/constants";
+import { Fonts, Routing } from "./utils/constants";
 import { getMostCommonTagsFromRecentPosts } from "./utils/format";
 import Model from "./utils/model";
 
@@ -61,7 +61,7 @@ export default function App() {
   const headerOptions = ({ navigation }) => ({
     headerTitle: () => <Image style={{ width: 260, height: 30 }} source={logoAssets[theme]} />,
     headerRight: () => (
-      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Labels.search, { tags })}>
+      <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Routing.search, { tags })}>
         <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
       </TouchableOpacity>
     ),
@@ -125,13 +125,13 @@ export default function App() {
 
       // Leverage information about the current view to construct a unique identifier for use in Firebase.
       switch (currentView) {
-        case Labels.post:
+        case Routing.post:
           routeParamIdentifier = currentRouteParams?.article?.id; // Unique to the post being presented in the detail view.
           break;
-        case Labels.section:
+        case Routing.section:
           routeParamIdentifier = currentRouteParams?.category?.id; // Unique to the section being presented in the detail view.
           break;
-        case Labels.author:
+        case Routing.author:
           routeParamIdentifier = currentRouteParams?.id; // Unique to the author being presented in the detail view.
           break;
         default:
@@ -174,7 +174,7 @@ export default function App() {
     const slug = event?.url?.split("/")?.pop();
     if (slug?.length > 0) {
       const result = await Model.posts().slug(slug).embed();
-      navigate(Labels.post, { item: result });
+      navigate(Routing.post, { item: result });
     }
   };
 
@@ -213,7 +213,7 @@ export default function App() {
         .id(response.notification.request.trigger.payload.body.postID)
         .embed()
         .then((result) => {
-          navigate(Labels.post, { item: result });
+          navigate(Routing.post, { item: result });
         });
     });
 
@@ -241,12 +241,12 @@ export default function App() {
         <ThemeContext.Provider value={{ theme, toggleTheme, deviceType }}>
           <ApplicationProvider {...eva} customMapping={mapping} theme={{ ...eva[theme], ...bread[theme] }}>
             <SafeAreaProvider>
-              <Stack.Navigator initialRouteName="Home">
-                <Stack.Screen component={Home} name="Home" options={headerOptions} />
-                <Stack.Screen component={Post} name="Post" options={detailHeaderOptions} />
-                <Stack.Screen component={Section} name="Section" options={sectionOptions} />
-                <Stack.Screen component={Author} name="Author" options={authorOptions} />
-                <Stack.Screen component={Search} name="Search" options={searchHeaderOptions} />
+              <Stack.Navigator initialRouteName={Routing.home}>
+                <Stack.Screen component={Home} name={Routing.home} options={headerOptions} />
+                <Stack.Screen component={Post} name={Routing.post} options={detailHeaderOptions} />
+                <Stack.Screen component={Section} name={Routing.section} options={sectionOptions} />
+                <Stack.Screen component={Author} name={Routing.author} options={authorOptions} />
+                <Stack.Screen component={Search} name={Routing.search} options={searchHeaderOptions} />
               </Stack.Navigator>
             </SafeAreaProvider>
           </ApplicationProvider>

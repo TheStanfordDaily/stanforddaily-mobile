@@ -18,6 +18,7 @@ function Carousel({ navigation, articles }) {
   const { theme, deviceType } = useContext(ThemeContext);
   const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350;
   const accentColor = useTheme()["color-primary-600"];
+  const borderColor = theme === "light" ? "#E7EBF3" : "transparent";
 
   const Header = ({ source }) => (
     <Image
@@ -42,9 +43,20 @@ function Carousel({ navigation, articles }) {
       {articles?.map((item, index) => (
         <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
           <Card
-            style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor: theme === "light" ? "#E7EBF3" : "transparent" }}
+            style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor }}
             header={<Header source={item["jetpack_featured_media_url"]} />}
-            footer={<Footer authors={item.parsely?.meta?.creator?.reduce((object, name, index) => ({ ...object, [name]: item.coauthors[index] }), {})} section={item.parsely?.meta?.articleSection} />}
+            footer={
+              <Footer
+                authors={item.parsely?.meta?.creator?.reduce(
+                  (object, name, index) => ({
+                    ...object,
+                    [name]: item.coauthors[index],
+                  }),
+                  {}
+                )}
+                section={item.parsely?.meta?.articleSection}
+              />
+            }
             onPress={() => navigation.navigate("Post", { article: item })}
           >
             <Text style={{ marginHorizontal: -10, marginTop: -5 }} category="h4">

@@ -2,6 +2,13 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform, Share, UIManager } from "react-native";
 
+/**
+ * Use this function to open a share sheet for an article on iOS or Android.
+ * @function
+ * @param {string} url - The URL to share.
+ * @param {string} title - The title of the content to share.
+ * @returns {Promise<void>} A promise that resolves when the sharing action is complete.
+ */
 export const onShare = async (url, title) => {
   try {
     const result = await Share.share({ url, message: `${title} | The Stanford Daily` });
@@ -20,6 +27,11 @@ export const onShare = async (url, title) => {
   }
 };
 
+/**
+ * Register the current device for push notifications. If registration fails, the promise resolves to null.
+ * @function
+ * @returns {Promise<string | undefined>} A promise that resolves to the Expo push token if the user agrees to receive notifications.
+ */
 export async function registerForPushNotificationsAsync() {
   let token;
   if (Device.isDevice) {
@@ -50,8 +62,14 @@ export async function registerForPushNotificationsAsync() {
   return token;
 }
 
+/**
+ * Allows for automatic animation for views whose position will change in the next render.
+ * Use this API before state updates to avoid visual inconsistencies.
+ * https://reactnative.dev/docs/layoutanimation
+ * @function
+ */
 export function enableAnimationExperimental() {
   if (Platform.OS === "android" && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
+    UIManager.setLayoutAnimationEnabledExperimental(true); // Without setting this flag, the animations do not work on Android.
   }
 }

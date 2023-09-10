@@ -11,20 +11,20 @@ import { ThemeContext } from "../../theme-context";
 import { Sections, Spacing } from "../../utils/constants";
 
 /**
- * The FirstPage React component displays everything before the wildcard articles.
+ * The `FirstPage` React component displays everything before the wildcard articles.
  * It is memoized to prevent unnecessary re-renders.
  *
- * @param {Object} props.articles - The list of articles to display, grouped by category.
- * @param {Object} props.data - Articles from same initial API call, but without any filters applied.
+ * @component
+ * @param {Record<string, Array>} props.articles - The list of articles to display, grouped by category.
+ * @param {Record<string, Array>} props.data - Articles from same initial API call, but without any filters applied.
  * @param {Object} props.navigation - The navigation object used by React Navigation.
- * @param {string} props.deviceType - The type of device the app is running on. Used to determine layout.
- * @returns {JSX.Element} The JSX Code for the FirstPage component.
+ * @param {DeviceType} props.deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
  */
 const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
   return (
-    <React.Fragment>
+    <>
       <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
       <Mark category={Sections.NEWS} navigation={navigation} seed={data[Sections.NEWS.slug] ?? []} />
       <Polyptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
@@ -45,17 +45,17 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
       <Mark alternate category={Sections.HUMOR} navigation={navigation} seed={data[Sections.HUMOR.slug] ?? []} />
       <Shelf alternate articles={articles[Sections.HUMOR.slug] ?? []} navigation={navigation} />
       <Divider />
-    </React.Fragment>
+    </>
   );
 });
 
 /**
- * The Home component is what you first see when opening the application.
- * It fetches data from WordPress using a React hook, then passes it to the FirstPage component for rendering.
+ * The `Home` component is what you first see when opening the application.
+ * It fetches data from WordPress using a React hook, then passes it to the `FirstPage` component for rendering.
  * It also contains pagination logic to fetch new data when the end of the list is reached.
  *
+ * @component
  * @param {Object} props.navigation - The navigation object used by React Navigation.
- * @returns {JSX.Element} The JSX Code for the Home component.
  */
 export default function Home({ navigation }) {
   const [pageNumber, setPageNumber] = useState(1);
@@ -64,14 +64,9 @@ export default function Home({ navigation }) {
   // Ensure that no culture posts simultaneously appear in wildcard.
   const wildcard = data?.wildcard?.filter((item) => !articles?.culture?.find((article) => article.id === item.id));
 
-  const Header = useMemo(() => (
-    <FirstPage
-      articles={articles}
-      data={data}
-      deviceType={deviceType}
-      navigation={navigation}
-    />
-  ), [articles, data, navigation, deviceType]);
+  const Header = useMemo(() => {
+    return <FirstPage articles={articles} data={data} deviceType={deviceType} navigation={navigation} />;
+  }, [articles, data, navigation, deviceType]);
 
   return articles ? (
     <Layout style={styles.container}>

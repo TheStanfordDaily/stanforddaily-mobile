@@ -36,7 +36,7 @@ export default function Author({ route, navigation }) {
         .param("_embed", pageNumber === 1)
         .get()
         .then((posts) => {
-          setArticles([...articles, ...posts]);
+          setArticles((prevArticles) => [...prevArticles, ...posts]);
           setArticlesLoading(false);
           if (pageNumber === 1) {
             const descriptions = posts.map((post) =>
