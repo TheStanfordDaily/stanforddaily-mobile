@@ -10,6 +10,20 @@ import Wlidcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
 
+/**
+ * The `Section` screen displays a list of articles from a specific category.
+ *
+ * The component maintains several pieces of state:
+ * - `articlesLoading`: A Boolean indicating whether the articles are currently being fetched.
+ * - `selection`: An integer representing the currently selected article.
+ * - `pageNumber`: The current page number for fetching articles. It starts from `1` if no seed data is provided, otherwise it starts from `2`.
+ * - `articles`: An array of articles. It starts with the seed data and gets appended with more articles as they are fetched.
+ * - `possiblyReachedEnd`: A Boolean indicating whether all possible articles from the WordPress category have been fetched.
+ *
+ * @component
+ * @param {object} props.route The route prop passed by the navigation. It includes the category and seed data.
+ * @param {object} props.navigation From React Navigation.
+ */
 export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
   const [articlesLoading, setArticlesLoading] = useState(false);
@@ -17,7 +31,11 @@ export default function Section({ route, navigation }) {
   const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2);
   const [articles, setArticles] = useState(seed);
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
+
+  // Before loading more articles, we calculate the number of pages we can skip when calling the API.
+  // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
   const basePageCount = Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1);
+  // The `theme` and `deviceType` are used to determine the number of columns in the list of articles.
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
 
@@ -64,7 +82,11 @@ export default function Section({ route, navigation }) {
         renderItem={({ item, index }) => (
           <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
         )}
-        ListFooterComponent={() => (!possiblyReachedEnd || articlesLoading) && <ActivityIndicator style={{ marginBottom: Spacing.large }} />}
+        ListFooterComponent={() => {
+          if (!possiblyReachedEnd || articlesLoading) {
+            return <ActivityIndicator style={{ marginBottom: Spacing.large }} />;
+          }
+        }}
       />
     </Container>
   );

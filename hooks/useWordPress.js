@@ -9,10 +9,10 @@ const PAGE_SIZE = 12;
 const homeCount = BATCH_SIZE * Object.keys(Sections).length;
 
 /**
- * This custom hook retrieves posts from a WordPress site via the provided Model function.
+ * This custom hook retrieves posts from a WordPress site via `Model`.
  * It fetches posts based on different categories and includes pagination. It returns an object
  * containing the retrieved data, articles, loading status, and any error occurred during the fetch.
- * The hook uses useEffect to ensure the data fetching only runs once when the component mounts, or if the pageNumber changes.
+ * Data fetching only runs in `useWordPress` when the component mounts, or if `pageNumber` changes.
  *
  * @param {number} pageNumber - The page number to fetch from WordPress. Defaults to 1.
  * @returns {Object} - An object containing the retrieved data, articles, loading status, and any error occurred during the fetch.
@@ -38,9 +38,9 @@ export const useWordPress = (pageNumber = 1) => {
         if (pageNumber === 1) {
           setArticles((prevState) => ({
             ...prevState,
-            [category.slug]: response.filter(
-              (item) => !item.categories.includes(Sections.FEATURED.id) || category.slug === Sections.FEATURED.slug
-            ),
+            [category.slug]: response.filter((item) => {
+              return !item.categories.includes(Sections.FEATURED.id) || category.slug === Sections.FEATURED.slug;
+            }),
           }));
 
           if (category.slug === Sections.ARTS_LIFE.slug || category.slug === Sections.THE_GRIND.slug) {
