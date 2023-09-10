@@ -44,7 +44,11 @@ export default function Polyptych({ articles, navigation }) {
   const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3;
 
   const Header = ({ source }) => (
-    <Image source={{ uri: `${source}?w=${(pixelRatio * width) / 2}` }} style={{ flex: 1 }} />
+    <Image
+      source={{ uri: `${source}?w=${(pixelRatio * width) / 2}` }}
+      style={{ flex: 1 }}
+      accessibilityLabel="Feature image"
+    />
   );
 
   const Footer = ({ date }) => (
@@ -66,6 +70,7 @@ export default function Polyptych({ articles, navigation }) {
           <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={outerIndex}>
             {group.map((item, index) => (
               <Card
+                accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
                 style={styles.card}
                 key={index}
                 // TODO: Perhaps consider a fallback option from `_embed` in the event that `jetpack_featured_media_url` malfunctions.
