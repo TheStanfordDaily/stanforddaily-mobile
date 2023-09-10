@@ -24,10 +24,10 @@ export default function Mark({ navigation, alternate, seed, category }) {
     <TouchableOpacity
       activeOpacity={alternate ? 0.8 : 0.5}
       onPress={() => navigation?.navigate("Section", { category, seed })}
-      style={[
-        styles.container,
-        { backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"] },
-      ]}
+      style={{
+        ...styles.container,
+        backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"],
+      }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ opacity: 0 }}>{"  \u276f"}</Text>
