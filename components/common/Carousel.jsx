@@ -48,13 +48,9 @@ function Carousel({ navigation, articles }) {
             header={<Header media={item["_embedded"]?.["wp:featuredmedia"]?.[0]} />}
             footer={
               <Footer
-                authors={item.parsely?.meta?.creator?.reduce(
-                  (object, name, index) => ({
-                    ...object,
-                    [name]: item.coauthors[index],
-                  }),
-                  {}
-                )}
+                authors={item.parsely?.meta?.creator?.reduce((o, name, index) => {
+                  return { ...o, [name]: item.coauthors[index] };
+                }, {})}
                 section={item.parsely?.meta?.articleSection}
               />
             }
