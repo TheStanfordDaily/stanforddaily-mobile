@@ -8,9 +8,9 @@ import { Dimensions, Image, View, StyleSheet, PixelRatio } from "react-native";
 import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";
-import { Spacing } from "../../utils/constants";
+import { Labels, Spacing } from "../../utils/constants";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 
 /**
@@ -43,11 +43,12 @@ export default function Polyptych({ articles, navigation }) {
   const { deviceType } = useContext(ThemeContext);
   const groupSize = deviceType === Device.DeviceType.PHONE ? 2 : 3;
 
-  const Header = ({ source }) => (
+  const Header = ({ media }) => (
     <Image
-      source={{ uri: `${source}?w=${(pixelRatio * width) / 2}` }}
+      source={{ uri: `${media?.["source_url"]}?w=${(pixelRatio * width) / 2}` }}
       style={{ flex: 1 }}
-      accessibilityLabel="Feature image"
+      accessibilityLabel={Labels.featureImage}
+      alt={media?.["alt_text"]}
     />
   );
 
@@ -71,10 +72,10 @@ export default function Polyptych({ articles, navigation }) {
             {group.map((item, index) => (
               <Card
                 accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
+                accessibilityHint={Labels.navigatesToFullTextArticle}
                 style={styles.card}
                 key={index}
-                // TODO: Perhaps consider a fallback option from `_embed` in the event that `jetpack_featured_media_url` malfunctions.
-                header={<Header source={item["jetpack_featured_media_url"]} />}
+                header={<Header media={item["_embedded"]?.["wp:featuredmedia"]?.[0]} />}
                 footer={<Footer date={item["date"]} />}
                 onPress={() => navigation.navigate("Post", { article: item })}
               >

@@ -240,6 +240,8 @@ export const Labels = {
   anon: "Anonymous",
   val: "value",
   timestamp: "TimeStamp",
+  navigatesToFullTextArticle: "Navigates to a view with full text for article",
+  featureImage: "Feature image",
   chatterPostSuffix: "'s post",
   detailedPost: "DetailedPost",
   pad: "padding",

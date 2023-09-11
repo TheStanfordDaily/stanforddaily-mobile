@@ -20,10 +20,11 @@ function Carousel({ navigation, articles }) {
   const accentColor = useTheme()["color-primary-600"];
   const borderColor = theme === "light" ? "#E7EBF3" : "transparent";
 
-  const Header = ({ source }) => (
+  const Header = ({ media }) => (
     <Image
-      source={{ uri: `${source}?w=${width * pixelRatio}` }}
+      source={{ uri: `${media?.["source_url"]}?w=${width * pixelRatio}` }}
       style={{ flex: 1, height: 192, borderTopLeftRadius: 3, borderTopRightRadius: 3 }}
+      alt={media?.["alt_text"]}
     />
   );
 
@@ -44,7 +45,7 @@ function Carousel({ navigation, articles }) {
         <View collapsable={false} style={{ flex: 1, flexDirection: "row" }} key={index}>
           <Card
             style={{ flex: 1, height: carouselHeight, marginHorizontal: 5, borderColor }}
-            header={<Header source={item["jetpack_featured_media_url"]} />}
+            header={<Header media={item["_embedded"]?.["wp:featuredmedia"]?.[0]} />}
             footer={
               <Footer
                 authors={item.parsely?.meta?.creator?.reduce(

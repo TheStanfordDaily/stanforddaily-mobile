@@ -43,6 +43,7 @@ export default function Section({ route, navigation }) {
     setArticlesLoading(true);
     try {
       const posts = await Model.posts()
+        .embed()
         .categories(category.id)
         .perPage(BATCH_SIZE)
         .page(basePageCount + pageNumber)

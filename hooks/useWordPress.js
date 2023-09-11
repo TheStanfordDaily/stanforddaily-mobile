@@ -29,7 +29,8 @@ export const useWordPress = (pageNumber = 1) => {
 
     Object.values(Sections).forEach(async (category) => {
       try {
-        const response = await Model.posts().categories(category.id).perPage(BATCH_SIZE).page(pageNumber).get();
+        // FIXME: Some Humor articles are not properly displaying the image from `wp:featuredmedia`.
+        const response = await Model.posts().embed().categories(category.id).perPage(BATCH_SIZE).page(pageNumber).get();
         setData((prevState) => ({
           ...prevState,
           [category.slug]: [...(category.slug in prevState ? prevState[category.slug] : []), ...response],
@@ -60,6 +61,7 @@ export const useWordPress = (pageNumber = 1) => {
     Model.posts()
       .perPage(PAGE_SIZE)
       .page(pageNumber + Math.ceil(homeCount / PAGE_SIZE) + 1)
+      .embed()
       .get()
       .then((posts) => {
         setData((prevState) => ({

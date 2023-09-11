@@ -17,7 +17,7 @@ const pixelRatio = PixelRatio.get();
  * @param {string} props.date - The publication date.
  * @param {string} props.uri - The URI for the feature image of the article.
  */
-const Header = ({ title, verbose, date, uri }) => (
+const Header = ({ title, verbose, date, media }) => (
   <>
     <View>
       <Text style={styles.header} category="h6">
@@ -29,7 +29,11 @@ const Header = ({ title, verbose, date, uri }) => (
         </Text>
       )}
     </View>
-    <Image source={{ uri: `${uri}?w=${width * pixelRatio}` }} style={{ flex: 1, height: 192 }} />
+    <Image
+      source={{ uri: `${media?.["source_url"]}?w=${width * pixelRatio}` }}
+      style={{ flex: 1, height: 192 }}
+      alt={media?.["alt_text"]}
+    />
   </>
 );
 
@@ -54,12 +58,14 @@ export default function Wildcard({ navigation, articles, random, verbose, title,
   return (
     <Card
       style={styles.card}
+      accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
+      accessibilityHint="Navigates to a view with full text for article"
       header={
         <Header
           verbose={verbose}
           title={decode(item.title.rendered)}
           date={item.date}
-          uri={item["jetpack_featured_media_url"]}
+          media={item["_embedded"]?.["wp:featuredmedia"]?.[0]}
         />
       }
       footer={

@@ -151,9 +151,8 @@ export const getMostCommonTagsFromRecentPosts = async (
       const tags = post._embedded["wp:term"][1];
 
       for (const tag of tags) {
-        if (excludedTags.includes(tag.id)) {
-          continue;
-        }
+        if (excludedTags.includes(tag.id)) continue;
+
         if (tagCounts[tag.id]) {
           tagCounts[tag.id].count += 1;
         } else {
