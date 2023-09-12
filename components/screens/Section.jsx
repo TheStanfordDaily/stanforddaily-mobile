@@ -92,9 +92,8 @@ export default function Section({ route, navigation }) {
   useEffect(() => {
     Object.values(category.desks)?.forEach(async (section) => {
       console.log(section);
-      await fetchResults(section).then((posts) => {
-        setArticles((prev) => ({ ...prev, [section.slug]: posts }));
-      });
+      const posts = await fetchResults(section);
+      setArticles((prev) => ({ ...prev, [section.slug]: posts }));
     });
   }, [pageNumber]);
 
@@ -103,7 +102,9 @@ export default function Section({ route, navigation }) {
       {/* {Object.values(category.desks).map((section) => (
         <ContainerSelection data={articles["science-and-technology-news"]} key={section.slug} />
       ))} */}
-      {Object.values(articles).map((key) => <Text>{JSON.stringify(key)}</Text>)}
+      {Object.values(articles).map((section, index) => (
+        <List style={{ flex: 1 }} key={index} data={section} renderItem={(item, inner) => <Wlidcard key={item.item.id} item={item.item} index={inner} navigation={navigation} verbose />} />
+      ))}
     </ViewPager>
   ) : (
     <ContainerSelection data={articles.seed} />

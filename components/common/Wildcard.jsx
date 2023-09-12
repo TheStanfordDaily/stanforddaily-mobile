@@ -55,7 +55,7 @@ const Footer = ({ byline, section }) => (
 );
 
 export default function Wildcard({ navigation, articles, random, verbose, title, item, index }) {
-  return (
+  return item.title && (
     <Card
       style={styles.card}
       accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
