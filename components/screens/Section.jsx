@@ -141,7 +141,7 @@ export default function Section({ route, navigation }) {
               data={articles[section.slug]}
               style={{ backgroundColor: "transparent" }}
               numColumns={columnCount}
-              key={columnCount}
+              key={index}
               scrollEventThrottle={BATCH_SIZE}
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
