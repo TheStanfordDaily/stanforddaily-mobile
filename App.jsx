@@ -60,7 +60,12 @@ export default function App() {
 
   const headerOptions = ({ navigation }) => ({
     headerTitle: () => (
-      <Image style={{ width: 260, height: 30 }} source={logoAssets[theme]} alt="Stanford Daily wordmark logo" />
+      <Image
+        style={{ width: 260, height: 30 }}
+        source={logoAssets[theme]}
+        alt="Stanford Daily wordmark logo"
+        accessibilityRole="header"
+      />
     ),
     headerRight: () => (
       <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Routing.search, { tags })}>

@@ -29,7 +29,7 @@ export default function Mark({ navigation, alternate, seed, category }) {
         backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"],
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }} accessible accessibilityRole="header">
         <Text style={{ opacity: 0 }}>{"  \u276f"}</Text>
         <Text style={{ color: alternate ? "white" : theme["text-basic-color"] }} category="h4">
           {category.name.toUpperCase()}

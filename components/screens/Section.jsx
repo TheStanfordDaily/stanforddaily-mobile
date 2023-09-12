@@ -1,4 +1,4 @@
-import { Layout, List } from "@ui-kitten/components";
+import { Layout, List, Text, ViewPager } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -29,7 +29,7 @@ export default function Section({ route, navigation }) {
   const [articlesLoading, setArticlesLoading] = useState(false);
   const [selection, setSelection] = useState(0);
   const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2);
-  const [articles, setArticles] = useState(seed);
+  const [articles, setArticles] = useState({ [category.slug]: seed });
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
 
   // Before loading more articles, we calculate the number of pages we can skip when calling the API.
@@ -39,16 +39,17 @@ export default function Section({ route, navigation }) {
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  const fetchResults = async () => {
+  const fetchResults = async (section) => {
     setArticlesLoading(true);
     try {
       const posts = await Model.posts()
         .embed()
-        .categories(category.id)
+        .categories(section.id)
         .perPage(BATCH_SIZE)
-        .page(basePageCount + pageNumber)
+        .page((section.id === category.id ? basePageCount : 0) + pageNumber)
         .get();
-      setArticles([...articles, ...posts]);
+      // console.log(posts);
+      return posts;
     } catch (error) {
       console.log(error);
       if (error.data?.status === 400) {
@@ -61,14 +62,10 @@ export default function Section({ route, navigation }) {
 
   const Container = theme === "dark" ? Layout : View;
 
-  useEffect(() => {
-    fetchResults();
-  }, [pageNumber]);
-
-  return (
+  const ContainerSelection = (data) => (
     <Container style={styles.container}>
       <List
-        data={articles}
+        data={data}
         style={{ backgroundColor: "transparent" }}
         numColumns={columnCount}
         key={columnCount}
@@ -77,7 +74,7 @@ export default function Section({ route, navigation }) {
         onEndReachedThreshold={1}
         onEndReached={() => {
           if (!articlesLoading) {
-            setPageNumber(pageNumber + 1);
+            //setPageNumber(pageNumber + 1);
           }
         }}
         renderItem={({ item, index }) => (
@@ -85,11 +82,31 @@ export default function Section({ route, navigation }) {
         )}
         ListFooterComponent={() => {
           if (!possiblyReachedEnd || articlesLoading) {
-            return <ActivityIndicator style={{ marginBottom: Spacing.large }} />;
+            return <Text>{pageNumber}</Text>;
           }
         }}
       />
     </Container>
+  );
+
+  useEffect(() => {
+    Object.values(category.desks)?.forEach(async (section) => {
+      console.log(section);
+      await fetchResults(section).then((posts) => {
+        setArticles((prev) => ({ ...prev, [section.slug]: posts }));
+      });
+    });
+  }, [pageNumber]);
+
+  return category.desks ? (
+    <ViewPager style={{ flex: 1 }} selectedIndex={selection} onSelect={setSelection}>
+      {/* {Object.values(category.desks).map((section) => (
+        <ContainerSelection data={articles["science-and-technology-news"]} key={section.slug} />
+      ))} */}
+      {Object.values(articles).map((key) => <Text>{JSON.stringify(key)}</Text>)}
+    </ViewPager>
+  ) : (
+    <ContainerSelection data={articles.seed} />
   );
 }
 
