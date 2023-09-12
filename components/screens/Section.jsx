@@ -62,8 +62,8 @@ export default function Section({ route, navigation }) {
 
   const Container = theme === "dark" ? Layout : View;
 
-  const ContainerSelection = (data) => (
-    <Container style={styles.container}>
+  const ContainerSelection = ({ data }) => (
+    <Container>
       <List
         data={data}
         style={{ backgroundColor: "transparent" }}
@@ -103,7 +103,8 @@ export default function Section({ route, navigation }) {
         <ContainerSelection data={articles["science-and-technology-news"]} key={section.slug} />
       ))} */}
       {Object.values(articles).map((section, index) => (
-        <List style={{ flex: 1 }} key={index} data={section} renderItem={(item, inner) => <Wlidcard key={item.item.id} item={item.item} index={inner} navigation={navigation} verbose />} />
+        <ContainerSelection data={section} key={index} />
+        // <List style={{ flex: 1 }} key={index} data={section} renderItem={({ item, innerIndex }) => <Wlidcard key={item.id} item={item} index={innerIndex} navigation={navigation} verbose />} />
       ))}
     </ViewPager>
   ) : (
