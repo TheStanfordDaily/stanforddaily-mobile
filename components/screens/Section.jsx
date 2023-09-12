@@ -6,7 +6,7 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { ThemeContext } from "../../theme-context";
 import { Spacing } from "../../utils/constants";
 import Model from "../../utils/model";
-import Wlidcard from "../common/Wildcard";
+import Wildcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
 
@@ -78,7 +78,7 @@ export default function Section({ route, navigation }) {
           }
         }}
         renderItem={({ item, index }) => (
-          <Wlidcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+          <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
         )}
         ListFooterComponent={() => {
           if (!possiblyReachedEnd || articlesLoading) {
@@ -95,20 +95,12 @@ export default function Section({ route, navigation }) {
       const posts = await fetchResults(section);
       setArticles((prev) => ({ ...prev, [section.slug]: posts }));
     });
-  }, [pageNumber]);
+  }, []);
 
-  return category.desks ? (
-    <ViewPager style={{ flex: 1 }} selectedIndex={selection} onSelect={setSelection}>
-      {/* {Object.values(category.desks).map((section) => (
-        <ContainerSelection data={articles["science-and-technology-news"]} key={section.slug} />
-      ))} */}
-      {Object.values(articles).map((section, index) => (
-        <ContainerSelection data={section} key={index} />
-        // <List style={{ flex: 1 }} key={index} data={section} renderItem={({ item, innerIndex }) => <Wlidcard key={item.id} item={item} index={innerIndex} navigation={navigation} verbose />} />
-      ))}
+  return (
+    <ViewPager selectedIndex={selection} onSelect={setSelection} swipeEnabled={category.desks}>
+      {Object.values(articles).map((section, index) => <ContainerSelection data={section} key={index} />)}
     </ViewPager>
-  ) : (
-    <ContainerSelection data={articles.seed} />
   );
 }
 
