@@ -2,6 +2,7 @@ import { Layout, List, Tab, TabBar, Text, TopNavigation, ViewPager } from "@ui-k
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";
 import { Spacing } from "../../utils/constants";
@@ -61,6 +62,7 @@ export default function Section({ route, navigation }) {
   };
 
   const Container = theme === "dark" ? Layout : View;
+  const pagerViewRef = React.useRef(null);
 
   const ContainerSelection = ({ data }) => (
     <Container>
@@ -100,15 +102,66 @@ export default function Section({ route, navigation }) {
   return (
     <>
       <TopNavigation title={category.name} alignment="center" />
-      <TabBar selectedIndex={selection} onSelect={(index) => setSelection(index)}>
-        {Object.values(category.desks)?.map((section) => <Tab title={section.name} />)}
+      <TabBar
+        selectedIndex={selection}
+        onSelect={(index) => {
+          setSelection(index);
+          pagerViewRef.current.setPage(index);
+        }}
+      >
+        {Object.values(category.desks)?.map((section) => (
+          <Tab
+            title={() => (
+              <Text category="c2" style={{ textAlign: "center" }}>
+                {section.name}
+              </Text>
+            )}
+          />
+        ))}
       </TabBar>
-      {Object.values(category.desks)?.map((section, index) => {
-        if (selection === index) {
-          return <ContainerSelection data={articles[section.slug]} />;
-        }
-      })}
-
+      <PagerView
+        ref={pagerViewRef}
+        // onPageScrollStateChanged={(e) => {
+        //   console.log(e.nativeEvent.pageScrollState);
+        //   if (e.nativeEvent.pageScrollState === "idle") {
+        //     setSelection(e.nativeEvent.position);
+        //   }
+        // }}
+        onPageSelected={(e) => {
+          console.log(e.nativeEvent.position);
+          setSelection(e.nativeEvent.position);
+        }}
+        style={{ flex: 1 }}
+        initialPage={0}
+        overdrag
+      >
+        {Object.values(category.desks)?.map((section, index) => (
+          <Container>
+            <List
+              data={articles[section.slug]}
+              style={{ backgroundColor: "transparent" }}
+              numColumns={columnCount}
+              key={columnCount}
+              scrollEventThrottle={BATCH_SIZE}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold={1}
+              onEndReached={() => {
+                if (!articlesLoading) {
+                  //setPageNumber(pageNumber + 1);
+                }
+              }}
+              renderItem={({ item, index }) => (
+                <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+              )}
+              ListFooterComponent={() => {
+                if (!possiblyReachedEnd || articlesLoading) {
+                  return <Text>{pageNumber}</Text>;
+                }
+              }}
+            />
+          </Container>
+        ))}
+      </PagerView>
     </>
   );
 }
