@@ -1,4 +1,4 @@
-import { Layout, List, Text, ViewPager } from "@ui-kitten/components";
+import { Layout, List, Tab, TabBar, Text, TopNavigation, ViewPager } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -98,9 +98,18 @@ export default function Section({ route, navigation }) {
   }, []);
 
   return (
-    <ViewPager selectedIndex={selection} onSelect={setSelection} swipeEnabled={category.desks}>
-      {Object.values(articles).map((section, index) => <ContainerSelection data={section} key={index} />)}
-    </ViewPager>
+    <>
+      <TopNavigation title={category.name} alignment="center" />
+      <TabBar selectedIndex={selection} onSelect={(index) => setSelection(index)}>
+        {Object.values(category.desks)?.map((section) => <Tab title={section.name} />)}
+      </TabBar>
+      {Object.values(category.desks)?.map((section, index) => {
+        if (selection === index) {
+          return <ContainerSelection data={articles[section.slug]} />;
+        }
+      })}
+
+    </>
   );
 }
 
