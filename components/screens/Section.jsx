@@ -1,4 +1,4 @@
-import { Layout, List, Tab, TabBar, Text, TopNavigation, ViewPager } from "@ui-kitten/components";
+import { Layout, List, Tab, TabBar, Text } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -29,7 +29,7 @@ export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
   const [articlesLoading, setArticlesLoading] = useState(false);
   const [selection, setSelection] = useState(0);
-  const [pageNumber, setPageNumber] = useState(seed.length === 0 ? 1 : 2);
+  const [pageNumbers, setPageNumbers] = useState({ [category.slug]: seed.length === 0 ? 1 : 2 });
   const [articles, setArticles] = useState({ [category.slug]: seed });
   const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
 
@@ -47,9 +47,8 @@ export default function Section({ route, navigation }) {
         .embed()
         .categories(section.id)
         .perPage(BATCH_SIZE)
-        .page((section.id === category.id ? basePageCount : 0) + pageNumber)
+        .page((section.slug === category.slug ? basePageCount : 0) + (pageNumbers[section.slug] || 1))
         .get();
-      // console.log(posts);
       return posts;
     } catch (error) {
       console.log(error);
@@ -64,44 +63,15 @@ export default function Section({ route, navigation }) {
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
 
-  const ContainerSelection = ({ data }) => (
-    <Container>
-      <List
-        data={data}
-        style={{ backgroundColor: "transparent" }}
-        numColumns={columnCount}
-        key={columnCount}
-        scrollEventThrottle={BATCH_SIZE}
-        showsVerticalScrollIndicator={false}
-        onEndReachedThreshold={1}
-        onEndReached={() => {
-          if (!articlesLoading) {
-            //setPageNumber(pageNumber + 1);
-          }
-        }}
-        renderItem={({ item, index }) => (
-          <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-        )}
-        ListFooterComponent={() => {
-          if (!possiblyReachedEnd || articlesLoading) {
-            return <Text>{pageNumber}</Text>;
-          }
-        }}
-      />
-    </Container>
-  );
-
   useEffect(() => {
     Object.values(category.desks)?.forEach(async (section) => {
-      console.log(section);
       const posts = await fetchResults(section);
       setArticles((prev) => ({ ...prev, [section.slug]: posts }));
     });
-  }, []);
+  }, []); // Make sure to fix the dependency array.
 
   return (
     <>
-      <TopNavigation title={category.name} alignment="center" />
       <TabBar
         selectedIndex={selection}
         onSelect={(index) => {
@@ -147,7 +117,7 @@ export default function Section({ route, navigation }) {
               onEndReachedThreshold={1}
               onEndReached={() => {
                 if (!articlesLoading) {
-                  //setPageNumber(pageNumber + 1);
+                  // setPageNumbers((prev) => ({ ...prev, [section.slug]: (prev[section.slug] || 0) + 1 }));
                 }
               }}
               renderItem={({ item, index }) => (
@@ -155,7 +125,7 @@ export default function Section({ route, navigation }) {
               )}
               ListFooterComponent={() => {
                 if (!possiblyReachedEnd || articlesLoading) {
-                  return <Text>{pageNumber}</Text>;
+                  return <ActivityIndicator />;
                 }
               }}
             />
