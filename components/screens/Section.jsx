@@ -70,6 +70,38 @@ export default function Section({ route, navigation }) {
     }
   };
 
+  useEffect(() => {
+    if (articlesLoading) {
+      return;
+    }
+
+    if (category.desks) {
+      for (const desk of Object.values(category.desks)) {
+        if (articles[desk.slug]?.length < pageNumbers[desk.slug] * BATCH_SIZE) {
+          fetchResults(desk).then((results) => {
+            if (results) {
+              setArticles((prev) => ({
+                ...prev,
+                [desk.slug]: [...prev[desk.slug], ...results],
+              }));
+            }
+          });
+        }
+      }
+    } else {
+      if (articles[category.slug]?.length < pageNumbers[category.slug] * BATCH_SIZE) {
+        fetchResults(category).then((results) => {
+          if (results) {
+            setArticles((prev) => ({
+              ...prev,
+              [category.slug]: [...prev[category.slug], ...results],
+            }));
+          }
+        });
+      }
+    }
+  }, [pageNumbers, articlesLoading]);
+
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
 
@@ -129,19 +161,19 @@ export default function Section({ route, navigation }) {
         overdrag
       >
         {Object.values(articles).map((sectionArticles, index) => (
-          <Container>
+          <Container key={index}>
             <List
               data={sectionArticles}
               style={{ backgroundColor: "transparent" }}
               numColumns={columnCount}
-              key={index}
               scrollEventThrottle={BATCH_SIZE}
               showsVerticalScrollIndicator={false}
               onEndReachedThreshold={1}
               onEndReached={() => {
-                if (!articlesLoading) {
-                  // setPageNumbers((prev) => ({ ...prev, [section.slug]: (prev[section.slug] || 0) + 1 }));
-                }
+                setPageNumbers((prev) => ({
+                  ...prev,
+                  [category.slug]: (prev[category.slug] || 1) + 1,
+                }));
               }}
               renderItem={({ item, index }) => (
                 <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
