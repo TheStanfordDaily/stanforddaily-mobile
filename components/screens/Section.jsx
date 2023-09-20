@@ -1,6 +1,6 @@
 import { Layout, List, Text, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 
@@ -10,6 +10,21 @@ import Model from "../../utils/model";
 import Wildcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
+
+const MemoizedWildcard = React.memo(Wildcard);
+// Util function to throttle events
+const throttle = (func, limit) => {
+  let inThrottle;
+  return function () {
+    const args = arguments;
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+};
 
 /**
  * The `Section` screen displays a list of articles from a specific category.
@@ -31,6 +46,7 @@ export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
   // const [articlesLoading, setArticlesLoading] = useState(false);
   const [selection, setSelection] = useState(0);
+  const [allArticles, setAllArticles] = useState(seed);
   // Before loading more articles, we calculate the number of pages we can skip when calling the API.
   // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
   /*const [pageNumbers, setPageNumbers] = useState({
@@ -73,7 +89,6 @@ export default function Section({ route, navigation }) {
     const fetchResults = async () => {
       setArticlesLoading(true);
       try {
-        console.log(subcategory.id);
         const posts = await Model.posts()
           .categories(subcategory.id)
           .perPage(BATCH_SIZE)
@@ -88,11 +103,14 @@ export default function Section({ route, navigation }) {
         }
       } finally {
         setArticlesLoading(false);
+        // setAllArticles((prev) => [...prev, ...articles.filter((item) => !prev.find((article) => article.id === item.id))]);
       }
     };
 
+    const throttledFetch = useCallback(throttle(fetchResults, 3000), []);
+
     useEffect(() => {
-      fetchResults();
+      throttledFetch();
     }, [pageNumber]);
 
     return (
@@ -110,7 +128,13 @@ export default function Section({ route, navigation }) {
             }
           }}
           renderItem={({ item, index }) => (
-            <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+            <MemoizedWildcard
+              key={`${subcategory.id}-${item.id}`}
+              item={item}
+              index={index}
+              navigation={navigation}
+              verbose
+            />
           )}
           ListFooterComponent={() => {
             if (!possiblyReachedEnd || articlesLoading) {
@@ -141,7 +165,7 @@ export default function Section({ route, navigation }) {
                 pagerViewRef.current.setPage(0);
               }}
               selected={selection === 0}
-              style={{ marginHorizontal: Spacing.medium }}
+              style={styles.tab}
               title={`All ${category.name}`}
             />
             {Object.values(category.desks).map((section, index) => (
@@ -151,7 +175,7 @@ export default function Section({ route, navigation }) {
                   pagerViewRef.current.setPage(index + 1);
                 }}
                 selected={selection === index + 1}
-                style={{ marginHorizontal: Spacing.medium }}
+                style={styles.tab}
                 title={section.name}
                 key={index}
               />
@@ -171,12 +195,13 @@ export default function Section({ route, navigation }) {
       >
         {Object.entries({ ...{ category }, ...(category.desks ?? {}) }).map(([sectionId, sectionArticles], index) => {
           const numericId = category.desks ? (category.desks[sectionId] ?? category).id : category.id;
-          const subcategory = category.desks ? category.desks[sectionId] : category;
+          const subcategory = category.desks?.[sectionId] ?? category;
           const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
+
           return (
             <CategoryContainer
               index={index}
-              sectionArticles={filteredSeed}
+              sectionArticles={numericId === category.id ? allArticles : filteredSeed}
               sectionId={numericId}
               key={index}
               basePageCount={Math.max(1, Math.floor(filteredSeed.length / BATCH_SIZE) - 1)}
@@ -200,5 +225,8 @@ const styles = StyleSheet.create({
   },
   indicator: {
     opacity: 0,
+  },
+  tab: {
+    marginHorizontal: Spacing.medium,
   },
 });
