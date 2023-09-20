@@ -1,4 +1,4 @@
-import { Layout, List, Tab, TabBar, Text, useTheme } from "@ui-kitten/components";
+import { Layout, List, Text, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
@@ -42,6 +42,15 @@ export default function Section({ route, navigation }) {
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
 
+  useEffect(() => {
+    for (const desk of Object.values(category.desks)) {
+      setArticles((prev) => ({
+        ...prev,
+        [desk.slug]: seed.filter((item) => item.categories.includes(desk.id)),
+      }));
+    }
+  }, [seed]);
+
   const fetchResults = async (section) => {
     setArticlesLoading(true);
     try {
@@ -63,80 +72,88 @@ export default function Section({ route, navigation }) {
 
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
-  const accentColor = useTheme()["color-primary-600"];
 
   return (
     <>
       {category.desks && (
+        // TODO: Make sure this is accessible using VoiceOver.
         <TabBar
           selectedIndex={selection}
           onSelect={(index) => {
             setSelection(index);
             pagerViewRef.current.setPage(index);
           }}
-          indicatorStyle={{ opacity: 0 }}
+          indicatorStyle={styles.indicator}
         >
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {/* TouchableOpacityProps */}
             <Tab
+              onSelect={() => {
+                setSelection(0);
+                pagerViewRef.current.setPage(0);
+              }}
+              selected={selection === 0}
               style={{ marginHorizontal: Spacing.medium }}
-              title={({ style, ...rest }) => (
-                <Text {...rest} style={{ ...style, color: accentColor }}>
-                  {category.name}
-                </Text>
-              )}
+              title={`All ${category.name}`}
             />
             {Object.values(category.desks).map((section, index) => (
-              <Tab style={{ marginHorizontal: Spacing.medium }} title={section.name} />
+              <Tab
+                onSelect={() => {
+                  setSelection(index + 1);
+                  pagerViewRef.current.setPage(index + 1);
+                }}
+                selected={selection === index + 1}
+                style={{ marginHorizontal: Spacing.medium }}
+                title={section.name}
+                key={index}
+              />
             ))}
           </ScrollView>
         </TabBar>
       )}
       <PagerView
         ref={pagerViewRef}
-        onPageScrollStateChanged={(e) => {
+        /*onPageScrollStateChanged={(e) => {
           console.log(e.nativeEvent.pageScrollState);
+          console.log(e.nativeEvent.position);
           if (e.nativeEvent.pageScrollState === "idle") {
             setSelection(e.nativeEvent.position);
           }
-        }}
+        }}*/
         onPageSelected={(e) => {
-          console.log(e.nativeEvent.position);
+          console.log("position", e.nativeEvent.position);
           setSelection(e.nativeEvent.position);
         }}
         scrollEnabled={Object.keys(category.desks ?? {}).length > 0} // Disable swiping in `PagerView` if there are no desks.
-        style={{ flex: 1 }}
+        style={styles.container}
         initialPage={0}
         overdrag
       >
-        {/*[...Object.values(category), ...(category.desks ? Object.values(category.desks) : [])].map(
-          (section, index) => (*/}
-        <Container>
-          <List
-            data={seed}
-            style={{ backgroundColor: "transparent" }}
-            numColumns={columnCount}
-            // key={index}
-            scrollEventThrottle={BATCH_SIZE}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={1}
-            onEndReached={() => {
-              if (!articlesLoading) {
-                // setPageNumbers((prev) => ({ ...prev, [section.slug]: (prev[section.slug] || 0) + 1 }));
-              }
-            }}
-            renderItem={({ item, index }) => (
-              <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-            )}
-            ListFooterComponent={() => {
-              if (!possiblyReachedEnd || articlesLoading) {
-                return <ActivityIndicator />;
-              }
-            }}
-          />
-        </Container>
-        {/*)
-        )}*/}
+        {Object.values(articles).map((sectionArticles, index) => (
+          <Container>
+            <List
+              data={sectionArticles}
+              style={{ backgroundColor: "transparent" }}
+              numColumns={columnCount}
+              key={index}
+              scrollEventThrottle={BATCH_SIZE}
+              showsVerticalScrollIndicator={false}
+              onEndReachedThreshold={1}
+              onEndReached={() => {
+                if (!articlesLoading) {
+                  // setPageNumbers((prev) => ({ ...prev, [section.slug]: (prev[section.slug] || 0) + 1 }));
+                }
+              }}
+              renderItem={({ item, index }) => (
+                <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+              )}
+              ListFooterComponent={() => {
+                if (!possiblyReachedEnd || articlesLoading) {
+                  return <ActivityIndicator />;
+                }
+              }}
+            />
+          </Container>
+        ))}
       </PagerView>
     </>
   );
@@ -150,5 +167,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  indicator: {
+    opacity: 0,
   },
 });
