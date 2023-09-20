@@ -1,6 +1,6 @@
 import { Layout, List, Text, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 
@@ -29,81 +29,117 @@ const BATCH_SIZE = 16;
  */
 export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
-  const [articlesLoading, setArticlesLoading] = useState(false);
+  // const [articlesLoading, setArticlesLoading] = useState(false);
   const [selection, setSelection] = useState(0);
-  const [pageNumbers, setPageNumbers] = useState({ [category.slug]: seed.length === 0 ? 1 : 2 });
-  const [articles, setArticles] = useState({ [category.slug]: seed });
-  const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
-
   // Before loading more articles, we calculate the number of pages we can skip when calling the API.
   // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
-  const basePageCount = Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1);
+  /*const [pageNumbers, setPageNumbers] = useState({
+    ...{ [category.slug]: seed.length === 0 ? 1 : Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1) },
+    ...Object.fromEntries(Object.values(category.desks ?? {}).map((desk) => [desk.slug, 1])),
+  });*/
+  /*const [articles, setArticles] = useState({
+    ...{ [category.slug]: seed },
+    ...Object.fromEntries(
+      Object.values(category.desks ?? {}).map((desk) => [
+        desk.slug,
+        seed.filter((item) => item.categories.includes(desk.id)),
+      ])
+    ),
+  });*/
   // The `theme` and `deviceType` are used to determine the number of columns in the list of articles.
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  useEffect(() => {
-    for (const desk of Object.values(category.desks)) {
-      setArticles((prev) => ({
-        ...prev,
-        [desk.slug]: seed.filter((item) => item.categories.includes(desk.id)),
-      }));
-    }
-  }, [seed]);
-
-  const fetchResults = async (section) => {
-    setArticlesLoading(true);
-    try {
-      return await Model.posts()
-        .embed()
-        .categories(section.id)
-        .perPage(BATCH_SIZE)
-        .page((section.slug === category.slug ? basePageCount : 0) + (pageNumbers[section.slug] || 1))
-        .get();
-    } catch (error) {
-      console.log(error);
-      if (error.data?.status === 400) {
-        setPossiblyReachedEnd(true);
-      }
-    } finally {
-      setArticlesLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (articlesLoading) {
-      return;
-    }
-
-    if (category.desks) {
-      for (const desk of Object.values(category.desks)) {
-        if (articles[desk.slug]?.length < pageNumbers[desk.slug] * BATCH_SIZE) {
-          fetchResults(desk).then((results) => {
-            if (results) {
-              setArticles((prev) => ({
-                ...prev,
-                [desk.slug]: [...prev[desk.slug], ...results],
-              }));
-            }
-          });
-        }
-      }
-    } else {
-      if (articles[category.slug]?.length < pageNumbers[category.slug] * BATCH_SIZE) {
-        fetchResults(category).then((results) => {
-          if (results) {
-            setArticles((prev) => ({
-              ...prev,
-              [category.slug]: [...prev[category.slug], ...results],
-            }));
-          }
-        });
-      }
-    }
-  }, [pageNumbers, articlesLoading]);
+  /*for (const desk of Object.values(category.desks)) {
+    setPageNumbers((prev) => ({
+      ...prev,
+      [desk.slug]: Math.max(0, Math.floor((articles[desk.slug]?.length ?? 0) / BATCH_SIZE) - 1),
+    }));
+  }*/
 
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
+
+  // Might try memoizing this down the line.
+  const CategoryContainer = ({ sectionArticles, basePageCount, sectionId }) => {
+    // const [articlesLoading, setArticlesLoading] = useState(false);
+    // const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
+    /*useEffect(() => {
+      setArticlesLoading(true);
+      Model.posts()
+        .categories(sectionId)
+        .page(pageNumber)
+        .perPage(BATCH_SIZE)
+        .embed()
+        .then((result) => {
+          setArticlesLoading(false);
+          setArticles((prev) => ({
+            ...prev,
+            [sectionId]: [...prev[sectionId], ...result],
+          }));
+          setPageNumbers((prev) => ({
+            ...prev,
+            [sectionId]: prev[sectionId] + 1,
+          }));
+          setPossiblyReachedEnd(result.length < BATCH_SIZE);
+        })
+        .catch((error) => console.trace(error));
+    }, [pageNumber]);*/
+    const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
+    const [articlesLoading, setArticlesLoading] = useState(false);
+    const [articles, setArticles] = useState(sectionArticles);
+    const [pageNumber, setPageNumber] = useState(basePageCount);
+
+    const fetchResults = async () => {
+      setArticlesLoading(true);
+      try {
+        console.log(sectionId);
+        const posts = await Model.posts()
+          .categories(sectionId)
+          .perPage(BATCH_SIZE)
+          .page(basePageCount + pageNumber)
+          .get();
+        setArticles((prev) => [...prev, ...posts]);
+      } catch (error) {
+        console.log(error);
+        if (error.data?.status === 400) {
+          setPossiblyReachedEnd(true);
+        }
+      } finally {
+        setArticlesLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      fetchResults();
+    }, [pageNumber]);
+
+    return (
+      <Container>
+        <List
+          data={articles}
+          style={{ backgroundColor: "transparent" }}
+          numColumns={columnCount}
+          scrollEventThrottle={BATCH_SIZE}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={1}
+          onEndReached={() => {
+            if (!possiblyReachedEnd && !articlesLoading) {
+              setPageNumber(pageNumber + 1);
+            }
+          }}
+          renderItem={({ item, index }) => (
+            <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
+          )}
+          ListFooterComponent={() => {
+            if (!possiblyReachedEnd || articlesLoading) {
+              return <ActivityIndicator />;
+            }
+          }}
+        />
+      </Container>
+    );
+  };
 
   return (
     <>
@@ -144,15 +180,7 @@ export default function Section({ route, navigation }) {
       )}
       <PagerView
         ref={pagerViewRef}
-        /*onPageScrollStateChanged={(e) => {
-          console.log(e.nativeEvent.pageScrollState);
-          console.log(e.nativeEvent.position);
-          if (e.nativeEvent.pageScrollState === "idle") {
-            setSelection(e.nativeEvent.position);
-          }
-        }}*/
         onPageSelected={(e) => {
-          console.log("position", e.nativeEvent.position);
           setSelection(e.nativeEvent.position);
         }}
         scrollEnabled={Object.keys(category.desks ?? {}).length > 0} // Disable swiping in `PagerView` if there are no desks.
@@ -160,32 +188,19 @@ export default function Section({ route, navigation }) {
         initialPage={0}
         overdrag
       >
-        {Object.values(articles).map((sectionArticles, index) => (
-          <Container key={index}>
-            <List
-              data={sectionArticles}
-              style={{ backgroundColor: "transparent" }}
-              numColumns={columnCount}
-              scrollEventThrottle={BATCH_SIZE}
-              showsVerticalScrollIndicator={false}
-              onEndReachedThreshold={1}
-              onEndReached={() => {
-                setPageNumbers((prev) => ({
-                  ...prev,
-                  [category.slug]: (prev[category.slug] || 1) + 1,
-                }));
-              }}
-              renderItem={({ item, index }) => (
-                <Wildcard key={item.id} item={item} index={index} navigation={navigation} verbose />
-              )}
-              ListFooterComponent={() => {
-                if (!possiblyReachedEnd || articlesLoading) {
-                  return <ActivityIndicator />;
-                }
-              }}
+        {Object.entries({ ...{ category }, ...(category.desks ?? {}) }).map(([sectionId, sectionArticles], index) => {
+          const numericId = category.desks ? (category.desks[sectionId] ?? category).id : category.id;
+          const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
+          return (
+            <CategoryContainer
+              index={index}
+              sectionArticles={filteredSeed}
+              sectionId={numericId}
+              key={index}
+              basePageCount={Math.max(1, Math.floor(filteredSeed.length / BATCH_SIZE) - 1)}
             />
-          </Container>
-        ))}
+          );
+        })}
       </PagerView>
     </>
   );
@@ -204,3 +219,13 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
 });
+
+/*
+<DeskContainer
+  index={index}
+  sectionArticles={articles[section.slug]}
+  sectionId={section.id}
+  pageNumber={pageNumbers[section.slug]}
+  key={index}
+/>
+*/
