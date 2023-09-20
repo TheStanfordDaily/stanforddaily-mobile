@@ -50,55 +50,36 @@ export default function Section({ route, navigation }) {
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  /*for (const desk of Object.values(category.desks)) {
-    setPageNumbers((prev) => ({
-      ...prev,
-      [desk.slug]: Math.max(0, Math.floor((articles[desk.slug]?.length ?? 0) / BATCH_SIZE) - 1),
-    }));
-  }*/
-
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
 
   // Might try memoizing this down the line.
-  const CategoryContainer = ({ sectionArticles, basePageCount, sectionId }) => {
-    // const [articlesLoading, setArticlesLoading] = useState(false);
-    // const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
-    /*useEffect(() => {
-      setArticlesLoading(true);
-      Model.posts()
-        .categories(sectionId)
-        .page(pageNumber)
-        .perPage(BATCH_SIZE)
-        .embed()
-        .then((result) => {
-          setArticlesLoading(false);
-          setArticles((prev) => ({
-            ...prev,
-            [sectionId]: [...prev[sectionId], ...result],
-          }));
-          setPageNumbers((prev) => ({
-            ...prev,
-            [sectionId]: prev[sectionId] + 1,
-          }));
-          setPossiblyReachedEnd(result.length < BATCH_SIZE);
-        })
-        .catch((error) => console.trace(error));
-    }, [pageNumber]);*/
+
+  /**
+   * @component
+   * @param {Object} props
+   * @param {Array<import("../../utils/model").WordPressPost>} props.sectionArticles
+   * @param {number} props.basePageCount Before loading more articles, we calculate the number of pages we can skip when calling the API.
+   * @param {number} props.sectionId
+   * @param {import("../../utils/constants").Category} props.subcategory
+   */
+  const CategoryContainer = ({ sectionArticles, basePageCount, subcategory }) => {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
     const [articlesLoading, setArticlesLoading] = useState(false);
     const [articles, setArticles] = useState(sectionArticles);
+    // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
     const [pageNumber, setPageNumber] = useState(basePageCount);
 
     const fetchResults = async () => {
       setArticlesLoading(true);
       try {
-        console.log(sectionId);
+        console.log(subcategory.id);
         const posts = await Model.posts()
-          .categories(sectionId)
+          .categories(subcategory.id)
           .perPage(BATCH_SIZE)
           .page(basePageCount + pageNumber)
           .get();
+        // TODO: Update the "all" list of articles, too.
         setArticles((prev) => [...prev, ...posts]);
       } catch (error) {
         console.log(error);
@@ -190,6 +171,7 @@ export default function Section({ route, navigation }) {
       >
         {Object.entries({ ...{ category }, ...(category.desks ?? {}) }).map(([sectionId, sectionArticles], index) => {
           const numericId = category.desks ? (category.desks[sectionId] ?? category).id : category.id;
+          const subcategory = category.desks ? category.desks[sectionId] : category;
           const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
           return (
             <CategoryContainer
@@ -198,6 +180,7 @@ export default function Section({ route, navigation }) {
               sectionId={numericId}
               key={index}
               basePageCount={Math.max(1, Math.floor(filteredSeed.length / BATCH_SIZE) - 1)}
+              subcategory={subcategory}
             />
           );
         })}
@@ -219,13 +202,3 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
 });
-
-/*
-<DeskContainer
-  index={index}
-  sectionArticles={articles[section.slug]}
-  sectionId={section.id}
-  pageNumber={pageNumbers[section.slug]}
-  key={index}
-/>
-*/
