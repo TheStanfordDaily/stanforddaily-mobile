@@ -238,7 +238,7 @@ export default function App() {
       themeListener.remove();
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
-      Linking.removeEventListener("url", handleOpenURL);
+      // Linking.removeEventListener("url", handleOpenURL); Seemed to be causing crashes.
     };
   }, [theme]);
 

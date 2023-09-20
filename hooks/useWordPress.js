@@ -16,11 +16,12 @@ const homeCount = BATCH_SIZE * Object.keys(Sections).length;
  *
  * @param {number} pageNumber - The page number to fetch from WordPress. Defaults to 1.
  * @returns {Object} - An object containing the retrieved data, articles, loading status, and any error occurred during the fetch.
- * @example const { data, articles, loading, error } = useWordPress();
+ * @example const { data, articles, desks, loading, error } = useWordPress();
  */
 export const useWordPress = (pageNumber = 1) => {
   const [data, setData] = useState({});
   const [articles, setArticles] = useState({});
+  const [desks, setDesks] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -55,6 +56,29 @@ export const useWordPress = (pageNumber = 1) => {
         setError(error);
       } finally {
         setLoading(false);
+        if (category.desks) {
+          Object.values(category.desks).forEach(async (desk) => {
+            try {
+              const response = await Model.posts()
+                .embed()
+                .categories(desk.id)
+                .perPage(BATCH_SIZE)
+                .page(pageNumber)
+                .get();
+              setDesks((prevState) => ({
+                ...prevState,
+                [category.slug]: {
+                  ...prevState[category.slug],
+                  [desk.slug]: [...(prevState[category.slug]?.[desk.slug] ?? []), ...response],
+                },
+              }));
+            } catch (error) {
+              setError(error);
+            } finally {
+              setLoading(false);
+            }
+          });
+        }
       }
     });
 
@@ -76,5 +100,5 @@ export const useWordPress = (pageNumber = 1) => {
       });
   }, [pageNumber]);
 
-  return { data, articles, loading, error };
+  return { data, articles, desks, loading, error };
 };

@@ -17,13 +17,13 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
  * @param {Array} props.seed - A collection of articles from the `Home` screen that can be immediately displayed upon navigation to the detail view.
  * @param {Object} props.category - The category object representing the section. It should have a `name` property like "News" or "The Grind."
  */
-export default function Mark({ navigation, alternate, seed, category }) {
+export default function Mark({ navigation, alternate, seed, category, desks }) {
   const theme = useTheme();
 
   return (
     <TouchableOpacity
       activeOpacity={alternate ? 0.8 : 0.5}
-      onPress={() => navigation?.navigate("Section", { category, seed })}
+      onPress={() => navigation?.navigate("Section", { category, desks, seed })}
       style={{
         ...styles.container,
         backgroundColor: theme[alternate ? "color-primary-600" : "background-color-basic-1"],

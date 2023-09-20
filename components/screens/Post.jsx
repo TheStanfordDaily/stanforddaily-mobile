@@ -1,13 +1,13 @@
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { Text, useTheme } from "@ui-kitten/components";
+import { Button, Text, useTheme } from "@ui-kitten/components";
 import * as Device from "expo-device";
 import { StatusBar } from "expo-status-bar";
 import { decode } from "html-entities";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
+import { Dimensions, Linking, PixelRatio, StyleSheet, Touchable, TouchableHighlight, TouchableOpacity, View, useColorScheme } from "react-native";
 import { ImageHeaderScrollView } from "react-native-image-header-scroll-view";
-import Content, { defaultSystemFonts } from "react-native-render-html";
+import Content, { defaultSystemFonts, useInternalRenderer } from "react-native-render-html";
 import WebView from "react-native-webview";
 
 import { ThemeContext } from "../../theme-context";
@@ -31,12 +31,11 @@ export default function Post({ route, navigation }) {
   const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio * width}`;
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const dateInstance = new Date(article.date);
+  const publicationDate = new Date(article.date);
   const authors = article.parsely?.meta?.creator?.reduce((o, name, index) => {
     return { ...o, [name]: article.coauthors[index] };
   }, {});
   const [displayCategory, setDisplayCategory] = useState({});
-  const [caption, setCaption] = useState("");
   const { deviceType } = useContext(ThemeContext);
   const headerHeight = useHeaderHeight();
   const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56;
@@ -156,7 +155,7 @@ export default function Post({ route, navigation }) {
             section={article.parsely.meta.articleSection}
             sourceName={sourceName}
             category={displayCategory}
-            date={formatDate(dateInstance, true)}
+            date={formatDate(publicationDate, true)}
             navigation={navigation}
           />
           <Content

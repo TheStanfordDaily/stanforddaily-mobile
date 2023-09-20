@@ -90,6 +90,113 @@ export const PlatformPalette = Platform.select({
   default: { label: "black" },
 });
 
+/**
+ * @typedef {Object} Sections
+ * @property {Object} FEATURED
+ * @property {string} FEATURED.name
+ * @property {string} FEATURED.slug
+ * @property {number} FEATURED.id
+ * @property {Object} NEWS
+ * @property {string} NEWS.name
+ * @property {string} NEWS.slug
+ * @property {number} NEWS.id
+ * @property {Object} NEWS.desks
+ * @property {Object} NEWS.desks.ACADEMICS
+ * @property {string} NEWS.desks.ACADEMICS.name
+ * @property {string} NEWS.desks.ACADEMICS.slug
+ * @property {number} NEWS.desks.ACADEMICS.id
+ * @property {Object} NEWS.desks.SCITECH
+ * @property {string} NEWS.desks.SCITECH.name
+ * @property {string} NEWS.desks.SCITECH.slug
+ * @property {number} NEWS.desks.SCITECH.id
+ * @property {Object} NEWS.desks.CAMPUS_LIFE
+ * @property {string} NEWS.desks.CAMPUS_LIFE.name
+ * @property {string} NEWS.desks.CAMPUS_LIFE.slug
+ * @property {number} NEWS.desks.CAMPUS_LIFE.id
+ * @property {Object} NEWS.desks.GRADUATE_STUDENTS
+ * @property {string} NEWS.desks.GRADUATE_STUDENTS.name
+ * @property {string} NEWS.desks.GRADUATE_STUDENTS.slug
+ * @property {number} NEWS.desks.GRADUATE_STUDENTS.id
+ * @property {Object} NEWS.desks.UNIVERSITY
+ * @property {string} NEWS.desks.UNIVERSITY.name
+ * @property {string} NEWS.desks.UNIVERSITY.slug
+ * @property {number} NEWS.desks.UNIVERSITY.id
+ * @property {Object} SPORTS
+ * @property {string} SPORTS.name
+ * @property {string} SPORTS.slug
+ * @property {number} SPORTS.id
+ * @property {Object} SPORTS.desks
+ * @property {Object} SPORTS.desks.SPORTS_FEATURES
+ * @property {string} SPORTS.desks.SPORTS_FEATURES.name
+ * @property {string} SPORTS.desks.SPORTS_FEATURES.slug
+ * @property {number} SPORTS.desks.SPORTS_FEATURES.id
+ * @property {Object} SPORTS.desks.FALL_SPORTS
+ * @property {string} SPORTS.desks.FALL_SPORTS.name
+ * @property {string} SPORTS.desks.FALL_SPORTS.slug
+ * @property {number} SPORTS.desks.FALL_SPORTS.id
+ * @property {Object} SPORTS.desks.WINTER_SPORTS
+ * @property {string} SPORTS.desks.WINTER_SPORTS.name
+ * @property {string} SPORTS.desks.WINTER_SPORTS.slug
+ * @property {number} SPORTS.desks.WINTER_SPORTS.id
+ * @property {Object} SPORTS.desks.SPRING_SPORTS
+ * @property {string} SPORTS.desks.SPRING_SPORTS.name
+ * @property {string} SPORTS.desks.SPRING_SPORTS.slug
+ * @property {number} SPORTS.desks.SPRING_SPORTS.id
+ * @property {Object} SPORTS.desks.THIS_WEEK_IN_SPORTS
+ * @property {string} SPORTS.desks.THIS_WEEK_IN_SPORTS.name
+ * @property {string} SPORTS.desks.THIS_WEEK_IN_SPORTS.slug
+ * @property {number} SPORTS.desks.THIS_WEEK_IN_SPORTS.id
+ * @property {Object} OPINIONS
+ * @property {string} OPINIONS.name
+ * @property {string} OPINIONS.slug
+ * @property {number} OPINIONS.id
+ * @property {Object} THE_GRIND
+ * @property {string} THE_GRIND.name
+ * @property {string} THE_GRIND.slug
+ * @property {number} THE_GRIND.id
+ * @property {Object} ARTS_LIFE
+ * @property {string} ARTS_LIFE.name
+ * @property {string} ARTS_LIFE.slug
+ * @property {number} ARTS_LIFE.id
+ * @property {Object} ARTS_LIFE.desks
+ * @property {Object} ARTS_LIFE.desks.CULTURE
+ * @property {string} ARTS_LIFE.desks.CULTURE.name
+ * @property {string} ARTS_LIFE.desks.CULTURE.slug
+ * @property {number} ARTS_LIFE.desks.CULTURE.id
+ * @property {Object} ARTS_LIFE.desks.MUSIC
+ * @property {string} ARTS_LIFE.desks.MUSIC.name
+ * @property {string} ARTS_LIFE.desks.MUSIC.slug
+ * @property {number} ARTS_LIFE.desks.MUSIC.id
+ * @property {Object} ARTS_LIFE.desks.READS
+ * @property {string} ARTS_LIFE.desks.READS.name
+ * @property {string} ARTS_LIFE.desks.READS.slug
+ * @property {number} ARTS_LIFE.desks.READS.id
+ * @property {Object} ARTS_LIFE.desks.SCREEN
+ * @property {string} ARTS_LIFE.desks.SCREEN.name
+ * @property {string} ARTS_LIFE.desks.SCREEN.slug
+ * @property {number} ARTS_LIFE.desks.SCREEN.id
+ * @property {Object} CARTOONS
+ * @property {string} CARTOONS.name
+ * @property {string} CARTOONS.slug
+ * @property {number} CARTOONS.id
+ * @property {Object} HUMOR
+ * @property {string} HUMOR.name
+ * @property {string} HUMOR.slug
+ * @property {number} HUMOR.id
+ * @property {Object} PODCASTS
+ * @property {string} PODCASTS.name
+ * @property {string} PODCASTS.slug
+ * @property {number} PODCASTS.id
+ * @property {Object} MORE_FROM_DAILY
+ * @property {string} MORE_FROM_DAILY.name
+ * @property {string} MORE_FROM_DAILY.slug
+ *
+ * @typedef {Object} Category
+ * @property {string} name
+ * @property {string} slug
+ * @property {number} id
+ * @property {Category[]} [desks]
+ */
 export const Sections = {
   FEATURED: {
     name: "Featured",
@@ -132,6 +239,34 @@ export const Sections = {
     name: "Sports",
     slug: "sports",
     id: 23,
+    // In some cases we're using "desk" as more of a term of art than a journalistic reference to our organizational structure.
+    desks: {
+      SPORTS_FEATURES: {
+        name: "Sports Features",
+        slug: "sports-features",
+        id: 57510,
+      },
+      FALL_SPORTS: {
+        name: "Fall Sports",
+        slug: "fall-sports",
+        id: 45417,
+      },
+      WINTER_SPORTS: {
+        name: "Winter Sports",
+        slug: "winter-sports",
+        id: 45418,
+      },
+      SPRING_SPORTS: {
+        name: "Spring Sports",
+        slug: "spring-sports",
+        id: 45419,
+      },
+      THIS_WEEK_IN_SPORTS: {
+        name: "This Week in Sports",
+        slug: "this-week-in-sports",
+        id: 78545,
+      },
+    },
   },
   OPINIONS: {
     name: "Opinions",
@@ -151,18 +286,22 @@ export const Sections = {
       CULTURE: {
         name: "Culture",
         slug: "culture",
+        id: 40678,
       },
       MUSIC: {
         name: "Music",
         slug: "music-intermission",
+        id: 23848,
       },
       READS: {
         name: "Reads",
         slug: "reads",
+        id: 40679,
       },
       SCREEN: {
         name: "Screen",
         slug: "screen",
+        id: 40640,
       },
     },
   },
@@ -179,6 +318,7 @@ export const Sections = {
   PODCASTS: {
     name: "Podcasts",
     slug: "podcasts",
+    id: 61182,
   },
   MORE_FROM_DAILY: {
     name: "More from The Daily",
