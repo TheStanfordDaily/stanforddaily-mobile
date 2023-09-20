@@ -1,4 +1,4 @@
-import { Layout, List, Tab, TabBar, Text } from "@ui-kitten/components";
+import { Layout, List, Tab, TabBar, Text, useTheme } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
@@ -63,6 +63,7 @@ export default function Section({ route, navigation }) {
 
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = React.useRef(null);
+  const accentColor = useTheme()["color-primary-600"];
 
   return (
     <>
@@ -76,31 +77,17 @@ export default function Section({ route, navigation }) {
           indicatorStyle={{ opacity: 0 }}
         >
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {/* TouchableOpacityProps */}
             <Tab
-              title={() => (
-                <Text
-                  category="label"
-                  selectionColor="info"
-                  appearance={selection === 1 ? undefined : "hint"}
-                  // style={{ marginHorizontal: Spacing.medium, color: selection === 0 ? "red" : undefined }}
-                >
+              style={{ marginHorizontal: Spacing.medium }}
+              title={({ style, ...rest }) => (
+                <Text {...rest} style={{ ...style, color: accentColor }}>
                   {category.name}
                 </Text>
               )}
             />
             {Object.values(category.desks).map((section, index) => (
-              <Tab
-                title={() => (
-                  <Text
-                    category="label"
-                    selectionColor="info"
-                    // status="basic"
-                    style={{ marginHorizontal: Spacing.medium }}
-                  >
-                    {section.name}
-                  </Text>
-                )}
-              />
+              <Tab style={{ marginHorizontal: Spacing.medium }} title={section.name} />
             ))}
           </ScrollView>
         </TabBar>
