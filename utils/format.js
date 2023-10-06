@@ -190,3 +190,27 @@ export function parsePipedHeadline(headline) {
   // Return the whole headline if there's no pipe character.
   return headline;
 }
+
+/**
+ * Utility function for throttling events, particularly when many events may incidentally be fired quick succession.
+ * Ultimately, it limits how often `func` can be called.
+ *
+ * Wraps the given function in logic that ensures it cannot be invoked more frequently than the given limit.
+ * Useful for limiting events that could fire rapidly like scroll and resize handlers.
+ *
+ * @function
+ * @param {Function} func - The function to throttle.
+ * @param {number} limit - The minimum interval allowed between calls (in milliseconds).
+ * @returns {Function} The throttled function wrapper.
+ */
+export const throttle = (func, limit) => {
+  let inThrottle;
+  return function (...args) {
+    const context = this;
+    if (!inThrottle) {
+      func.apply(context, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+};

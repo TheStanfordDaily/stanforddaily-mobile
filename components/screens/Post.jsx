@@ -5,7 +5,7 @@ import * as Device from "expo-device";
 import { StatusBar } from "expo-status-bar";
 import { decode } from "html-entities";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, Linking, PixelRatio, StyleSheet, Touchable, TouchableHighlight, TouchableOpacity, View, useColorScheme } from "react-native";
+import { Dimensions, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
 import { ImageHeaderScrollView } from "react-native-image-header-scroll-view";
 import Content, { defaultSystemFonts, useInternalRenderer } from "react-native-render-html";
 import WebView from "react-native-webview";
@@ -45,9 +45,8 @@ export default function Post({ route, navigation }) {
     const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url;
     const slug = pruned.split("/").at(-1);
 
-    // Hopefully this doesn't take too long to load. Might have to preload.
-
     if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {
+      // Hopefully this doesn't take too long to load. Might have to preload.
       Model.posts()
         .slug(slug)
         .embed()

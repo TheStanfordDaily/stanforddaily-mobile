@@ -56,6 +56,7 @@ const FirstPage = React.memo(({ data, articles, navigation, deviceType }) => {
  * It also contains pagination logic to fetch new data when the end of the list is reached.
  *
  * @component
+ * @param {Object} props
  * @param {Object} props.navigation - The navigation object used by React Navigation.
  */
 export default function Home({ navigation }) {

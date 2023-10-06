@@ -1,4 +1,4 @@
-import { Layout, List, Text, Tab, TabBar } from "@ui-kitten/components";
+import { Layout, List, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
@@ -6,25 +6,12 @@ import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";
 import { Spacing } from "../../utils/constants";
+import { throttle } from "../../utils/format";
 import Model from "../../utils/model";
 import Wildcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
-
 const MemoizedWildcard = React.memo(Wildcard);
-// Util function to throttle events
-const throttle = (func, limit) => {
-  let inThrottle;
-  return function () {
-    const args = arguments;
-    const context = this;
-    if (!inThrottle) {
-      func.apply(context, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
 
 /**
  * The `Section` screen displays a list of articles from a specific category.
@@ -47,21 +34,6 @@ export default function Section({ route, navigation }) {
   // const [articlesLoading, setArticlesLoading] = useState(false);
   const [selection, setSelection] = useState(0);
   const [allArticles, setAllArticles] = useState(seed);
-  // Before loading more articles, we calculate the number of pages we can skip when calling the API.
-  // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
-  /*const [pageNumbers, setPageNumbers] = useState({
-    ...{ [category.slug]: seed.length === 0 ? 1 : Math.max(0, Math.floor(seed.length / BATCH_SIZE) - 1) },
-    ...Object.fromEntries(Object.values(category.desks ?? {}).map((desk) => [desk.slug, 1])),
-  });*/
-  /*const [articles, setArticles] = useState({
-    ...{ [category.slug]: seed },
-    ...Object.fromEntries(
-      Object.values(category.desks ?? {}).map((desk) => [
-        desk.slug,
-        seed.filter((item) => item.categories.includes(desk.id)),
-      ])
-    ),
-  });*/
   // The `theme` and `deviceType` are used to determine the number of columns in the list of articles.
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
@@ -84,6 +56,7 @@ export default function Section({ route, navigation }) {
     const [articlesLoading, setArticlesLoading] = useState(false);
     const [articles, setArticles] = useState(sectionArticles);
     // Since there might already be a chronology of several articles passed in from the seed data, there's no need to fetch them again.
+    // Right now the page numbers are a little out of sync, so that needs to be fixed ASAP.
     const [pageNumber, setPageNumber] = useState(basePageCount);
 
     const fetchResults = async () => {
@@ -127,15 +100,17 @@ export default function Section({ route, navigation }) {
               setPageNumber(pageNumber + 1);
             }
           }}
-          renderItem={({ item, index }) => (
-            <MemoizedWildcard
-              key={`${subcategory.id}-${item.id}`}
-              item={item}
-              index={index}
-              navigation={navigation}
-              verbose
-            />
-          )}
+          renderItem={({ item, index }) =>
+            React.memo(
+              <Wildcard
+                key={`${subcategory.id}-${item.id}`}
+                item={item}
+                index={index}
+                navigation={navigation}
+                verbose
+              />
+            )
+          }
           ListFooterComponent={() => {
             if (!possiblyReachedEnd || articlesLoading) {
               return <ActivityIndicator />;
