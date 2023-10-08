@@ -15,12 +15,13 @@ import { Sections, Spacing } from "../../utils/constants";
  * It is memoized to prevent unnecessary re-renders.
  *
  * @component
- * @param {Record<string, Array>} props.articles - The list of articles to display, grouped by category.
- * @param {Record<string, Array>} props.data - Articles from same initial API call, but without any filters applied.
+ * @param {Object} props
+ * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.articles - The list of articles to display, grouped by category.
+ * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.data - Articles from same initial API call, but without any filters applied.
  * @param {Object} props.navigation - The navigation object used by React Navigation.
  * @param {DeviceType} props.deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
  */
-const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
+const FirstPage = React.memo(({ data, articles, navigation, deviceType }) => {
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
   return (
@@ -55,11 +56,12 @@ const FirstPage = React.memo(({ articles, data, navigation, deviceType }) => {
  * It also contains pagination logic to fetch new data when the end of the list is reached.
  *
  * @component
+ * @param {Object} props
  * @param {Object} props.navigation - The navigation object used by React Navigation.
  */
 export default function Home({ navigation }) {
   const [pageNumber, setPageNumber] = useState(1);
-  const { data, articles, error, loading } = useWordPress(pageNumber);
+  const { data, articles, desks, error, loading } = useWordPress(pageNumber);
   const { theme, deviceType } = useContext(ThemeContext);
   // Ensure that no culture posts simultaneously appear in wildcard.
   const wildcard = data?.wildcard?.filter((item) => !articles?.culture?.find((article) => article.id === item.id));

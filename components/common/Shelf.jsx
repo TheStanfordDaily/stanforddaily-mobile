@@ -25,8 +25,12 @@ export default function Shelf({ articles, alternate, navigation }) {
     shelfArticles.pop();
   }
 
-  const Accessory = ({ uri }) => (
-    <Image source={{ uri: `${uri}?w=${(pixelRatio * width) / 3}` }} style={styles.image} />
+  const Accessory = ({ media }) => (
+    <Image
+      source={{ uri: `${media?.["source_url"]}?w=${(pixelRatio * width) / 3}` }}
+      style={styles.image}
+      alt={media?.["alt_text"]}
+    />
   );
 
   return (
@@ -43,7 +47,7 @@ export default function Shelf({ articles, alternate, navigation }) {
               {group.map((item, innerIndex) => (
                 <React.Fragment key={innerIndex}>
                   <ListItem
-                    accessoryRight={<Accessory uri={item.jetpack_featured_media_url} />}
+                    accessoryRight={<Accessory media={item["_embedded"]?.["wp:featuredmedia"]?.[0]} />}
                     activeOpacity={0.8}
                     description={() => (
                       <Text

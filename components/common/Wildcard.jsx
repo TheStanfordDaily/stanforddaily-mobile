@@ -6,18 +6,19 @@ import { Dimensions, Image, PixelRatio, StyleSheet, View } from "react-native";
 import { Spacing } from "../../utils/constants";
 import { formatDate, itemize } from "../../utils/format";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 
 /**
  * `Header` is a sub-component of `Wildcard` that displays the article title, date, and image.
  * @component
+ * @param {Object} props
  * @param {string} props.title - The title of the article.
  * @param {boolean} props.verbose - A flag indicating whether to include the excerpt in the card.
  * @param {string} props.date - The publication date.
  * @param {string} props.uri - The URI for the feature image of the article.
  */
-const Header = ({ title, verbose, date, uri }) => (
+const Header = ({ title, verbose, date, media }) => (
   <>
     <View>
       <Text style={styles.header} category="h6">
@@ -29,13 +30,18 @@ const Header = ({ title, verbose, date, uri }) => (
         </Text>
       )}
     </View>
-    <Image source={{ uri: `${uri}?w=${width * pixelRatio}` }} style={{ flex: 1, height: 192 }} />
+    <Image
+      source={{ uri: `${media?.["source_url"]}?w=${width * pixelRatio}` }}
+      style={{ flex: 1, height: 192 }}
+      alt={media?.["alt_text"]}
+    />
   </>
 );
 
 /**
  * `Footer` is a sub-component of `Wildcard` that displays the article byline and section.
  * @component
+ * @param {Object} props
  * @param {string} props.byline - The author's name(s) in a displayable format.
  * @param {string} props.section - The name of the section to which the article belongs.
  */
@@ -50,28 +56,42 @@ const Footer = ({ byline, section }) => (
   </View>
 );
 
-export default function Wildcard({ navigation, articles, random, verbose, title, item, index }) {
+/**
+ * Displays a `Card` preview for an article or some other related form of content.
+ * @component
+ * @param {Object} props
+ * @param {Object} props.navigation - The navigation object used for navigating between screens.
+ * @param {boolean} props.verbose - A flag indicating whether to include the excerpt in the card.
+ * @param {string} props.title - The headline.
+ * @param {import("../../utils/model").WordPressPost} props.item - The article object.
+ * @param {number} props.index - The index of the article in a parent view. Currently unused in the implementation.
+ */
+export default function Wildcard({ navigation, verbose, title, item, index }) {
   return (
-    <Card
-      style={styles.card}
-      header={
-        <Header
-          verbose={verbose}
-          title={decode(item.title.rendered)}
-          date={item.date}
-          uri={item["jetpack_featured_media_url"]}
-        />
-      }
-      footer={
-        <Footer
-          byline={itemize(item.parsely?.meta?.creator?.map((name) => name.toUpperCase()))}
-          section={item.parsely?.meta?.articleSection}
-        />
-      }
-      onPress={() => navigation.push("Post", { article: item, sourceName: title })}
-    >
-      <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
-    </Card>
+    item.title && (
+      <Card
+        style={styles.card}
+        accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
+        accessibilityHint="Navigates to a view with full text for article"
+        header={
+          <Header
+            verbose={verbose}
+            title={decode(item.title.rendered)}
+            date={item.date}
+            media={item["_embedded"]?.["wp:featuredmedia"]?.[0]}
+          />
+        }
+        footer={
+          <Footer
+            byline={itemize(item.parsely?.meta?.creator?.map((name) => name.toUpperCase()))}
+            section={item.parsely?.meta?.articleSection}
+          />
+        }
+        onPress={() => navigation.push("Post", { article: item, sourceName: title })}
+      >
+        <Text style={{ marginHorizontal: -4 }}>{decode(item.excerpt.rendered.slice(3, -5))}</Text>
+      </Card>
+    )
   );
 }
 

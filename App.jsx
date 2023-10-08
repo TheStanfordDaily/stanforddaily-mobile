@@ -59,7 +59,14 @@ export default function App() {
   };
 
   const headerOptions = ({ navigation }) => ({
-    headerTitle: () => <Image style={{ width: 260, height: 30 }} source={logoAssets[theme]} />,
+    headerTitle: () => (
+      <Image
+        style={{ width: 260, height: 30 }}
+        source={logoAssets[theme]}
+        alt="Stanford Daily wordmark logo"
+        accessibilityRole="header"
+      />
+    ),
     headerRight: () => (
       <TouchableOpacity style={{ paddingHorizontal: 16 }} onPress={() => navigation.navigate(Routing.search, { tags })}>
         <Icon name="search-outline" width={24} height={24} fill={theme === "dark" ? "white" : "black"} />
@@ -173,7 +180,7 @@ export default function App() {
     // FIXME: Listener for when app is opened from web browser.
     const slug = event?.url?.split("/")?.pop();
     if (slug?.length > 0) {
-      const result = await Model.posts().slug(slug).embed();
+      const result = await Model.posts().embed().slug(slug).embed();
       navigate(Routing.post, { item: result });
     }
   };
@@ -212,6 +219,7 @@ export default function App() {
       Model.posts()
         .id(response.notification.request.trigger.payload.body.postID)
         .embed()
+        .get()
         .then((result) => {
           navigate(Routing.post, { item: result });
         });
@@ -230,7 +238,7 @@ export default function App() {
       themeListener.remove();
       Notifications.removeNotificationSubscription(notificationListener.current);
       Notifications.removeNotificationSubscription(responseListener.current);
-      Linking.removeEventListener("url", handleOpenURL);
+      // Linking.removeEventListener("url", handleOpenURL); Seemed to be causing crashes.
     };
   }, [theme]);
 

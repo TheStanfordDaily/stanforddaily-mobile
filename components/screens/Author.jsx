@@ -73,6 +73,7 @@ export default function Author({ route, navigation }) {
         }}
         renderItem={({ item }) => (
           <Card
+            accessibilityLabel={`Article titled ${decode(item.title.rendered)}`}
             key={item.id}
             onPress={() => navigation.navigate("Post", { article: item })}
             style={{ flex: 1 / groupSize }}

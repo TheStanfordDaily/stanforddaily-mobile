@@ -81,7 +81,13 @@ export default function Search({ route, navigation }) {
       setArticlesLoading(true);
       let posts;
       try {
-        posts = await Model.posts().search(incumbentQuery).orderby("relevance").perPage(BATCH_SIZE).page(page).get();
+        posts = await Model.posts()
+          .embed()
+          .search(incumbentQuery)
+          .orderby("relevance")
+          .perPage(BATCH_SIZE)
+          .page(page)
+          .get();
         setArticles([...articles, ...posts]);
       } catch (error) {
         console.log(error);

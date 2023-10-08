@@ -1,17 +1,16 @@
 import IframeRenderer, { iframeModel } from "@native-html/iframe-plugin";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { Text, useTheme } from "@ui-kitten/components";
+import { Button, Text, useTheme } from "@ui-kitten/components";
 import * as Device from "expo-device";
 import { StatusBar } from "expo-status-bar";
 import { decode } from "html-entities";
 import React, { useContext, useEffect, useState } from "react";
-import { Dimensions, LayoutAnimation, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
-import { ImageHeaderScrollView, TriggeringView } from "react-native-image-header-scroll-view";
-import Content, { defaultSystemFonts } from "react-native-render-html";
+import { Dimensions, Linking, PixelRatio, StyleSheet, View, useColorScheme } from "react-native";
+import { ImageHeaderScrollView } from "react-native-image-header-scroll-view";
+import Content, { defaultSystemFonts, useInternalRenderer } from "react-native-render-html";
 import WebView from "react-native-webview";
 
 import { ThemeContext } from "../../theme-context";
-import { enableAnimationExperimental } from "../../utils/action";
 import { Fonts, Spacing } from "../../utils/constants";
 import { formatDate } from "../../utils/format";
 import Model from "../../utils/model";
@@ -21,8 +20,6 @@ const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
 const systemFonts = [...Object.keys(Fonts.minion).map((key) => String(key)), ...defaultSystemFonts];
-
-enableAnimationExperimental();
 
 /**
  * Displays a Stanford Daily article with rich text, recirculatory navigation and custom renderers.
@@ -34,12 +31,11 @@ export default function Post({ route, navigation }) {
   const featuredMedia = `${article["jetpack_featured_media_url"]}?w=${pixelRatio * width}`;
   const colorScheme = useColorScheme();
   const theme = useTheme();
-  const dateInstance = new Date(article.date);
+  const publicationDate = new Date(article.date);
   const authors = article.parsely?.meta?.creator?.reduce((o, name, index) => {
     return { ...o, [name]: article.coauthors[index] };
   }, {});
   const [displayCategory, setDisplayCategory] = useState({});
-  const [caption, setCaption] = useState("");
   const { deviceType } = useContext(ThemeContext);
   const headerHeight = useHeaderHeight();
   const contentEdgeInset = deviceType === Device.DeviceType.PHONE ? 14 : 56;
@@ -49,9 +45,8 @@ export default function Post({ route, navigation }) {
     const pruned = url.slice(-1) === "/" ? url.slice(0, -1) : url;
     const slug = pruned.split("/").at(-1);
 
-    // Hopefully this doesn't take too long to load. Might have to preload.
-
     if (url.match(/stanforddaily.com\/\d{4}\/\d{2}\/\d{2}\/(.*)/)) {
+      // Hopefully this doesn't take too long to load. Might have to preload.
       Model.posts()
         .slug(slug)
         .embed()
@@ -114,7 +109,7 @@ export default function Post({ route, navigation }) {
   );
 
   useEffect(() => {
-    Promise.all(article.categories.map((category) => Model.categories().id(category).get())).then((p) => {
+    Promise.all(article.categories.map((category) => Model.categories().embed().id(category).get())).then((p) => {
       const resolvedCategory = p.filter((q) => q.name === article.parsely.meta.articleSection)[0];
       setDisplayCategory(resolvedCategory);
     });
@@ -126,21 +121,6 @@ export default function Post({ route, navigation }) {
     navigation.addListener("blur", () => {
       setStatusBarStyle(undefined);
     });
-
-    /*
-      Maybe we can get the captions in the initial home screen API call in the future.
-      Hoping there is a better way than using the `_embed` query parameter.
-      That would vastly increase loading time when so many posts are being fetched at once,
-      most of which are not going to be tapped on anyway.
-    */
-
-    Model.media()
-      .id(article["featured_media"])
-      .get()
-      .then((media) => {
-        setCaption(decode(media.caption?.rendered).slice(3, -5));
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      });
   }, [article, navigation]);
 
   return (
@@ -164,21 +144,19 @@ export default function Post({ route, navigation }) {
             paddingBottom: Spacing.large,
           }}
         >
-          <TriggeringView>
-            {caption !== "" && (
-              <Text style={{ paddingTop: Spacing.medium }} category="s1">
-                {caption}
-              </Text>
-            )}
-            <Byline
-              authors={authors}
-              section={article.parsely.meta.articleSection}
-              sourceName={sourceName}
-              category={displayCategory}
-              date={formatDate(dateInstance, true)}
-              navigation={navigation}
-            />
-          </TriggeringView>
+          {article["_embedded"]?.["wp:featuredmedia"]?.[0]?.caption && (
+            <Text style={{ paddingTop: Spacing.medium }} category="s1">
+              {decode(article["_embedded"]?.["wp:featuredmedia"]?.[0]?.caption.rendered.slice(3, -5))}
+            </Text>
+          )}
+          <Byline
+            authors={authors}
+            section={article.parsely.meta.articleSection}
+            sourceName={sourceName}
+            category={displayCategory}
+            date={formatDate(publicationDate, true)}
+            navigation={navigation}
+          />
           <Content
             source={{ html: article.content.rendered }}
             defaultTextProps={{ selectable: true }}
