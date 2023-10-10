@@ -12,7 +12,7 @@ import { formatDate, itemize } from "../../utils/format";
 
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function Shelf({ articles, alternate, navigation }) {
   const theme = useTheme();
@@ -20,7 +20,7 @@ export default function Shelf({ articles, alternate, navigation }) {
   const { deviceType } = useContext(ThemeContext);
   const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  let shelfArticles = articles;
+  const shelfArticles = articles; // Won't be reassigned, so the `const` keyword is appropriate.
   while (shelfArticles.length % (3 * groupSize) !== 0) {
     shelfArticles.pop();
   }
