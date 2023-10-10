@@ -19,7 +19,7 @@ import Byline from "../common/Byline";
 const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 const fontScale = PixelRatio.getFontScale();
-const systemFonts = [...Object.keys(Fonts.minion).map((key) => String(key)), ...defaultSystemFonts];
+const systemFonts = [...Object.keys(Fonts.minion).map(String), ...defaultSystemFonts];
 
 /**
  * Displays a Stanford Daily article with rich text, recirculatory navigation and custom renderers.

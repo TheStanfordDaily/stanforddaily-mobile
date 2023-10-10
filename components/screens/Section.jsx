@@ -11,7 +11,6 @@ import Model from "../../utils/model";
 import Wildcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
-const MemoizedWildcard = React.memo(Wildcard);
 
 /**
  * The `Section` screen displays a list of articles from a specific category.
