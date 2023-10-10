@@ -10,45 +10,52 @@ import { useWordPress } from "../../hooks/useWordPress";
 import { ThemeContext } from "../../theme-context";
 import { Sections, Spacing } from "../../utils/constants";
 
-/**
- * The `FirstPage` React component displays everything before the wildcard articles.
- * It is memoized to prevent unnecessary re-renders.
- *
- * @component
- * @param {Object} props
- * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.articles - The list of articles to display, grouped by category.
- * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.data - Articles from same initial API call, but without any filters applied.
- * @param {Object} props.navigation - The navigation object used by React Navigation.
- * @param {DeviceType} props.deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
- */
-const FirstPage = React.memo(({ data, articles, navigation, deviceType }) => {
-  const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
+const FirstPage = React.memo(
+  /**
+   * The `FirstPage` React component displays everything before the wildcard articles.
+   * It is memoized to prevent unnecessary re-renders.
+   *
+   * @component
+   * @param {Object} props
+   * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.articles - The list of articles to display, grouped by category.
+   * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.data - Articles from same initial API call, but without any filters applied.
+   * @param {Object} props.navigation - The navigation object used by React Navigation.
+   * @param {DeviceType} props.deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
+   */
+  ({ data, articles, navigation, deviceType }) => {
+    const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
 
-  return (
-    <>
-      <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
-      <Mark category={Sections.NEWS} navigation={navigation} seed={data[Sections.NEWS.slug] ?? []} />
-      <Polyptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
-      <Divider marginTop={Spacing.medium} />
-      <Mark category={Sections.OPINIONS} navigation={navigation} seed={data[Sections.OPINIONS.slug]} />
-      <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
-      <Mark category={Sections.SPORTS} navigation={navigation} seed={data[Sections.SPORTS.slug] ?? []} />
-      <Polyptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
-      <Divider marginTop={Spacing.medium} />
-      {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map((group, outerIndex) => (
-        <View key={outerIndex} style={{ flex: 1 / groupSize, flexDirection: "row" }}>
-          {group.map((item, index) => (
-            <Wildcard key={item.id.toString()} index={outerIndex * index + index} item={item} navigation={navigation} />
-          ))}
-        </View>
-      ))}
-      <Divider />
-      <Mark alternate category={Sections.HUMOR} navigation={navigation} seed={data[Sections.HUMOR.slug] ?? []} />
-      <Shelf alternate articles={articles[Sections.HUMOR.slug] ?? []} navigation={navigation} />
-      <Divider />
-    </>
-  );
-});
+    return (
+      <>
+        <Carousel articles={articles[Sections.FEATURED.slug] ?? []} navigation={navigation} />
+        <Mark category={Sections.NEWS} navigation={navigation} seed={data[Sections.NEWS.slug] ?? []} />
+        <Polyptych articles={articles[Sections.NEWS.slug] ?? []} navigation={navigation} />
+        <Divider marginTop={Spacing.medium} />
+        <Mark category={Sections.OPINIONS} navigation={navigation} seed={data[Sections.OPINIONS.slug]} />
+        <Shelf articles={articles[Sections.OPINIONS.slug] ?? []} navigation={navigation} />
+        <Mark category={Sections.SPORTS} navigation={navigation} seed={data[Sections.SPORTS.slug] ?? []} />
+        <Polyptych articles={articles[Sections.SPORTS.slug] ?? []} navigation={navigation} />
+        <Divider marginTop={Spacing.medium} />
+        {_.chunk(articles?.culture?.slice(0, 4 * groupSize), groupSize)?.map((group, outerIndex) => (
+          <View key={outerIndex} style={{ flex: 1 / groupSize, flexDirection: "row" }}>
+            {group.map((item, index) => (
+              <Wildcard
+                key={item.id.toString()}
+                index={outerIndex * index + index}
+                item={item}
+                navigation={navigation}
+              />
+            ))}
+          </View>
+        ))}
+        <Divider />
+        <Mark alternate category={Sections.HUMOR} navigation={navigation} seed={data[Sections.HUMOR.slug] ?? []} />
+        <Shelf alternate articles={articles[Sections.HUMOR.slug] ?? []} navigation={navigation} />
+        <Divider />
+      </>
+    );
+  }
+);
 
 /**
  * The `Home` component is what you first see when opening the application.
