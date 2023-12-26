@@ -14,6 +14,17 @@ import { itemize } from "../../utils/format";
 const { width } = Dimensions.get("window");
 const pixelRatio = PixelRatio.get();
 
+/**
+ * The `Carousel` component displays a horizontal scrollable list of articles, chiefly featured ones.
+ * Its content panels are `Card` components that display a large image and details like title, date and image below.
+ *
+ * @component
+ * @property {Object} navigation - The navigation object from React Navigation.
+ * @property {Array} articles - An array of articles to be displayed in the carousel.
+ *
+ * @example
+ * <Carousel navigation={navigation} articles={articles} />
+ */
 function Carousel({ navigation, articles }) {
   const { theme, deviceType } = useContext(ThemeContext);
   const carouselHeight = deviceType === DeviceType.PHONE ? 300 : 350;

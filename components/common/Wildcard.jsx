@@ -12,11 +12,10 @@ const pixelRatio = PixelRatio.get();
 /**
  * `Header` is a sub-component of `Wildcard` that displays the article title, date, and image.
  * @component
- * @param {Object} props
- * @param {string} props.title - The title of the article.
- * @param {boolean} props.verbose - A flag indicating whether to include the excerpt in the card.
- * @param {string} props.date - The publication date.
- * @param {string} props.uri - The URI for the feature image of the article.
+ * @property {string} title - The title of the article.
+ * @property {boolean} verbose - A flag indicating whether to include the excerpt in the card.
+ * @property {string} date - The publication date.
+ * @property {string} uri - The URI for the feature image of the article.
  */
 const Header = ({ title, verbose, date, media }) => (
   <>
@@ -41,9 +40,8 @@ const Header = ({ title, verbose, date, media }) => (
 /**
  * `Footer` is a sub-component of `Wildcard` that displays the article byline and section.
  * @component
- * @param {Object} props
- * @param {string} props.byline - The author's name(s) in a displayable format.
- * @param {string} props.section - The name of the section to which the article belongs.
+ * @property {string} byline - The author's name(s) in a displayable format.
+ * @property {string} section - The name of the section to which the article belongs.
  */
 const Footer = ({ byline, section }) => (
   <View style={styles.footer}>
@@ -59,12 +57,12 @@ const Footer = ({ byline, section }) => (
 /**
  * Displays a `Card` preview for an article or some other related form of content.
  * @component
- * @param {Object} props
- * @param {Object} props.navigation - The navigation object used for navigating between screens.
- * @param {boolean} props.verbose - A flag indicating whether to include the excerpt in the card.
- * @param {string} props.title - The headline.
- * @param {import("../../utils/model").WordPressPost} props.item - The article object.
- * @param {number} props.index - The index of the article in a parent view. Currently unused in the implementation.
+ * @property {Object} navigation - The navigation object used for navigating between screens.
+ * @property {boolean} verbose - A flag indicating whether to include the excerpt in the card.
+ * @property {string} title - The headline.
+ * @property {Object} item - The article object.
+ * @property {number} index - The index of the article in a parent view. Currently unused in the implementation.
+ * @exports Wildcard
  */
 export default function Wildcard({ navigation, verbose, title, item, index }) {
   return (

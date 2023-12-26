@@ -32,8 +32,9 @@ const pixelRatio = PixelRatio.get();
  *
  * @component
  * @param {Object} props
- * @param {Array<import("../../utils/model").WordPressPost>} props.articles - The array of article objects to display. Expected to be non-null.
+ * @param {Array<Object>} props.articles - The array of article objects to display. Expected to be non-null.
  * @param {Object} props.navigation - The navigation object used for navigating between screens.
+ * @exports Polyptych
  *
  * @example
  * <Polyptych articles={articles[Section.SPORTS.slug]} navigation={navigation} />

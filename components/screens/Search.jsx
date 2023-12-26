@@ -28,6 +28,7 @@ const { width, height } = Dimensions.get("window");
  * through Daily articles from across the years, in a similar fashion to the website.
  * It uses similar heuristics to determine the most relevant articles to display, which
  * means there is still plenty of room for improvement.
+ *
  * @component
  */
 export default function Search({ route, navigation }) {

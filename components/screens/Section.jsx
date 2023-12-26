@@ -23,10 +23,10 @@ const BATCH_SIZE = 16;
  * - `possiblyReachedEnd`: A Boolean indicating whether all possible articles from the WordPress category have been fetched.
  *
  * @component
- * @param {Object} props
- * @param {Object} props.route The route prop passed by the navigation. It includes the category and seed data.
- * @param {{ category: import("../../utils/constants").Category, seed: Array<import("../../utils/model").WordPressPost> }} props.route.params The parameters passed by the navigation. It includes the category and seed data.
- * @param {Object} props.navigation From React Navigation.
+ * @property {Object} route The route prop passed by the navigation. It includes the category and seed data.
+ * @property {{ category: import("../../utils/constants").Category, seed: Array<import("../../utils/model").WordPressPost> }} route.params The parameters passed by the navigation. It includes the category and seed data.
+ * @property {Object} navigation From React Navigation.
+ * @exports Section
  */
 export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
@@ -44,11 +44,10 @@ export default function Section({ route, navigation }) {
 
   /**
    * @component
-   * @param {Object} props
-   * @param {Array<import("../../utils/model").WordPressPost>} props.sectionArticles
-   * @param {number} props.basePageCount Before loading more articles, we calculate the number of pages we can skip when calling the API.
-   * @param {number} props.sectionId
-   * @param {import("../../utils/constants").Category} props.subcategory
+   * @property {Array<import("../../utils/model").WordPressPost>} sectionArticles
+   * @property {number} basePageCount Before loading more articles, we calculate the number of pages we can skip when calling the API.
+   * @property {number} sectionId
+   * @property {import("../../utils/constants").Category} subcategory
    */
   const CategoryContainer = ({ sectionArticles, basePageCount, subcategory }) => {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);

@@ -16,11 +16,10 @@ const FirstPage = React.memo(
    * It is memoized to prevent unnecessary re-renders.
    *
    * @component
-   * @param {Object} props
-   * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.articles - The list of articles to display, grouped by category.
-   * @param {Record<string, Array<import("../../utils/model").WordPressPost>} props.data - Articles from same initial API call, but without any filters applied.
-   * @param {Object} props.navigation - The navigation object used by React Navigation.
-   * @param {DeviceType} props.deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
+   * @property {Record<string, Array<import("../../utils/model").WordPressPost>} articles - The list of articles to display, grouped by category.
+   * @property {Record<string, Array<import("../../utils/model").WordPressPost>} data - Articles from same initial API call, but without any filters applied.
+   * @property {Object} navigation - The navigation object used by React Navigation.
+   * @property {DeviceType} deviceType - An enumeration with the type of device on which the app is running. Used to determine layout.
    */
   ({ data, articles, navigation, deviceType }) => {
     const groupSize = deviceType === DeviceType.PHONE ? 1 : 2;
@@ -63,8 +62,8 @@ const FirstPage = React.memo(
  * It also contains pagination logic to fetch new data when the end of the list is reached.
  *
  * @component
- * @param {Object} props
- * @param {Object} props.navigation - The navigation object used by React Navigation.
+ * @property {Object} navigation - The navigation object used by React Navigation.
+ * @exports Home
  */
 export default function Home({ navigation }) {
   const [pageNumber, setPageNumber] = useState(1);
