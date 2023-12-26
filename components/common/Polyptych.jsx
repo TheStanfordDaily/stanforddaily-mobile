@@ -31,9 +31,8 @@ const pixelRatio = PixelRatio.get();
  * Canonically, a polyptych is an altarpiece of multiple panels that are joined by hinges. The name is a metaphor.
  *
  * @component
- * @param {Object} props
- * @param {Array<Object>} props.articles - The array of article objects to display. Expected to be non-null.
- * @param {Object} props.navigation - The navigation object used for navigating between screens.
+ * @property {Array<Object>} articles - The array of article objects to display. Expected to be non-null.
+ * @property {Object} navigation - The navigation object used for navigating between screens.
  * @exports Polyptych
  *
  * @example

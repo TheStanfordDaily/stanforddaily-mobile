@@ -36,7 +36,6 @@ If set to `true`, the background takes on the accent color typically used for th
 | seed | <code>Array</code> | A collection of articles from the `Home` screen that can be immediately displayed upon navigation to the detail view. |
 | category | <code>Object</code> | The category object representing the section. It should have a `name` property like "News" or "The Grind." |
 
-
 ## Polyptych
 Displays a set of articles in a paginated layout.
 
@@ -54,13 +53,12 @@ When a card is tapped, the component navigates to the `Post` screen and passes t
 
 Canonically, a polyptych is an altarpiece of multiple panels that are joined by hinges. The name is a metaphor.
 
-**Component**:
+**Properties**
 
-| Param | Type | Description |
+| Name | Type | Description |
 | --- | --- | --- |
-| props | <code>Object</code> |  |
-| props.articles | <code>Array.&lt;Object&gt;</code> | The array of article objects to display. Expected to be non-null. |
-| props.navigation | <code>Object</code> | The navigation object used for navigating between screens. |
+| articles | <code>Array.&lt;Object&gt;</code> | The array of article objects to display. Expected to be non-null. |
+| navigation | <code>Object</code> | The navigation object used for navigating between screens. |
 
 **Example**  
 ```js
