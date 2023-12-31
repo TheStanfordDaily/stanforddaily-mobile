@@ -98,17 +98,9 @@ export default function Section({ route, navigation }) {
               setPageNumber(pageNumber + 1);
             }
           }}
-          renderItem={({ item, index }) =>
-            React.memo(
-              <Wildcard
-                key={`${subcategory.id}-${item.id}`}
-                item={item}
-                index={index}
-                navigation={navigation}
-                verbose
-              />
-            )
-          }
+          renderItem={({ item, index }) => (
+            <Wildcard key={`${subcategory.id}-${item.id}`} item={item} index={index} navigation={navigation} verbose />
+          )}
           ListFooterComponent={() => {
             if (!possiblyReachedEnd || articlesLoading) {
               return <ActivityIndicator />;
@@ -172,18 +164,12 @@ export default function Section({ route, navigation }) {
           const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
 
           return (
-            <List
-              data={filteredSeed}
-              style={{ backgroundColor: "transparent" }}
-              renderItem={({ item, index }) => (
-                <Wildcard
-                  key={`${subcategory.id}-${item.id}`}
-                  item={item}
-                  index={index}
-                  navigation={navigation}
-                  verbose
-                />
-              )}
+            <CategoryContainer
+              key={index}
+              sectionArticles={filteredSeed}
+              basePageCount={Math.max(1, Math.floor(filteredSeed.length / BATCH_SIZE) - 1)}
+              sectionId={sectionId}
+              subcategory={subcategory}
             />
           );
         })}
