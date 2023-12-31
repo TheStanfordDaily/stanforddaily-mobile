@@ -1,4 +1,4 @@
-import { Layout, List, Tab, TabBar } from "@ui-kitten/components";
+import { Layout, List, Tab, TabBar, Text } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
@@ -172,13 +172,18 @@ export default function Section({ route, navigation }) {
           const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
 
           return (
-            <CategoryContainer
-              index={index}
-              sectionArticles={numericId === category.id ? allArticles : filteredSeed}
-              sectionId={numericId}
-              key={index}
-              basePageCount={Math.max(1, Math.floor(filteredSeed.length / BATCH_SIZE) - 1)}
-              subcategory={subcategory}
+            <List
+              data={filteredSeed}
+              style={{ backgroundColor: "transparent" }}
+              renderItem={({ item, index }) => (
+                <Wildcard
+                  key={`${subcategory.id}-${item.id}`}
+                  item={item}
+                  index={index}
+                  navigation={navigation}
+                  verbose
+                />
+              )}
             />
           );
         })}

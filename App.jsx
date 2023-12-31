@@ -1,4 +1,4 @@
-import { TECH_PASSWORD } from "@env";
+import { TECH_PASSWORD, FIREBASE_PASSWORD } from "@env";
 import * as eva from "@eva-design/eva";
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -105,10 +105,11 @@ export default function App() {
     headerTintColor: bread[theme]["color-primary-500"],
   };
 
-  const { app, database } = useFirebase(expoPushToken, TECH_PASSWORD);
+  // const { app, database } = useFirebase(expoPushToken, FIREBASE_PASSWORD);
 
   // Handles changes in the navigation state (as received from `NavigationContainer`) and logs them to a Firebase database.
   const handleNavigationChange = async (state) => {
+    return;
     if (!app || !state || !state.routes) return;
     const auth = getAuth(app);
 
