@@ -1,7 +1,7 @@
 import { Layout, List, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
-import React, { useCallback, useContext, useEffect, useState, useRef, useMemo } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import React, { useContext, useState, useRef, useMemo } from "react";
+import { ActivityIndicator, ScrollView, StyleSheet, View, Text } from "react-native";
 import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";
@@ -41,7 +41,7 @@ function Section({ route, navigation }) {
 
   const fetchResults = async (subcategory, pageNumber) => {
     try {
-      const posts = await Model.posts().categories(subcategory.id).perPage(BATCH_SIZE).page(pageNumber).get();
+      const posts = await Model.posts().categories(subcategory.id).perPage(BATCH_SIZE).page(pageNumber).embed().get();
       return posts;
     } catch (error) {
       console.error(error);
@@ -49,16 +49,11 @@ function Section({ route, navigation }) {
     }
   };
 
-  /**
-   * @component
-   * @property {Array<import("../../utils/model").WordPressPost>} sectionArticles
-   * @property {number} basePageCount Before loading more articles, we calculate the number of pages we can skip when calling the API.
-   * @property {import("../../utils/constants").Category} subcategory
-   */
   const CategoryContainer = useMemo(
     () =>
       React.memo(({ sectionArticles, basePageCount, subcategory }) => {
         const [articles, setArticles] = useState(sectionArticles);
+        // Before loading more articles, we calculate the number of pages we can skip when calling the API.
         const [pageNumber, setPageNumber] = useState(basePageCount);
         const [articlesLoading, setArticlesLoading] = useState(false);
         const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
@@ -76,6 +71,16 @@ function Section({ route, navigation }) {
           }
           setArticlesLoading(false);
         };
+
+        if (articles.length === 0) {
+          loadMoreArticles();
+
+          return (
+            <Container>
+              <ActivityIndicator />
+            </Container>
+          );
+        }
 
         return (
           <Container>
@@ -128,9 +133,11 @@ function Section({ route, navigation }) {
 
     return sections.map((section, index) => {
       const numericId = section.id === "all" ? category.id : section.id;
-      const subcategory = section.id === "all" ? category : category.desks?.[section.id] ?? category;
+      const subcategory =
+        section.id === "all"
+          ? category
+          : Object.values(category.desks).find((value) => value.id === section.id) ?? category;
       const filteredSeed = seed.filter((item) => item.categories.includes(numericId));
-      console.log(category.desks, section.id);
 
       return (
         <CategoryContainer
