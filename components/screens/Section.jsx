@@ -49,7 +49,7 @@ export default function Section({ route, navigation }) {
    * @property {number} sectionId
    * @property {import("../../utils/constants").Category} subcategory
    */
-  const CategoryContainer = ({ sectionArticles, basePageCount, subcategory }) => {
+  const CategoryContainer = React.memo(({ sectionArticles, basePageCount, subcategory }) => {
     const [possiblyReachedEnd, setPossiblyReachedEnd] = useState(false);
     const [articlesLoading, setArticlesLoading] = useState(false);
     const [articles, setArticles] = useState(sectionArticles);
@@ -102,14 +102,14 @@ export default function Section({ route, navigation }) {
             <Wildcard key={`${subcategory.id}-${item.id}`} item={item} index={index} navigation={navigation} verbose />
           )}
           ListFooterComponent={() => {
-            if (!possiblyReachedEnd || articlesLoading) {
-              return <ActivityIndicator />;
-            }
+            // if (!possiblyReachedEnd || articlesLoading) {
+            //   return <ActivityIndicator />;
+            // }
           }}
         />
       </Container>
     );
-  };
+  });
 
   return (
     <>
