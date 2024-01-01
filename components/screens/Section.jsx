@@ -10,7 +10,7 @@ import Model from "../../utils/model";
 import Wildcard from "../common/Wildcard";
 
 const BATCH_SIZE = 16;
-const MemoizedWildcard = React.memo(Wildcard);
+const SECTION_ALL = -1; // Special value for the union of all desks in a section or all articles in the section.
 
 /**
  * The `Section` screen displays a list of articles from a specific category.
@@ -23,9 +23,9 @@ const MemoizedWildcard = React.memo(Wildcard);
  * - `possiblyReachedEnd`: A Boolean indicating whether all possible articles from the WordPress category have been fetched.
  *
  * @component
- * @property {Object} route The route prop passed by the navigation. It includes the category and seed data.
- * @property {{ category: import("../../utils/constants").Category, seed: Array<import("../../utils/model").WordPressPost> }} route.params The parameters passed by the navigation. It includes the category and seed data.
- * @property {Object} navigation From React Navigation.
+ * @property {Object} route - The route prop passed by the navigation. It includes the category and seed data.
+ * @property {{ category: import("../../utils/constants").Category, seed: Array<import("../../utils/model").WordPressPost> }} route.params - The parameters passed by the navigation. It includes the category and seed data.
+ * @property {Object} navigation - From React Navigation.
  * @exports Section
  */
 export default function Section({ route, navigation }) {
@@ -39,18 +39,30 @@ export default function Section({ route, navigation }) {
   const scrollViewRef = useRef(null);
   const tabWidths = useRef(new Array(category.desks?.length ?? 1).fill(0));
 
-  // Measure the width of each tab.
   const measureTab = (index) => (event) => {
     const { width } = event.nativeEvent.layout;
     tabWidths.current[index] = width;
   };
 
-  // Calculate the position of the tab.
+  /**
+   * Calculates the position of the tab.
+   * When a tab is selected, this function calculates its position (i.e., its offset from the start of the `ScrollView`).
+   * This can be done by taking the sum of the widths of all tabs before the selected one.
+   * @function
+   * @param {number} index - The index of the selected tab.
+   * @returns {number} The position of the tab.
+   */
   const getTabOffset = (index) => {
     return tabWidths.current.slice(0, index).reduce((acc, width) => acc + width, 0);
   };
 
-  // Scroll to the selected tab if it is not currently visible.
+  /**
+   * Determines the position of the selected tab within the `ScrollView` and then uses the `scrollTo` method to adjust the scroll position accordingly.
+   * Checks if the selected tab is fully visible within the `ScrollView` by comparing the tab's position and the current scroll position of the `ScrollView`.
+   * If the tab is not fully visible, this function uses the `scrollTo` method of the `ScrollView` to adjust the scroll position so that the selected tab becomes visible.
+   * @function
+   * @param {number} index - The index of the selected tab.
+   */
   const scrollToSelectedTab = (index) => {
     const offset = getTabOffset(index);
     scrollViewRef?.current?.scrollTo({ x: offset, animated: true });
@@ -109,12 +121,7 @@ export default function Section({ route, navigation }) {
               onEndReached={loadMoreArticles}
               onEndReachedThreshold={0.5}
               renderItem={({ item, index }) => (
-                <MemoizedWildcard
-                  key={`${subcategory.id}-${item.id}`}
-                  item={item}
-                  index={index}
-                  navigation={navigation}
-                />
+                <Wildcard key={`${subcategory.id}-${item.id}`} item={item} index={index} navigation={navigation} />
               )}
               ListFooterComponent={() => articlesLoading && <ActivityIndicator />}
             />
@@ -126,7 +133,7 @@ export default function Section({ route, navigation }) {
 
   const renderTabs = () => {
     const tabs = [
-      { name: `All ${category.name}`, id: "all" },
+      { name: `All ${category.name}`, id: SECTION_ALL },
       ...Object.values(category.desks ?? {}).map((desk, index) => ({ ...desk, id: index + 1 })),
     ];
 
@@ -147,12 +154,12 @@ export default function Section({ route, navigation }) {
   };
 
   const renderPagerView = () => {
-    const sections = [{ ...category, id: "all" }, ...Object.values(category.desks ?? {})];
+    const sections = [{ ...category, id: SECTION_ALL }, ...Object.values(category.desks ?? {})];
 
     return sections.map((section) => {
-      const numericId = section.id === "all" ? category.id : section.id;
+      const numericId = section.id === SECTION_ALL ? category.id : section.id;
       const subcategory =
-        section.id === "all"
+        section.id === SECTION_ALL
           ? category
           : Object.values(category.desks).find((value) => value.id === section.id) ?? category;
       const filteredSeed = seed.filter((item) => item.categories.includes(numericId));

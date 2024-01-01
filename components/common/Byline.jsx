@@ -5,10 +5,15 @@ import { TouchableOpacity, StyleSheet, View } from "react-native";
 
 import { Spacing, Sections } from "../../utils/constants";
 
+const includesDesks = (category) => {
+  return category.desks && Object.keys(category.desks).length > 0;
+};
+
 export default function Byline({ authors, section, sourceName, category, date, navigation }) {
   const entries = Object.entries(authors);
   const bylineFontSize = entries.length < 3 ? 16 : 14;
-  const richCategory = Object.values(Sections).find((item) => item.id === category.id) ?? category;
+  const richCategory = Object.values(Sections).find((value) => value.id === category.id) ?? category;
+  const resolvedCategory = [3, 23, 25].includes(category.id) && includesDesks(richCategory) ? richCategory : category;
 
   const Name = ({ detail }) => (
     <TouchableOpacity onPress={() => navigation.navigate("Author", { name: detail[0], id: detail[1] })}>
@@ -42,10 +47,10 @@ export default function Byline({ authors, section, sourceName, category, date, n
 
       <Button
         onPress={() => {
-          if (richCategory?.name === sourceName) {
-            navigation.navigate("Section", { category: richCategory, seed: [] });
+          if (category.name === sourceName) {
+            navigation.navigate("Section", { category: resolvedCategory, seed: [] });
           } else {
-            navigation.push("Section", { category: richCategory, seed: [] });
+            navigation.push("Section", { category: resolvedCategory, seed: [] });
           }
         }}
         style={{ maxHeight: 100 }}
