@@ -3,13 +3,14 @@ import { decode } from "html-entities";
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 
-import { Spacing } from "../../utils/constants";
+import { Spacing, Sections } from "../../utils/constants";
 
 export default function Byline({ authors, section, sourceName, category, date, navigation }) {
   const entries = Object.entries(authors);
   const bylineFontSize = entries.length < 3 ? 16 : 14;
   const [sameCategory, setSameCategory] = useState(false);
   const theme = useTheme();
+  const richCategory = Object.values(Sections).find((item) => item.id === category.id) ?? category;
 
   const Name = ({ detail }) => (
     <TouchableOpacity onPress={() => navigation.navigate("Author", { name: detail[0], id: detail[1] })}>
@@ -43,10 +44,10 @@ export default function Byline({ authors, section, sourceName, category, date, n
 
       <Button
         onPress={() => {
-          if (category?.name === sourceName) {
-            navigation.navigate("Section", { category, seed: [] });
+          if (richCategory?.name === sourceName) {
+            navigation.navigate("Section", { category: richCategory, seed: [] });
           } else {
-            navigation.push("Section", { category, seed: [] });
+            navigation.push("Section", { category: richCategory, seed: [] });
           }
         }}
         style={{ maxHeight: 100 }}
