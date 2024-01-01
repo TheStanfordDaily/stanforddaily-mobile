@@ -109,71 +109,72 @@ export default function App() {
 
   // Handles changes in the navigation state (as received from `NavigationContainer`) and logs them to a Firebase database.
   const handleNavigationChange = async (state) => {
-    return;
-    if (!app || !state || !state.routes) return;
-    const auth = getAuth(app);
+    /*
+      if (!app || !state || !state.routes) return;
+      const auth = getAuth(app);
 
-    try {
-      await signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD);
+      try {
+        await signInWithEmailAndPassword(auth, "tech@stanforddaily.com", TECH_PASSWORD);
 
-      const currentRoute = state.routes[state.index];
-      const currentView = currentRoute?.name;
-      const currentRouteParams = currentRoute?.params;
+        const currentRoute = state.routes[state.index];
+        const currentView = currentRoute?.name;
+        const currentRouteParams = currentRoute?.params;
 
-      if (!currentView) return;
+        if (!currentView) return;
 
-      const datetime = new Date();
-      const year = datetime.getFullYear();
-      const month = String(datetime.getMonth() + 1).padStart(2, "0");
-      const day = String(datetime.getDate()).padStart(2, "0");
+        const datetime = new Date();
+        const year = datetime.getFullYear();
+        const month = String(datetime.getMonth() + 1).padStart(2, "0");
+        const day = String(datetime.getDate()).padStart(2, "0");
 
-      let currentViewPath = `Analytics/${year}/${month}/${day}/${currentView}`;
-      let viewIdentifier; // Used to track unique views for each screen in the sessions map.
-      let routeParamIdentifier;
+        let currentViewPath = `Analytics/${year}/${month}/${day}/${currentView}`;
+        let viewIdentifier; // Used to track unique views for each screen in the sessions map.
+        let routeParamIdentifier;
 
-      // Leverage information about the current view to construct a unique identifier for use in Firebase.
-      switch (currentView) {
-        case Routing.post:
-          routeParamIdentifier = currentRouteParams?.article?.id; // Unique to the post being presented in the detail view.
-          break;
-        case Routing.section:
-          routeParamIdentifier = currentRouteParams?.category?.id; // Unique to the section being presented in the detail view.
-          break;
-        case Routing.author:
-          routeParamIdentifier = currentRouteParams?.id; // Unique to the author being presented in the detail view.
-          break;
-        default:
+        // Leverage information about the current view to construct a unique identifier for use in Firebase.
+        switch (currentView) {
+          case Routing.post:
+            routeParamIdentifier = currentRouteParams?.article?.id; // Unique to the post being presented in the detail view.
+            break;
+          case Routing.section:
+            routeParamIdentifier = currentRouteParams?.category?.id; // Unique to the section being presented in the detail view.
+            break;
+          case Routing.author:
+            routeParamIdentifier = currentRouteParams?.id; // Unique to the author being presented in the detail view.
+            break;
+          default:
+            viewIdentifier = currentView;
+        }
+
+        if (routeParamIdentifier) {
+          // After the switch, if there is a `routeParamIdentifier`, it appends that to the `currentViewPath` string.
+          currentViewPath += `/${routeParamIdentifier}`;
+          viewIdentifier = `${currentView}/${routeParamIdentifier}`;
+        } else if (!viewIdentifier) {
+          // Otherwise, the default case must have been triggered, so it just uses the view identifier.
           viewIdentifier = currentView;
-      }
+        }
 
-      if (routeParamIdentifier) {
-        // After the switch, if there is a `routeParamIdentifier`, it appends that to the `currentViewPath` string.
-        currentViewPath += `/${routeParamIdentifier}`;
-        viewIdentifier = `${currentView}/${routeParamIdentifier}`;
-      } else if (!viewIdentifier) {
-        // Otherwise, the default case must have been triggered, so it just uses the view identifier.
-        viewIdentifier = currentView;
-      }
-
-      const impressionsRef = ref(database, `${currentViewPath}/impressions`);
-      runTransaction(impressionsRef, (impressions) => {
-        return (impressions || 0) + 1;
-      });
-
-      if (!sessionViews[viewIdentifier]) {
-        const sessionsRef = ref(database, `${currentViewPath}/sessions`);
-        runTransaction(sessionsRef, (sessions) => {
-          return (sessions || 0) + 1;
+        const impressionsRef = ref(database, `${currentViewPath}/impressions`);
+        runTransaction(impressionsRef, (impressions) => {
+          return (impressions || 0) + 1;
         });
 
-        // Update view information for future reference.
-        setSessionViews((prevSessionViews) => {
-          return { ...prevSessionViews, [viewIdentifier]: true };
-        });
+        if (!sessionViews[viewIdentifier]) {
+          const sessionsRef = ref(database, `${currentViewPath}/sessions`);
+          runTransaction(sessionsRef, (sessions) => {
+            return (sessions || 0) + 1;
+          });
+
+          // Update view information for future reference.
+          setSessionViews((prevSessionViews) => {
+            return { ...prevSessionViews, [viewIdentifier]: true };
+          });
+        }
+      } catch (error) {
+        console.trace(error);
       }
-    } catch (error) {
-      console.trace(error);
-    }
+    */
   };
 
   // Triggered when the app is opened from a web browser. It extracts the slug from the URL and navigates to the corresponding post.

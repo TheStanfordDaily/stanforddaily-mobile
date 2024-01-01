@@ -1,7 +1,7 @@
 import { Layout, List, Tab, TabBar } from "@ui-kitten/components";
 import { DeviceType } from "expo-device";
 import React, { useContext, useState, useRef, useMemo } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View, Text } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import PagerView from "react-native-pager-view";
 
 import { ThemeContext } from "../../theme-context";
@@ -28,21 +28,38 @@ const MemoizedWildcard = React.memo(Wildcard);
  * @property {Object} navigation From React Navigation.
  * @exports Section
  */
-function Section({ route, navigation }) {
+export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
   const [selection, setSelection] = useState(0);
-  const [allArticles, setAllArticles] = useState(seed);
   const [pageScrollState, setPageScrollState] = useState("idle");
 
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
   const Container = theme === "dark" ? Layout : View;
   const pagerViewRef = useRef(null);
+  const scrollViewRef = useRef(null);
+  const tabWidths = useRef(new Array(category.desks?.length ?? 1).fill(0));
+
+  // Measure the width of each tab.
+  const measureTab = (index) => (event) => {
+    const { width } = event.nativeEvent.layout;
+    tabWidths.current[index] = width;
+  };
+
+  // Calculate the position of the tab.
+  const getTabOffset = (index) => {
+    return tabWidths.current.slice(0, index).reduce((acc, width) => acc + width, 0);
+  };
+
+  // Scroll to the selected tab if it is not currently visible.
+  const scrollToSelectedTab = (index) => {
+    const offset = getTabOffset(index);
+    scrollViewRef?.current?.scrollTo({ x: offset, animated: true });
+  };
 
   const fetchResults = async (subcategory, pageNumber) => {
     try {
-      const posts = await Model.posts().categories(subcategory.id).perPage(BATCH_SIZE).page(pageNumber).embed().get();
-      return posts;
+      return await Model.posts().categories(subcategory.id).perPage(BATCH_SIZE).page(pageNumber).embed().get();
     } catch (error) {
       console.error(error);
       return [];
@@ -120,7 +137,9 @@ function Section({ route, navigation }) {
         onSelect={() => {
           setSelection(index);
           pagerViewRef.current?.setPage(index);
+          scrollToSelectedTab(index);
         }}
+        onLayout={measureTab(index)}
         selected={selection === index}
         style={styles.tab}
         title={tab.name}
@@ -131,7 +150,7 @@ function Section({ route, navigation }) {
   const renderPagerView = () => {
     const sections = [{ ...category, id: "all" }, ...Object.values(category.desks ?? {})];
 
-    return sections.map((section, index) => {
+    return sections.map((section) => {
       const numericId = section.id === "all" ? category.id : section.id;
       const subcategory =
         section.id === "all"
@@ -161,14 +180,17 @@ function Section({ route, navigation }) {
           }}
           indicatorStyle={styles.indicator}
         >
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView ref={scrollViewRef} horizontal showsHorizontalScrollIndicator={false}>
             {renderTabs()}
           </ScrollView>
         </TabBar>
       )}
       <PagerView
         ref={pagerViewRef}
-        onPageSelected={(e) => setSelection(e.nativeEvent.position)}
+        onPageSelected={(e) => {
+          setSelection(e.nativeEvent.position);
+          scrollToSelectedTab(e.nativeEvent.position);
+        }}
         onPageScrollStateChanged={(e) => setPageScrollState(e.nativeEvent.pageScrollState)}
         scrollEnabled={Object.keys(category.desks ?? {}).length > 0}
         style={styles.container}
@@ -192,5 +214,3 @@ const styles = StyleSheet.create({
     opacity: 0,
   },
 });
-
-export default Section;
