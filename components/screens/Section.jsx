@@ -31,7 +31,6 @@ const MemoizedWildcard = React.memo(Wildcard);
 export default function Section({ route, navigation }) {
   const { category, seed } = route.params;
   const [selection, setSelection] = useState(0);
-  const [pageScrollState, setPageScrollState] = useState("idle");
 
   const { theme, deviceType } = useContext(ThemeContext);
   const columnCount = deviceType === DeviceType.PHONE ? 1 : 2;
@@ -191,7 +190,6 @@ export default function Section({ route, navigation }) {
           setSelection(e.nativeEvent.position);
           scrollToSelectedTab(e.nativeEvent.position);
         }}
-        onPageScrollStateChanged={(e) => setPageScrollState(e.nativeEvent.pageScrollState)}
         scrollEnabled={Object.keys(category.desks ?? {}).length > 0}
         style={styles.container}
         initialPage={0}

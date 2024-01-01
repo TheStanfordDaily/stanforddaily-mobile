@@ -1,6 +1,6 @@
-import { Button, Text, useTheme } from "@ui-kitten/components";
+import { Button, Text } from "@ui-kitten/components";
 import { decode } from "html-entities";
-import React, { useState } from "react";
+import React from "react";
 import { TouchableOpacity, StyleSheet, View } from "react-native";
 
 import { Spacing, Sections } from "../../utils/constants";
@@ -8,8 +8,6 @@ import { Spacing, Sections } from "../../utils/constants";
 export default function Byline({ authors, section, sourceName, category, date, navigation }) {
   const entries = Object.entries(authors);
   const bylineFontSize = entries.length < 3 ? 16 : 14;
-  const [sameCategory, setSameCategory] = useState(false);
-  const theme = useTheme();
   const richCategory = Object.values(Sections).find((item) => item.id === category.id) ?? category;
 
   const Name = ({ detail }) => (
