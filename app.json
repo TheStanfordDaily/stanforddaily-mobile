@@ -57,11 +57,6 @@
           "deploymentTarget": "13.0"
         }
       }]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "b79492b0-f9be-11e8-9d5e-cdc02a26eca7"
-      }
-    }
+    ]
   }
 }
